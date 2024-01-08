@@ -1,4 +1,4 @@
-﻿# Simple Sound Studio Library
+﻿# Simple Sound Studio - Library
 
 ## English
 

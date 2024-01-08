@@ -6,6 +6,7 @@ import terser from "@rollup/plugin-terser";
 import glob from "glob";
 import commonjs from "@rollup/plugin-commonjs";
 import dts from "rollup-plugin-dts";
+import eslint from "@rollup/plugin-eslint";
 
 const workletFiles = [
     ...glob.sync(path.join(__dirname, "lib/filters/worklets/*.worklet.ts")),
@@ -42,6 +43,7 @@ const bundleConfig = [
             resolve({
                 browser: true,
             }),
+            eslint(),
             commonjs({
                 include: /node_modules/,
                 requireReturnsDefault: "auto",
@@ -69,6 +71,7 @@ const workletConfig = workletFiles.map((input) => ({
         resolve({
             browser: true,
         }),
+        eslint(),
         typescript({
             noEmit: true
         }),
