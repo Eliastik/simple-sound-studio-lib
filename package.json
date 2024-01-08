@@ -10,11 +10,6 @@
   "main": "dist/cjs/SimpleSoundStudioLibrary.js",
   "module": "dist/esm/SimpleSoundStudioLibrary.js",
   "types": "dist/index.d.ts",
-  "dependencies": {
-    "inline-worker": "^1.1.0",
-    "lodash": "^4.17.21",
-    "soundtouchjs": "^0.1.30"
-  },
   "devDependencies": {
     "@rollup/plugin-commonjs": "^25.0.7",
     "@rollup/plugin-node-resolve": "^15.2.3",
@@ -22,7 +17,7 @@
     "@rollup/plugin-typescript": "^11.1.5",
     "@types/audioworklet": "^0.0.52",
     "@types/lodash": "^4.14.202",
-    "@types/node": "^20.10.6",
+    "@types/node": "^20.10.7",
     "@types/semver": "^7.5.6",
     "@typescript-eslint/eslint-plugin": "^6.16.0",
     "@typescript-eslint/parser": "^6.16.0",
@@ -32,7 +27,10 @@
     "rollup-plugin-cleanup": "^3.2.1",
     "rollup-plugin-dts": "^6.1.0",
     "tslib": "^2.6.2",
-    "typescript": "^5.3.3"
+    "typescript": "^5.3.3",
+    "inline-worker": "^1.1.0",
+    "lodash": "^4.17.21",
+    "soundtouchjs": "^0.1.30"
   },
   "peerDependencies": {
     "@types/audioworklet": "^0.0.52"
