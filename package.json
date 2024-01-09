@@ -1,5 +1,6 @@
 {
   "name": "@eliastik/simple-sound-studio-lib",
+  "description": "A Web Audio API library used in my Simple Voice Changer (soon to be renamed to Simple Sound Studio) project",
   "version": "2.1.0",
   "private": false,
   "scripts": {
