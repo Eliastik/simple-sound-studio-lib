@@ -16,8 +16,8 @@ class BitCrusherProcessor extends AudioWorkletProcessor {
 
     static get parameterDescriptors() {
         return [
-            { name: "bits", defaultValue: 8 },
-            { name: "normFreq", defaultValue: 0.15 },
+            { name: "bits", defaultValue: 16 },
+            { name: "normFreq", defaultValue: 0.9 },
         ];
     }
 
@@ -32,7 +32,7 @@ class BitCrusherProcessor extends AudioWorkletProcessor {
         const output = outputs[0];
 
         const step = 2 * Math.pow(1 / 2, parameters.bits[0]);
-        const currentNormFreq = parameters.normFreq[0] / (sampleRate / 48000);
+        const currentNormFreq = (1 - parameters.normFreq[0]) / (sampleRate / 48000);
 
         if (this.last == null) {
             this.last = new Array(input.length).fill(0);

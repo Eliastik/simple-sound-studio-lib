@@ -154,7 +154,7 @@ export default class AudioEditor extends AbstractAudioElement {
     /** Setup all audio filters */
     private setupDefaultFilters() {
         const bassBooster = new BassBoosterFilter(200, 15, 200, -2);
-        const bitCrusher = new BitCrusherFilter(2, 8, 0.15);
+        const bitCrusher = new BitCrusherFilter(16, 0.9);
         const echo = new EchoFilter(0.2, 0.75);
         const highPass = new HighPassFilter(3500);
         const lowPass = new LowPassFilter(3500);

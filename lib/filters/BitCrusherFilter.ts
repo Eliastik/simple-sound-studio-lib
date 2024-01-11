@@ -6,13 +6,11 @@ import "./worklets/BitCrusher.worklet";
 import utilFunctions from "../utils/Functions";
 
 export default class BitCrusherFilter extends AbstractAudioFilterWorklet {
-    private channels = 2;
-    private bits = 8;
-    private normFreq = 0.15;
+    private bits = 16;
+    private normFreq = 0.9;
 
-    constructor(channels: number, bits: number, normFreq: number) {
+    constructor(bits: number, normFreq: number) {
         super();
-        this.channels = channels;
         this.bits = bits;
         this.normFreq = normFreq;
     }
@@ -35,7 +33,6 @@ export default class BitCrusherFilter extends AbstractAudioFilterWorklet {
 
     getSettings(): BitCrusherSettings {
         return {
-            channels: this.channels,
             bits: this.bits,
             normFreq: this.normFreq,
         };
