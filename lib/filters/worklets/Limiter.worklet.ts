@@ -124,7 +124,11 @@ class LimiterProcessor extends AudioWorkletProcessor {
             // apply pre gain to signal
             if (inp) {
                 for (let k = 0; k < inp.length; ++k) {
-                    out[k] = preGainAmp * inp[k];
+                    if (!this.disabled) {
+                        out[k] = preGainAmp * inp[k];
+                    } else {
+                        out[k] = inp[k];
+                    }
                 }
             }
 
