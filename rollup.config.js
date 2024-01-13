@@ -47,9 +47,14 @@ const bundleConfig = [
                 requireReturnsDefault: "auto",
             }),
             typescript({
+                sourceMap: true,
+                inlineSources: true,
+                inlineSourceMap: true,
                 noEmit: true
             }),
-            terser(),
+            terser({
+                sourceMap: true
+            }),
             cleanup()
         ],
     },
