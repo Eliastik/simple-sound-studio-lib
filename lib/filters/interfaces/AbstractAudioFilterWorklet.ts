@@ -100,6 +100,7 @@ export default abstract class AbstractAudioFilterWorklet extends AbstractAudioFi
         }
 
         this.applyCurrentSettingsToWorklet();
+        this.setEnabled(this.isEnabled());
 
         if (this.currentWorkletNode) {
             if (this.currentWorkletNode instanceof WorkletScriptProcessorNodeAdapter) {
