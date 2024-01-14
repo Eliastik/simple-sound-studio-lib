@@ -23,7 +23,7 @@ export default class SoundtouchCustomFilter extends SimpleFilter {
         }
     }
 
-    extractSource(outSamples: any, numFramesReq: any, frameOffset = 0){
+    extractSource(outSamples: Float32Array, numFramesReq: number) {
         let numFramesExtracted = 0;
 
         if (this.sourceSound.length < numFramesReq*2) {
@@ -46,7 +46,7 @@ export default class SoundtouchCustomFilter extends SimpleFilter {
             super.inputBuffer.putSamples(samples, 0, numFramesExtracted);
     }
 
-    extract(target: any, numFrames = 0) {
+    extract(target: Float32Array, numFrames = 0) {
         return super.extract(target, numFrames);
     }
 
