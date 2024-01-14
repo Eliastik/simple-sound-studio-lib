@@ -188,6 +188,12 @@ export default class Vocoder {
             this.noiseGain.gain.value = value;
     }
 
+    updateDetuneValue(value: number) {
+        this.oscillatorDetuneValue = value;
+        if (this.oscillatorNode)
+            this.oscillatorNode.detune.value = value;
+    }
+
     // this will algorithmically re-calculate vocoder bands, distributing evenly
     // from startFreq to endFreq, splitting evenly (logarhythmically) into a given numBands.
     // The function places this info into the global vocoderBands and numVocoderBands letiables.
