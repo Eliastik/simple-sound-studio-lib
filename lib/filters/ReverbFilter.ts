@@ -4,15 +4,21 @@ import { ReverbEnvironment } from "../model/ReverbEnvironment";
 import ReverbSettings from "../model/filtersSettings/ReverbSettings";
 import GenericSettingValue from "../model/filtersSettings/GenericSettingValue";
 import { FilterSettingValue } from "../model/filtersSettings/FilterSettings";
+import utilFunctions from "@/utils/Functions";
 
 export default class ReverbFilter extends AbstractAudioFilter {
+
     private reverbEnvironment: ReverbEnvironment = Constants.DEFAULT_REVERB_ENVIRONMENT;
+    private reverbCustomEnvironmentAddTime = 5;
+    private customEnvironment: AudioBuffer | null = null;
 
     getNode(context: BaseAudioContext) {
         const convolver = context.createConvolver();
 
-        if(this.bufferFetcherService) {
+        if (this.reverbEnvironment && this.reverbEnvironment.url != "custom" && this.bufferFetcherService) {
             convolver.buffer = this.bufferFetcherService.getAudioBuffer(this.reverbEnvironment.url)!;
+        } else {
+            convolver.buffer = this.customEnvironment;
         }
 
         return {
@@ -20,7 +26,7 @@ export default class ReverbFilter extends AbstractAudioFilter {
             output: convolver
         };
     }
-    
+
     get order(): number {
         return 9;
     }
@@ -32,16 +38,24 @@ export default class ReverbFilter extends AbstractAudioFilter {
     getAddingTime() {
         const settings = this.getSettings();
 
-        if(settings && settings.reverbEnvironment && settings.reverbEnvironment.additionalData) {
-            return settings.reverbEnvironment.additionalData.addDuration as number;
+        if (settings && settings.reverbEnvironment) {
+            if (settings.reverbEnvironment.value != "custom") {
+                if (settings.reverbEnvironment.additionalData) {
+                    return settings.reverbEnvironment.additionalData.addDuration as number;
+                }
+            } else {
+                return this.reverbCustomEnvironmentAddTime;
+            }
         }
 
         return 0;
     }
 
     getSettings(): ReverbSettings {
-        if(!this.reverbEnvironment) {
-            return {};
+        if (!this.reverbEnvironment) {
+            return {
+                reverbCustomEnvironmentAddTime: this.reverbCustomEnvironmentAddTime
+            };
         }
 
         return {
@@ -54,21 +68,24 @@ export default class ReverbFilter extends AbstractAudioFilter {
                     addDuration: this.reverbEnvironment.addDuration
                 }
             },
-            downloadedBuffers: this.bufferFetcherService?.getDownloadedBuffersList()
+            downloadedBuffers: this.bufferFetcherService?.getDownloadedBuffersList(),
+            reverbCustomEnvironmentAddTime: this.reverbCustomEnvironmentAddTime
         };
     }
 
     async setSetting(settingId: string, value: FilterSettingValue) {
-        if(settingId == "reverbEnvironment") {
+        if (settingId == "reverbEnvironment") {
             const reverbEnvironment = value as GenericSettingValue;
 
-            if(reverbEnvironment) {
+            if (reverbEnvironment) {
                 const url = reverbEnvironment.value;
-    
+
                 try {
-                    await this.bufferFetcherService?.fetchBuffer(url);
-    
-                    if(reverbEnvironment.additionalData) {
+                    if (url != "custom") {
+                        await this.bufferFetcherService?.fetchBuffer(url);
+                    }
+
+                    if (reverbEnvironment.additionalData) {
                         this.reverbEnvironment = {
                             name: reverbEnvironment.name,
                             url,
@@ -85,7 +102,15 @@ export default class ReverbFilter extends AbstractAudioFilter {
                             link: ""
                         };
                     }
-                } catch(e) { /* empty */ }
+                } catch (e) { /* empty */ }
+            }
+        } else if (settingId == "reverbCustomEnvironmentAddTime") {
+            if (utilFunctions.isSettingValueValid(value)) {
+                this.reverbCustomEnvironmentAddTime = parseInt(value as string);
+            }
+        } else if (settingId == "reverbCustomEnvironmentFile") {
+            if (this.bufferDecoderService) {
+                this.customEnvironment = await this.bufferDecoderService.decodeBufferFromFile(value as File);
             }
         }
     }

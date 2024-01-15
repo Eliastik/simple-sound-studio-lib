@@ -31,6 +31,7 @@ import GenericConfigService from "./utils/GenericConfigService";
 import getRecorderWorker from "./recorder/RecorderWorker";
 import { Recorder } from "./recorder/Recorder";
 import ReverbSettings from "./model/filtersSettings/ReverbSettings";
+import BufferDecoderService from "./services/BufferDecoderService";
 
 export default class AudioEditor extends AbstractAudioElement {
 
@@ -77,6 +78,7 @@ export default class AudioEditor extends AbstractAudioElement {
         this.bufferPlayer = player || new BufferPlayer(context!);
         this.configService = configService || new GenericConfigService();
         this.bufferFetcherService = new BufferFetcherService(this.currentContext!, this.eventEmitter);
+        this.bufferDecoderService = new BufferDecoderService(this.currentContext!, this.eventEmitter);
         this.audioBuffersToFetch = audioBuffersToFetch || [];
 
         // Callback called just before starting audio player
@@ -106,7 +108,7 @@ export default class AudioEditor extends AbstractAudioElement {
 
             // Callback called when playing is finished
             this.bufferPlayer.on(EventType.PLAYING_FINISHED, () => {
-                if(this.savingBuffer && this.playingStoppedCallback) {
+                if (this.savingBuffer && this.playingStoppedCallback) {
                     this.off(EventType.PLAYING_STOPPED, this.playingStoppedCallback);
                 }
 
@@ -132,6 +134,7 @@ export default class AudioEditor extends AbstractAudioElement {
         for (const filter of filters) {
             filter.initializeDefaultSettings();
             filter.bufferFetcherService = this.bufferFetcherService;
+            filter.bufferDecoderService = this.bufferDecoderService;
             filter.configService = this.configService;
         }
 
@@ -145,6 +148,7 @@ export default class AudioEditor extends AbstractAudioElement {
     addRenderers(...renderers: AbstractAudioRenderer[]) {
         for (const renderer of renderers) {
             renderer.bufferFetcherService = this.bufferFetcherService;
+            renderer.bufferDecoderService = this.bufferDecoderService;
             renderer.configService = this.configService;
         }
 
@@ -288,6 +292,10 @@ export default class AudioEditor extends AbstractAudioElement {
         if (this.bufferFetcherService) {
             this.bufferFetcherService.updateContext(this.currentContext);
         }
+
+        if (this.bufferDecoderService) {
+            this.bufferDecoderService.updateContext(this.currentContext);
+        }
     }
 
     /** Prepare the AudioContext before use */
@@ -331,8 +339,8 @@ export default class AudioEditor extends AbstractAudioElement {
 
         await this.prepareContext();
 
-        if (this.currentContext) {
-            this.principalBuffer = await utilFunctions.loadAudioBuffer(this.currentContext, file);
+        if (this.currentContext && this.bufferDecoderService) {
+            this.principalBuffer = await this.bufferDecoderService.decodeBufferFromFile(file);
             this.sumPrincipalBuffer = utils.sumAudioBuffer(this.principalBuffer);
         } else {
             throw new Error("Audio Context is not ready!");
