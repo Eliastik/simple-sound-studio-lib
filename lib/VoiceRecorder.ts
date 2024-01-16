@@ -113,6 +113,14 @@ export default class VoiceRecorder extends AbstractAudioElement {
                 case "NotAllowedError":
                     this.errorCallback();
                     break;
+                // Disable sample rate configuration
+                case "NotSupportedError":
+                    if (!this.sampleRateConfigNotSupported) {
+                        this.previousSampleRate = 0;
+                        this.sampleRateConfigNotSupported = true;
+                        this.init();
+                    }
+                    break;
                 }
             }
         }

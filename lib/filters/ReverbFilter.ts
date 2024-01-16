@@ -126,6 +126,11 @@ export default class ReverbFilter extends AbstractAudioFilter {
         } else if (settingId == "reverbCustomEnvironmentFile") {
             if (this.bufferDecoderService && value) {
                 this.customEnvironment = await this.bufferDecoderService.decodeBufferFromFile(value as File);
+
+                if (!this.customEnvironment) {
+                    // Fallback to default environment
+                    this.reverbEnvironment = Constants.DEFAULT_REVERB_ENVIRONMENT;
+                }
             }
         }
     }

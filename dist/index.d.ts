@@ -16,7 +16,7 @@ declare class BufferDecoderService {
     private context;
     private eventEmitter;
     constructor(context: AudioContext, eventEmitter?: EventEmitter);
-    decodeBufferFromFile(file: File): Promise<AudioBuffer>;
+    decodeBufferFromFile(file: File): Promise<AudioBuffer | null>;
     updateContext(context: AudioContext): void;
 }
 
@@ -831,7 +831,8 @@ declare enum EventType {
     RECORDER_COUNT_UPDATE = "recorderCountUpdate",
     SAMPLE_RATE_CHANGED = "sampleRateChanged",
     DECODING_AUDIO_FILE = "decodingAudioFile",
-    DECODED_AUDIO_FILE = "decodedAudioFile"
+    DECODED_AUDIO_FILE = "decodedAudioFile",
+    ERROR_DECODING_AUDIO_FILE = "errorDecodingAudioFile"
 }
 
 export { AbstractAudioElement, AbstractAudioFilter, AbstractAudioFilterWorklet, AbstractAudioRenderer, AudioEditor, type AudioFilterEntrypointInterface, type AudioFilterNodes, BufferPlayer, type ConfigService, Constants, EventEmitter, type EventEmitterCallback, EventType, type FilterSettingValue, type FilterSettings, type FilterState, GenericConfigService, type GenericSettingValueAdditionalData, type RecorderSettings, type SelectFormValue, utilFunctions as UtilFunctions, VoiceRecorder };

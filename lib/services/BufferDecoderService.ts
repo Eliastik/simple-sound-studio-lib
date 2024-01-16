@@ -12,18 +12,29 @@ export default class BufferDecoderService {
         this.eventEmitter = eventEmitter || new EventEmitter();
     }
 
-    async decodeBufferFromFile(file: File): Promise<AudioBuffer> {
+    async decodeBufferFromFile(file: File): Promise<AudioBuffer | null> {
         if (this.eventEmitter) {
             this.eventEmitter.emit(EventType.DECODING_AUDIO_FILE);
         }
 
-        const buffer = await utilFunctions.loadAudioBuffer(this.context, file);
+        try {
+            const buffer = await utilFunctions.loadAudioBuffer(this.context, file);
 
-        if (this.eventEmitter) {
-            this.eventEmitter.emit(EventType.DECODED_AUDIO_FILE);
+            if (this.eventEmitter) {
+                this.eventEmitter.emit(EventType.DECODED_AUDIO_FILE);
+            }
+
+            return buffer;
+        } catch (e) {
+            console.error(e);
+
+            if (this.eventEmitter) {
+                this.eventEmitter.emit(EventType.DECODED_AUDIO_FILE);
+                this.eventEmitter.emit(EventType.ERROR_DECODING_AUDIO_FILE);
+            }
         }
 
-        return buffer;
+        return null;
     }
 
     updateContext(context: AudioContext) {

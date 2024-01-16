@@ -22,5 +22,6 @@ export enum EventType {
     RECORDER_COUNT_UPDATE = "recorderCountUpdate",
     SAMPLE_RATE_CHANGED = "sampleRateChanged",
     DECODING_AUDIO_FILE = "decodingAudioFile",
-    DECODED_AUDIO_FILE = "decodedAudioFile"
+    DECODED_AUDIO_FILE = "decodedAudioFile",
+    ERROR_DECODING_AUDIO_FILE = "errorDecodingAudioFile"
 };
