@@ -13,9 +13,16 @@ export default class BufferDecoderService {
     }
 
     async decodeBufferFromFile(file: File): Promise<AudioBuffer> {
-        this.eventEmitter?.emit(EventType.DECODING_AUDIO_FILE);
+        if (this.eventEmitter) {
+            this.eventEmitter.emit(EventType.DECODING_AUDIO_FILE);
+        }
+
         const buffer = await utilFunctions.loadAudioBuffer(this.context, file);
-        this.eventEmitter?.emit(EventType.DECODED_AUDIO_FILE);
+
+        if (this.eventEmitter) {
+            this.eventEmitter.emit(EventType.DECODED_AUDIO_FILE);
+        }
+
         return buffer;
     }
 

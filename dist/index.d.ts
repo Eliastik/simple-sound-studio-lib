@@ -12,6 +12,14 @@ declare class EventEmitter {
     off(event: string, callback: EventEmitterCallback): void;
 }
 
+declare class BufferDecoderService {
+    private context;
+    private eventEmitter;
+    constructor(context: AudioContext, eventEmitter?: EventEmitter);
+    decodeBufferFromFile(file: File): Promise<AudioBuffer>;
+    updateContext(context: AudioContext): void;
+}
+
 declare class BufferFetcherService {
     private context;
     private buffers;
@@ -78,6 +86,7 @@ declare abstract class AbstractAudioElement {
     private enabled;
     private defaultEnabled;
     bufferFetcherService: BufferFetcherService | null;
+    bufferDecoderService: BufferDecoderService | null;
     configService: ConfigService | null;
     /** Returns the order in which the filter/renderer needs to be applied */
     abstract get order(): number;
@@ -115,7 +124,7 @@ interface SelectFormValue {
     additionalData?: GenericSettingValueAdditionalData;
 }
 
-type FilterSettingValue = string | number | SelectFormValue | string[] | undefined;
+type FilterSettingValue = string | number | File | SelectFormValue | string[] | undefined;
 interface FilterSettings {
     [key: string]: FilterSettingValue;
     downloadedBuffers?: string[];
@@ -812,7 +821,9 @@ declare enum EventType {
     RECORDER_PAUSED = "recorderPaused",
     RECORDER_RESETED = "recorderReseted",
     RECORDER_COUNT_UPDATE = "recorderCountUpdate",
-    SAMPLE_RATE_CHANGED = "sampleRateChanged"
+    SAMPLE_RATE_CHANGED = "sampleRateChanged",
+    DECODING_AUDIO_FILE = "decodingAudioFile",
+    DECODED_AUDIO_FILE = "decodedAudioFile"
 }
 
 export { AbstractAudioElement, AbstractAudioFilter, AbstractAudioFilterWorklet, AbstractAudioRenderer, AudioEditor, type AudioFilterEntrypointInterface, type AudioFilterNodes, BufferPlayer, type ConfigService, Constants, EventEmitter, type EventEmitterCallback, EventType, type FilterSettingValue, type FilterSettings, type FilterState, GenericConfigService, type GenericSettingValueAdditionalData, type RecorderSettings, type SelectFormValue, utilFunctions as UtilFunctions, VoiceRecorder };

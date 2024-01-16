@@ -12,7 +12,7 @@ export default abstract class AbstractAudioFilter extends AbstractAudioElement {
     abstract getSettings(): FilterSettings;
     /** Set a filter setting */
     abstract setSetting(settingId: string, value: FilterSettingValue): Promise<void>;
-    
+
     /** Get the amount of time this filter add to the audio */
     getAddingTime(): number {
         return 0;
@@ -29,13 +29,13 @@ export default abstract class AbstractAudioFilter extends AbstractAudioElement {
     }
 
     /** Reset the default settings of this filter */
-    public resetSettings() {
-        if(this.defaultSettings) {
-            Object.keys(this.defaultSettings).forEach(key => {
-                if(this.defaultSettings && typeof(this.defaultSettings[key]) !== "undefined") {
-                    this.setSetting(key, this.defaultSettings[key]);
+    public async resetSettings() {
+        if (this.defaultSettings) {
+            for (const key in this.defaultSettings) {
+                if (this.defaultSettings && typeof (this.defaultSettings[key]) !== "undefined") {
+                    await this.setSetting(key, this.defaultSettings[key]);
                 }
-            });
+            }
         }
     }
 

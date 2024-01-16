@@ -15,16 +15,31 @@ export default class ReverbFilter extends AbstractAudioFilter {
     getNode(context: BaseAudioContext) {
         const convolver = context.createConvolver();
 
-        if (this.reverbEnvironment && this.reverbEnvironment.url != "custom" && this.bufferFetcherService) {
-            convolver.buffer = this.bufferFetcherService.getAudioBuffer(this.reverbEnvironment.url)!;
-        } else {
-            convolver.buffer = this.customEnvironment;
+        if (!this.reverbEnvironment || (this.reverbEnvironment.url == "custom" && !this.customEnvironment)) {
+            // Fallback to default environment otherwise
+            this.reverbEnvironment = Constants.DEFAULT_REVERB_ENVIRONMENT;
+        }
+
+        const buffer = this.getReverbBuffer();
+
+        if (buffer) {
+            convolver.buffer = buffer;
         }
 
         return {
             input: convolver,
             output: convolver
         };
+    }
+
+    private getReverbBuffer(): AudioBuffer | undefined {
+        if (this.reverbEnvironment.url == "custom" && this.customEnvironment) {
+            return this.customEnvironment;
+        } else if (this.bufferFetcherService) {
+            return this.bufferFetcherService.getAudioBuffer(this.reverbEnvironment.url);
+        }
+
+        return;
     }
 
     get order(): number {
@@ -109,7 +124,7 @@ export default class ReverbFilter extends AbstractAudioFilter {
                 this.reverbCustomEnvironmentAddTime = parseInt(value as string);
             }
         } else if (settingId == "reverbCustomEnvironmentFile") {
-            if (this.bufferDecoderService) {
+            if (this.bufferDecoderService && value) {
                 this.customEnvironment = await this.bufferDecoderService.decodeBufferFromFile(value as File);
             }
         }

@@ -670,11 +670,11 @@ export default class AudioEditor extends AbstractAudioElement {
      * Reset the settings of a filter/renderer
      * @param filterId Id of the filter/renderer
      */
-    resetFilterSettings(filterId: string) {
+    async resetFilterSettings(filterId: string) {
         const filter = this.filters.find(f => f.id === filterId);
 
         if (filter) {
-            filter.resetSettings();
+            await filter.resetSettings();
             this.reconnectNodesIfNeeded();
         }
     }
