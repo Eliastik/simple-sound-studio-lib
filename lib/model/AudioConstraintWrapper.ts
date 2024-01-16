@@ -1,4 +1,4 @@
-import AudioConstraint from "./AudioConstraint";
+import { AudioConstraint } from "./AudioConstraint";
 
 export default interface AudioConstraintWrapper {
     audio: AudioConstraint

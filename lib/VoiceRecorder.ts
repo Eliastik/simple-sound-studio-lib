@@ -29,7 +29,7 @@ import { ConfigService } from "./services/ConfigService";
 import AbstractAudioElement from "./filters/interfaces/AbstractAudioElement";
 import Constants from "./model/Constants";
 import { EventEmitterCallback } from "./model/EventEmitterCallback";
-import AudioConstraint from "./model/AudioConstraint";
+import { AudioConstraint } from "./model/AudioConstraint";
 import Recorder from "./recorder/Recorder";
 
 export default class VoiceRecorder extends AbstractAudioElement {
@@ -47,11 +47,13 @@ export default class VoiceRecorder extends AbstractAudioElement {
         audio: {
             noiseSuppression: true,
             echoCancellation: true,
-            autoGainControl: true
+            autoGainControl: true,
+            sampleRate: { ideal: 44100 }
         }
     };
     private eventEmitter: EventEmitter | null = null;
     private previousSampleRate = Constants.DEFAULT_SAMPLE_RATE;
+    private sampleRateConfigNotSupported = false;
 
     constructor(context?: AudioContext | null, eventEmitter?: EventEmitter, configService?: ConfigService) {
         super();
@@ -69,6 +71,10 @@ export default class VoiceRecorder extends AbstractAudioElement {
         if (!this.isRecordingAvailable()) {
             return;
         }
+
+        // Specific case: Firefox doesn't support changing sample-rate for MediaDevice API
+        // In this case we disable sample-rate config feature for this VoiceRecorder
+        this.sampleRateConfigNotSupported = !navigator.mediaDevices.getSupportedConstraints().sampleRate;
 
         if (!this.context) {
             await this.createNewContext(this.previousSampleRate);
@@ -96,7 +102,19 @@ export default class VoiceRecorder extends AbstractAudioElement {
 
             this.successCallback();
         } catch (e) {
-            this.errorCallback();
+            console.error(e);
+
+            const exception = e as DOMException;
+
+            if (exception) {
+                switch (exception.name) {
+                case "SecurityError":
+                case "AbortError":
+                case "NotAllowedError":
+                    this.errorCallback();
+                    break;
+                }
+            }
         }
 
         navigator.mediaDevices.ondevicechange = () => this.updateInputList();
@@ -131,11 +149,12 @@ export default class VoiceRecorder extends AbstractAudioElement {
             latencyHint: "balanced"
         };
 
-        if (sampleRate != 0) {
+        if (sampleRate != 0 && !this.sampleRateConfigNotSupported) {
             options.sampleRate = sampleRate;
         }
 
         this.context = new AudioContext(options);
+        this.constraints.audio.sampleRate = { ideal: this.context.sampleRate };
     }
 
     private successCallback() {

@@ -1,4 +1,4 @@
-import AudioConstraint from "./AudioConstraint";
+import { AudioConstraint } from "./AudioConstraint";
 
 export interface RecorderSettings {
     deviceList: MediaDeviceInfo[],

@@ -145,7 +145,7 @@ declare abstract class AbstractAudioFilter extends AbstractAudioElement {
     /** Returns the default settings of this filter */
     getDefaultSettings(): FilterSettings | null;
     /** Reset the default settings of this filter */
-    resetSettings(): void;
+    resetSettings(): Promise<void>;
     /** Return if the current filter use an audio worklet */
     isWorklet(): boolean;
 }
@@ -415,7 +415,7 @@ declare class AudioEditor extends AbstractAudioElement {
      * Reset the settings of a filter/renderer
      * @param filterId Id of the filter/renderer
      */
-    resetFilterSettings(filterId: string): void;
+    resetFilterSettings(filterId: string): Promise<void>;
     /**
      * Reset all filters/renderers state (enabled/disabled) based on their default states
      */
@@ -449,13 +449,20 @@ declare class AudioEditor extends AbstractAudioElement {
     private downloadAudioBlob;
 }
 
+interface ConstraintULong {
+    min?: number;
+    max?: number;
+    ideal?: number;
+    exact?: number;
+}
 interface AudioConstraint {
-    [key: string]: string | boolean | undefined;
+    [key: string]: ConstraintULong | string | number | boolean | undefined;
     noiseSuppression?: boolean;
     echoCancellation?: boolean;
     autoGainControl?: boolean;
     deviceId?: string;
     groupId?: string;
+    sampleRate?: ConstraintULong;
 }
 
 interface RecorderSettings {
@@ -477,6 +484,7 @@ declare class VoiceRecorder extends AbstractAudioElement {
     private constraints;
     private eventEmitter;
     private previousSampleRate;
+    private sampleRateConfigNotSupported;
     constructor(context?: AudioContext | null, eventEmitter?: EventEmitter, configService?: ConfigService);
     /** Initialize this voice recorder */
     init(): Promise<void>;
