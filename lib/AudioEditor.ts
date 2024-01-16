@@ -344,6 +344,8 @@ export default class AudioEditor extends AbstractAudioElement {
 
             if (this.principalBuffer) {
                 this.sumPrincipalBuffer = utils.sumAudioBuffer(this.principalBuffer);
+            } else {
+                throw new Error("Error decoding audio file");
             }
         } else {
             throw new Error("Audio Context is not ready!");
