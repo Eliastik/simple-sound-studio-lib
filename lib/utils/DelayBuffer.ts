@@ -15,21 +15,18 @@ export default class DelayBuffer {
         this.length = this._array.length;
         this.readPointer = 0;
         this.writePointer = this.n - 1;
-
-        for (let i = 0; i < this.length; i++) {
-            this._array[i] = 0;
-        }
+        this._array.fill(0);
     }
 
     read() {
         const value = this._array[this.readPointer % this.length];
-        this.readPointer++;
+        this.readPointer = (this.readPointer + 1) % this.length;
         return value;
     }
 
     push(v: number) {
         this._array[this.writePointer % this.length] = v;
-        this.writePointer++;
+        this.writePointer = (this.writePointer + 1) % this.length;
     }
 
     reset() {
@@ -41,5 +38,9 @@ export default class DelayBuffer {
         this.length = 0;
         this.readPointer = 0;
         this.writePointer = 0;
+    }
+
+    sum() {
+        return this._array.reduce((a, b) => a + b, 0);
     }
 }
