@@ -5,8 +5,12 @@ import SoundtouchCustomFilter from "../../utils/SoundtouchCustomFilter";
 import SoundtouchWorkletOptions from "../../model/SoundtouchWorkletOptions";
 import Constants from "../../model/Constants";
 import SoundtouchWorkletMessage from "../../model/SoundtouchWorkletMessage";
+import DelayBuffer from "@/utils/DelayBuffer";
+
+const QUALITY_MULTIPLIER = 1;
 
 class SoundTouchWorkletProcessor extends AudioWorkletProcessor {
+    
     private name: string;
     private options: SoundtouchWorkletOptions; // Change the type accordingly
     nOutputFrames: number;
@@ -20,6 +24,12 @@ class SoundTouchWorkletProcessor extends AudioWorkletProcessor {
     private inSamples: Float32Array;
     private outSamples: Float32Array;
     private running = false;
+
+    private outputDelayBuffer: DelayBuffer[] = [];
+    private inputDelayBuffer: DelayBuffer[] = [];
+
+    // TEMPO
+    private frameCount = 0;
 
     constructor(options: AudioWorkletNodeOptions) {
         super();
@@ -37,8 +47,10 @@ class SoundTouchWorkletProcessor extends AudioWorkletProcessor {
         this.filter = new SoundtouchCustomFilter(this.soundtouch, () => { });
         this.recordedSamples = [[], []];
 
-        this.inSamples = new Float32Array(128 * 2);
-        this.outSamples = new Float32Array(128 * 2);
+        //this.inSamples = new Float32Array(128 * 2);
+        //this.outSamples = new Float32Array(128 * 2);
+        this.inSamples = new Float32Array(128 * 2 * QUALITY_MULTIPLIER);
+        this.outSamples = new Float32Array(128 * 2 * QUALITY_MULTIPLIER);
 
         this.port.onmessage = this.messageProcessor.bind(this);
         this.process = this.process.bind(this);
@@ -149,7 +161,7 @@ class SoundTouchWorkletProcessor extends AudioWorkletProcessor {
                 return false;
             }
         } else {
-            if (this.nVirtualOutputFrames <= this.options.nInputFrames) {
+            if (this.nVirtualOutputFrames <= this.options.nInputFrames * 2 * QUALITY_MULTIPLIER) {
                 const nOutputFrames = this.processFilter(inputs[0], outputs[0]);
                 this.nVirtualOutputFrames += nOutputFrames * this.soundtouch.tempo;
             } else {
@@ -193,23 +205,65 @@ class SoundTouchWorkletProcessor extends AudioWorkletProcessor {
 
         const inSamples = this.inSamples; // LR Interleaved for soundtouch
 
+        for(let channel = 0; channel < 2; channel++) { // TODO magic number 2 = nb of channels
+            // Setup output delay buffer
+            if (this.outputDelayBuffer[channel] == null) {
+                this.outputDelayBuffer[channel] = new DelayBuffer(4096 * 2 * QUALITY_MULTIPLIER);
+            }
+
+            // Setup input delay buffer
+            if (this.inputDelayBuffer[channel] == null) {
+                this.inputDelayBuffer[channel] = new DelayBuffer(4096 * QUALITY_MULTIPLIER); // TODO magic number
+            }
+        }
+
         for (let i = 0; i < inputBuffer[0].length; i++) {
-            inSamples[2 * i] = leftIn[i];
-            inSamples[2 * i + 1] = rightIn[i];
+            this.inputDelayBuffer[0].push(leftIn[i]);
+            this.inputDelayBuffer[1].push(rightIn[i]);
+        }
+
+        // Read lot of buffer
+        for (let i = 0; i < 128 * QUALITY_MULTIPLIER; i++) { // TODO magic number
+            inSamples[2 * i] = this.inputDelayBuffer[0].read();
+            inSamples[2 * i + 1] = this.inputDelayBuffer[1].read();
         }
 
         this.filter.putSource(inSamples);
 
-        const framesExtracted = this.filter.extract(this.outSamples, 128);
+        const framesExtracted = this.filter.extract(this.outSamples, 128 * QUALITY_MULTIPLIER);
+
+        const sumOutput = this.outputDelayBuffer.reduce((acc, delayBuffer) => {
+            return acc + delayBuffer.sum();
+        }, 0);
+
+        const sumInput = this.inputDelayBuffer.reduce((acc, delayBuffer) => {
+            return acc + delayBuffer.sum();
+        }, 0);
+
+        this.frameCount += 128;
+
+        if (sumOutput > 0 && sumInput > 0 && this.frameCount % 24000 == 0) {
+            console.log(framesExtracted, this.outputDelayBuffer, this.inputDelayBuffer, this.outSamples, this.inSamples, inSamples.length, this.soundtouch.tempo, this.filter);
+        }
 
         for (let i = 0; i < framesExtracted; i++) {
-            left[i] = this.outSamples[i * 2];
-            right[i] = this.outSamples[i * 2 + 1];
+            let leftSample = this.outSamples[i * 2];
+            let rightSample = this.outSamples[i * 2 + 1];
 
-            if (isNaN(left[i]) || isNaN(right[i])) {
-                left[i] = 0;
-                right[i] = 0;
+            if (isNaN(leftSample) || isNaN(rightSample)) {
+                leftSample = 0;
+                rightSample = 0;
             }
+
+            // Set delayed samples
+            this.outputDelayBuffer[0].push(leftSample);
+            this.outputDelayBuffer[1].push(rightSample);
+        }
+
+        // Read delayed samples
+        for (let i = 0; i < 128; i++) { // TODO 128 = buffer size for audio worklet
+            left[i] = this.outputDelayBuffer[0].read();
+            right[i] = this.outputDelayBuffer[1].read();
         }
 
         return framesExtracted;
