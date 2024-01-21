@@ -256,7 +256,7 @@ export default class AudioEditor extends AbstractAudioElement {
             if (reverbSettings) {
                 const reverbUrl = (reverbSettings as ReverbSettings).reverbEnvironment?.value;
 
-                if (reverbUrl) {
+                if (reverbUrl && reverbUrl !== "custom") {
                     await this.bufferFetcherService.fetchBuffer(reverbUrl);
                 }
             }

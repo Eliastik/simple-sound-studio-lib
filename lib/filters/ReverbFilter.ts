@@ -20,7 +20,7 @@ export default class ReverbFilter extends AbstractAudioFilter {
             this.reverbEnvironment = Constants.DEFAULT_REVERB_ENVIRONMENT;
         }
 
-        const buffer = this.getReverbBuffer();
+        const buffer = this.getReverbBuffer(context);
 
         if (buffer) {
             convolver.buffer = buffer;
@@ -32,9 +32,13 @@ export default class ReverbFilter extends AbstractAudioFilter {
         };
     }
 
-    private getReverbBuffer(): AudioBuffer | undefined {
+    private getReverbBuffer(context: BaseAudioContext): AudioBuffer | undefined {
         if (this.reverbEnvironment.url == "custom" && this.customEnvironment) {
-            return this.customEnvironment;
+            if (this.customEnvironment.sampleRate === context.sampleRate) {
+                return this.customEnvironment;
+            } else {
+                this.reverbEnvironment = Constants.DEFAULT_REVERB_ENVIRONMENT;
+            }
         } else if (this.bufferFetcherService) {
             return this.bufferFetcherService.getAudioBuffer(this.reverbEnvironment.url);
         }
