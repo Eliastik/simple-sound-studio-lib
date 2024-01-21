@@ -60,9 +60,9 @@ export default class SoundtouchWrapperFilter extends AbstractAudioFilterWorklet 
                     output: bufferSource
                 };
             } else {
-                // If audio worklet is enabled for soundtouch, and if the speed of audio is equal or less than 1
-                // Soundtouch Audio Worklet don't support speed editing > 1 yet
-                if(this.isAudioWorkletEnabled() && utils.isAudioWorkletCompatible(context) && this.speedAudio <= 1) {
+                // If audio worklet is enabled for soundtouch, and if the speed of audio is untouched
+                // Soundtouch Audio Worklet don't support speed editing yet
+                if(this.isAudioWorkletEnabled() && utils.isAudioWorkletCompatible(context) && this.speedAudio == 1) {
                     return this.renderWithWorklet(buffer, context);
                 } else {
                     return this.renderWithScriptProcessorNode(buffer, context);
@@ -210,7 +210,7 @@ export default class SoundtouchWrapperFilter extends AbstractAudioFilterWorklet 
             if(this.speedAudio == 1 && this.frequencyAudio == 1) {
                 return null;
             } else {
-                if(this.isAudioWorkletEnabled() && this.currentPitchShifterWorklet && this.speedAudio <= 1) {
+                if(this.isAudioWorkletEnabled() && this.currentPitchShifterWorklet && this.speedAudio == 1) {
                     return this.currentPitchShifterWorklet;
                 } else {
                     return this.currentPitchShifter;
