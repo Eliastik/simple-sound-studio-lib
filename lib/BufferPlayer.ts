@@ -51,14 +51,14 @@ export default class BufferPlayer extends AbstractAudioElement {
     }
 
     /** Init this buffer player */
-    init() {
+    init(direct?: boolean) {
         this.playing = false;
 
         if (this.context) {
             this.context.resume();
 
             if (!this.compatibilityMode && this.buffer) {
-                if (this.source != null) this.source.disconnect();
+                if (this.source != null && !direct) this.source.disconnect();
                 this.source = this.context.createBufferSource();
                 this.source.buffer = this.buffer;
                 this.duration = this.buffer.duration * this.speedAudio;
@@ -101,11 +101,14 @@ export default class BufferPlayer extends AbstractAudioElement {
     /**
      * Reset this player
      */
-    reset() {
+    reset(direct?: boolean) {
         clearInterval(this.interval!);
         this.currentTime = 0;
         this.displayTime = 0;
-        this.stop();
+
+        if (!direct) {
+            this.stop();
+        }
     }
 
     /**
@@ -135,10 +138,13 @@ export default class BufferPlayer extends AbstractAudioElement {
     /**
      * Start playing the audio
      */
-    async start() {
+    async start(direct?: boolean) {
         if (this.source || this.compatibilityMode) {
-            this.stop();
-            this.init();
+            if (!direct) {
+                this.stop();
+            }
+
+            this.init(direct);
 
             await this.onBeforePlayingCallback();
 
@@ -146,7 +152,7 @@ export default class BufferPlayer extends AbstractAudioElement {
 
             if (!this.compatibilityMode) {
                 if (this.source) {
-                    this.source.start(0, this.currentTime / this.speedAudio);
+                    this.source.start(0, direct ? 0 : this.currentTime / this.speedAudio);
                     this.playing = true;
                 } else {
                     return;
@@ -172,20 +178,27 @@ export default class BufferPlayer extends AbstractAudioElement {
                 if (this.currentTime > this.duration) {
                     if (this.loop) {
                         if (!this.compatibilityMode) {
-                            this.reset();
+                            this.reset(direct);
                             this.start();
                         } else {
                             this.eventEmitter?.emit(EventType.PLAYING_FINISHED);
                         }
                     } else {
                         this.eventEmitter?.emit(EventType.PLAYING_FINISHED);
-                        this.reset();
+                        this.reset(direct);
                     }
                 } else {
                     this.updateInfos();
                 }
             }, 100);
         }
+    }
+
+    /**
+     * Play audio directly, without stopping previous audio play
+     */
+    async playDirect() {
+        this.start(true);
     }
 
     /**

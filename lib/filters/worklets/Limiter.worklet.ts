@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with "Simple Voice Changer".  If not, see <http://www.gnu.org/licenses/>.
  */
-// Source: https://webaudiotech.com/2016/01/21/should-your-web-audio-app-have-a-limiter/
+// Source: https://webaudiotech.com/2016/01/21/should-your-web-audio-app-have-a-limiter/ (https://web.archive.org/web/20220519100003/https://webaudiotech.com/2016/01/21/should-your-web-audio-app-have-a-limiter/)
 // Original code: https://webaudiotech.com/sites/limiter_comparison/limiter.js
 // Additions by Eliastik (eliastiksofts.com): Stereo and multi-channel support, code simplified in one object class (Limiter), converted into AudioWorklet
 import Constants from "../../model/Constants";

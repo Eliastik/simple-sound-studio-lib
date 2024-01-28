@@ -542,10 +542,18 @@ export default class AudioEditor extends AbstractAudioElement {
                 if (this.bufferPlayer) {
                     this.bufferPlayer.loadBuffer(this.renderedBuffer);
                 }
+
+                if (this.eventEmitter) {
+                    this.eventEmitter.emit(EventType.OFFLINE_AUDIO_RENDERING_FINISHED);
+                }
             } else {
                 if (this.bufferPlayer) {
                     this.bufferPlayer.setCompatibilityMode(this.currentNodes!.output, durationAudio);
                 }
+            }
+
+            if (this.eventEmitter) {
+                this.eventEmitter.emit(EventType.AUDIO_RENDERING_FINISHED);
             }
         }
     }

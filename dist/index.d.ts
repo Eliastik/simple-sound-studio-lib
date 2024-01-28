@@ -172,7 +172,7 @@ declare class BufferPlayer extends AbstractAudioElement {
     currentNode: AudioNode | null;
     constructor(context: AudioContext | OfflineAudioContext | null, eventEmitter?: EventEmitter);
     /** Init this buffer player */
-    init(): void;
+    init(direct?: boolean): void;
     /**
      * Load an audio buffer
      * @param buffer The buffer
@@ -187,7 +187,7 @@ declare class BufferPlayer extends AbstractAudioElement {
     /**
      * Reset this player
      */
-    reset(): void;
+    reset(direct?: boolean): void;
     /**
      * Stop playing the audio
      */
@@ -195,7 +195,11 @@ declare class BufferPlayer extends AbstractAudioElement {
     /**
      * Start playing the audio
      */
-    start(): Promise<void>;
+    start(direct?: boolean): Promise<void>;
+    /**
+     * Play audio directly, without stopping previous audio play
+     */
+    playDirect(): Promise<void>;
     /**
      * Pause the audio
      */
@@ -816,6 +820,8 @@ declare enum EventType {
     LOADED_BUFFERS = "loadedBuffers",
     COMPATIBILITY_MODE_AUTO_ENABLED = "compatibilityModeAutoEnabled",
     RENDERING_AUDIO_PROBLEM_DETECTED = "renderingAudioProblemDetected",
+    AUDIO_RENDERING_FINISHED = "audioRenderingFinished",
+    OFFLINE_AUDIO_RENDERING_FINISHED = "offlineAudioRenderingFinished",
     PLAYING_STOPPED = "playingStopped",
     PLAYING_STARTED = "playingStarted",
     PLAYING_FINISHED = "playingFinished",

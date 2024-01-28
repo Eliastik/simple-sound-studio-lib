@@ -7,6 +7,8 @@ export enum EventType {
     LOADED_BUFFERS = "loadedBuffers",
     COMPATIBILITY_MODE_AUTO_ENABLED = "compatibilityModeAutoEnabled",
     RENDERING_AUDIO_PROBLEM_DETECTED = "renderingAudioProblemDetected",
+    AUDIO_RENDERING_FINISHED = "audioRenderingFinished",
+    OFFLINE_AUDIO_RENDERING_FINISHED = "offlineAudioRenderingFinished",
     PLAYING_STOPPED = "playingStopped",
     PLAYING_STARTED = "playingStarted",
     PLAYING_FINISHED = "playingFinished",
