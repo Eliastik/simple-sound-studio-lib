@@ -198,7 +198,12 @@ export default class BufferPlayer extends AbstractAudioElement {
      * Play audio directly, without stopping previous audio play
      */
     async playDirect() {
-        this.start(true);
+        if (!this.compatibilityMode) {
+            this.start(true);
+        } else {
+            // Play direct is not possible when compatibility mode is enabled
+            this.start(false);
+        }
     }
 
     /**
