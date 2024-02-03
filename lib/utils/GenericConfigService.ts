@@ -74,10 +74,10 @@ export default class GenericConfigService implements ConfigService {
     }
 
     getWorkletBasePath(): string {
-        return "worklets/";
+        return "";
     }
 
     getSoundBasePath(): string {
-        return "static/sounds/";
+        return "";
     }
 };
