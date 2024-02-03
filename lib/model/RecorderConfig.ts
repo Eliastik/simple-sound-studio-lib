@@ -5,5 +5,6 @@ export default interface RecorderConfig {
     numChannels: number,
     mimeType: "audio/wav",
     sampleRate: number,
+    workletBasePath: string,
     callback?: RecorderCallback<Blob | Float32Array[]>
 };

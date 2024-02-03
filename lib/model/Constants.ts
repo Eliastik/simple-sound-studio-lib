@@ -21,10 +21,10 @@ const Constants = {
         VOCODER: "vocoder"
     },
     WORKLET_PATHS: {
-        BITCRUSHER: "worklets/BitCrusher.worklet.js",
-        LIMITER: "worklets/Limiter.worklet.js",
-        SOUNDTOUCH: "worklets/Soundtouch.worklet.js",
-        RECORDER_WORKLET: "worklets/RecorderWorklet.js"
+        BITCRUSHER: "BitCrusher.worklet.js",
+        LIMITER: "Limiter.worklet.js",
+        SOUNDTOUCH: "Soundtouch.worklet.js",
+        RECORDER_WORKLET: "RecorderWorklet.js"
     },
     WORKLET_NAMES: {
         BITCRUSHER: "bitcrusher-processor",
@@ -48,7 +48,7 @@ const Constants = {
     SOUNDTOUCH_PITCH_SHIFTER_BUFFER_SIZE: 16384,
     DEFAULT_REVERB_ENVIRONMENT: {
         name: "Medium Damping Cave E002 M2S",
-        url: "static/sounds/impulse_response.wav",
+        url: "impulse_response.wav",
         size: 1350278,
         addDuration: 4,
         link: "http://www.cksde.com/p_6_250.htm"

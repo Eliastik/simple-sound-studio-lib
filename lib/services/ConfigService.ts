@@ -51,4 +51,14 @@ export interface ConfigService {
      * Disable the compatibility/direct audio rendering mode
      */
     disableCompatibilityMode(): void;
+
+    /**
+     * Return the base path for worklet files
+     */
+    getWorkletBasePath(): string;
+
+    /**
+     * Return the base path for audio files (reverb environments for example)
+     */
+    getSoundBasePath(): string;
 };

@@ -77,7 +77,7 @@ export default class AudioEditor extends AbstractAudioElement {
         this.eventEmitter = eventEmitter || new EventEmitter();
         this.bufferPlayer = player || new BufferPlayer(context!);
         this.configService = configService || new GenericConfigService();
-        this.bufferFetcherService = new BufferFetcherService(this.currentContext!, this.eventEmitter);
+        this.bufferFetcherService = new BufferFetcherService(this.currentContext!, this.configService, this.eventEmitter);
         this.bufferDecoderService = new BufferDecoderService(this.currentContext!, this.eventEmitter);
         this.audioBuffersToFetch = audioBuffersToFetch || [];
 
@@ -810,6 +810,7 @@ export default class AudioEditor extends AbstractAudioElement {
                         bufferLen: this.configService.getBufferSize(),
                         sampleRate: this.configService.getSampleRate(),
                         numChannels: 2,
+                        workletBasePath: this.configService.getWorkletBasePath(),
                         mimeType: "audio/wav"
                     });
 

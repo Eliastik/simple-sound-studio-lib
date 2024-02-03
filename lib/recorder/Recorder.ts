@@ -18,6 +18,7 @@ export class Recorder {
         sampleRate: 44100,
         numChannels: 2,
         mimeType: "audio/wav",
+        workletBasePath: "worklets/",
         callback: () => { }
     };
 
@@ -104,7 +105,7 @@ export class Recorder {
 
     private async createRecorderWorklet() {
         if (this.context) {
-            await this.context.audioWorklet.addModule(Constants.WORKLET_PATHS.RECORDER_WORKLET);
+            await this.context.audioWorklet.addModule(this.config.workletBasePath + Constants.WORKLET_PATHS.RECORDER_WORKLET);
 
             this.node = new AudioWorkletNode(this.context, Constants.WORKLET_NAMES.RECORDER_WORKLET);
 

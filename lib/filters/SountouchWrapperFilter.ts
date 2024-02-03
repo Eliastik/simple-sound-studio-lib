@@ -137,7 +137,7 @@ export default class SoundtouchWrapperFilter extends AbstractAudioFilterWorklet 
             }
 
             // Setup worklet JS module
-            await context.audioWorklet.addModule(Constants.WORKLET_PATHS.SOUNDTOUCH);
+            await context.audioWorklet.addModule((this.configService ? this.configService.getWorkletBasePath() : "") + Constants.WORKLET_PATHS.SOUNDTOUCH);
     
             // Setup an audio buffer source from the audio buffer
             const bufferSource = context.createBufferSource();

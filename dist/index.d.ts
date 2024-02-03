@@ -20,22 +20,6 @@ declare class BufferDecoderService {
     updateContext(context: AudioContext): void;
 }
 
-declare class BufferFetcherService {
-    private context;
-    private buffers;
-    private bufferErrors;
-    private eventEmitter;
-    constructor(context: AudioContext, eventEmitter?: EventEmitter);
-    fetchBuffer(bufferURI: string, force?: boolean): Promise<void>;
-    fetchAllBuffers(bufferURIs: string[]): Promise<void>;
-    getAudioBuffer(filename: string): AudioBuffer | undefined;
-    getOrFetchAudioBuffer(filename: string): Promise<AudioBuffer | undefined>;
-    getDownloadedBuffersList(): string[];
-    private getKeyFromLocation;
-    updateContext(context: AudioContext): void;
-    reset(): void;
-}
-
 interface ConfigService {
     /**
      * Get config with a key
@@ -80,6 +64,31 @@ interface ConfigService {
      * Disable the compatibility/direct audio rendering mode
      */
     disableCompatibilityMode(): void;
+    /**
+     * Return the base path for worklet files
+     */
+    getWorkletBasePath(): string;
+    /**
+     * Return the base path for audio files (reverb environments for example)
+     */
+    getSoundBasePath(): string;
+}
+
+declare class BufferFetcherService {
+    private context;
+    private buffers;
+    private bufferErrors;
+    private eventEmitter;
+    private configService;
+    constructor(context: AudioContext, configService: ConfigService, eventEmitter?: EventEmitter);
+    fetchBuffer(bufferURI: string, force?: boolean): Promise<void>;
+    fetchAllBuffers(bufferURIs: string[]): Promise<void>;
+    getAudioBuffer(filename: string): AudioBuffer | undefined;
+    getOrFetchAudioBuffer(filename: string): Promise<AudioBuffer | undefined>;
+    getDownloadedBuffersList(): string[];
+    private getKeyFromLocation;
+    updateContext(context: AudioContext): void;
+    reset(): void;
 }
 
 declare abstract class AbstractAudioElement {
@@ -788,6 +797,8 @@ declare class GenericConfigService implements ConfigService {
     getSampleRate(): number;
     enableCompatibilityMode(): void;
     disableCompatibilityMode(): void;
+    getWorkletBasePath(): string;
+    getSoundBasePath(): string;
 }
 
 declare const utilFunctions: {

@@ -34,9 +34,11 @@ export default abstract class AbstractAudioFilterWorklet extends AbstractAudioFi
             return;
         }
 
-        await audioContext.audioWorklet.addModule(this.workletPath)
+        const workletPath = (this.configService ? this.configService.getWorkletBasePath() : "") + this.workletPath;
+
+        await audioContext.audioWorklet.addModule(workletPath)
             .catch(e => {
-                console.error(`Error when loading Worklet (${this.workletPath}) for filter ${this.id}. Fallback to ScriptProcessor. Exception:`, e);
+                console.error(`Error when loading Worklet (${workletPath}) for filter ${this.id}. Fallback to ScriptProcessor. Exception:`, e);
                 this.fallbackToScriptProcessor = true;
             });
     }

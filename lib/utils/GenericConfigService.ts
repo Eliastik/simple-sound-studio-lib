@@ -72,4 +72,12 @@ export default class GenericConfigService implements ConfigService {
     disableCompatibilityMode() {
         this.setConfig(Constants.PREFERENCES_KEYS.COMPATIBILITY_MODE_ENABLED, "false");
     }
+
+    getWorkletBasePath(): string {
+        return "worklets/";
+    }
+
+    getSoundBasePath(): string {
+        return "static/sounds/";
+    }
 };
