@@ -122,7 +122,7 @@ class LimiterProcessor extends AudioWorkletProcessor {
             }
 
             // apply pre gain to signal
-            if (inp) {
+            if (inp && out) {
                 for (let k = 0; k < inp.length; ++k) {
                     if (!this.disabled) {
                         out[k] = preGainAmp * inp[k];
@@ -133,7 +133,7 @@ class LimiterProcessor extends AudioWorkletProcessor {
             }
 
             // compute the envelope
-            if (!this.disabled) {
+            if (!this.disabled && out) {
                 envelopeData[channel] = this.getEnvelope(out, parameters.attackTime[0], parameters.releaseTime[0], sampleRate);
             }
         }
@@ -142,7 +142,7 @@ class LimiterProcessor extends AudioWorkletProcessor {
             const inp = inputBuffer[channel];
             const out = outputBuffer[channel];
 
-            if (parameters.lookAheadTime[0] > 0) {
+            if (parameters.lookAheadTime[0] > 0 && out) {
                 // write signal into buffer and read delayed signal
                 for (let i = 0; i < out.length; i++) {
                     this.delayBuffer[channel].push(out[i]);
@@ -158,7 +158,7 @@ class LimiterProcessor extends AudioWorkletProcessor {
             // limiter mode: slope is 1
             const slope = 1;
 
-            if (inp) {
+            if (inp && out) {
                 for (let i = 0; i < inp.length; i++) {
                     let gainDB = slope * (parameters.threshold[0] - this.ampToDB(this.getMaxEnvelope(envelopeData, outputBuffer.length, i))); // max gain
 

@@ -49,7 +49,7 @@ class BitCrusherProcessor extends AudioWorkletProcessor {
                 const inp = input[channel];
                 const out = output[channel];
 
-                if (inp) {
+                if (inp && out) {
                     for (let i = 0; i < blockSize; i++) {
                         this.phaser[channel] += currentNormFreq;
 
