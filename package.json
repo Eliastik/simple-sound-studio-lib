@@ -23,21 +23,21 @@
     "@rollup/plugin-node-resolve": "^15.2.3",
     "@rollup/plugin-terser": "^0.4.4",
     "@rollup/plugin-typescript": "^11.1.6",
-    "@types/audioworklet": "^0.0.53",
+    "@types/audioworklet": "^0.0.54",
     "@types/lodash": "^4.14.202",
-    "@types/node": "^20.11.16",
-    "@types/semver": "^7.5.6",
-    "@typescript-eslint/eslint-plugin": "^6.21.0",
-    "@typescript-eslint/parser": "^6.21.0",
+    "@types/node": "^20.11.19",
+    "@types/semver": "^7.5.7",
+    "@typescript-eslint/eslint-plugin": "^7.0.2",
+    "@typescript-eslint/parser": "^7.0.2",
     "eslint": "^8.56.0",
     "glob": "^10.3.10",
-    "rollup": "^4.9.6",
+    "rollup": "^4.12.0",
     "rollup-plugin-cleanup": "^3.2.1",
     "rollup-plugin-dts": "^6.1.0",
     "tslib": "^2.6.2",
     "typescript": "^5.3.3"
   },
   "peerDependencies": {
-    "@types/audioworklet": "^0.0.53"
+    "@types/audioworklet": "^0.0.54"
   }
 }
