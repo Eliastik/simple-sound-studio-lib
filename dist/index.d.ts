@@ -133,7 +133,7 @@ interface SelectFormValue {
     additionalData?: GenericSettingValueAdditionalData;
 }
 
-type FilterSettingValue = string | number | File | SelectFormValue | string[] | undefined;
+type FilterSettingValue = string | boolean | number | File | SelectFormValue | string[] | undefined;
 interface FilterSettings {
     [key: string]: FilterSettingValue;
     downloadedBuffers?: string[];

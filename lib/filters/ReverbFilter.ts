@@ -88,6 +88,7 @@ export default class ReverbFilter extends AbstractAudioFilter {
                 }
             },
             downloadedBuffers: this.bufferFetcherService?.getDownloadedBuffersList(),
+            hasCustomEnvironment: this.customEnvironment ? true : false,
             reverbCustomEnvironmentAddTime: this.reverbCustomEnvironmentAddTime
         };
     }

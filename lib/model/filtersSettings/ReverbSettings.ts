@@ -3,5 +3,6 @@ import GenericSettingValue from "./GenericSettingValue";
 
 export default interface ReverbSettings extends FilterSettings {
     reverbEnvironment?: GenericSettingValue,
+    hasCustomEnvironment?: boolean,
     reverbCustomEnvironmentAddTime?: number
 };
