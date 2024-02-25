@@ -25,5 +25,7 @@ export enum EventType {
     SAMPLE_RATE_CHANGED = "sampleRateChanged",
     DECODING_AUDIO_FILE = "decodingAudioFile",
     DECODED_AUDIO_FILE = "decodedAudioFile",
-    ERROR_DECODING_AUDIO_FILE = "errorDecodingAudioFile"
+    ERROR_DECODING_AUDIO_FILE = "errorDecodingAudioFile",
+    RECORDER_NOT_FOUND_ERROR = "recorderNotFoundError",
+    RECORDER_UNKNOWN_ERROR = "recorderUnknownError"
 };

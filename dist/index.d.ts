@@ -511,6 +511,8 @@ declare class VoiceRecorder extends AbstractAudioElement {
     private createNewContext;
     private successCallback;
     private errorCallback;
+    private notFoundErrorCallback;
+    private unknownErrorCallback;
     /**
      * Enable or disable audio feedback
      * @param enable boolean
@@ -849,7 +851,9 @@ declare enum EventType {
     SAMPLE_RATE_CHANGED = "sampleRateChanged",
     DECODING_AUDIO_FILE = "decodingAudioFile",
     DECODED_AUDIO_FILE = "decodedAudioFile",
-    ERROR_DECODING_AUDIO_FILE = "errorDecodingAudioFile"
+    ERROR_DECODING_AUDIO_FILE = "errorDecodingAudioFile",
+    RECORDER_NOT_FOUND_ERROR = "recorderNotFoundError",
+    RECORDER_UNKNOWN_ERROR = "recorderUnknownError"
 }
 
 export { AbstractAudioElement, AbstractAudioFilter, AbstractAudioFilterWorklet, AbstractAudioRenderer, AudioEditor, type AudioFilterEntrypointInterface, type AudioFilterNodes, BufferPlayer, type ConfigService, Constants, EventEmitter, type EventEmitterCallback, EventType, type FilterSettingValue, type FilterSettings, type FilterState, GenericConfigService, type GenericSettingValueAdditionalData, type RecorderSettings, type SelectFormValue, utilFunctions as UtilFunctions, VoiceRecorder };

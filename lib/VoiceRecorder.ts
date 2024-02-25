@@ -109,9 +109,11 @@ export default class VoiceRecorder extends AbstractAudioElement {
             if (exception) {
                 switch (exception.name) {
                 case "SecurityError":
-                case "AbortError":
                 case "NotAllowedError":
                     this.errorCallback();
+                    break;
+                case "NotFoundError":
+                    this.notFoundErrorCallback();
                     break;
                 // Disable sample rate configuration
                 case "NotSupportedError":
@@ -120,6 +122,9 @@ export default class VoiceRecorder extends AbstractAudioElement {
                         this.sampleRateConfigNotSupported = true;
                         this.init();
                     }
+                    break;
+                default:
+                    this.unknownErrorCallback();
                     break;
                 }
             }
@@ -171,6 +176,14 @@ export default class VoiceRecorder extends AbstractAudioElement {
 
     private errorCallback() {
         this.eventEmitter?.emit(EventType.RECORDER_ERROR);
+    }
+
+    private notFoundErrorCallback() {
+        this.eventEmitter?.emit(EventType.RECORDER_NOT_FOUND_ERROR);
+    }
+
+    private unknownErrorCallback() {
+        this.eventEmitter?.emit(EventType.RECORDER_UNKNOWN_ERROR);
     }
 
     /**
