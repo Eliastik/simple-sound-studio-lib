@@ -39,6 +39,12 @@ export default class WorkletScriptProcessorNodeAdapter {
             }
         };
 
+        if(this.workletProcessor && this.workletProcessor.port2) {
+            this.workletProcessor.port2.onmessage = (ev) => {
+                messageChannel.port1.postMessage(ev.data);
+            };
+        }
+
         this._port = messageChannel.port2;
     }
 

@@ -22,7 +22,7 @@ class PassthroughWorkletProcessor extends AudioWorkletProcessor {
         return PassthroughWorkletProcessor.parameterDescriptors;
     }
 
-    process(inputs: Float32Array[][], outputs: Float32Array[][], parameters: Record<string, Float32Array>): boolean {
+    process(inputs: Float32Array[][], outputs: Float32Array[][]): boolean {
         if (this.stopped) return false;
 
         const input = inputs[0];
