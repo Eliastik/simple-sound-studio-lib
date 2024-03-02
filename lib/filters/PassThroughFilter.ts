@@ -9,6 +9,9 @@ export default class PassThroughFilter extends AbstractAudioFilterWorklet<PassTh
     
     private _totalSamples = 0;
     private currentTime = 0;
+    private lastSampleCount = 0;
+    private samplePerSecond = 0;
+    private currentTimeSamplesPerSecond = 0;
 
     constructor() {
         super();
@@ -20,7 +23,16 @@ export default class PassThroughFilter extends AbstractAudioFilterWorklet<PassTh
 
         if (this.eventEmitter && message.data.command === "update" && timeDifference >= Constants.TREATMENT_TIME_COUNTING_THROTTLE_INTERVAL) {
             this.eventEmitter.emit(EventType.UPDATE_AUDIO_TREATMENT_PERCENT, (message.data.samplesCount / this._totalSamples) * 100);
+            this.eventEmitter.emit(EventType.UPDATE_REMAINING_TIME_ESTIMATED, ((this._totalSamples - message.data.samplesCount) / this.samplePerSecond));
             this.currentTime = currentTime;
+        }
+
+        const timeDifferenceSamplePerSecond = currentTime - this.currentTimeSamplesPerSecond;
+        this.lastSampleCount += message.data.samplesCount;
+
+        if (timeDifferenceSamplePerSecond >= 1000) {
+            this.samplePerSecond = this.lastSampleCount / (timeDifferenceSamplePerSecond / 1000);
+            this.lastSampleCount = 0;
         }
     }
 

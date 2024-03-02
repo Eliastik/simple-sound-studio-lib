@@ -28,5 +28,6 @@ export enum EventType {
     ERROR_DECODING_AUDIO_FILE = "errorDecodingAudioFile",
     RECORDER_NOT_FOUND_ERROR = "recorderNotFoundError",
     RECORDER_UNKNOWN_ERROR = "recorderUnknownError",
-    UPDATE_AUDIO_TREATMENT_PERCENT = "updateAudioTreatmentPercent"
+    UPDATE_AUDIO_TREATMENT_PERCENT = "updateAudioTreatmentPercent",
+    UPDATE_REMAINING_TIME_ESTIMATED = "updateRemainingTimeEstimated"
 };

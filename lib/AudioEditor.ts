@@ -501,6 +501,10 @@ export default class AudioEditor extends AbstractAudioElement {
 
         this.renderedBuffer = currentBuffer;
 
+        if (this.eventEmitter) {
+            this.eventEmitter.emit(EventType.UPDATE_AUDIO_TREATMENT_PERCENT, 0);
+        }
+
         const passthroughFilter = this.filters.find(f => f.id === Constants.FILTERS_NAMES.PASSTHROUGH);
 
         if (passthroughFilter) {

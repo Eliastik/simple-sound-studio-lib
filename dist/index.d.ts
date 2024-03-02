@@ -864,7 +864,8 @@ declare enum EventType {
     ERROR_DECODING_AUDIO_FILE = "errorDecodingAudioFile",
     RECORDER_NOT_FOUND_ERROR = "recorderNotFoundError",
     RECORDER_UNKNOWN_ERROR = "recorderUnknownError",
-    UPDATE_AUDIO_TREATMENT_PERCENT = "updateAudioTreatmentPercent"
+    UPDATE_AUDIO_TREATMENT_PERCENT = "updateAudioTreatmentPercent",
+    UPDATE_REMAINING_TIME_ESTIMATED = "updateRemainingTimeEstimated"
 }
 
 export { AbstractAudioElement, AbstractAudioFilter, AbstractAudioFilterWorklet, AbstractAudioRenderer, AudioEditor, type AudioFilterEntrypointInterface, type AudioFilterNodes, BufferPlayer, type ConfigService, Constants, EventEmitter, type EventEmitterCallback, EventType, type FilterSettingValue, type FilterSettings, type FilterState, GenericConfigService, type GenericSettingValueAdditionalData, type RecorderSettings, type SelectFormValue, utilFunctions as UtilFunctions, VoiceRecorder };
