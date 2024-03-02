@@ -8,14 +8,19 @@ import { EventType } from "@/model/EventTypeEnum";
 export default class PassThroughFilter extends AbstractAudioFilterWorklet<PassThroughWorkletEvent> {
     
     private _totalSamples = 0;
+    private currentTime = 0;
 
     constructor() {
         super();
     }
 
     receiveEvent(message: MessageEvent<PassThroughWorkletEvent>): void {
-        if (this.eventEmitter && message.data.command === "update") {
+        const currentTime = performance.now();
+        const timeDifference = currentTime - this.currentTime;
+
+        if (this.eventEmitter && message.data.command === "update" && timeDifference >= Constants.TREATMENT_TIME_COUNTING_THROTTLE_INTERVAL) {
             this.eventEmitter.emit(EventType.UPDATE_AUDIO_TREATMENT_PERCENT, (message.data.samplesCount / this._totalSamples) * 100);
+            this.currentTime = currentTime;
         }
     }
 
@@ -37,6 +42,7 @@ export default class PassThroughFilter extends AbstractAudioFilterWorklet<PassTh
 
     set totalSamples(value: number) {
         this._totalSamples = value;
+        this.currentTime = performance.now();
     }
 
     getSettings() {

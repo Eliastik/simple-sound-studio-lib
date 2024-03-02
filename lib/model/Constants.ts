@@ -59,7 +59,9 @@ const Constants = {
     DEFAULT_BUFFER_SIZE: 0,
     VALID_BUFFER_SIZE: [0, 256, 512, 1024, 2048, 4096, 8192, 16384],
     DEFAULT_SAMPLE_RATE: 0, // 0 = AUTO
-    VALID_SAMPLE_RATES: [0, 8000, 11025, 16000, 22050, 32000, 44100, 48000, 88200, 96000, 176400, 192000]
+    VALID_SAMPLE_RATES: [0, 8000, 11025, 16000, 22050, 32000, 44100, 48000, 88200, 96000, 176400, 192000],
+    // Interval used by the treatment percent counter. The event will be dispatched each ms defined here
+    TREATMENT_TIME_COUNTING_THROTTLE_INTERVAL: 100
 };
 
 export default Constants;

@@ -790,6 +790,7 @@ declare const Constants: {
     VALID_BUFFER_SIZE: number[];
     DEFAULT_SAMPLE_RATE: number;
     VALID_SAMPLE_RATES: number[];
+    TREATMENT_TIME_COUNTING_THROTTLE_INTERVAL: number;
 };
 
 /**

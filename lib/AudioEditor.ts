@@ -350,6 +350,10 @@ export default class AudioEditor extends AbstractAudioElement {
             } else {
                 throw new Error("Error decoding audio file");
             }
+
+            if (this.eventEmitter) {
+                this.eventEmitter.emit(EventType.UPDATE_AUDIO_TREATMENT_PERCENT, 0);
+            }
         } else {
             throw new Error("Audio Context is not ready!");
         }
@@ -496,10 +500,6 @@ export default class AudioEditor extends AbstractAudioElement {
         }
 
         this.renderedBuffer = currentBuffer;
-
-        if (this.eventEmitter) {
-            this.eventEmitter.emit(EventType.UPDATE_AUDIO_TREATMENT_PERCENT, 0);
-        }
 
         const passthroughFilter = this.filters.find(f => f.id === Constants.FILTERS_NAMES.PASSTHROUGH);
 
