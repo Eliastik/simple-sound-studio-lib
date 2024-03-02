@@ -78,7 +78,7 @@ export default abstract class AbstractAudioFilterWorklet<T> extends AbstractAudi
             }
         }
 
-        if (this.currentWorkletNode && this.currentWorkletNode.port && this.currentWorkletNode.port.onmessage) {
+        if (this.currentWorkletNode && this.currentWorkletNode.port) {
             this.currentWorkletNode.port.onmessage = message => this.receiveEvent(message);
         }
     }

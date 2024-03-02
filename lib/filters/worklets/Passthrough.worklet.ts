@@ -28,8 +28,8 @@ class PassthroughWorkletProcessor extends AudioWorkletProcessor {
         const input = inputs[0];
         const output = outputs[0];
 
-        if (input) {
-            this.samplesCount += input.length;
+        if (input && input[0]) {
+            this.samplesCount += input[0].length;
         }
 
         if (output) {

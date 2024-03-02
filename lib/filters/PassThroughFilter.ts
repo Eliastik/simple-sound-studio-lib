@@ -3,7 +3,7 @@ import Constants from "../model/Constants";
 import "./worklets/Passthrough.worklet";
 import { FilterSettingValue } from "../model/filtersSettings/FilterSettings";
 import PassThroughWorkletEvent from "@/model/PassThroughWorkletEvent";
-import { EventType } from "..";
+import { EventType } from "@/model/EventTypeEnum";
 
 export default class PassThroughFilter extends AbstractAudioFilterWorklet<PassThroughWorkletEvent> {
     
@@ -15,7 +15,7 @@ export default class PassThroughFilter extends AbstractAudioFilterWorklet<PassTh
 
     receiveEvent(message: MessageEvent<PassThroughWorkletEvent>): void {
         if (this.eventEmitter && message.data.command === "update") {
-            this.eventEmitter.emit(EventType.UPDATE_AUDIO_TREATMENT_PERCENT, message.data.samplesCount / this.totalSamples);
+            this.eventEmitter.emit(EventType.UPDATE_AUDIO_TREATMENT_PERCENT, (message.data.samplesCount / this._totalSamples) * 100);
         }
     }
 
@@ -36,7 +36,7 @@ export default class PassThroughFilter extends AbstractAudioFilterWorklet<PassTh
     }
 
     set totalSamples(value: number) {
-        this._totalSamples = 0;
+        this._totalSamples = value;
     }
 
     getSettings() {
