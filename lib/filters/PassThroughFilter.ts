@@ -1,32 +1,42 @@
-import AbstractAudioFilter from "./interfaces/AbstractAudioFilter";
+import AbstractAudioFilterWorklet from "./interfaces/AbstractAudioFilterWorklet";
 import Constants from "../model/Constants";
+import "./worklets/Passthrough.worklet";
 import { FilterSettingValue } from "../model/filtersSettings/FilterSettings";
+import PassThroughWorkletEvent from "@/model/PassThroughWorkletEvent";
+import { EventType } from "..";
 
-export default class PassThroughFilter extends AbstractAudioFilter {
-
-    private gainNode: GainNode | undefined = undefined;
+export default class PassThroughFilter extends AbstractAudioFilterWorklet<PassThroughWorkletEvent> {
+    
+    private _totalSamples = 0;
 
     constructor() {
         super();
     }
 
-    getNode(context: BaseAudioContext) {
-        if (!this.gainNode || context != this.gainNode.context) {
-            this.gainNode = new GainNode(context);
+    receiveEvent(message: MessageEvent<PassThroughWorkletEvent>): void {
+        if (this.eventEmitter && message.data.command === "update") {
+            this.eventEmitter.emit(EventType.UPDATE_AUDIO_TREATMENT_PERCENT, message.data.samplesCount / this.totalSamples);
         }
+    }
 
-        return {
-            input: this.gainNode,
-            output: this.gainNode,
-        };
+    get workletName(): string {
+        return Constants.WORKLET_NAMES.PASSTHROUGH;
+    }
+
+    get workletPath(): string {
+        return Constants.WORKLET_PATHS.PASSTHROUGH;
     }
 
     get order(): number {
-        return Number.MAX_SAFE_INTEGER;
+        return 10;
     }
 
     get id(): string {
-        return Constants.FILTERS_NAMES.PASS_THROUGH;
+        return Constants.FILTERS_NAMES.PASSTHROUGH;
+    }
+
+    set totalSamples(value: number) {
+        this._totalSamples = 0;
     }
 
     getSettings() {
@@ -38,5 +48,5 @@ export default class PassThroughFilter extends AbstractAudioFilter {
     }
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    async setSetting(settingId: string, value: FilterSettingValue) { }
+    async setSetting(settingId: string, value: FilterSettingValue) {}
 }

@@ -14,7 +14,7 @@ const Constants = {
         HIGH_PASS: "highpass",
         LIMITER: "limiter",
         LOW_PASS: "lowpass",
-        PASS_THROUGH: "passthroughfilter",
+        PASSTHROUGH: "passthroughfilter",
         RETURN_AUDIO: "returnAudio",
         SOUNDTOUCH: "soundtouch",
         TELEPHONIZER: "telephonizer",
@@ -24,13 +24,15 @@ const Constants = {
         BITCRUSHER: "BitCrusher.worklet.js",
         LIMITER: "Limiter.worklet.js",
         SOUNDTOUCH: "Soundtouch.worklet.js",
-        RECORDER_WORKLET: "RecorderWorklet.js"
+        RECORDER_WORKLET: "RecorderWorklet.js",
+        PASSTHROUGH: "Passthrough.worklet.js"
     },
     WORKLET_NAMES: {
         BITCRUSHER: "bitcrusher-processor",
         LIMITER: "limiter-processor",
         SOUNDTOUCH: "soundtouch-worklet",
-        RECORDER_WORKLET: "recorder-worklet"
+        RECORDER_WORKLET: "recorder-worklet",
+        PASSTHROUGH: "passthrough"
     },
     PREFERENCES_KEYS: {
         COMPATIBILITY_MODE_ENABLED: "compatibility-mode-enabled",

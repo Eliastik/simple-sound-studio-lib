@@ -5,7 +5,7 @@ import "../../workletPolyfill/AudioWorkletProcessorPolyfill";
 import RegisterProcessorPolyfill from "../../workletPolyfill/RegisterProcessorPolyfill";
 import utilFunctions from "../../utils/Functions";
 
-export default abstract class AbstractAudioFilterWorklet extends AbstractAudioFilter {
+export default abstract class AbstractAudioFilterWorklet<T> extends AbstractAudioFilter {
 
     protected currentWorkletNode: AudioWorkletNode | WorkletScriptProcessorNodeAdapter | null = null;
     protected fallbackToScriptProcessor = false;
@@ -20,6 +20,11 @@ export default abstract class AbstractAudioFilterWorklet extends AbstractAudioFi
      * Return the path to worklet file
      */
     abstract get workletPath(): string;
+
+    /**
+     * Receive event from the worklet
+     */
+    abstract receiveEvent(message: MessageEvent<T>): void;
 
     /**
      * Initialize the audio worklet by loading the module
@@ -71,6 +76,10 @@ export default abstract class AbstractAudioFilterWorklet extends AbstractAudioFi
             } else {
                 throw new Error(`No processor registered with name ${workletName} for filter ${this.id} to use the fallback/polyfill for AudioWorklet. Make sure you have created the class.`);
             }
+        }
+
+        if (this.currentWorkletNode && this.currentWorkletNode.port && this.currentWorkletNode.port.onmessage) {
+            this.currentWorkletNode.port.onmessage = message => this.receiveEvent(message);
         }
     }
 

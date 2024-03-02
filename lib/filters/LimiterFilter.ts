@@ -5,7 +5,7 @@ import { FilterSettingValue } from "../model/filtersSettings/FilterSettings";
 import "./worklets/Limiter.worklet";
 import utilFunctions from "../utils/Functions";
 
-export default class LimiterFilter extends AbstractAudioFilterWorklet {
+export default class LimiterFilter extends AbstractAudioFilterWorklet<void> {
     private preGain = 0; // dB
     private postGain = 0; // dB
     private attackTime = 0; // s
@@ -25,6 +25,11 @@ export default class LimiterFilter extends AbstractAudioFilterWorklet {
         this.enable();
         this.setDefaultEnabled(true);
     }
+    
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    receiveEvent(message: MessageEvent<void>): void {
+        // Do nothing
+    }
 
     get workletPath(): string {
         return Constants.WORKLET_PATHS.LIMITER;
@@ -35,7 +40,7 @@ export default class LimiterFilter extends AbstractAudioFilterWorklet {
     }
 
     get order(): number {
-        return 10;
+        return 11;
     }
 
     get id(): string {

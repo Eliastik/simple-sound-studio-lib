@@ -1,10 +1,12 @@
 import AbstractAudioElement from "./AbstractAudioElement";
 import { AudioFilterNodes } from "../../model/AudioNodes";
 import { FilterSettingValue, FilterSettings } from "../../model/filtersSettings/FilterSettings";
+import EventEmitter from "@/utils/EventEmitter";
 
 export default abstract class AbstractAudioFilter extends AbstractAudioElement {
 
     private defaultSettings: FilterSettings | null = null;
+    eventEmitter: EventEmitter | undefined = undefined;
 
     /** Return a input and output AudioNode of the filter */
     abstract getNode(context: BaseAudioContext): AudioFilterNodes;

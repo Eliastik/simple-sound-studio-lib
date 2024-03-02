@@ -32,6 +32,7 @@ import getRecorderWorker from "./recorder/RecorderWorker";
 import { Recorder } from "./recorder/Recorder";
 import ReverbSettings from "./model/filtersSettings/ReverbSettings";
 import BufferDecoderService from "./services/BufferDecoderService";
+import PassThroughFilter from "./filters/PassThroughFilter";
 
 export default class AudioEditor extends AbstractAudioElement {
 
@@ -136,6 +137,7 @@ export default class AudioEditor extends AbstractAudioElement {
             filter.bufferFetcherService = this.bufferFetcherService;
             filter.bufferDecoderService = this.bufferDecoderService;
             filter.configService = this.configService;
+            filter.eventEmitter = this.eventEmitter;
         }
 
         this.filters.push(...filters);
@@ -167,9 +169,10 @@ export default class AudioEditor extends AbstractAudioElement {
         const limiterFilter = new LimiterFilter(0, 0, 0, 3, -0.05, 0.1);
         const telephonizerFilter = new TelephonizerFilter();
         const vocoder = new VocoderFilter();
+        const passthrough = new PassThroughFilter();
 
         this.entrypointFilter = soundtouchWrapper;
-        this.addFilters(bassBooster, bitCrusher, echo, highPass, lowPass, reverb, limiterFilter, telephonizerFilter, soundtouchWrapper, vocoder);
+        this.addFilters(bassBooster, bitCrusher, echo, highPass, lowPass, reverb, limiterFilter, telephonizerFilter, soundtouchWrapper, vocoder, passthrough);
     }
 
     /** Setup the renderers */
@@ -450,7 +453,7 @@ export default class AudioEditor extends AbstractAudioElement {
     private async initializeWorklets(context: BaseAudioContext) {
         for (const filter of this.filters) {
             if (filter.isWorklet()) {
-                await (filter as AbstractAudioFilterWorklet).initializeWorklet(context);
+                await (filter as AbstractAudioFilterWorklet<object>).initializeWorklet(context);
             }
         }
     }
@@ -493,6 +496,16 @@ export default class AudioEditor extends AbstractAudioElement {
         }
 
         this.renderedBuffer = currentBuffer;
+
+        if (this.eventEmitter) {
+            this.eventEmitter.emit(EventType.UPDATE_AUDIO_TREATMENT_PERCENT, 0);
+        }
+
+        const passthroughFilter = this.filters.find(f => f.id === Constants.FILTERS_NAMES.PASSTHROUGH);
+
+        if (passthroughFilter) {
+            (passthroughFilter as PassThroughFilter).totalSamples = durationAudio * this.currentContext.sampleRate;
+        }
 
         return await this.setupOutput(outputContext, durationAudio, offlineContext);
     }

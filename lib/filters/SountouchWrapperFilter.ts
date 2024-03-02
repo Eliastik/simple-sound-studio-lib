@@ -12,7 +12,7 @@ import SoundtouchSettings from "../model/filtersSettings/SoundtouchSettings";
 import { FilterSettingValue } from "../model/filtersSettings/FilterSettings";
 import utilFunctions from "../utils/Functions";
 
-export default class SoundtouchWrapperFilter extends AbstractAudioFilterWorklet implements AudioFilterEntrypointInterface {
+export default class SoundtouchWrapperFilter extends AbstractAudioFilterWorklet<void> implements AudioFilterEntrypointInterface {
 
     private speedAudio = 1;
     private frequencyAudio = 1;
@@ -28,6 +28,11 @@ export default class SoundtouchWrapperFilter extends AbstractAudioFilterWorklet 
     }
 
     async initializeWorklet(): Promise<void> {
+        // Do nothing
+    }
+    
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    receiveEvent(message: MessageEvent<void>): void {
         // Do nothing
     }
 

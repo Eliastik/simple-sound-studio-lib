@@ -1,3 +1,5 @@
+import EventEmitter$1 from '@/utils/EventEmitter';
+
 type EventEmitterCallback = (data: string | number | AudioBuffer | undefined) => void;
 
 interface AudioEditorEvents {
@@ -141,6 +143,7 @@ interface FilterSettings {
 
 declare abstract class AbstractAudioFilter extends AbstractAudioElement {
     private defaultSettings;
+    eventEmitter: EventEmitter$1 | undefined;
     /** Return a input and output AudioNode of the filter */
     abstract getNode(context: BaseAudioContext): AudioFilterNodes;
     /** Return an object with current settings of this filter */
@@ -660,7 +663,7 @@ declare class WorkletScriptProcessorNodeAdapter {
     get context(): BaseAudioContext | undefined;
 }
 
-declare abstract class AbstractAudioFilterWorklet extends AbstractAudioFilter {
+declare abstract class AbstractAudioFilterWorklet<T> extends AbstractAudioFilter {
     protected currentWorkletNode: AudioWorkletNode | WorkletScriptProcessorNodeAdapter | null;
     protected fallbackToScriptProcessor: boolean;
     protected keepCurrentNodeIfPossible: boolean;
@@ -672,6 +675,10 @@ declare abstract class AbstractAudioFilterWorklet extends AbstractAudioFilter {
      * Return the path to worklet file
      */
     abstract get workletPath(): string;
+    /**
+     * Receive event from the worklet
+     */
+    abstract receiveEvent(message: MessageEvent<T>): void;
     /**
      * Initialize the audio worklet by loading the module
      * @param audioContext The audio context
@@ -739,7 +746,7 @@ declare const Constants: {
         HIGH_PASS: string;
         LIMITER: string;
         LOW_PASS: string;
-        PASS_THROUGH: string;
+        PASSTHROUGH: string;
         RETURN_AUDIO: string;
         SOUNDTOUCH: string;
         TELEPHONIZER: string;
@@ -750,12 +757,14 @@ declare const Constants: {
         LIMITER: string;
         SOUNDTOUCH: string;
         RECORDER_WORKLET: string;
+        PASSTHROUGH: string;
     };
     WORKLET_NAMES: {
         BITCRUSHER: string;
         LIMITER: string;
         SOUNDTOUCH: string;
         RECORDER_WORKLET: string;
+        PASSTHROUGH: string;
     };
     PREFERENCES_KEYS: {
         COMPATIBILITY_MODE_ENABLED: string;
@@ -853,7 +862,8 @@ declare enum EventType {
     DECODED_AUDIO_FILE = "decodedAudioFile",
     ERROR_DECODING_AUDIO_FILE = "errorDecodingAudioFile",
     RECORDER_NOT_FOUND_ERROR = "recorderNotFoundError",
-    RECORDER_UNKNOWN_ERROR = "recorderUnknownError"
+    RECORDER_UNKNOWN_ERROR = "recorderUnknownError",
+    UPDATE_AUDIO_TREATMENT_PERCENT = "updateAudioTreatmentPercent"
 }
 
 export { AbstractAudioElement, AbstractAudioFilter, AbstractAudioFilterWorklet, AbstractAudioRenderer, AudioEditor, type AudioFilterEntrypointInterface, type AudioFilterNodes, BufferPlayer, type ConfigService, Constants, EventEmitter, type EventEmitterCallback, EventType, type FilterSettingValue, type FilterSettings, type FilterState, GenericConfigService, type GenericSettingValueAdditionalData, type RecorderSettings, type SelectFormValue, utilFunctions as UtilFunctions, VoiceRecorder };

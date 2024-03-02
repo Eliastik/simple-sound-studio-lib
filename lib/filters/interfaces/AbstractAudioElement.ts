@@ -1,3 +1,4 @@
+import { EventEmitter } from "stream";
 import BufferDecoderService from "../../services/BufferDecoderService";
 import BufferFetcherService from "../../services/BufferFetcherService";
 import { ConfigService } from "../../services/ConfigService";
