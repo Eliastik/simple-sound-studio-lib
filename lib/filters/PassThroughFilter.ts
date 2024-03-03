@@ -13,8 +13,6 @@ export default class PassThroughFilter extends AbstractAudioFilterWorklet<PassTh
     private samplePerSecond = 0;
     private currentTimeSamplesPerSecond = 0;
 
-    private SMOOTHING_FACTOR = 0.9;
-
     constructor() {
         super();
     }
@@ -61,7 +59,10 @@ export default class PassThroughFilter extends AbstractAudioFilterWorklet<PassTh
 
         const timeDifferenceSamplePerSecond = currentTime - this.currentTimeSamplesPerSecond;
         const remainingSamples = this._totalSamples - samplesProcessed;
-        const remainingTimeSeconds = remainingSamples / this.calculateSmoothedSamplePerSecond(timeDifferenceSamplePerSecond, samplesProcessed);
+        
+        this.calculateSmoothedSamplePerSecond(timeDifferenceSamplePerSecond, samplesProcessed);
+
+        const remainingTimeSeconds = remainingSamples / this.samplePerSecond;
 
         if (this.eventEmitter && remainingSamples <= 0) {
             this.eventEmitter.emit(EventType.UPDATE_REMAINING_TIME_ESTIMATED, 0);
@@ -69,7 +70,6 @@ export default class PassThroughFilter extends AbstractAudioFilterWorklet<PassTh
         }
 
         if (this.eventEmitter && timeDifferenceSamplePerSecond >= 1000) {
-            this.samplePerSecond = (samplesProcessed - this.lastSampleCount) / (timeDifferenceSamplePerSecond / 1000);
             this.currentTimeSamplesPerSecond = currentTime;
             this.lastSampleCount = samplesProcessed;
 
@@ -87,15 +87,11 @@ export default class PassThroughFilter extends AbstractAudioFilterWorklet<PassTh
      * @param samplesProcessed Samples count processed
      * @returns Smoothed samples per second
      */
-    private calculateSmoothedSamplePerSecond(timeDifferenceSamplePerSecond: number, samplesProcessed: number): number {
-        if (timeDifferenceSamplePerSecond === 0) {
-            return this.samplePerSecond;
+    private calculateSmoothedSamplePerSecond(timeDifferenceSamplePerSecond: number, samplesProcessed: number): void {
+        if (timeDifferenceSamplePerSecond > 0) {
+            const currentSampleRate = (samplesProcessed - this.lastSampleCount) / (timeDifferenceSamplePerSecond / 1000);
+            this.samplePerSecond = Constants.TREATMENT_TIME_COUNTING_SMOOTHING_FACTOR * this.samplePerSecond + (1 - Constants.TREATMENT_TIME_COUNTING_SMOOTHING_FACTOR) * currentSampleRate;
         }
-        
-        const currentSampleRate = (samplesProcessed - this.lastSampleCount) / (timeDifferenceSamplePerSecond / 1000);
-        this.samplePerSecond = this.SMOOTHING_FACTOR * this.samplePerSecond + (1 - this.SMOOTHING_FACTOR) * currentSampleRate;
-
-        return this.samplePerSecond;
     }
 
     get workletName(): string {

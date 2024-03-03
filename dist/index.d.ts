@@ -1,5 +1,3 @@
-import EventEmitter$1 from '@/utils/EventEmitter';
-
 type EventEmitterCallback = (data: string | number | AudioBuffer | undefined) => void;
 
 interface AudioEditorEvents {
@@ -143,7 +141,7 @@ interface FilterSettings {
 
 declare abstract class AbstractAudioFilter extends AbstractAudioElement {
     private defaultSettings;
-    eventEmitter: EventEmitter$1 | undefined;
+    eventEmitter: EventEmitter | undefined;
     /** Return a input and output AudioNode of the filter */
     abstract getNode(context: BaseAudioContext): AudioFilterNodes;
     /** Return an object with current settings of this filter */
@@ -791,6 +789,7 @@ declare const Constants: {
     DEFAULT_SAMPLE_RATE: number;
     VALID_SAMPLE_RATES: number[];
     TREATMENT_TIME_COUNTING_THROTTLE_INTERVAL: number;
+    TREATMENT_TIME_COUNTING_SMOOTHING_FACTOR: number;
 };
 
 /**
