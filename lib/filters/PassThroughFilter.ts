@@ -19,20 +19,40 @@ export default class PassThroughFilter extends AbstractAudioFilterWorklet<PassTh
 
     receiveEvent(message: MessageEvent<PassThroughWorkletEvent>): void {
         const currentTime = performance.now();
-        const timeDifference = currentTime - this.currentTime;
+        const samplesProcessed = message.data.samplesCount;
 
-        if (this.eventEmitter && message.data.command === "update" && timeDifference >= Constants.TREATMENT_TIME_COUNTING_THROTTLE_INTERVAL) {
-            this.eventEmitter.emit(EventType.UPDATE_AUDIO_TREATMENT_PERCENT, (message.data.samplesCount / this._totalSamples) * 100);
-            this.eventEmitter.emit(EventType.UPDATE_REMAINING_TIME_ESTIMATED, ((this._totalSamples - message.data.samplesCount) / this.samplePerSecond));
-            this.currentTime = currentTime;
+        if (this.currentTimeSamplesPerSecond === 0) {
+            this.currentTimeSamplesPerSecond = currentTime;
         }
 
         const timeDifferenceSamplePerSecond = currentTime - this.currentTimeSamplesPerSecond;
-        this.lastSampleCount += message.data.samplesCount;
 
         if (timeDifferenceSamplePerSecond >= 1000) {
-            this.samplePerSecond = this.lastSampleCount / (timeDifferenceSamplePerSecond / 1000);
-            this.lastSampleCount = 0;
+            console.log(samplesProcessed, this.lastSampleCount);
+            this.samplePerSecond = (samplesProcessed - this.lastSampleCount) / (timeDifferenceSamplePerSecond / 1000);
+            this.currentTimeSamplesPerSecond = currentTime;
+            this.lastSampleCount = samplesProcessed;
+        }
+
+        if (this.currentTime === 0) {
+            this.currentTime = currentTime;
+        }
+
+        const timeDifference = currentTime - this.currentTime;
+        const percentageProcessed = (samplesProcessed / this._totalSamples);
+        const remainingSamples = this._totalSamples - samplesProcessed;
+        const remainingTimeSeconds = remainingSamples / this.samplePerSecond;
+
+        if (this.eventEmitter && message.data.command === "update" && timeDifference >= Constants.TREATMENT_TIME_COUNTING_THROTTLE_INTERVAL) {
+            this.eventEmitter.emit(EventType.UPDATE_AUDIO_TREATMENT_PERCENT, percentageProcessed * 100);
+
+            if (isNaN(remainingTimeSeconds) || !isFinite(remainingTimeSeconds)) {
+                this.eventEmitter.emit(EventType.UPDATE_REMAINING_TIME_ESTIMATED, 0);
+            } else {
+                this.eventEmitter.emit(EventType.UPDATE_REMAINING_TIME_ESTIMATED, remainingTimeSeconds);
+            }
+
+            this.currentTime = currentTime;
         }
     }
 
@@ -54,7 +74,10 @@ export default class PassThroughFilter extends AbstractAudioFilterWorklet<PassTh
 
     set totalSamples(value: number) {
         this._totalSamples = value;
-        this.currentTime = performance.now();
+        this.currentTime = 0;
+        this.currentTimeSamplesPerSecond = 0;
+        this.samplePerSecond = 0;
+        this.lastSampleCount = 0;
     }
 
     getSettings() {
