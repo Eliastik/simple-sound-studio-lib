@@ -13,39 +13,62 @@ export default class PassThroughFilter extends AbstractAudioFilterWorklet<PassTh
     private samplePerSecond = 0;
     private currentTimeSamplesPerSecond = 0;
 
+    private SMOOHTING_FACTOR = 0.9;
+
     constructor() {
         super();
     }
 
     receiveEvent(message: MessageEvent<PassThroughWorkletEvent>): void {
-        if (!this.eventEmitter) {
-            return;
-        }
-        
         const currentTime = performance.now();
         const samplesProcessed = message.data.samplesCount;
 
+        if (message.data.command === "update") {
+            this.calculatePercentageProcessed(currentTime, samplesProcessed);
+        }
+
+        this.calculateRemainingTimeProcessing(currentTime, samplesProcessed);
+    }
+
+    /**
+     * Calculate percentage processed
+     * @param currentTime Current time (ms)
+     * @param samplesProcessed Samples count processed
+     */
+    private calculatePercentageProcessed(currentTime: number, samplesProcessed: number) {
         if (this.currentTime === 0) {
             this.currentTime = currentTime;
         }
 
         const timeDifference = currentTime - this.currentTime;
         const percentageProcessed = (samplesProcessed / this._totalSamples);
-        const remainingSamples = this._totalSamples - samplesProcessed;
-        const remainingTimeSeconds = remainingSamples / this.samplePerSecond;
 
-        if (message.data.command === "update" && timeDifference >= Constants.TREATMENT_TIME_COUNTING_THROTTLE_INTERVAL) {
+        if (this.eventEmitter && timeDifference >= Constants.TREATMENT_TIME_COUNTING_THROTTLE_INTERVAL) {
             this.eventEmitter.emit(EventType.UPDATE_AUDIO_TREATMENT_PERCENT, percentageProcessed * 100);
             this.currentTime = currentTime;
         }
+    }
 
+    /**
+     * Calculate remaining time to process the audio
+     * @param currentTime Current time (ms)
+     * @param samplesProcessed Samples count processed
+     */
+    private calculateRemainingTimeProcessing(currentTime: number, samplesProcessed: number) {
         if (this.currentTimeSamplesPerSecond === 0) {
             this.currentTimeSamplesPerSecond = currentTime;
         }
 
         const timeDifferenceSamplePerSecond = currentTime - this.currentTimeSamplesPerSecond;
+        const remainingSamples = this._totalSamples - samplesProcessed;
+        const remainingTimeSeconds = remainingSamples / this.calculateSmoothedSamplePerSecond(timeDifferenceSamplePerSecond, samplesProcessed);
 
-        if (timeDifferenceSamplePerSecond >= 1000) {
+        if (this.eventEmitter && remainingSamples <= 0) {
+            this.eventEmitter.emit(EventType.UPDATE_REMAINING_TIME_ESTIMATED, 0);
+            return;
+        }
+
+        if (this.eventEmitter && timeDifferenceSamplePerSecond >= 1000) {
             this.samplePerSecond = (samplesProcessed - this.lastSampleCount) / (timeDifferenceSamplePerSecond / 1000);
             this.currentTimeSamplesPerSecond = currentTime;
             this.lastSampleCount = samplesProcessed;
@@ -56,6 +79,19 @@ export default class PassThroughFilter extends AbstractAudioFilterWorklet<PassTh
                 this.eventEmitter.emit(EventType.UPDATE_REMAINING_TIME_ESTIMATED, remainingTimeSeconds);
             }
         }
+    }
+
+    /**
+     * Calculate smoothed samples per second
+     * @param timeDifferenceSamplePerSecond Time difference 
+     * @param samplesProcessed Samples count processed
+     * @returns Smoothed samples per second
+     */
+    private calculateSmoothedSamplePerSecond(timeDifferenceSamplePerSecond: number, samplesProcessed: number): number {
+        const currentSampleRate = (samplesProcessed - this.lastSampleCount) / (timeDifferenceSamplePerSecond / 1000);
+        this.samplePerSecond = this.SMOOHTING_FACTOR * this.samplePerSecond + (1 - this.SMOOHTING_FACTOR) * currentSampleRate;
+
+        return this.samplePerSecond;
     }
 
     get workletName(): string {
