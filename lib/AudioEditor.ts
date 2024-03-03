@@ -353,6 +353,7 @@ export default class AudioEditor extends AbstractAudioElement {
 
             if (this.eventEmitter) {
                 this.eventEmitter.emit(EventType.UPDATE_AUDIO_TREATMENT_PERCENT, 0);
+                this.eventEmitter.emit(EventType.UPDATE_REMAINING_TIME_ESTIMATED, -1);
             }
         } else {
             throw new Error("Audio Context is not ready!");
@@ -503,6 +504,7 @@ export default class AudioEditor extends AbstractAudioElement {
 
         if (this.eventEmitter) {
             this.eventEmitter.emit(EventType.UPDATE_AUDIO_TREATMENT_PERCENT, 0);
+            this.eventEmitter.emit(EventType.UPDATE_REMAINING_TIME_ESTIMATED, -1);
         }
 
         const passthroughFilter = this.filters.find(f => f.id === Constants.FILTERS_NAMES.PASSTHROUGH);

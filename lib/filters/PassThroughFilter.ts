@@ -18,21 +18,12 @@ export default class PassThroughFilter extends AbstractAudioFilterWorklet<PassTh
     }
 
     receiveEvent(message: MessageEvent<PassThroughWorkletEvent>): void {
+        if (!this.eventEmitter) {
+            return;
+        }
+        
         const currentTime = performance.now();
         const samplesProcessed = message.data.samplesCount;
-
-        if (this.currentTimeSamplesPerSecond === 0) {
-            this.currentTimeSamplesPerSecond = currentTime;
-        }
-
-        const timeDifferenceSamplePerSecond = currentTime - this.currentTimeSamplesPerSecond;
-
-        if (timeDifferenceSamplePerSecond >= 1000) {
-            console.log(samplesProcessed, this.lastSampleCount);
-            this.samplePerSecond = (samplesProcessed - this.lastSampleCount) / (timeDifferenceSamplePerSecond / 1000);
-            this.currentTimeSamplesPerSecond = currentTime;
-            this.lastSampleCount = samplesProcessed;
-        }
 
         if (this.currentTime === 0) {
             this.currentTime = currentTime;
@@ -43,16 +34,27 @@ export default class PassThroughFilter extends AbstractAudioFilterWorklet<PassTh
         const remainingSamples = this._totalSamples - samplesProcessed;
         const remainingTimeSeconds = remainingSamples / this.samplePerSecond;
 
-        if (this.eventEmitter && message.data.command === "update" && timeDifference >= Constants.TREATMENT_TIME_COUNTING_THROTTLE_INTERVAL) {
+        if (message.data.command === "update" && timeDifference >= Constants.TREATMENT_TIME_COUNTING_THROTTLE_INTERVAL) {
             this.eventEmitter.emit(EventType.UPDATE_AUDIO_TREATMENT_PERCENT, percentageProcessed * 100);
+            this.currentTime = currentTime;
+        }
+
+        if (this.currentTimeSamplesPerSecond === 0) {
+            this.currentTimeSamplesPerSecond = currentTime;
+        }
+
+        const timeDifferenceSamplePerSecond = currentTime - this.currentTimeSamplesPerSecond;
+
+        if (timeDifferenceSamplePerSecond >= 1000) {
+            this.samplePerSecond = (samplesProcessed - this.lastSampleCount) / (timeDifferenceSamplePerSecond / 1000);
+            this.currentTimeSamplesPerSecond = currentTime;
+            this.lastSampleCount = samplesProcessed;
 
             if (isNaN(remainingTimeSeconds) || !isFinite(remainingTimeSeconds)) {
-                this.eventEmitter.emit(EventType.UPDATE_REMAINING_TIME_ESTIMATED, 0);
+                this.eventEmitter.emit(EventType.UPDATE_REMAINING_TIME_ESTIMATED, -1);
             } else {
                 this.eventEmitter.emit(EventType.UPDATE_REMAINING_TIME_ESTIMATED, remainingTimeSeconds);
             }
-
-            this.currentTime = currentTime;
         }
     }
 
