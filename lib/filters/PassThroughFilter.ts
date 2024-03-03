@@ -13,7 +13,7 @@ export default class PassThroughFilter extends AbstractAudioFilterWorklet<PassTh
     private samplePerSecond = 0;
     private currentTimeSamplesPerSecond = 0;
 
-    private SMOOHTING_FACTOR = 0.9;
+    private SMOOTHING_FACTOR = 0.9;
 
     constructor() {
         super();
@@ -88,8 +88,12 @@ export default class PassThroughFilter extends AbstractAudioFilterWorklet<PassTh
      * @returns Smoothed samples per second
      */
     private calculateSmoothedSamplePerSecond(timeDifferenceSamplePerSecond: number, samplesProcessed: number): number {
+        if (timeDifferenceSamplePerSecond === 0) {
+            return this.samplePerSecond;
+        }
+        
         const currentSampleRate = (samplesProcessed - this.lastSampleCount) / (timeDifferenceSamplePerSecond / 1000);
-        this.samplePerSecond = this.SMOOHTING_FACTOR * this.samplePerSecond + (1 - this.SMOOHTING_FACTOR) * currentSampleRate;
+        this.samplePerSecond = this.SMOOTHING_FACTOR * this.samplePerSecond + (1 - this.SMOOTHING_FACTOR) * currentSampleRate;
 
         return this.samplePerSecond;
     }
