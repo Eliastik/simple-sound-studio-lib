@@ -13,6 +13,10 @@ export default class PassThroughFilter extends AbstractAudioFilterWorklet<PassTh
     private samplePerSecond = 0;
     private currentTimeSamplesPerSecond = 0;
 
+    private mapSmoothedValues = new Map<number, number>();
+    private mapStandardValues = new Map<number, number>();
+    private totalTime = 0;
+
     constructor() {
         super();
     }
@@ -68,6 +72,10 @@ export default class PassThroughFilter extends AbstractAudioFilterWorklet<PassTh
         if (this.eventEmitter && timeDifferenceSamplePerSecond >= 1000) {
             this.calculateSmoothedSamplePerSecond(timeDifferenceSamplePerSecond, samplesProcessed);
 
+            this.mapSmoothedValues.set(this.totalTime, this.samplePerSecond);
+            this.mapStandardValues.set(this.totalTime, (samplesProcessed - this.lastSampleCount) / (timeDifferenceSamplePerSecond / 1000));
+            this.totalTime++;
+
             const remainingTimeSeconds = remainingSamples / this.samplePerSecond;
             
             this.currentTimeSamplesPerSecond = currentTime;
@@ -116,6 +124,12 @@ export default class PassThroughFilter extends AbstractAudioFilterWorklet<PassTh
         this.currentTimeSamplesPerSecond = 0;
         this.samplePerSecond = 0;
         this.lastSampleCount = 0;
+
+        console.log(this.mapSmoothedValues, this.mapStandardValues);
+
+        this.mapSmoothedValues = new Map<number, number>();
+        this.mapStandardValues = new Map<number, number>();
+        this.totalTime = 0;
     }
 
     getSettings() {
