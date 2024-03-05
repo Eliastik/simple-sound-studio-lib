@@ -65,9 +65,9 @@ export default class PassThroughFilter extends AbstractAudioFilterWorklet<PassTh
             return;
         }
 
-        this.calculateSmoothedSamplePerSecond(timeDifferenceSamplePerSecond, samplesProcessed);
-
         if (this.eventEmitter && timeDifferenceSamplePerSecond >= 1000) {
+            this.calculateSmoothedSamplePerSecond(timeDifferenceSamplePerSecond, samplesProcessed);
+
             const remainingTimeSeconds = remainingSamples / this.samplePerSecond;
             
             this.currentTimeSamplesPerSecond = currentTime;
