@@ -62,7 +62,8 @@ const Constants = {
     VALID_SAMPLE_RATES: [0, 8000, 11025, 16000, 22050, 32000, 44100, 48000, 88200, 96000, 176400, 192000],
     // Interval used by the treatment percent counter. The event will be dispatched each ms defined here
     TREATMENT_TIME_COUNTING_THROTTLE_INTERVAL: 100,
-    TREATMENT_TIME_COUNTING_SMOOTHING_FACTOR: 0.7
+    // Smoothing factor for the time couting estimation (between 0 and 1)
+    TREATMENT_TIME_COUNTING_SMOOTHING_FACTOR: 0.9
 };
 
 export default Constants;
