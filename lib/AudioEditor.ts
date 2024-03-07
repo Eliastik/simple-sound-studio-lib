@@ -38,6 +38,8 @@ export default class AudioEditor extends AbstractAudioElement {
 
     /** The current audio context */
     private currentContext: AudioContext | null | undefined;
+    /** The current offline context */
+    private currentOfflineContext: OfflineAudioContext | null | undefined;
     /** The audio buffer to be processed */
     private principalBuffer: AudioBuffer | null = null;
     /** The sum of all the samples of the principal buffer,
@@ -57,17 +59,16 @@ export default class AudioEditor extends AbstractAudioElement {
     private eventEmitter: EventEmitter | undefined;
     /** The current connected nodes */
     private currentNodes: AudioFilterNodes | null = null;
-
     /** If we are currently processing and downloading the buffer */
     private savingBuffer = false;
     /** The previous sample rate setting */
     private previousSampleRate = Constants.DEFAULT_SAMPLE_RATE;
     /** List of audio buffers to fetch */
     private audioBuffersToFetch: string[] = [];
-
     /** Callback used when saving audio */
     private playingStoppedCallback: (() => void) | null = null;
-
+    /** true if the user wanted to cancel audio rendering */
+    private audioRenderingLastCanceled = false;
     /** True if we are downloading initial buffer data */
     downloadingInitialData = false;
 
@@ -251,17 +252,20 @@ export default class AudioEditor extends AbstractAudioElement {
         if (this.bufferFetcherService) {
             this.bufferFetcherService.reset();
             await this.fetchBuffers(true);
-
             // Fetch the current select environment for the reverb filter
-            const filterSettings = this.getFiltersSettings();
-            const reverbSettings = filterSettings.get(Constants.FILTERS_NAMES.REVERB);
+            await this.resetReverbFilterBuffer();
+        }
+    }
 
-            if (reverbSettings) {
-                const reverbUrl = (reverbSettings as ReverbSettings).reverbEnvironment?.value;
+    private async resetReverbFilterBuffer() {
+        const filterSettings = this.getFiltersSettings();
+        const reverbSettings = filterSettings.get(Constants.FILTERS_NAMES.REVERB);
 
-                if (reverbUrl && reverbUrl !== "custom") {
-                    await this.bufferFetcherService.fetchBuffer(reverbUrl);
-                }
+        if (reverbSettings) {
+            const reverbUrl = (reverbSettings as ReverbSettings).reverbEnvironment?.value;
+
+            if (reverbUrl && reverbUrl !== "custom" && this.bufferFetcherService) {
+                await this.bufferFetcherService.fetchBuffer(reverbUrl);
             }
         }
     }
@@ -351,12 +355,19 @@ export default class AudioEditor extends AbstractAudioElement {
                 throw new Error("Error decoding audio file");
             }
 
-            if (this.eventEmitter) {
-                this.eventEmitter.emit(EventType.UPDATE_AUDIO_TREATMENT_PERCENT, 0);
-                this.eventEmitter.emit(EventType.UPDATE_REMAINING_TIME_ESTIMATED, -1);
-            }
+            this.resetAudioRenderingProgress();
         } else {
             throw new Error("Audio Context is not ready!");
+        }
+    }
+
+    /**
+     * Reset audio rendering progress
+     */
+    private resetAudioRenderingProgress() {
+        if (this.eventEmitter) {
+            this.eventEmitter.emit(EventType.UPDATE_AUDIO_TREATMENT_PERCENT, 0);
+            this.eventEmitter.emit(EventType.UPDATE_REMAINING_TIME_ESTIMATED, -1);
         }
     }
 
@@ -492,6 +503,21 @@ export default class AudioEditor extends AbstractAudioElement {
         const offlineContext = new OfflineAudioContext(2, this.currentContext.sampleRate * durationAudio, this.currentContext.sampleRate);
         const outputContext = this.configService && this.configService.isCompatibilityModeEnabled() ? this.currentContext : offlineContext;
 
+        this.renderedBuffer = await this.executeAudioRenderers(outputContext);
+        this.currentOfflineContext = null;
+        this.audioRenderingLastCanceled = false;
+
+        this.setupPasstroughFilter(durationAudio);
+
+        return await this.setupOutput(outputContext, durationAudio, offlineContext);
+    }
+
+    /**
+     * Execute audio renderers then returns audio buffer rendered
+     * @param outputContext The output context
+     * @returns Audio buffer rendered
+     */
+    private async executeAudioRenderers(outputContext: AudioContext | OfflineAudioContext) {
         let currentBuffer = this.principalBuffer!;
 
         for (const renderer of this.renderers.sort((a, b) => a.order - b.order)) {
@@ -499,21 +525,21 @@ export default class AudioEditor extends AbstractAudioElement {
                 currentBuffer = await renderer.renderAudio(outputContext, currentBuffer);
             }
         }
+        return currentBuffer;
+    }
 
-        this.renderedBuffer = currentBuffer;
-
-        if (this.eventEmitter) {
-            this.eventEmitter.emit(EventType.UPDATE_AUDIO_TREATMENT_PERCENT, 0);
-            this.eventEmitter.emit(EventType.UPDATE_REMAINING_TIME_ESTIMATED, -1);
-        }
+    /**
+     * Setup the passthrough filter to count audio rendering progress
+     * @param durationAudio Audio duration - number
+     */
+    private setupPasstroughFilter(durationAudio: number) {
+        this.resetAudioRenderingProgress();
 
         const passthroughFilter = this.filters.find(f => f.id === Constants.FILTERS_NAMES.PASSTHROUGH);
 
-        if (passthroughFilter) {
+        if (passthroughFilter && this.currentContext) {
             (passthroughFilter as PassThroughFilter).totalSamples = durationAudio * this.currentContext.sampleRate;
         }
-
-        return await this.setupOutput(outputContext, durationAudio, offlineContext);
     }
 
     /**
@@ -524,56 +550,70 @@ export default class AudioEditor extends AbstractAudioElement {
      * @returns A promise resolved when the audio processing is done
      */
     private async setupOutput(outputContext: BaseAudioContext, durationAudio?: number, offlineContext?: OfflineAudioContext): Promise<void> {
-        if (this.renderedBuffer && this.configService) {
+        if (this.renderedBuffer && this.configService && this.eventEmitter && this.bufferPlayer) {
             await this.initializeWorklets(outputContext);
             await this.connectNodes(outputContext, this.renderedBuffer, false, this.configService.isCompatibilityModeEnabled());
 
-            if (this.entrypointFilter && this.bufferPlayer) {
+            if (this.entrypointFilter) {
                 const speedAudio = this.entrypointFilter.getSpeed();
                 this.bufferPlayer.speedAudio = speedAudio;
             }
 
             if (!this.configService.isCompatibilityModeEnabled() && offlineContext && this.currentNodes) {
+                this.currentOfflineContext = offlineContext;
                 this.currentNodes.output.connect(outputContext.destination);
 
                 const renderedBuffer = await offlineContext.startRendering();
-                const sumRenderedAudio = utils.sumAudioBuffer(renderedBuffer);
 
-                if (sumRenderedAudio == 0 && this.sumPrincipalBuffer !== 0) {
-                    if (!this.configService.isCompatibilityModeChecked()) {
-                        this.setCompatibilityModeChecked(true);
-                        this.configService.enableCompatibilityMode();
-
-                        if (this.eventEmitter) {
-                            this.eventEmitter.emit(EventType.COMPATIBILITY_MODE_AUTO_ENABLED);
-                        }
-
-                        return await this.setupOutput(this.currentContext!, durationAudio);
-                    }
-
-                    if (this.eventEmitter) {
-                        this.eventEmitter.emit(EventType.RENDERING_AUDIO_PROBLEM_DETECTED);
-                    }
+                if(!this.loadRenderedAudio(renderedBuffer)) {
+                    return await this.setupOutput(this.currentContext!, durationAudio);
                 }
-
-                this.renderedBuffer = renderedBuffer;
-
-                if (this.bufferPlayer) {
-                    this.bufferPlayer.loadBuffer(this.renderedBuffer);
-                }
-
-                if (this.eventEmitter) {
-                    this.eventEmitter.emit(EventType.OFFLINE_AUDIO_RENDERING_FINISHED);
-                }
+                
+                this.eventEmitter.emit(EventType.OFFLINE_AUDIO_RENDERING_FINISHED);
             } else {
-                if (this.bufferPlayer) {
-                    this.bufferPlayer.setCompatibilityMode(this.currentNodes!.output, durationAudio);
-                }
+                this.bufferPlayer.setCompatibilityMode(this.currentNodes!.output, durationAudio);
             }
+            
+            this.eventEmitter.emit(EventType.AUDIO_RENDERING_FINISHED);
+        }
+    }
 
-            if (this.eventEmitter) {
-                this.eventEmitter.emit(EventType.AUDIO_RENDERING_FINISHED);
+    /**
+     * Load rendered audio buffer into audio player
+     * @param renderedBuffer Rendered audio buffer - AudioBuffer
+     * @returns false if the rendred audio buffer is invalid, true otherwise
+     */
+    private loadRenderedAudio(renderedBuffer: AudioBuffer): boolean {
+        if (this.eventEmitter && this.bufferPlayer && !this.audioRenderingLastCanceled) {
+            const sumRenderedAudio = utils.sumAudioBuffer(renderedBuffer);
+        
+            if (sumRenderedAudio == 0 && this.sumPrincipalBuffer !== 0) {
+                if (this.configService && !this.configService.isCompatibilityModeChecked()) {
+                    this.setCompatibilityModeChecked(true);
+                    this.configService.enableCompatibilityMode();
+                    this.eventEmitter.emit(EventType.COMPATIBILITY_MODE_AUTO_ENABLED);
+
+                    return false;
+                }
+                            
+                this.eventEmitter.emit(EventType.RENDERING_AUDIO_PROBLEM_DETECTED);
             }
+        
+            this.renderedBuffer = renderedBuffer;
+                        
+            this.bufferPlayer.loadBuffer(this.renderedBuffer);
+        }
+
+        return true;
+    }
+
+    /**
+     * Cancel the audio rendering
+     */
+    public cancelAudioRendering() {
+        if (this.currentOfflineContext && !this.audioRenderingLastCanceled) {
+            this.audioRenderingLastCanceled = true;
+            this.disconnectOldNodes(false);
         }
     }
 

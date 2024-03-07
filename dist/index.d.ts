@@ -273,6 +273,8 @@ interface FilterState {
 declare class AudioEditor extends AbstractAudioElement {
     /** The current audio context */
     private currentContext;
+    /** The current offline context */
+    private currentOfflineContext;
     /** The audio buffer to be processed */
     private principalBuffer;
     /** The sum of all the samples of the principal buffer,
@@ -300,6 +302,8 @@ declare class AudioEditor extends AbstractAudioElement {
     private audioBuffersToFetch;
     /** Callback used when saving audio */
     private playingStoppedCallback;
+    /** true if the user wanted to cancel audio rendering */
+    private audioRenderingLastCanceled;
     /** True if we are downloading initial buffer data */
     downloadingInitialData: boolean;
     constructor(context?: AudioContext | null, player?: BufferPlayer, eventEmitter?: EventEmitter, configService?: ConfigService, audioBuffersToFetch?: string[]);
@@ -331,6 +335,7 @@ declare class AudioEditor extends AbstractAudioElement {
      * Reset the buffer fetcher and redownload the buffers. Used when changing sample rate.
      */
     private resetBufferFetcher;
+    private resetReverbFilterBuffer;
     /**
      * Stop previous audio context and create a new one
      */
@@ -347,6 +352,10 @@ declare class AudioEditor extends AbstractAudioElement {
     get defaultDeviceSampleRate(): number;
     /** Decode and load an audio buffer from an audio file */
     loadBufferFromFile(file: File): Promise<void>;
+    /**
+     * Reset audio rendering progress
+     */
+    private resetAudioRenderingProgress;
     /** Change the principal audio buffer of this editor */
     loadBuffer(audioBuffer: AudioBuffer): void;
     /**
@@ -377,6 +386,17 @@ declare class AudioEditor extends AbstractAudioElement {
      */
     renderAudio(): Promise<void>;
     /**
+     * Execute audio renderers then returns audio buffer rendered
+     * @param outputContext The output context
+     * @returns Audio buffer rendered
+     */
+    private executeAudioRenderers;
+    /**
+     * Setup the passthrough filter to count audio rendering progress
+     * @param durationAudio Audio duration - number
+     */
+    private setupPasstroughFilter;
+    /**
      * Setup output buffers/nodes, then process the audio
      * @param outputContext Output audio context
      * @param durationAudio Duration of the audio buffer
@@ -384,6 +404,16 @@ declare class AudioEditor extends AbstractAudioElement {
      * @returns A promise resolved when the audio processing is done
      */
     private setupOutput;
+    /**
+     * Load rendered audio buffer into audio player
+     * @param renderedBuffer Rendered audio buffer - AudioBuffer
+     * @returns false if the rendred audio buffer is invalid, true otherwise
+     */
+    private loadRenderedAudio;
+    /**
+     * Cancel the audio rendering
+     */
+    cancelAudioRendering(): void;
     /**
      * Calculate approximative audio duration according to enabled filters and their settings
      * @param speedAudio Current audio speed
