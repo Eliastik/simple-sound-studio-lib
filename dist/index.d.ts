@@ -304,6 +304,8 @@ declare class AudioEditor extends AbstractAudioElement {
     private playingStoppedCallback;
     /** true if the user wanted to cancel audio rendering */
     private audioRenderingLastCanceled;
+    /** true if initial rendering for the current buffer was done */
+    private initialRenderingDone;
     /** True if we are downloading initial buffer data */
     downloadingInitialData: boolean;
     constructor(context?: AudioContext | null, player?: BufferPlayer, eventEmitter?: EventEmitter, configService?: ConfigService, audioBuffersToFetch?: string[]);
@@ -894,7 +896,8 @@ declare enum EventType {
     RECORDER_NOT_FOUND_ERROR = "recorderNotFoundError",
     RECORDER_UNKNOWN_ERROR = "recorderUnknownError",
     UPDATE_AUDIO_TREATMENT_PERCENT = "updateAudioTreatmentPercent",
-    UPDATE_REMAINING_TIME_ESTIMATED = "updateRemainingTimeEstimated"
+    UPDATE_REMAINING_TIME_ESTIMATED = "updateRemainingTimeEstimated",
+    CANCELED_AND_LOADED_INITIAL_AUDIO = "canceledAndLoadedInitialAudio"
 }
 
 export { AbstractAudioElement, AbstractAudioFilter, AbstractAudioFilterWorklet, AbstractAudioRenderer, AudioEditor, type AudioFilterEntrypointInterface, type AudioFilterNodes, BufferPlayer, type ConfigService, Constants, EventEmitter, type EventEmitterCallback, EventType, type FilterSettingValue, type FilterSettings, type FilterState, GenericConfigService, type GenericSettingValueAdditionalData, type RecorderSettings, type SelectFormValue, utilFunctions as UtilFunctions, VoiceRecorder };

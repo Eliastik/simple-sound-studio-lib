@@ -69,6 +69,8 @@ export default class AudioEditor extends AbstractAudioElement {
     private playingStoppedCallback: (() => void) | null = null;
     /** true if the user wanted to cancel audio rendering */
     private audioRenderingLastCanceled = false;
+    /** true if initial rendering for the current buffer was done */
+    private initialRenderingDone = false;
     /** True if we are downloading initial buffer data */
     downloadingInitialData = false;
 
@@ -348,6 +350,7 @@ export default class AudioEditor extends AbstractAudioElement {
 
         if (this.currentContext && this.bufferDecoderService) {
             this.principalBuffer = await this.bufferDecoderService.decodeBufferFromFile(file);
+            this.initialRenderingDone = false;
 
             if (this.principalBuffer) {
                 this.sumPrincipalBuffer = utils.sumAudioBuffer(this.principalBuffer);
@@ -375,6 +378,7 @@ export default class AudioEditor extends AbstractAudioElement {
     loadBuffer(audioBuffer: AudioBuffer) {
         this.principalBuffer = audioBuffer;
         this.sumPrincipalBuffer = utils.sumAudioBuffer(this.principalBuffer);
+        this.initialRenderingDone = false;
     }
 
     /**
@@ -551,6 +555,7 @@ export default class AudioEditor extends AbstractAudioElement {
      */
     private async setupOutput(outputContext: BaseAudioContext, durationAudio?: number, offlineContext?: OfflineAudioContext): Promise<void> {
         if (this.renderedBuffer && this.configService && this.eventEmitter && this.bufferPlayer) {
+            // Initialize worklets then connect the filter nodes
             await this.initializeWorklets(outputContext);
             await this.connectNodes(outputContext, this.renderedBuffer, false, this.configService.isCompatibilityModeEnabled());
 
@@ -559,21 +564,22 @@ export default class AudioEditor extends AbstractAudioElement {
                 this.bufferPlayer.speedAudio = speedAudio;
             }
 
+            // Standard mode
             if (!this.configService.isCompatibilityModeEnabled() && offlineContext && this.currentNodes) {
                 this.currentOfflineContext = offlineContext;
                 this.currentNodes.output.connect(outputContext.destination);
 
                 const renderedBuffer = await offlineContext.startRendering();
 
-                if(!this.loadRenderedAudio(renderedBuffer)) {
+                if (!this.loadRenderedAudio(renderedBuffer)) {
                     return await this.setupOutput(this.currentContext!, durationAudio);
                 }
-                
+
                 this.eventEmitter.emit(EventType.OFFLINE_AUDIO_RENDERING_FINISHED);
-            } else {
+            } else { // Compatibility mode
                 this.bufferPlayer.setCompatibilityMode(this.currentNodes!.output, durationAudio);
             }
-            
+
             this.eventEmitter.emit(EventType.AUDIO_RENDERING_FINISHED);
         }
     }
@@ -584,24 +590,32 @@ export default class AudioEditor extends AbstractAudioElement {
      * @returns false if the rendred audio buffer is invalid, true otherwise
      */
     private loadRenderedAudio(renderedBuffer: AudioBuffer): boolean {
-        if (this.eventEmitter && this.bufferPlayer && !this.audioRenderingLastCanceled) {
-            const sumRenderedAudio = utils.sumAudioBuffer(renderedBuffer);
-        
-            if (sumRenderedAudio == 0 && this.sumPrincipalBuffer !== 0) {
-                if (this.configService && !this.configService.isCompatibilityModeChecked()) {
-                    this.setCompatibilityModeChecked(true);
-                    this.configService.enableCompatibilityMode();
-                    this.eventEmitter.emit(EventType.COMPATIBILITY_MODE_AUTO_ENABLED);
+        if (this.eventEmitter && this.bufferPlayer) {
+            if(!this.audioRenderingLastCanceled) {
+                const sumRenderedAudio = utils.sumAudioBuffer(renderedBuffer);
 
-                    return false;
+                if (sumRenderedAudio == 0 && this.sumPrincipalBuffer !== 0) {
+                    if (this.configService && !this.configService.isCompatibilityModeChecked()) {
+                        this.setCompatibilityModeChecked(true);
+                        this.configService.enableCompatibilityMode();
+                        this.eventEmitter.emit(EventType.COMPATIBILITY_MODE_AUTO_ENABLED);
+
+                        return false;
+                    }
+
+                    this.eventEmitter.emit(EventType.RENDERING_AUDIO_PROBLEM_DETECTED);
                 }
-                            
-                this.eventEmitter.emit(EventType.RENDERING_AUDIO_PROBLEM_DETECTED);
+
+                this.renderedBuffer = renderedBuffer;
+                this.bufferPlayer.loadBuffer(this.renderedBuffer);
+            } else if(!this.initialRenderingDone) {
+                this.renderedBuffer = this.principalBuffer;
+                this.bufferPlayer.loadBuffer(this.principalBuffer!);
+
+                this.eventEmitter.emit(EventType.CANCELED_AND_LOADED_INITIAL_AUDIO);
             }
-        
-            this.renderedBuffer = renderedBuffer;
-                        
-            this.bufferPlayer.loadBuffer(this.renderedBuffer);
+
+            this.initialRenderingDone = true;
         }
 
         return true;
@@ -775,8 +789,10 @@ export default class AudioEditor extends AbstractAudioElement {
         if (this.bufferPlayer) {
             this.bufferPlayer.stop();
             this.bufferPlayer.reset();
-            this.principalBuffer = null;
         }
+        
+        this.cancelAudioRendering();
+        this.principalBuffer = null;
     }
 
     /**
