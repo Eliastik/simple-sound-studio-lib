@@ -72,6 +72,10 @@ interface ConfigService {
      * Return the base path for audio files (reverb environments for example)
      */
     getSoundBasePath(): string;
+    /**
+     * Check if initial audio rendering (when opening a file or buffer) is disabled
+     */
+    isInitialRenderingDisabled(): boolean;
 }
 
 declare class BufferFetcherService {
@@ -384,9 +388,10 @@ declare class AudioEditor extends AbstractAudioElement {
     /**
      * Render the audio to a buffer
      * @returns A promise resolved when the audio processing is finished.
+     * The promise return false if the audio processing was cancelled or if an error occurred.
      * The resulting audio buffer can then be obtained by using the "getOutputBuffer" method.
      */
-    renderAudio(): Promise<void>;
+    renderAudio(): Promise<boolean>;
     /**
      * Execute audio renderers then returns audio buffer rendered
      * @param outputContext The output context
@@ -403,7 +408,7 @@ declare class AudioEditor extends AbstractAudioElement {
      * @param outputContext Output audio context
      * @param durationAudio Duration of the audio buffer
      * @param offlineContext An offline context to do the rendering (can be omited, in this case the rendering is done in real time - "compatibility mode")
-     * @returns A promise resolved when the audio processing is done
+     * @returns A promise resolved when the audio processing is done. The promise returns false if the audio processing was cancelled, or if an error occurred.
      */
     private setupOutput;
     /**
@@ -412,6 +417,10 @@ declare class AudioEditor extends AbstractAudioElement {
      * @returns false if the rendred audio buffer is invalid, true otherwise
      */
     private loadRenderedAudio;
+    /**
+     * Load the initial audio buffer to the buffer player
+     */
+    private loadInitialBuffer;
     /**
      * Cancel the audio rendering
      */
@@ -803,6 +812,7 @@ declare const Constants: {
         ENABLE_SOUNDTOUCH_AUDIO_WORKLET: string;
         BUFFER_SIZE: string;
         SAMPLE_RATE: string;
+        DISABLE_INITIAL_RENDERING: string;
     };
     ENABLE_SOUNDTOUCH_AUDIO_WORKLET: boolean;
     ENABLE_AUDIO_WORKLET: boolean;
@@ -822,6 +832,7 @@ declare const Constants: {
     VALID_SAMPLE_RATES: number[];
     TREATMENT_TIME_COUNTING_THROTTLE_INTERVAL: number;
     TREATMENT_TIME_COUNTING_SMOOTHING_FACTOR: number;
+    DISABLE_INITIAL_RENDERING: boolean;
 };
 
 /**
@@ -842,6 +853,7 @@ declare class GenericConfigService implements ConfigService {
     disableCompatibilityMode(): void;
     getWorkletBasePath(): string;
     getSoundBasePath(): string;
+    isInitialRenderingDisabled(): boolean;
 }
 
 declare const utilFunctions: {

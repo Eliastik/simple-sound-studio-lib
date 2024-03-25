@@ -61,4 +61,9 @@ export interface ConfigService {
      * Return the base path for audio files (reverb environments for example)
      */
     getSoundBasePath(): string;
+
+    /**
+     * Check if initial audio rendering (when opening a file or buffer) is disabled
+     */
+    isInitialRenderingDisabled(): boolean;
 };

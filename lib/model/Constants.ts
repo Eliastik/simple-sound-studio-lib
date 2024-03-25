@@ -40,7 +40,8 @@ const Constants = {
         ENABLE_AUDIO_WORKLET: "enable-audio-worklet",
         ENABLE_SOUNDTOUCH_AUDIO_WORKLET: "enable-soundtouch-audio-worklet",
         BUFFER_SIZE: "buffer-size",
-        SAMPLE_RATE: "sample-rate"
+        SAMPLE_RATE: "sample-rate",
+        DISABLE_INITIAL_RENDERING: "disable-initial-rendering"
     },
     // Enable or disable the use of Audio Worklet version of Soundtouch
     // If disabled, the ScriptProcessorNode version is used
@@ -63,7 +64,9 @@ const Constants = {
     // Interval used by the treatment percent counter. The event will be dispatched each ms defined here
     TREATMENT_TIME_COUNTING_THROTTLE_INTERVAL: 100,
     // Smoothing factor for the time couting estimation (between 0 and 1)
-    TREATMENT_TIME_COUNTING_SMOOTHING_FACTOR: 0.9
+    TREATMENT_TIME_COUNTING_SMOOTHING_FACTOR: 0.9,
+    // Disable initial rendering (when opening audio file or buffer)
+    DISABLE_INITIAL_RENDERING: true
 };
 
 export default Constants;

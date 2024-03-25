@@ -489,9 +489,10 @@ export default class AudioEditor extends AbstractAudioElement {
     /**
      * Render the audio to a buffer
      * @returns A promise resolved when the audio processing is finished.
+     * The promise return false if the audio processing was cancelled or if an error occurred.
      * The resulting audio buffer can then be obtained by using the "getOutputBuffer" method.
      */
-    async renderAudio(): Promise<void> {
+    async renderAudio(): Promise<boolean> {
         await this.prepareContext();
 
         if (!this.currentContext) {
@@ -500,6 +501,12 @@ export default class AudioEditor extends AbstractAudioElement {
 
         if (!this.entrypointFilter) {
             throw new Error("Entrypoint filter is not available");
+        }
+
+        if (!this.initialRenderingDone && this.configService && this.configService.isInitialRenderingDisabled()) {
+            this.loadInitialBuffer();
+            this.initialRenderingDone = true;
+            return true;
         }
 
         const speedAudio = this.entrypointFilter.getSpeed();
@@ -551,9 +558,9 @@ export default class AudioEditor extends AbstractAudioElement {
      * @param outputContext Output audio context
      * @param durationAudio Duration of the audio buffer
      * @param offlineContext An offline context to do the rendering (can be omited, in this case the rendering is done in real time - "compatibility mode")
-     * @returns A promise resolved when the audio processing is done
+     * @returns A promise resolved when the audio processing is done. The promise returns false if the audio processing was cancelled, or if an error occurred.
      */
-    private async setupOutput(outputContext: BaseAudioContext, durationAudio?: number, offlineContext?: OfflineAudioContext): Promise<void> {
+    private async setupOutput(outputContext: BaseAudioContext, durationAudio?: number, offlineContext?: OfflineAudioContext): Promise<boolean> {
         if (this.renderedBuffer && this.configService && this.eventEmitter && this.bufferPlayer) {
             // Initialize worklets then connect the filter nodes
             await this.initializeWorklets(outputContext);
@@ -575,13 +582,21 @@ export default class AudioEditor extends AbstractAudioElement {
                     return await this.setupOutput(this.currentContext!, durationAudio);
                 }
 
+                if(this.audioRenderingLastCanceled) {
+                    return false;
+                }
+
                 this.eventEmitter.emit(EventType.OFFLINE_AUDIO_RENDERING_FINISHED);
             } else { // Compatibility mode
                 this.bufferPlayer.setCompatibilityMode(this.currentNodes!.output, durationAudio);
             }
 
             this.eventEmitter.emit(EventType.AUDIO_RENDERING_FINISHED);
+
+            return true;
         }
+
+        return false;
     }
 
     /**
@@ -609,9 +624,7 @@ export default class AudioEditor extends AbstractAudioElement {
                 this.renderedBuffer = renderedBuffer;
                 this.bufferPlayer.loadBuffer(this.renderedBuffer);
             } else if(!this.initialRenderingDone) {
-                this.renderedBuffer = this.principalBuffer;
-                this.bufferPlayer.loadBuffer(this.principalBuffer!);
-
+                this.loadInitialBuffer();
                 this.eventEmitter.emit(EventType.CANCELED_AND_LOADED_INITIAL_AUDIO);
             }
 
@@ -619,6 +632,16 @@ export default class AudioEditor extends AbstractAudioElement {
         }
 
         return true;
+    }
+
+    /**
+     * Load the initial audio buffer to the buffer player
+     */
+    private loadInitialBuffer() {
+        if (this.bufferPlayer) {
+            this.renderedBuffer = this.principalBuffer;
+            this.bufferPlayer.loadBuffer(this.principalBuffer!);
+        }
     }
 
     /**

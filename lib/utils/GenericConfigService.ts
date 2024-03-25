@@ -80,4 +80,14 @@ export default class GenericConfigService implements ConfigService {
     getSoundBasePath(): string {
         return "";
     }
+
+    isInitialRenderingDisabled(): boolean {
+        const setting = this.getConfig(Constants.PREFERENCES_KEYS.DISABLE_INITIAL_RENDERING);
+
+        if(setting != null) {
+            return setting == "true";
+        }
+
+        return Constants.DISABLE_INITIAL_RENDERING;
+    }
 };
