@@ -510,7 +510,7 @@ export default class AudioEditor extends AbstractAudioElement {
             return true;
         }
 
-        // If switching from compaitiblity mode to normal mode, we stop the audio player
+        // If switching from compatiblity mode to normal mode, we stop the audio player
         if (this.configService && this.bufferPlayer && !this.configService.isCompatibilityModeEnabled() && this.bufferPlayer.compatibilityMode) {
             this.bufferPlayer.stop();
         }
