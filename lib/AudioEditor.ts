@@ -503,10 +503,16 @@ export default class AudioEditor extends AbstractAudioElement {
             throw new Error("Entrypoint filter is not available");
         }
 
+        // If initial rendering is disabled, we stop here
         if (!this.initialRenderingDone && this.configService && this.configService.isInitialRenderingDisabled()) {
             this.loadInitialBuffer();
             this.initialRenderingDone = true;
             return true;
+        }
+
+        // If switching from compaitiblity mode to normal mode, we stop the audio player
+        if (this.configService && this.bufferPlayer && !this.configService.isCompatibilityModeEnabled() && this.bufferPlayer.compatibilityMode) {
+            this.bufferPlayer.stop();
         }
 
         const speedAudio = this.entrypointFilter.getSpeed();
