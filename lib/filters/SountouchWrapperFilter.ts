@@ -51,6 +51,17 @@ export default class SoundtouchWrapperFilter extends AbstractAudioFilterWorklet<
     async getEntrypointNode(context: BaseAudioContext, buffer: AudioBuffer, offline: boolean): Promise<AudioFilterNodes> {
         this.isOfflineMode = offline;
 
+        // Stop current worklet
+        if(this.currentPitchShifterWorklet) {
+            this.currentPitchShifterWorklet.stop();
+            this.currentPitchShifterWorklet.disconnect();
+        }
+
+        // Stop current pitch shifter
+        if (this.currentPitchShifter) {
+            this.currentPitchShifter.disconnect();
+        }
+
         // In offline (compatibility) mode
         if(offline) {
             // If the settings are untouched, we don't use Soundtouch
@@ -76,10 +87,6 @@ export default class SoundtouchWrapperFilter extends AbstractAudioFilterWorklet<
         }
 
         // Not in offline mode: get classic soundtouch script processor node
-        if (this.currentPitchShifter) {
-            this.currentPitchShifter.disconnect();
-        }
-
         this.currentPitchShifter = this.getSoundtouchScriptProcessorNode(buffer, context);
         this.updateState();
 
@@ -103,10 +110,6 @@ export default class SoundtouchWrapperFilter extends AbstractAudioFilterWorklet<
     private async renderWithScriptProcessorNode(buffer: AudioBuffer, context: BaseAudioContext): Promise<AudioFilterNodes> {
         const durationAudio = utils.calcAudioDuration(buffer, this.speedAudio);
         const offlineContext = new OfflineAudioContext(2, context.sampleRate * durationAudio, context.sampleRate);
-
-        if (this.currentPitchShifter) {
-            this.currentPitchShifter.disconnect();
-        }
 
         this.currentPitchShifter = this.getSoundtouchScriptProcessorNode(buffer, offlineContext);
         this.updateState();
@@ -136,11 +139,6 @@ export default class SoundtouchWrapperFilter extends AbstractAudioFilterWorklet<
         const durationAudio = utils.calcAudioDuration(buffer, this.speedAudio);
 
         try {
-            // Stop current worklet
-            if(this.currentPitchShifterWorklet) {
-                this.currentPitchShifterWorklet.stop();
-            }
-
             // Setup worklet JS module
             await context.audioWorklet.addModule((this.configService ? this.configService.getWorkletBasePath() : "") + Constants.WORKLET_PATHS.SOUNDTOUCH);
     
