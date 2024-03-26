@@ -67,8 +67,10 @@ export default abstract class AbstractAudioFilterWorklet<T> extends AbstractAudi
      */
     private initializeNode(context: BaseAudioContext, workletName: string) {
         if (this.isAudioWorkletEnabled() && !this.fallbackToScriptProcessor) {
+            // Standard Audio Worklet
             this.currentWorkletNode = new AudioWorkletNode(context, workletName);
         } else {
+            // Fallback to ScriptProcessorNode (polyfill)
             const processor = RegisterProcessorPolyfill.getProcessor(workletName);
 
             if(processor) {
@@ -136,6 +138,7 @@ export default abstract class AbstractAudioFilterWorklet<T> extends AbstractAudi
     stop() {
         if (this.currentWorkletNode && this.currentWorkletNode.port) {
             this.currentWorkletNode.port.postMessage("stop");
+            this.currentWorkletNode.port.onmessage = null;
         }
 
         this.currentWorkletNode = null;
