@@ -30,5 +30,6 @@ export enum EventType {
     RECORDER_UNKNOWN_ERROR = "recorderUnknownError",
     UPDATE_AUDIO_TREATMENT_PERCENT = "updateAudioTreatmentPercent",
     UPDATE_REMAINING_TIME_ESTIMATED = "updateRemainingTimeEstimated",
-    CANCELED_AND_LOADED_INITIAL_AUDIO = "canceledAndLoadedInitialAudio"
+    CANCELLED_AND_LOADED_INITIAL_AUDIO = "cancelledAndLoadedInitialAudio",
+    CANCELLING_AUDIO_PROCESSING = "cancellingAudioProcessing"
 };

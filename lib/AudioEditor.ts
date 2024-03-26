@@ -631,7 +631,7 @@ export default class AudioEditor extends AbstractAudioElement {
                 this.bufferPlayer.loadBuffer(this.renderedBuffer);
             } else if(!this.initialRenderingDone) {
                 this.loadInitialBuffer();
-                this.eventEmitter.emit(EventType.CANCELED_AND_LOADED_INITIAL_AUDIO);
+                this.eventEmitter.emit(EventType.CANCELLED_AND_LOADED_INITIAL_AUDIO);
             }
 
             this.initialRenderingDone = true;
@@ -657,6 +657,10 @@ export default class AudioEditor extends AbstractAudioElement {
         if (this.currentOfflineContext && !this.audioRenderingLastCanceled) {
             this.audioRenderingLastCanceled = true;
             this.disconnectOldNodes(false);
+
+            if (this.eventEmitter) {
+                this.eventEmitter.emit(EventType.CANCELLING_AUDIO_PROCESSING);
+            }
         }
     }
 
