@@ -215,6 +215,7 @@ export default class AudioEditor extends AbstractAudioElement {
 
     /**
      * Create new context if needed, for example if sample rate setting have changed
+     * @returns Return true if sample rate have changed
      */
     private async createNewContextIfNeeded() {
         const isCompatibilityModeEnabled = this.configService && this.configService.isCompatibilityModeEnabled();
@@ -243,6 +244,8 @@ export default class AudioEditor extends AbstractAudioElement {
 
                 // We need to refetch all buffers of the fetcher
                 await this.resetBufferFetcher();
+
+                return true;
             }
         }
     }
@@ -307,13 +310,18 @@ export default class AudioEditor extends AbstractAudioElement {
         }
     }
 
-    /** Prepare the AudioContext before use */
+    /**
+     * Prepare the AudioContext before use
+     * @returns Return true if sample rate have changed
+     */
     private async prepareContext() {
-        await this.createNewContextIfNeeded();
+        const sampleRateChanged = await this.createNewContextIfNeeded();
 
         if (this.currentContext) {
             this.currentContext.resume();
         }
+
+        return sampleRateChanged;
     }
 
     /**
@@ -493,7 +501,7 @@ export default class AudioEditor extends AbstractAudioElement {
      * The resulting audio buffer can then be obtained by using the "getOutputBuffer" method.
      */
     async renderAudio(): Promise<boolean> {
-        await this.prepareContext();
+        const sampleRateChanged = await this.prepareContext();
 
         if (!this.currentContext) {
             throw new Error("AudioContext is not yet available");
@@ -510,8 +518,8 @@ export default class AudioEditor extends AbstractAudioElement {
             return true;
         }
 
-        // If switching from compatiblity mode to normal mode, we stop the audio player
-        if (this.configService && this.bufferPlayer && !this.configService.isCompatibilityModeEnabled() && this.bufferPlayer.compatibilityMode) {
+        // If sample rate changed or if switching from compatiblity mode to normal mode, we stop the audio player
+        if (this.bufferPlayer && (sampleRateChanged || (this.configService && !this.configService.isCompatibilityModeEnabled() && this.bufferPlayer.compatibilityMode))) {
             this.bufferPlayer.stop();
         }
 

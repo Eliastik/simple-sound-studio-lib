@@ -335,6 +335,7 @@ declare class AudioEditor extends AbstractAudioElement {
     private fetchBuffers;
     /**
      * Create new context if needed, for example if sample rate setting have changed
+     * @returns Return true if sample rate have changed
      */
     private createNewContextIfNeeded;
     /**
@@ -346,7 +347,10 @@ declare class AudioEditor extends AbstractAudioElement {
      * Stop previous audio context and create a new one
      */
     private createNewContext;
-    /** Prepare the AudioContext before use */
+    /**
+     * Prepare the AudioContext before use
+     * @returns Return true if sample rate have changed
+     */
     private prepareContext;
     /**
      * Get the current sample rate used
