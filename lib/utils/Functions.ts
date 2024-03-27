@@ -1,4 +1,25 @@
 import { FilterSettingValue } from "../model/filtersSettings/FilterSettings";
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+//@ts-ignore
+import lamejs from "lamejs";
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+//@ts-ignore
+import MPEGMode from "lamejs/src/js/MPEGMode";
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+//@ts-ignore
+import Lame from "lamejs/src/js/Lame";
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+//@ts-ignore
+import BitStream from "lamejs/src/js/BitStream";
+
+if (typeof (window) !== "undefined") {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (window as any).MPEGMode = MPEGMode;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (window as any).Lame = Lame;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (window as any).BitStream = BitStream;
+}
 
 const utilFunctions = {
     calcAudioDuration: (audio: AudioBuffer, speed: number) => {
@@ -88,7 +109,7 @@ const utilFunctions = {
     sumAudioBuffer(buffer: AudioBuffer) {
         let sum = 0;
 
-        for(let channel = 0; channel < buffer.numberOfChannels; channel++) {
+        for (let channel = 0; channel < buffer.numberOfChannels; channel++) {
             sum += this.sumAudioBufferChannel(buffer, channel);
         }
 
@@ -110,7 +131,37 @@ const utilFunctions = {
      * @param value FilterSettingValue
      */
     isSettingValueValid(value: FilterSettingValue) {
-        return typeof(value) !== "undefined" && !isNaN(Number(value)) && !(typeof(value) === "string" && value.trim() === "");
+        return typeof (value) !== "undefined" && !isNaN(Number(value)) && !(typeof (value) === "string" && value.trim() === "");
+    },
+    encodeMP3(buffers: Float32Array[], numChannels: number, sampleRate: number, bitrate: number) {
+        const mp3encoder = new lamejs.Mp3Encoder(Math.max(2, numChannels), sampleRate, bitrate);
+        const mp3Data = [];
+
+        const left = this.floatArray2Int16(buffers[0]);
+        const right = this.floatArray2Int16(buffers[1]);
+
+        const mp3Tmp = mp3encoder.encodeBuffer(left, right);
+
+        mp3Data.push(mp3Tmp);
+
+        const mp3buf = mp3encoder.flush();
+
+        mp3Data.push(mp3buf);
+
+        return mp3Data;
+    },
+    floatArray2Int16(floatbuffer: Float32Array) {
+        const int16Buffer = new Int16Array(floatbuffer.length);
+
+        for (let i = 0, len = floatbuffer.length; i < len; i++) {
+            if (floatbuffer[i] < 0) {
+                int16Buffer[i] = 0x8000 * floatbuffer[i];
+            } else {
+                int16Buffer[i] = 0x7FFF * floatbuffer[i];
+            }
+        }
+
+        return int16Buffer;
     }
 };
 

@@ -274,6 +274,11 @@ interface FilterState {
     [filterId: string]: boolean;
 }
 
+interface SaveBufferOptions {
+    format?: "mp3" | "wav";
+    bitrate?: number;
+}
+
 declare class AudioEditor extends AbstractAudioElement {
     /** The current audio context */
     private currentContext;
@@ -494,14 +499,22 @@ declare class AudioEditor extends AbstractAudioElement {
     off(event: string, callback: EventEmitterCallback): void;
     /**
      * Save the rendered audio to a buffer
+     * @param options The save options
      * @returns A promise resolved when the audio buffer is downloaded to the user
      */
-    saveBuffer(): Promise<boolean>;
+    saveBuffer(options?: SaveBufferOptions): Promise<boolean>;
     /**
      * Download an audio Blob
      * @param blob The blob
+     * @param options The save options
      */
     private downloadAudioBlob;
+    /**
+     * Export an audio to MP3
+     * @param buffers The buffers
+     * @param options The save options
+     */
+    private exportMP3;
 }
 
 interface ConstraintULong {
@@ -774,6 +787,7 @@ declare const Constants: {
     VOICE_RECORDER: string;
     BUFFER_PLAYER: string;
     EXPORT_WAV_COMMAND: string;
+    EXPORT_MP3_COMMAND: string;
     AUDIO_WAV: string;
     RECORD_COMMAND: string;
     INIT_COMMAND: string;
@@ -833,6 +847,8 @@ declare const Constants: {
     TREATMENT_TIME_COUNTING_THROTTLE_INTERVAL: number;
     TREATMENT_TIME_COUNTING_SMOOTHING_FACTOR: number;
     DISABLE_INITIAL_RENDERING: boolean;
+    DEFAULT_SAVE_FORMAT: string;
+    DEFAULT_MP3_BITRATE: number;
 };
 
 /**
@@ -875,6 +891,8 @@ declare const utilFunctions: {
      * @param value FilterSettingValue
      */
     isSettingValueValid(value: FilterSettingValue): boolean;
+    encodeMP3(buffers: Float32Array[], numChannels: number, sampleRate: number, bitrate: number): any[];
+    floatArray2Int16(floatbuffer: Float32Array): Int16Array;
 };
 
 declare enum EventType {

@@ -3,6 +3,7 @@ const Constants = {
     VOICE_RECORDER: "voiceRecorder",
     BUFFER_PLAYER: "bufferPlayer",
     EXPORT_WAV_COMMAND: "exportWAV",
+    EXPORT_MP3_COMMAND: "exportMP3",
     AUDIO_WAV: "audio/wav",
     RECORD_COMMAND: "record",
     INIT_COMMAND: "init",
@@ -66,7 +67,11 @@ const Constants = {
     // Smoothing factor for the time couting estimation (between 0 and 1)
     TREATMENT_TIME_COUNTING_SMOOTHING_FACTOR: 0.9,
     // Disable initial rendering (when opening audio file or buffer)
-    DISABLE_INITIAL_RENDERING: true
+    DISABLE_INITIAL_RENDERING: true,
+    // Default save format
+    DEFAULT_SAVE_FORMAT: "mp3",
+    // Default bitrate for the MP3 encoder
+    DEFAULT_MP3_BITRATE: 320
 };
 
 export default Constants;

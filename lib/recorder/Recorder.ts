@@ -72,7 +72,7 @@ export class Recorder {
                     case "getBuffer":
                         callbacks = this.callbacks.getBuffer;
                         break;
-                    case "exportWAV":
+                    case Constants.EXPORT_WAV_COMMAND:
                         callbacks = this.callbacks.exportWAV;
                         break;
                     }
@@ -203,7 +203,7 @@ export class Recorder {
 
         if (this.worker) {
             this.worker.postMessage({
-                command: "exportWAV",
+                command: Constants.EXPORT_WAV_COMMAND,
                 type: mimeType
             });
         }
