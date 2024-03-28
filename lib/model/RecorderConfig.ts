@@ -6,6 +6,7 @@ export default interface RecorderConfig {
     mimeType: string,
     sampleRate: number,
     workletBasePath: string,
+    workerBasePath: string,
     bitrate?: number,
     callback?: RecorderCallback<Blob | Float32Array[]>
 };

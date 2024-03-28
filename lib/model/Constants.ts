@@ -70,7 +70,7 @@ const Constants = {
     // Disable initial rendering (when opening audio file or buffer)
     DISABLE_INITIAL_RENDERING: true,
     // Default save format
-    DEFAULT_SAVE_FORMAT: "mp3",
+    DEFAULT_SAVE_FORMAT: "wav",
     // Default bitrate for the MP3 encoder
     DEFAULT_MP3_BITRATE: 320
 };

@@ -69,6 +69,10 @@ interface ConfigService {
      */
     getWorkletBasePath(): string;
     /**
+     * Return the base path for worker files
+     */
+    getWorkerBasePath(): string;
+    /**
      * Return the base path for audio files (reverb environments for example)
      */
     getSoundBasePath(): string;
@@ -509,12 +513,6 @@ declare class AudioEditor extends AbstractAudioElement {
      * @param options The save options
      */
     private downloadAudioBlob;
-    /**
-     * Export an audio to MP3
-     * @param buffers The buffers
-     * @param options The save options
-     */
-    private exportMP3;
 }
 
 interface ConstraintULong {
@@ -869,6 +867,7 @@ declare class GenericConfigService implements ConfigService {
     enableCompatibilityMode(): void;
     disableCompatibilityMode(): void;
     getWorkletBasePath(): string;
+    getWorkerBasePath(): string;
     getSoundBasePath(): string;
     isInitialRenderingDisabled(): boolean;
 }
@@ -892,21 +891,6 @@ declare const utilFunctions: {
      * @param value FilterSettingValue
      */
     isSettingValueValid(value: FilterSettingValue): boolean;
-    /**
-     * Encode a buffer to MP3
-     * @param buffers Array of Float32Array (one for each channel)
-     * @param numChannels The number of channels for the audio (max 2)
-     * @param sampleRate The sample rate
-     * @param bitrate The resulting MP3 bitrate
-     * @returns Int16Array buffer with MP3 data
-     */
-    encodeMP3(buffers: Float32Array[], numChannels: number, sampleRate: number, bitrate: number): Int16Array[];
-    /**
-     * Convert a Float32Array to an Int16Array
-     * @param floatbuffer The buffer to convert
-     * @returns Int16Array buffer
-     */
-    floatArray2Int16(floatbuffer: Float32Array): Int16Array;
 };
 
 declare enum EventType {

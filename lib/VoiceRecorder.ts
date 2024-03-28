@@ -375,6 +375,7 @@ export default class VoiceRecorder extends AbstractAudioElement {
                     sampleRate: this.configService.getSampleRate(),
                     numChannels: 2,
                     workletBasePath: this.configService.getWorkletBasePath(),
+                    workerBasePath: this.configService.getWorkerBasePath(),
                     mimeType: "audio/wav"
                 });
 

@@ -12,6 +12,10 @@ const workletFiles = [
     "lib/recorder/worklet/RecorderWorklet.ts",
 ];
 
+const workerFiles = [
+    "lib/recorder/worker/RecorderWorker.ts"
+]
+
 const bundleConfig = [
     {
         input: "./dist/dts/index.d.ts",
@@ -82,6 +86,32 @@ const workletConfig = workletFiles.map((input) => ({
     ],
 }));
 
-const config = [...bundleConfig, ...workletConfig];
+const workerConfig = workerFiles.map((input) => ({
+    input,
+    output: [
+        {
+            file: `dist/workers/${path.basename(input, ".ts")}.js`,
+            format: "esm",
+            sourcemap: false,
+            exports: "named",
+        },
+    ],
+    plugins: [
+        resolve({
+            browser: true
+        }),
+        commonjs({
+            include: /node_modules/,
+            requireReturnsDefault: "auto",
+        }),
+        typescript({
+            noEmit: true
+        }),
+        terser(),
+        cleanup(),
+    ],
+}));
+
+const config = [...bundleConfig, ...workletConfig, ...workerConfig];
 
 export default config;
