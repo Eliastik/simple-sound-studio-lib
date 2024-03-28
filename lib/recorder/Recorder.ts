@@ -77,6 +77,9 @@ export class Recorder {
                     case Constants.EXPORT_WAV_COMMAND:
                         callbacks = this.callbacks.exportWAV;
                         break;
+                    case Constants.EXPORT_MP3_COMMAND:
+                        callbacks = this.callbacks.exportMP3;
+                        break;
                     }
 
                     if (callbacks) {

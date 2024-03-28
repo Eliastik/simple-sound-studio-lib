@@ -344,7 +344,6 @@ declare class AudioEditor extends AbstractAudioElement {
     private fetchBuffers;
     /**
      * Create new context if needed, for example if sample rate setting have changed
-     * @returns Return true if sample rate have changed
      */
     private createNewContextIfNeeded;
     /**
@@ -356,10 +355,7 @@ declare class AudioEditor extends AbstractAudioElement {
      * Stop previous audio context and create a new one
      */
     private createNewContext;
-    /**
-     * Prepare the AudioContext before use
-     * @returns Return true if sample rate have changed
-     */
+    /** Prepare the AudioContext before use */
     private prepareContext;
     /**
      * Get the current sample rate used
@@ -511,6 +507,18 @@ declare class AudioEditor extends AbstractAudioElement {
      * @returns A promise resolved when the audio buffer is downloaded to the user
      */
     saveBuffer(options?: SaveBufferOptions): Promise<boolean>;
+    /**
+     * Save the rendered audio to a buffer, when compatibility mode is disabled
+     * @param options The save options
+     * @returns A promise resolved when the audio buffer is downloaded to the user
+     */
+    private saveBufferDirect;
+    /**
+     * Save the rendered audio to a buffer, when compatibility mode is enabled
+     * @param options The save options
+     * @returns A promise resolved when the audio buffer is downloaded to the user
+     */
+    private saveBufferCompatibilityMode;
     /**
      * Download an audio Blob
      * @param blob The blob
