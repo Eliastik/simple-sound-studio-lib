@@ -88,7 +88,7 @@ const utilFunctions = {
     sumAudioBuffer(buffer: AudioBuffer) {
         let sum = 0;
 
-        for(let channel = 0; channel < buffer.numberOfChannels; channel++) {
+        for (let channel = 0; channel < buffer.numberOfChannels; channel++) {
             sum += this.sumAudioBufferChannel(buffer, channel);
         }
 
@@ -110,7 +110,7 @@ const utilFunctions = {
      * @param value FilterSettingValue
      */
     isSettingValueValid(value: FilterSettingValue) {
-        return typeof(value) !== "undefined" && !isNaN(Number(value)) && !(typeof(value) === "string" && value.trim() === "");
+        return typeof (value) !== "undefined" && !isNaN(Number(value)) && !(typeof (value) === "string" && value.trim() === "");
     }
 };
 

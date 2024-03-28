@@ -58,6 +58,11 @@ export interface ConfigService {
     getWorkletBasePath(): string;
 
     /**
+     * Return the base path for worker files
+     */
+    getWorkerBasePath(): string;
+
+    /**
      * Return the base path for audio files (reverb environments for example)
      */
     getSoundBasePath(): string;

@@ -4,7 +4,7 @@ import RecorderConfig from "../model/RecorderConfig";
 import RecorderWorkerMessage from "../model/RecorderWorkerMessage";
 import RecorderWorkletMessage from "../model/RecorderWorkletMessage";
 import utilFunctions from "../utils/Functions";
-import getRecorderWorker from "./RecorderWorker";
+import getRecorderWorker from "./getRecorderWorker";
 
 export class Recorder {
 
@@ -19,12 +19,14 @@ export class Recorder {
         numChannels: 2,
         mimeType: "audio/wav",
         workletBasePath: "worklets/",
+        workerBasePath: "workers/",
         callback: () => { }
     };
 
     private callbacks: RecorderCallbacks = {
         getBuffer: [],
-        exportWAV: []
+        exportWAV: [],
+        exportMP3: []
     };
 
     recording = false;
@@ -54,7 +56,7 @@ export class Recorder {
         }
 
         if (this.context && !this.worker) {
-            this.worker = getRecorderWorker();
+            this.worker = getRecorderWorker(this.config.workerBasePath);
 
             if (this.worker) {
                 this.worker.postMessage({
@@ -72,7 +74,7 @@ export class Recorder {
                     case "getBuffer":
                         callbacks = this.callbacks.getBuffer;
                         break;
-                    case "exportWAV":
+                    case Constants.EXPORT_WAV_COMMAND:
                         callbacks = this.callbacks.exportWAV;
                         break;
                     }
@@ -203,7 +205,22 @@ export class Recorder {
 
         if (this.worker) {
             this.worker.postMessage({
-                command: "exportWAV",
+                command: Constants.EXPORT_WAV_COMMAND,
+                type: mimeType
+            });
+        }
+    }
+
+    exportMP3(cb: RecorderCallback<Blob>, mimeType?: string) {
+        mimeType = mimeType || this.config.mimeType;
+        cb = cb || this.config.callback;
+        if (!cb) throw new Error("Callback not set");
+
+        this.callbacks.exportMP3.push(cb);
+
+        if (this.worker) {
+            this.worker.postMessage({
+                command: Constants.EXPORT_MP3_COMMAND,
                 type: mimeType
             });
         }

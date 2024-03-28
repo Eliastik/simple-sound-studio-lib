@@ -77,6 +77,10 @@ export default class GenericConfigService implements ConfigService {
         return "";
     }
 
+    getWorkerBasePath(): string {
+        return "";
+    }
+
     getSoundBasePath(): string {
         return "";
     }

@@ -69,6 +69,10 @@ interface ConfigService {
      */
     getWorkletBasePath(): string;
     /**
+     * Return the base path for worker files
+     */
+    getWorkerBasePath(): string;
+    /**
      * Return the base path for audio files (reverb environments for example)
      */
     getSoundBasePath(): string;
@@ -272,6 +276,11 @@ declare class BufferPlayer extends AbstractAudioElement {
 
 interface FilterState {
     [filterId: string]: boolean;
+}
+
+interface SaveBufferOptions {
+    format?: "mp3" | "wav";
+    bitrate?: number;
 }
 
 declare class AudioEditor extends AbstractAudioElement {
@@ -498,12 +507,14 @@ declare class AudioEditor extends AbstractAudioElement {
     off(event: string, callback: EventEmitterCallback): void;
     /**
      * Save the rendered audio to a buffer
+     * @param options The save options
      * @returns A promise resolved when the audio buffer is downloaded to the user
      */
-    saveBuffer(): Promise<boolean>;
+    saveBuffer(options?: SaveBufferOptions): Promise<boolean>;
     /**
      * Download an audio Blob
      * @param blob The blob
+     * @param options The save options
      */
     private downloadAudioBlob;
 }
@@ -778,7 +789,9 @@ declare const Constants: {
     VOICE_RECORDER: string;
     BUFFER_PLAYER: string;
     EXPORT_WAV_COMMAND: string;
+    EXPORT_MP3_COMMAND: string;
     AUDIO_WAV: string;
+    AUDIO_MP3: string;
     RECORD_COMMAND: string;
     INIT_COMMAND: string;
     FILTERS_NAMES: {
@@ -837,6 +850,8 @@ declare const Constants: {
     TREATMENT_TIME_COUNTING_THROTTLE_INTERVAL: number;
     TREATMENT_TIME_COUNTING_SMOOTHING_FACTOR: number;
     DISABLE_INITIAL_RENDERING: boolean;
+    DEFAULT_SAVE_FORMAT: string;
+    DEFAULT_MP3_BITRATE: number;
 };
 
 /**
@@ -856,6 +871,7 @@ declare class GenericConfigService implements ConfigService {
     enableCompatibilityMode(): void;
     disableCompatibilityMode(): void;
     getWorkletBasePath(): string;
+    getWorkerBasePath(): string;
     getSoundBasePath(): string;
     isInitialRenderingDisabled(): boolean;
 }

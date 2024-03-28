@@ -28,11 +28,12 @@ import RecorderWorkerMessage from "./model/RecorderWorkerMessage";
 import { EventEmitterCallback } from "./model/EventEmitterCallback";
 import { FilterState } from "./model/FilterState";
 import GenericConfigService from "./utils/GenericConfigService";
-import getRecorderWorker from "./recorder/RecorderWorker";
+import getRecorderWorker from "./recorder/getRecorderWorker";
 import { Recorder } from "./recorder/Recorder";
 import ReverbSettings from "./model/filtersSettings/ReverbSettings";
 import BufferDecoderService from "./services/BufferDecoderService";
 import PassThroughFilter from "./filters/PassThroughFilter";
+import SaveBufferOptions from "./model/SaveBufferOptions";
 
 export default class AudioEditor extends AbstractAudioElement {
 
@@ -860,9 +861,10 @@ export default class AudioEditor extends AbstractAudioElement {
 
     /**
      * Save the rendered audio to a buffer
+     * @param options The save options
      * @returns A promise resolved when the audio buffer is downloaded to the user
      */
-    saveBuffer(): Promise<boolean> {
+    saveBuffer(options?: SaveBufferOptions): Promise<boolean> {
         if (this.savingBuffer) {
             return Promise.reject();
         }
@@ -879,32 +881,33 @@ export default class AudioEditor extends AbstractAudioElement {
                     return resolve(false);
                 }
 
-                const worker = getRecorderWorker();
+                const worker = getRecorderWorker(this.configService?.getWorkerBasePath());
 
                 if (worker) {
-                    worker.onmessage = (e: RecorderWorkerMessage) => {
-                        if (e.data.command == Constants.EXPORT_WAV_COMMAND) {
-                            this.downloadAudioBlob(e.data.data);
-                        }
-
-                        worker.terminate();
-                        this.savingBuffer = false;
-                        resolve(true);
-                    };
-
-                    worker.postMessage({
-                        command: Constants.INIT_COMMAND,
-                        config: {
-                            sampleRate: this.renderedBuffer.sampleRate,
-                            numChannels: 2
-                        }
-                    });
-
                     const buffer: Float32Array[] = [];
 
                     for (let i = 0; i < this.renderedBuffer.numberOfChannels; i++) {
                         buffer.push(this.renderedBuffer.getChannelData(i));
                     }
+
+                    worker.onmessage = (e: RecorderWorkerMessage) => {
+                        if (e.data.command == Constants.EXPORT_WAV_COMMAND || e.data.command == Constants.EXPORT_MP3_COMMAND) {
+                            this.downloadAudioBlob(e.data.data, options);
+                        }
+    
+                        worker.terminate();
+                        this.savingBuffer = false;
+                        resolve(true);
+                    };
+    
+                    worker.postMessage({
+                        command: Constants.INIT_COMMAND,
+                        config: {
+                            sampleRate: this.renderedBuffer.sampleRate,
+                            numChannels: 2,
+                            bitrate: options?.bitrate || Constants.DEFAULT_MP3_BITRATE
+                        }
+                    });
 
                     worker.postMessage({
                         command: Constants.RECORD_COMMAND,
@@ -912,7 +915,7 @@ export default class AudioEditor extends AbstractAudioElement {
                     });
 
                     worker.postMessage({
-                        command: Constants.EXPORT_WAV_COMMAND,
+                        command: options?.format === "mp3" || Constants.DEFAULT_SAVE_FORMAT === "mp3" ? Constants.EXPORT_MP3_COMMAND : Constants.EXPORT_WAV_COMMAND,
                         type: Constants.AUDIO_WAV
                     });
                 }
@@ -927,7 +930,9 @@ export default class AudioEditor extends AbstractAudioElement {
                         sampleRate: this.configService.getSampleRate(),
                         numChannels: 2,
                         workletBasePath: this.configService.getWorkletBasePath(),
-                        mimeType: "audio/wav"
+                        workerBasePath: this.configService.getWorkerBasePath(),
+                        mimeType: options?.format == "mp3" ? Constants.AUDIO_MP3 : Constants.AUDIO_WAV,
+                        bitrate: options?.bitrate || Constants.DEFAULT_MP3_BITRATE
                     });
 
                     rec.setup(this.currentNodes!.output).then(() => {
@@ -953,15 +958,27 @@ export default class AudioEditor extends AbstractAudioElement {
 
                             rec.stop();
 
-                            rec.exportWAV((blob: Blob) => {
-                                this.downloadAudioBlob(blob);
+                            if (options?.format === "mp3" || Constants.DEFAULT_SAVE_FORMAT === "mp3") {
+                                rec.exportMP3((blob: Blob) => {
+                                    this.downloadAudioBlob(blob, options);
 
-                                this.savingBuffer = false;
-                                this.off(EventType.PLAYING_FINISHED, finishedCallback);
-                                rec.kill();
+                                    this.savingBuffer = false;
+                                    this.off(EventType.PLAYING_FINISHED, finishedCallback);
+                                    rec.kill();
 
-                                resolve(true);
-                            });
+                                    resolve(true);
+                                });
+                            } else {
+                                rec.exportWAV((blob: Blob) => {
+                                    this.downloadAudioBlob(blob, options);
+
+                                    this.savingBuffer = false;
+                                    this.off(EventType.PLAYING_FINISHED, finishedCallback);
+                                    rec.kill();
+
+                                    resolve(true);
+                                });
+                            }
                         };
 
                         this.on(EventType.PLAYING_FINISHED, finishedCallback);
@@ -975,8 +992,9 @@ export default class AudioEditor extends AbstractAudioElement {
     /**
      * Download an audio Blob
      * @param blob The blob
+     * @param options The save options
      */
-    private downloadAudioBlob(blob: Blob) {
-        Recorder.forceDownload(blob, "audio-" + new Date().toISOString() + ".wav");
+    private downloadAudioBlob(blob: Blob, options?: SaveBufferOptions) {
+        Recorder.forceDownload(blob, "audio-" + new Date().toISOString() + "." + (options?.format || Constants.DEFAULT_SAVE_FORMAT));
     }
 }
