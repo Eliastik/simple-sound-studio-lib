@@ -882,8 +882,9 @@ export default class AudioEditor extends AbstractAudioElement {
                         buffer.push(this.renderedBuffer.getChannelData(i));
                     }
 
-                    if (options?.format === "mp3") {
+                    if (options?.format === "mp3" || Constants.DEFAULT_SAVE_FORMAT === "mp3") {
                         this.exportMP3(buffer, options);
+                        this.savingBuffer = false;
                         resolve(true);
                     } else {
                         worker.onmessage = (e: RecorderWorkerMessage) => {
@@ -927,7 +928,7 @@ export default class AudioEditor extends AbstractAudioElement {
                         sampleRate: this.configService.getSampleRate(),
                         numChannels: 2,
                         workletBasePath: this.configService.getWorkletBasePath(),
-                        mimeType: options?.format == "mp3" ? "audio/mp3" : "audio/wav",
+                        mimeType: options?.format == "mp3" ? Constants.AUDIO_MP3 : Constants.AUDIO_WAV,
                         bitrate: options?.bitrate || Constants.DEFAULT_MP3_BITRATE
                     });
 
@@ -990,10 +991,7 @@ export default class AudioEditor extends AbstractAudioElement {
     private exportMP3(buffers: Float32Array[], options?: SaveBufferOptions) {
         if (this.configService) {
             const mp3Data = utils.encodeMP3(buffers, 2, this.currentSampleRate, options?.bitrate || Constants.DEFAULT_MP3_BITRATE);
-            const blob = new Blob(mp3Data, {type: "audio/mp3"});
-
-            console.log(mp3Data);
-
+            const blob = new Blob(mp3Data, { type: Constants.AUDIO_MP3 });
             this.downloadAudioBlob(blob, options);
         }
     };

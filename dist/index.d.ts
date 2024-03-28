@@ -789,6 +789,7 @@ declare const Constants: {
     EXPORT_WAV_COMMAND: string;
     EXPORT_MP3_COMMAND: string;
     AUDIO_WAV: string;
+    AUDIO_MP3: string;
     RECORD_COMMAND: string;
     INIT_COMMAND: string;
     FILTERS_NAMES: {
@@ -891,7 +892,20 @@ declare const utilFunctions: {
      * @param value FilterSettingValue
      */
     isSettingValueValid(value: FilterSettingValue): boolean;
-    encodeMP3(buffers: Float32Array[], numChannels: number, sampleRate: number, bitrate: number): any[];
+    /**
+     * Encode a buffer to MP3
+     * @param buffers Array of Float32Array (one for each channel)
+     * @param numChannels The number of channels for the audio (max 2)
+     * @param sampleRate The sample rate
+     * @param bitrate The resulting MP3 bitrate
+     * @returns Int16Array buffer with MP3 data
+     */
+    encodeMP3(buffers: Float32Array[], numChannels: number, sampleRate: number, bitrate: number): Int16Array[];
+    /**
+     * Convert a Float32Array to an Int16Array
+     * @param floatbuffer The buffer to convert
+     * @returns Int16Array buffer
+     */
     floatArray2Int16(floatbuffer: Float32Array): Int16Array;
 };
 

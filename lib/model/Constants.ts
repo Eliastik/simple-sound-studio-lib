@@ -5,6 +5,7 @@ const Constants = {
     EXPORT_WAV_COMMAND: "exportWAV",
     EXPORT_MP3_COMMAND: "exportMP3",
     AUDIO_WAV: "audio/wav",
+    AUDIO_MP3: "audio/mp3",
     RECORD_COMMAND: "record",
     INIT_COMMAND: "init",
     FILTERS_NAMES: {

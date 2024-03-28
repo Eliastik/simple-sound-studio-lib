@@ -3,7 +3,7 @@ import { RecorderCallback } from "./RecorderCallback";
 export default interface RecorderConfig {
     bufferLen: number,
     numChannels: number,
-    mimeType: "audio/wav" | "audio/mp3",
+    mimeType: string,
     sampleRate: number,
     workletBasePath: string,
     bitrate?: number,
