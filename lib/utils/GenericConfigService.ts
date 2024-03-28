@@ -65,6 +65,16 @@ export default class GenericConfigService implements ConfigService {
         return Constants.DEFAULT_SAMPLE_RATE;
     }
 
+    getBitrateMP3(): number {
+        const setting = this.getConfig(Constants.PREFERENCES_KEYS.BITRATE_MP3);
+
+        if(setting != null) {
+            return parseInt(setting);
+        }
+
+        return Constants.DEFAULT_MP3_BITRATE;
+    }
+
     enableCompatibilityMode() {
         this.setConfig(Constants.PREFERENCES_KEYS.COMPATIBILITY_MODE_ENABLED, "true");
     }

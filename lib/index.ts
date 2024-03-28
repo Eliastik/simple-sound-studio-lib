@@ -19,6 +19,7 @@ import { FilterSettingValue, FilterSettings } from "./model/filtersSettings/Filt
 import { AudioFilterNodes } from "./model/AudioNodes";
 import { EventEmitterCallback } from "./model/EventEmitterCallback";
 import { ConfigService } from "./services/ConfigService";
+import SaveBufferOptions from "./model/SaveBufferOptions";
 
 export {
     AudioEditor,
@@ -37,6 +38,7 @@ export {
     type RecorderSettings,
     type AudioFilterNodes,
     type EventEmitterCallback,
+    type SaveBufferOptions,
     AbstractAudioElement,
     AbstractAudioFilter,
     AbstractAudioFilterWorklet,

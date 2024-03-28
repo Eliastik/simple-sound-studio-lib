@@ -57,6 +57,10 @@ interface ConfigService {
      */
     getSampleRate(): number;
     /**
+     * Get MP3 bitrate
+     */
+    getBitrateMP3(): number;
+    /**
      * Enable the compatibility/direct audio rendering mode
      */
     enableCompatibilityMode(): void;
@@ -838,6 +842,7 @@ declare const Constants: {
         BUFFER_SIZE: string;
         SAMPLE_RATE: string;
         DISABLE_INITIAL_RENDERING: string;
+        BITRATE_MP3: string;
     };
     ENABLE_SOUNDTOUCH_AUDIO_WORKLET: boolean;
     ENABLE_AUDIO_WORKLET: boolean;
@@ -853,6 +858,7 @@ declare const Constants: {
     VOCODER_MODULATOR: string;
     DEFAULT_BUFFER_SIZE: number;
     VALID_BUFFER_SIZE: number[];
+    VALID_MP3_BITRATES: number[];
     DEFAULT_SAMPLE_RATE: number;
     VALID_SAMPLE_RATES: number[];
     TREATMENT_TIME_COUNTING_THROTTLE_INTERVAL: number;
@@ -876,6 +882,7 @@ declare class GenericConfigService implements ConfigService {
     isSoundtouchAudioWorkletEnabled(): boolean;
     getBufferSize(): number;
     getSampleRate(): number;
+    getBitrateMP3(): number;
     enableCompatibilityMode(): void;
     disableCompatibilityMode(): void;
     getWorkletBasePath(): string;
@@ -941,4 +948,4 @@ declare enum EventType {
     CANCELLING_AUDIO_PROCESSING = "cancellingAudioProcessing"
 }
 
-export { AbstractAudioElement, AbstractAudioFilter, AbstractAudioFilterWorklet, AbstractAudioRenderer, AudioEditor, type AudioFilterEntrypointInterface, type AudioFilterNodes, BufferPlayer, type ConfigService, Constants, EventEmitter, type EventEmitterCallback, EventType, type FilterSettingValue, type FilterSettings, type FilterState, GenericConfigService, type GenericSettingValueAdditionalData, type RecorderSettings, type SelectFormValue, utilFunctions as UtilFunctions, VoiceRecorder };
+export { AbstractAudioElement, AbstractAudioFilter, AbstractAudioFilterWorklet, AbstractAudioRenderer, AudioEditor, type AudioFilterEntrypointInterface, type AudioFilterNodes, BufferPlayer, type ConfigService, Constants, EventEmitter, type EventEmitterCallback, EventType, type FilterSettingValue, type FilterSettings, type FilterState, GenericConfigService, type GenericSettingValueAdditionalData, type RecorderSettings, type SaveBufferOptions, type SelectFormValue, utilFunctions as UtilFunctions, VoiceRecorder };

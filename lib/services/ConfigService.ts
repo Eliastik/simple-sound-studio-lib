@@ -43,6 +43,11 @@ export interface ConfigService {
     getSampleRate(): number;
 
     /**
+     * Get MP3 bitrate
+     */
+    getBitrateMP3(): number;
+
+    /**
      * Enable the compatibility/direct audio rendering mode
      */
     enableCompatibilityMode(): void;

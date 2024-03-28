@@ -43,7 +43,8 @@ const Constants = {
         ENABLE_SOUNDTOUCH_AUDIO_WORKLET: "enable-soundtouch-audio-worklet",
         BUFFER_SIZE: "buffer-size",
         SAMPLE_RATE: "sample-rate",
-        DISABLE_INITIAL_RENDERING: "disable-initial-rendering"
+        DISABLE_INITIAL_RENDERING: "disable-initial-rendering",
+        BITRATE_MP3: "bitrate-mp3"
     },
     // Enable or disable the use of Audio Worklet version of Soundtouch
     // If disabled, the ScriptProcessorNode version is used
@@ -61,6 +62,7 @@ const Constants = {
     VOCODER_MODULATOR: "modulator.mp3",
     DEFAULT_BUFFER_SIZE: 0,
     VALID_BUFFER_SIZE: [0, 256, 512, 1024, 2048, 4096, 8192, 16384],
+    VALID_MP3_BITRATES: [32, 64, 96, 128, 160, 256, 320],
     DEFAULT_SAMPLE_RATE: 0, // 0 = AUTO
     VALID_SAMPLE_RATES: [0, 8000, 11025, 16000, 22050, 32000, 44100, 48000, 88200, 96000, 176400, 192000],
     // Interval used by the treatment percent counter. The event will be dispatched each ms defined here
@@ -70,7 +72,7 @@ const Constants = {
     // Disable initial rendering (when opening audio file or buffer)
     DISABLE_INITIAL_RENDERING: true,
     // Default save format
-    DEFAULT_SAVE_FORMAT: "mp3",
+    DEFAULT_SAVE_FORMAT: "wav",
     // Default bitrate for the MP3 encoder
     DEFAULT_MP3_BITRATE: 320
 };
