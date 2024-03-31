@@ -34,7 +34,7 @@ export default class BufferPlayer extends AbstractAudioElement {
     currentTime = 0;
     displayTime = 0;
     duration = 0;
-    private interval: number | null = null;
+    private intervals: number[] = [];
     playing = false;
     loop = false;
     speedAudio = 1;
@@ -102,7 +102,8 @@ export default class BufferPlayer extends AbstractAudioElement {
      * Reset this player
      */
     reset(direct?: boolean) {
-        clearInterval(this.interval!);
+        this.clearIntervals();
+
         this.currentTime = 0;
         this.displayTime = 0;
 
@@ -115,7 +116,7 @@ export default class BufferPlayer extends AbstractAudioElement {
      * Stop playing the audio
      */
     stop() {
-        clearInterval(this.interval!);
+        this.clearIntervals();
 
         if (this.source != undefined && this.source != null && this.playing) {
             this.source.stop(0);
@@ -133,6 +134,17 @@ export default class BufferPlayer extends AbstractAudioElement {
 
         this.eventEmitter?.emit(EventType.PLAYING_STOPPED);
         this.updateInfos();
+    }
+
+    /**
+     * Clear old intervals
+     */
+    private clearIntervals() {
+        for (const interval of this.intervals) {
+            clearInterval(interval);
+        }
+
+        this.intervals = [];
     }
 
     /**
@@ -167,7 +179,7 @@ export default class BufferPlayer extends AbstractAudioElement {
 
             let startTime = performance.now();
 
-            this.interval = window.setInterval(() => {
+            this.intervals.push(window.setInterval(() => {
                 const timeNow = performance.now();
                 const nextTime = timeNow - startTime;
                 startTime = timeNow;
@@ -190,7 +202,7 @@ export default class BufferPlayer extends AbstractAudioElement {
                 } else {
                     this.updateInfos();
                 }
-            }, 100);
+            }, 100));
         }
     }
 

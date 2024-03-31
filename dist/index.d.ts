@@ -184,7 +184,7 @@ declare class BufferPlayer extends AbstractAudioElement {
     currentTime: number;
     displayTime: number;
     duration: number;
-    private interval;
+    private intervals;
     playing: boolean;
     loop: boolean;
     speedAudio: number;
@@ -214,6 +214,10 @@ declare class BufferPlayer extends AbstractAudioElement {
      * Stop playing the audio
      */
     stop(): void;
+    /**
+     * Clear old intervals
+     */
+    private clearIntervals;
     /**
      * Start playing the audio
      */

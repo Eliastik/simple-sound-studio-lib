@@ -20,6 +20,7 @@ export class Recorder {
         mimeType: "audio/wav",
         workletBasePath: "worklets/",
         workerBasePath: "workers/",
+        bitrate: Constants.DEFAULT_MP3_BITRATE,
         callback: () => { }
     };
 
@@ -63,7 +64,8 @@ export class Recorder {
                     command: "init",
                     config: {
                         sampleRate: this.context.sampleRate,
-                        numChannels: this.config.numChannels
+                        numChannels: this.config.numChannels,
+                        bitrate: this.config.bitrate
                     }
                 });
 
