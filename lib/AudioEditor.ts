@@ -504,8 +504,8 @@ export default class AudioEditor extends AbstractAudioElement {
             throw new Error("Entrypoint filter is not available");
         }
 
-        // If initial rendering is disabled, we stop here
-        if (!this.initialRenderingDone && this.configService && this.configService.isInitialRenderingDisabled()) {
+        // If initial rendering is disabled and compatibility mode is disabled, we stop here
+        if (!this.initialRenderingDone && this.configService && this.configService.isInitialRenderingDisabled() && !this.configService.isCompatibilityModeEnabled()) {
             this.loadInitialBuffer();
             this.initialRenderingDone = true;
             return true;
@@ -589,13 +589,14 @@ export default class AudioEditor extends AbstractAudioElement {
                     return await this.setupOutput(this.currentContext!, durationAudio);
                 }
 
-                if(this.audioRenderingLastCanceled) {
+                if (this.audioRenderingLastCanceled) {
                     return false;
                 }
 
                 this.eventEmitter.emit(EventType.OFFLINE_AUDIO_RENDERING_FINISHED);
             } else { // Compatibility mode
                 this.bufferPlayer.setCompatibilityMode(this.currentNodes!.output, durationAudio);
+                this.initialRenderingDone = true;
             }
 
             this.eventEmitter.emit(EventType.AUDIO_RENDERING_FINISHED);
@@ -613,7 +614,7 @@ export default class AudioEditor extends AbstractAudioElement {
      */
     private loadRenderedAudio(renderedBuffer: AudioBuffer): boolean {
         if (this.eventEmitter && this.bufferPlayer) {
-            if(!this.audioRenderingLastCanceled) {
+            if (!this.audioRenderingLastCanceled) {
                 const sumRenderedAudio = utils.sumAudioBuffer(renderedBuffer);
 
                 if (sumRenderedAudio == 0 && this.sumPrincipalBuffer !== 0) {
@@ -630,7 +631,7 @@ export default class AudioEditor extends AbstractAudioElement {
 
                 this.renderedBuffer = renderedBuffer;
                 this.bufferPlayer.loadBuffer(this.renderedBuffer);
-            } else if(!this.initialRenderingDone) {
+            } else if (!this.initialRenderingDone) {
                 this.loadInitialBuffer();
                 this.eventEmitter.emit(EventType.CANCELLED_AND_LOADED_INITIAL_AUDIO);
             }
@@ -824,7 +825,7 @@ export default class AudioEditor extends AbstractAudioElement {
             this.bufferPlayer.stop();
             this.bufferPlayer.reset();
         }
-        
+
         this.cancelAudioRendering();
         this.principalBuffer = null;
     }
@@ -890,26 +891,26 @@ export default class AudioEditor extends AbstractAudioElement {
             if (!this.renderedBuffer || !this.currentContext) {
                 return reject("No rendered buffer or AudioContext not initialized");
             }
-    
+
             const worker = getRecorderWorker(this.configService?.getWorkerBasePath());
-    
+
             if (worker) {
                 const buffer: Float32Array[] = [];
-    
+
                 for (let i = 0; i < this.renderedBuffer.numberOfChannels; i++) {
                     buffer.push(this.renderedBuffer.getChannelData(i));
                 }
-    
+
                 worker.onmessage = (e: RecorderWorkerMessage) => {
                     if (e.data.command == Constants.EXPORT_WAV_COMMAND || e.data.command == Constants.EXPORT_MP3_COMMAND) {
                         this.downloadAudioBlob(e.data.data, options);
                     }
-    
+
                     worker.terminate();
                     this.savingBuffer = false;
                     resolve(true);
                 };
-    
+
                 worker.postMessage({
                     command: Constants.INIT_COMMAND,
                     config: {
@@ -918,12 +919,12 @@ export default class AudioEditor extends AbstractAudioElement {
                         bitrate: options?.bitrate || Constants.DEFAULT_MP3_BITRATE
                     }
                 });
-    
+
                 worker.postMessage({
                     command: Constants.RECORD_COMMAND,
                     buffer
                 });
-    
+
                 worker.postMessage({
                     command: options?.format === "mp3" || Constants.DEFAULT_SAVE_FORMAT === "mp3" ? Constants.EXPORT_MP3_COMMAND : Constants.EXPORT_WAV_COMMAND,
                     type: Constants.AUDIO_WAV
@@ -980,7 +981,7 @@ export default class AudioEditor extends AbstractAudioElement {
                         }
 
                         rec.stop();
-                        
+
                         const downloadBlobCallback = (blob: Blob) => {
                             this.downloadAudioBlob(blob, options);
 
