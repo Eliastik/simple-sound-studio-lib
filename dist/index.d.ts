@@ -292,6 +292,8 @@ interface SaveBufferOptions {
 }
 
 declare class AudioEditor extends AbstractAudioElement {
+    /** The filter manager */
+    private filterManager;
     /** The current audio context */
     private currentContext;
     /** The current offline context */
@@ -303,18 +305,10 @@ declare class AudioEditor extends AbstractAudioElement {
     private sumPrincipalBuffer;
     /** The resulting audio buffer */
     private renderedBuffer;
-    /** The entrypoint filter */
-    private entrypointFilter;
-    /** A list of filters */
-    private filters;
-    /** A list of renderers */
-    private renderers;
     /** The audio player */
     private bufferPlayer;
     /** The event emitter */
     private eventEmitter;
-    /** The current connected nodes */
-    private currentNodes;
     /** If we are currently processing and downloading the buffer */
     private savingBuffer;
     /** The previous sample rate setting */
@@ -341,10 +335,6 @@ declare class AudioEditor extends AbstractAudioElement {
      * @param renderers One or more AbstractAudioRenderer
      */
     addRenderers(...renderers: AbstractAudioRenderer[]): void;
-    /** Setup all audio filters */
-    private setupDefaultFilters;
-    /** Setup the renderers */
-    private setupDefaultRenderers;
     /**
      * Fetch default buffers from network
      * @param refetch true if we need to refetch the buffers
@@ -382,22 +372,6 @@ declare class AudioEditor extends AbstractAudioElement {
     /** Change the principal audio buffer of this editor */
     loadBuffer(audioBuffer: AudioBuffer): void;
     /**
-     * Connect the Audio API nodes of the enabled filters
-     * @param context The Audio Context
-     * @param buffer  The Audio Buffer
-     * @param keepCurrentInputOutput Keep current first input/output nodes?
-     */
-    private connectNodes;
-    /**
-     * Disconnect old audio nodes
-     * @param keepCurrentOutput Keeps current output nodes?
-     */
-    private disconnectOldNodes;
-    /** Reconnect the nodes if the compatibility/direct mode is enabled */
-    private reconnectNodesIfNeeded;
-    /** Initialize worklets filters */
-    private initializeWorklets;
-    /**
      * Get the rendered audio buffer
      * @returns The AudioBuffer
      */
@@ -409,17 +383,6 @@ declare class AudioEditor extends AbstractAudioElement {
      * The resulting audio buffer can then be obtained by using the "getOutputBuffer" method.
      */
     renderAudio(): Promise<boolean>;
-    /**
-     * Execute audio renderers then returns audio buffer rendered
-     * @param outputContext The output context
-     * @returns Audio buffer rendered
-     */
-    private executeAudioRenderers;
-    /**
-     * Setup the passthrough filter to count audio rendering progress
-     * @param durationAudio Audio duration - number
-     */
-    private setupPasstroughFilter;
     /**
      * Setup output buffers/nodes, then process the audio
      * @param outputContext Output audio context
@@ -472,6 +435,8 @@ declare class AudioEditor extends AbstractAudioElement {
      * @returns
      */
     getFiltersSettings(): Map<string, FilterSettings>;
+    /** Reconnect the nodes if the compatibility/direct mode is enabled */
+    reconnectNodesIfNeeded(): Promise<void>;
     /**
      * Toggle enabled/disabled state for a filter/renderer
      * @param filterId The filter/renderer ID

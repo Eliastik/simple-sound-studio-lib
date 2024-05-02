@@ -1,4 +1,4 @@
-import AudioEditor from "./AudioEditor";
+import AudioEditor from "./audioEditor/AudioEditor";
 import BufferPlayer from "./BufferPlayer";
 import VoiceRecorder from "./VoiceRecorder";
 import AbstractAudioElement from "./filters/interfaces/AbstractAudioElement";

@@ -1,41 +1,30 @@
-import AbstractAudioElement from "./filters/interfaces/AbstractAudioElement";
-import AbstractAudioFilter from "./filters/interfaces/AbstractAudioFilter";
-import AudioFilterEntrypointInterface from "./filters/interfaces/AudioFilterEntrypointInterface";
-import AbstractAudioRenderer from "./filters/interfaces/AbstractAudioRenderer";
-import BassBoosterFilter from "./filters/BassBoosterFilter";
-import BitCrusherFilter from "./filters/BitCrusherFilter";
-import EchoFilter from "./filters/EchoFilter";
-import HighPassFilter from "./filters/HighPassFilter";
-import LimiterFilter from "./filters/LimiterFilter";
-import LowPassFilter from "./filters/LowPassFilter";
-import ReturnAudioRenderer from "./filters/ReturnAudioRenderer";
-import ReverbFilter from "./filters/ReverbFilter";
-import SoundtouchWrapperFilter from "./filters/SountouchWrapperFilter";
-import TelephonizerFilter from "./filters/TelephonizerFilter";
-import utils from "./utils/Functions";
-import BufferPlayer from "./BufferPlayer";
-import BufferFetcherService from "./services/BufferFetcherService";
-import EventEmitter from "./utils/EventEmitter";
-import { EventType } from "./model/EventTypeEnum";
-import Constants from "./model/Constants";
-import AbstractAudioFilterWorklet from "./filters/interfaces/AbstractAudioFilterWorklet";
-import { AudioFilterNodes } from "./model/AudioNodes";
-import VocoderFilter from "./filters/VocoderFilter";
-import { ConfigService } from "./services/ConfigService";
-import utilFunctions from "./utils/Functions";
-import { FilterSettings } from "./model/filtersSettings/FilterSettings";
-import RecorderWorkerMessage from "./model/RecorderWorkerMessage";
-import { EventEmitterCallback } from "./model/EventEmitterCallback";
-import { FilterState } from "./model/FilterState";
-import GenericConfigService from "./utils/GenericConfigService";
-import getRecorderWorker from "./recorder/getRecorderWorker";
-import { Recorder } from "./recorder/Recorder";
-import ReverbSettings from "./model/filtersSettings/ReverbSettings";
-import BufferDecoderService from "./services/BufferDecoderService";
-import PassThroughFilter from "./filters/PassThroughFilter";
-import SaveBufferOptions from "./model/SaveBufferOptions";
+import AbstractAudioElement from "../filters/interfaces/AbstractAudioElement";
+import AbstractAudioFilter from "../filters/interfaces/AbstractAudioFilter";
+import AbstractAudioRenderer from "../filters/interfaces/AbstractAudioRenderer";
+import utils from "../utils/Functions";
+import BufferPlayer from "../BufferPlayer";
+import BufferFetcherService from "../services/BufferFetcherService";
+import EventEmitter from "../utils/EventEmitter";
+import { EventType } from "../model/EventTypeEnum";
+import Constants from "../model/Constants";
+import { ConfigService } from "../services/ConfigService";
+import utilFunctions from "../utils/Functions";
+import { FilterSettings } from "../model/filtersSettings/FilterSettings";
+import RecorderWorkerMessage from "../model/RecorderWorkerMessage";
+import { EventEmitterCallback } from "../model/EventEmitterCallback";
+import { FilterState } from "../model/FilterState";
+import GenericConfigService from "../utils/GenericConfigService";
+import getRecorderWorker from "../recorder/getRecorderWorker";
+import { Recorder } from "../recorder/Recorder";
+import ReverbSettings from "../model/filtersSettings/ReverbSettings";
+import BufferDecoderService from "../services/BufferDecoderService";
+import SaveBufferOptions from "../model/SaveBufferOptions";
+import FilterManager from "./FilterManager";
 
 export default class AudioEditor extends AbstractAudioElement {
+
+    /** The filter manager */
+    private filterManager: FilterManager | undefined;
 
     /** The current audio context */
     private currentContext: AudioContext | null | undefined;
@@ -48,18 +37,10 @@ export default class AudioEditor extends AbstractAudioElement {
     private sumPrincipalBuffer: number = 0;
     /** The resulting audio buffer */
     private renderedBuffer: AudioBuffer | null = null;
-    /** The entrypoint filter */
-    private entrypointFilter: (AbstractAudioFilter & AudioFilterEntrypointInterface) | null = null;
-    /** A list of filters */
-    private filters: AbstractAudioFilter[] = [];
-    /** A list of renderers */
-    private renderers: AbstractAudioRenderer[] = [];
     /** The audio player */
     private bufferPlayer: BufferPlayer | undefined;
     /** The event emitter */
     private eventEmitter: EventEmitter | undefined;
-    /** The current connected nodes */
-    private currentNodes: AudioFilterNodes | null = null;
     /** If we are currently processing and downloading the buffer */
     private savingBuffer = false;
     /** The previous sample rate setting */
@@ -84,6 +65,9 @@ export default class AudioEditor extends AbstractAudioElement {
         this.configService = configService || new GenericConfigService();
         this.bufferFetcherService = new BufferFetcherService(this.currentContext!, this.configService, this.eventEmitter);
         this.bufferDecoderService = new BufferDecoderService(this.currentContext!, this.eventEmitter);
+        
+        this.filterManager = new FilterManager(this.eventEmitter, this.bufferFetcherService, this.bufferDecoderService, this.configService);
+
         this.audioBuffersToFetch = audioBuffersToFetch || [];
 
         // Callback called just before starting audio player
@@ -123,8 +107,10 @@ export default class AudioEditor extends AbstractAudioElement {
             });
         }
 
-        this.setupDefaultFilters();
-        this.setupDefaultRenderers();
+        if (this.filterManager) {
+            this.filterManager.setupDefaultFilters();
+            this.filterManager.setupDefaultRenderers();
+        }
 
         if (this.audioBuffersToFetch.length > 0) {
             this.fetchBuffers(false);
@@ -136,15 +122,9 @@ export default class AudioEditor extends AbstractAudioElement {
      * @param filters One or more AbstractAudioFilter
      */
     addFilters(...filters: AbstractAudioFilter[]) {
-        for (const filter of filters) {
-            filter.initializeDefaultSettings();
-            filter.bufferFetcherService = this.bufferFetcherService;
-            filter.bufferDecoderService = this.bufferDecoderService;
-            filter.configService = this.configService;
-            filter.eventEmitter = this.eventEmitter;
+        if (this.filterManager) {
+            this.filterManager.addFilters(...filters);
         }
-
-        this.filters.push(...filters);
     }
 
     /**
@@ -152,37 +132,9 @@ export default class AudioEditor extends AbstractAudioElement {
      * @param renderers One or more AbstractAudioRenderer
      */
     addRenderers(...renderers: AbstractAudioRenderer[]) {
-        for (const renderer of renderers) {
-            renderer.bufferFetcherService = this.bufferFetcherService;
-            renderer.bufferDecoderService = this.bufferDecoderService;
-            renderer.configService = this.configService;
+        if (this.filterManager) {
+            this.filterManager.addRenderers(...renderers);
         }
-
-        this.renderers.push(...renderers);
-    }
-
-    /** Setup all audio filters */
-    private setupDefaultFilters() {
-        const bassBooster = new BassBoosterFilter(200, 15, 200, -2);
-        const bitCrusher = new BitCrusherFilter(16, 0.9);
-        const echo = new EchoFilter(0.2, 0.75);
-        const highPass = new HighPassFilter(3500);
-        const lowPass = new LowPassFilter(3500);
-        const reverb = new ReverbFilter();
-        const soundtouchWrapper = new SoundtouchWrapperFilter();
-        const limiterFilter = new LimiterFilter(0, 0, 0, 3, -0.05, 0.1);
-        const telephonizerFilter = new TelephonizerFilter();
-        const vocoder = new VocoderFilter();
-        const passthrough = new PassThroughFilter();
-
-        this.entrypointFilter = soundtouchWrapper;
-        this.addFilters(bassBooster, bitCrusher, echo, highPass, lowPass, reverb, limiterFilter, telephonizerFilter, soundtouchWrapper, vocoder, passthrough);
-    }
-
-    /** Setup the renderers */
-    private setupDefaultRenderers() {
-        const returnAudio = new ReturnAudioRenderer();
-        this.addRenderers(returnAudio);
     }
 
     /**
@@ -383,103 +335,6 @@ export default class AudioEditor extends AbstractAudioElement {
     }
 
     /**
-     * Connect the Audio API nodes of the enabled filters
-     * @param context The Audio Context
-     * @param buffer  The Audio Buffer
-     * @param keepCurrentInputOutput Keep current first input/output nodes?
-     */
-    private async connectNodes(context: BaseAudioContext, buffer: AudioBuffer, keepCurrentInputOutput: boolean, isCompatibilityMode: boolean) {
-        if (!this.entrypointFilter) {
-            return;
-        }
-
-        let entrypointNode: AudioNode | null = null;
-
-        if (keepCurrentInputOutput && this.currentNodes) {
-            entrypointNode = this.currentNodes.input;
-        } else {
-            const entrypointNodes = await this.entrypointFilter.getEntrypointNode(context, buffer, !isCompatibilityMode);
-            entrypointNode = entrypointNodes.input;
-        }
-
-        const intermediateNodes: AudioFilterNodes[] = [];
-        let previousNode: AudioNode | undefined = entrypointNode;
-
-        this.disconnectOldNodes(keepCurrentInputOutput);
-
-        // Sort by filter order, then remove the disabled filter (but always keep the last/output filter)
-        const filters = this.filters
-            .sort((a, b) => a.order - b.order)
-            .filter((filter, index) => filter !== this.entrypointFilter && (filter.isEnabled() || index >= this.filters.length - 1));
-
-        for (const filter of filters) {
-            const node = filter.getNode(context);
-
-            if (previousNode) {
-                previousNode.connect(node.input);
-            }
-
-            previousNode = node.output;
-            intermediateNodes.push(node);
-        }
-
-        if (this.entrypointFilter) {
-            this.entrypointFilter.updateState();
-        }
-
-        this.currentNodes = {
-            input: entrypointNode!,
-            output: previousNode!,
-            intermediateNodes: intermediateNodes
-                .filter(n => n.input != previousNode && n.output != previousNode &&
-                    n.input != entrypointNode && n.output != entrypointNode)
-        };
-    }
-
-    /**
-     * Disconnect old audio nodes
-     * @param keepCurrentOutput Keeps current output nodes?
-     */
-    private disconnectOldNodes(keepCurrentOutput: boolean) {
-        if (this.currentNodes) {
-            this.currentNodes.input.disconnect();
-
-            if (!keepCurrentOutput) {
-                this.currentNodes.output.disconnect();
-            }
-
-            if (this.currentNodes.intermediateNodes) {
-                for (const intermediate of this.currentNodes.intermediateNodes) {
-                    intermediate.input.disconnect();
-                    intermediate.output.disconnect();
-                }
-            }
-        }
-    }
-
-    /** Reconnect the nodes if the compatibility/direct mode is enabled */
-    private async reconnectNodesIfNeeded() {
-        if (this.bufferPlayer && this.bufferPlayer.compatibilityMode &&
-            this.currentContext && this.principalBuffer &&
-            this.bufferPlayer && this.entrypointFilter) {
-            await this.connectNodes(this.currentContext, this.principalBuffer, true, this.bufferPlayer.compatibilityMode);
-
-            const speedAudio = this.entrypointFilter.getSpeed();
-            this.bufferPlayer.speedAudio = speedAudio;
-            this.bufferPlayer.duration = this.calculateAudioDuration(speedAudio) * speedAudio;
-        }
-    }
-
-    /** Initialize worklets filters */
-    private async initializeWorklets(context: BaseAudioContext) {
-        for (const filter of this.filters) {
-            if (filter.isWorklet()) {
-                await (filter as AbstractAudioFilterWorklet<object>).initializeWorklet(context);
-            }
-        }
-    }
-
-    /**
      * Get the rendered audio buffer
      * @returns The AudioBuffer
      */
@@ -500,8 +355,16 @@ export default class AudioEditor extends AbstractAudioElement {
             throw new Error("AudioContext is not yet available");
         }
 
-        if (!this.entrypointFilter) {
+        if(!this.filterManager) {
+            throw new Error("Filter manager is not available");
+        }
+
+        if (!this.filterManager.entrypointFilter) {
             throw new Error("Entrypoint filter is not available");
+        }
+
+        if (!this.principalBuffer) {
+            throw new Error("No principal buffer available");
         }
 
         // If initial rendering is disabled and compatibility mode is disabled, we stop here
@@ -516,48 +379,20 @@ export default class AudioEditor extends AbstractAudioElement {
             this.bufferPlayer.stop();
         }
 
-        const speedAudio = this.entrypointFilter.getSpeed();
+        const speedAudio = this.filterManager.entrypointFilter.getSpeed();
         const durationAudio = this.calculateAudioDuration(speedAudio);
         const offlineContext = new OfflineAudioContext(2, this.currentContext.sampleRate * durationAudio, this.currentContext.sampleRate);
         const outputContext = this.configService && this.configService.isCompatibilityModeEnabled() ? this.currentContext : offlineContext;
 
-        this.renderedBuffer = await this.executeAudioRenderers(outputContext);
+        this.renderedBuffer = await this.filterManager.executeAudioRenderers(this.principalBuffer, outputContext);
         this.currentOfflineContext = null;
         this.audioRenderingLastCanceled = false;
 
-        this.setupPasstroughFilter(durationAudio);
+
+        this.resetAudioRenderingProgress();
+        this.filterManager.setupPasstroughFilter(durationAudio, this.currentContext);
 
         return await this.setupOutput(outputContext, durationAudio, offlineContext);
-    }
-
-    /**
-     * Execute audio renderers then returns audio buffer rendered
-     * @param outputContext The output context
-     * @returns Audio buffer rendered
-     */
-    private async executeAudioRenderers(outputContext: AudioContext | OfflineAudioContext) {
-        let currentBuffer = this.principalBuffer!;
-
-        for (const renderer of this.renderers.sort((a, b) => a.order - b.order)) {
-            if (renderer.isEnabled()) {
-                currentBuffer = await renderer.renderAudio(outputContext, currentBuffer);
-            }
-        }
-        return currentBuffer;
-    }
-
-    /**
-     * Setup the passthrough filter to count audio rendering progress
-     * @param durationAudio Audio duration - number
-     */
-    private setupPasstroughFilter(durationAudio: number) {
-        this.resetAudioRenderingProgress();
-
-        const passthroughFilter = this.filters.find(f => f.id === Constants.FILTERS_NAMES.PASSTHROUGH);
-
-        if (passthroughFilter && this.currentContext) {
-            (passthroughFilter as PassThroughFilter).totalSamples = durationAudio * this.currentContext.sampleRate;
-        }
     }
 
     /**
@@ -568,20 +403,17 @@ export default class AudioEditor extends AbstractAudioElement {
      * @returns A promise resolved when the audio processing is done. The promise returns false if the audio processing was cancelled, or if an error occurred.
      */
     private async setupOutput(outputContext: BaseAudioContext, durationAudio?: number, offlineContext?: OfflineAudioContext): Promise<boolean> {
-        if (this.renderedBuffer && this.configService && this.eventEmitter && this.bufferPlayer) {
+        if (this.renderedBuffer && this.configService && this.eventEmitter && this.bufferPlayer && this.filterManager) {
             // Initialize worklets then connect the filter nodes
-            await this.initializeWorklets(outputContext);
-            await this.connectNodes(outputContext, this.renderedBuffer, false, this.configService.isCompatibilityModeEnabled());
+            await this.filterManager.initializeWorklets(outputContext);
+            await this.filterManager.connectNodes(outputContext, this.renderedBuffer, false, this.configService.isCompatibilityModeEnabled());
 
-            if (this.entrypointFilter) {
-                const speedAudio = this.entrypointFilter.getSpeed();
-                this.bufferPlayer.speedAudio = speedAudio;
-            }
+            this.filterManager.setupPlayerSpeed(this.bufferPlayer);
 
             // Standard mode
-            if (!this.configService.isCompatibilityModeEnabled() && offlineContext && this.currentNodes) {
+            if (!this.configService.isCompatibilityModeEnabled() && offlineContext && this.filterManager.currentNodes) {
                 this.currentOfflineContext = offlineContext;
-                this.currentNodes.output.connect(outputContext.destination);
+                this.filterManager.currentNodes.output.connect(outputContext.destination);
 
                 const renderedBuffer = await offlineContext.startRendering();
 
@@ -595,7 +427,7 @@ export default class AudioEditor extends AbstractAudioElement {
 
                 this.eventEmitter.emit(EventType.OFFLINE_AUDIO_RENDERING_FINISHED);
             } else { // Compatibility mode
-                this.bufferPlayer.setCompatibilityMode(this.currentNodes!.output, durationAudio);
+                this.bufferPlayer.setCompatibilityMode(this.filterManager.currentNodes!.output, durationAudio);
                 this.initialRenderingDone = true;
             }
 
@@ -656,9 +488,9 @@ export default class AudioEditor extends AbstractAudioElement {
      * Cancel the audio rendering
      */
     public cancelAudioRendering() {
-        if (this.currentOfflineContext && !this.audioRenderingLastCanceled) {
+        if (this.currentOfflineContext && !this.audioRenderingLastCanceled && this.filterManager) {
             this.audioRenderingLastCanceled = true;
-            this.disconnectOldNodes(false);
+            this.filterManager.disconnectOldNodes(false);
 
             if (this.eventEmitter) {
                 this.eventEmitter.emit(EventType.CANCELLING_AUDIO_PROCESSING);
@@ -672,16 +504,9 @@ export default class AudioEditor extends AbstractAudioElement {
      * @returns The audio duration
      */
     private calculateAudioDuration(speedAudio: number): number {
-        if (this.principalBuffer) {
-            let duration = utils.calcAudioDuration(this.principalBuffer, speedAudio);
-
-            for (const filter of this.filters) {
-                if (filter.isEnabled()) {
-                    duration += filter.getAddingTime();
-                }
-            }
-
-            return duration;
+        if (this.principalBuffer && this.filterManager) {
+            const duration = utils.calcAudioDuration(this.principalBuffer, speedAudio);
+            return duration + this.filterManager.getAddingTime();
         }
 
         return 0;
@@ -728,13 +553,11 @@ export default class AudioEditor extends AbstractAudioElement {
      * @returns The filters state (enabled/disabled)
      */
     getFiltersState(): FilterState {
-        const state: FilterState = {};
+        if (this.filterManager) {
+            return this.filterManager.getFiltersState();
+        }
 
-        [...this.filters, ...this.renderers].forEach(filter => {
-            state[filter.id] = filter.isEnabled();
-        });
-
-        return state;
+        return {};
     }
 
     /**
@@ -742,13 +565,24 @@ export default class AudioEditor extends AbstractAudioElement {
      * @returns 
      */
     getFiltersSettings(): Map<string, FilterSettings> {
-        const settings = new Map<string, FilterSettings>();
-
-        for (const filter of this.filters) {
-            settings.set(filter.id, filter.getSettings());
+        if (this.filterManager) {
+            return this.filterManager.getFiltersSettings();
         }
 
-        return settings;
+        return new Map();
+    }
+
+    /** Reconnect the nodes if the compatibility/direct mode is enabled */
+    async reconnectNodesIfNeeded() {
+        if (this.bufferPlayer && this.bufferPlayer.compatibilityMode &&
+            this.currentContext && this.principalBuffer &&
+            this.filterManager && this.filterManager.entrypointFilter) {
+            await this.filterManager.connectNodes(this.currentContext, this.principalBuffer, true, this.bufferPlayer.compatibilityMode);
+
+            const speedAudio = this.filterManager.entrypointFilter.getSpeed();
+            this.bufferPlayer.speedAudio = speedAudio;
+            this.bufferPlayer.duration = this.calculateAudioDuration(speedAudio) * speedAudio;
+        }
     }
 
     /**
@@ -756,18 +590,10 @@ export default class AudioEditor extends AbstractAudioElement {
      * @param filterId The filter/renderer ID
      */
     toggleFilter(filterId: string) {
-        const filter = this.filters.find(f => f.id === filterId);
-        const renderer = this.renderers.find(f => f.id === filterId);
-
-        if (filter) {
-            filter.toggle();
+        if (this.filterManager && this.currentContext && this.principalBuffer) {
+            this.filterManager.toggleFilter(filterId);
+            this.reconnectNodesIfNeeded();
         }
-
-        if (renderer) {
-            renderer.toggle();
-        }
-
-        this.reconnectNodesIfNeeded();
     }
 
     /**
@@ -776,13 +602,8 @@ export default class AudioEditor extends AbstractAudioElement {
      * @param settings Filter setting (key/value)
      */
     async changeFilterSettings(filterId: string, settings: FilterSettings) {
-        const filter = this.filters.find(f => f.id === filterId);
-
-        if (filter) {
-            for (const key of Object.keys(settings)) {
-                await filter.setSetting(key, settings[key]);
-            }
-
+        if (this.filterManager && this.currentContext && this.principalBuffer) {
+            this.filterManager.changeFilterSettings(filterId, settings);
             await this.reconnectNodesIfNeeded();
         }
     }
@@ -792,11 +613,9 @@ export default class AudioEditor extends AbstractAudioElement {
      * @param filterId Id of the filter/renderer
      */
     async resetFilterSettings(filterId: string) {
-        const filter = this.filters.find(f => f.id === filterId);
-
-        if (filter) {
-            await filter.resetSettings();
-            this.reconnectNodesIfNeeded();
+        if (this.filterManager && this.currentContext && this.principalBuffer) {
+            this.filterManager.resetFilterSettings(filterId);
+            await this.reconnectNodesIfNeeded();
         }
     }
 
@@ -804,15 +623,10 @@ export default class AudioEditor extends AbstractAudioElement {
      * Reset all filters/renderers state (enabled/disabled) based on their default states
      */
     resetAllFiltersState() {
-        [...this.filters, ...this.renderers].forEach(element => {
-            if (element.isDefaultEnabled()) {
-                element.enable();
-            } else {
-                element.disable();
-            }
-        });
-
-        this.reconnectNodesIfNeeded();
+        if (this.filterManager && this.currentContext && this.principalBuffer) {
+            this.filterManager.resetAllFiltersState();
+            this.reconnectNodesIfNeeded();
+        }
     }
 
     /** Events and exit */
@@ -949,6 +763,10 @@ export default class AudioEditor extends AbstractAudioElement {
                     return reject("No config service found");
                 }
 
+                if (!this.filterManager) {
+                    return reject("No filter manager found");
+                }
+
                 const rec = new Recorder({
                     bufferLen: this.configService.getBufferSize(),
                     sampleRate: this.configService.getSampleRate(),
@@ -959,7 +777,7 @@ export default class AudioEditor extends AbstractAudioElement {
                     bitrate: options?.bitrate || Constants.DEFAULT_MP3_BITRATE
                 });
 
-                rec.setup(this.currentNodes!.output).then(() => {
+                rec.setup(this.filterManager.currentNodes!.output).then(() => {
                     rec.record();
 
                     this.playingStoppedCallback = () => {
