@@ -294,8 +294,8 @@ interface SaveBufferOptions {
 declare class AudioEditor extends AbstractAudioElement {
     /** The filter manager */
     private filterManager;
-    /** The current audio context */
-    private currentContext;
+    /** The context manager */
+    private contextManager;
     /** The current offline context */
     private currentOfflineContext;
     /** The audio buffer to be processed */
@@ -311,8 +311,6 @@ declare class AudioEditor extends AbstractAudioElement {
     private eventEmitter;
     /** If we are currently processing and downloading the buffer */
     private savingBuffer;
-    /** The previous sample rate setting */
-    private previousSampleRate;
     /** List of audio buffers to fetch */
     private audioBuffersToFetch;
     /** Callback used when saving audio */
@@ -341,18 +339,10 @@ declare class AudioEditor extends AbstractAudioElement {
      */
     private fetchBuffers;
     /**
-     * Create new context if needed, for example if sample rate setting have changed
-     */
-    private createNewContextIfNeeded;
-    /**
      * Reset the buffer fetcher and redownload the buffers. Used when changing sample rate.
      */
     private resetBufferFetcher;
     private resetReverbFilterBuffer;
-    /**
-     * Stop previous audio context and create a new one
-     */
-    private createNewContext;
     /** Prepare the AudioContext before use */
     private prepareContext;
     /**

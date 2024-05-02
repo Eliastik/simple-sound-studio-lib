@@ -45,6 +45,9 @@ export default class FilterManager extends AbstractAudioElement {
         this.configService = configService || new GenericConfigService();
         this.bufferFetcherService = bufferFetcherService;
         this.bufferDecoderService = bufferDecoderService;
+
+        this.setupDefaultFilters();
+        this.setupDefaultRenderers();
     }
 
     /**
@@ -78,7 +81,7 @@ export default class FilterManager extends AbstractAudioElement {
     }
 
     /** Setup all audio filters */
-    setupDefaultFilters() {
+    private setupDefaultFilters() {
         const bassBooster = new BassBoosterFilter(200, 15, 200, -2);
         const bitCrusher = new BitCrusherFilter(16, 0.9);
         const echo = new EchoFilter(0.2, 0.75);
@@ -96,7 +99,7 @@ export default class FilterManager extends AbstractAudioElement {
     }
 
     /** Setup the renderers */
-    setupDefaultRenderers() {
+    private setupDefaultRenderers() {
         const returnAudio = new ReturnAudioRenderer();
         this.addRenderers(returnAudio);
     }
@@ -318,19 +321,19 @@ export default class FilterManager extends AbstractAudioElement {
         }
     }
 
-    get order(): number {
-        return -1;
-    }
-
-    get id(): string {
-        return "FilterManager";
-    }
-
     get entrypointFilter() {
         return this._entryPointFilter;
     }
 
     get currentNodes() {
         return this._currentNodes;
+    }
+
+    get order(): number {
+        return -1;
+    }
+
+    get id(): string {
+        return "FilterManager";
     }
 }
