@@ -1,8 +1,7 @@
-import BufferPlayer from "@/BufferPlayer";
-import AbstractAudioElement from "@/filters/interfaces/AbstractAudioElement";
-import Constants from "@/model/Constants";
 import { EventType } from "@/model/EventTypeEnum";
 import { ConfigService } from "@/services/ConfigService";
+import AbstractAudioElement from "@/filters/interfaces/AbstractAudioElement";
+import Constants from "@/model/Constants";
 import EventEmitter from "@/utils/EventEmitter";
 
 export default class AudioContextManager extends AbstractAudioElement {
@@ -15,15 +14,12 @@ export default class AudioContextManager extends AbstractAudioElement {
     private oldAudioContext: AudioContext | null | undefined;
     /** The previous sample rate setting */
     private previousSampleRate = Constants.DEFAULT_SAMPLE_RATE;
-    /** The buffer player */
-    private bufferPlayer: BufferPlayer | undefined;
 
-    constructor(context: AudioContext | undefined | null, configService: ConfigService | null, eventEmitter: EventEmitter | null, bufferPlayer: BufferPlayer) {
+    constructor(context: AudioContext | undefined | null, configService: ConfigService | null, eventEmitter: EventEmitter | null) {
         super();
 
         this._currentContext = context;
         this.eventEmitter = eventEmitter || new EventEmitter();
-        this.bufferPlayer = bufferPlayer;
         this.configService = configService;
 
         this.setup();
@@ -101,10 +97,6 @@ export default class AudioContextManager extends AbstractAudioElement {
 
         if (this.eventEmitter) {
             this.eventEmitter.emit(EventType.SAMPLE_RATE_CHANGED, this.currentSampleRate);
-        }
-
-        if (this.bufferPlayer && this.currentContext) {
-            this.bufferPlayer.updateContext(this.currentContext);
         }
     }
 

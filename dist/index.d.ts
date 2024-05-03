@@ -1,3 +1,8 @@
+import AudioContextManager$1 from '@/audioEditor/AudioContextManager';
+import { ConfigService as ConfigService$1 } from '@/services/ConfigService';
+import AbstractAudioElement$1 from '@/filters/interfaces/AbstractAudioElement';
+import EventEmitter$1 from '@/utils/EventEmitter';
+
 type EventEmitterCallback = (data: string | number | AudioBuffer | undefined) => void;
 
 interface AudioEditorEvents {
@@ -13,11 +18,10 @@ declare class EventEmitter {
 }
 
 declare class BufferDecoderService {
-    private context;
+    private contextManager;
     private eventEmitter;
-    constructor(context: AudioContext, eventEmitter?: EventEmitter);
+    constructor(contextManager: AudioContextManager$1, eventEmitter?: EventEmitter);
     decodeBufferFromFile(file: File): Promise<AudioBuffer | null>;
-    updateContext(context: AudioContext): void;
 }
 
 interface ConfigService {
@@ -87,19 +91,18 @@ interface ConfigService {
 }
 
 declare class BufferFetcherService {
-    private context;
+    private contextManager;
     private buffers;
     private bufferErrors;
     private eventEmitter;
     private configService;
-    constructor(context: AudioContext, configService: ConfigService, eventEmitter?: EventEmitter);
+    constructor(contextManager: AudioContextManager$1, configService: ConfigService, eventEmitter?: EventEmitter);
     fetchBuffer(bufferURI: string, force?: boolean): Promise<void>;
     fetchAllBuffers(bufferURIs: string[]): Promise<void>;
     getAudioBuffer(filename: string): AudioBuffer | undefined;
     getOrFetchAudioBuffer(filename: string): Promise<AudioBuffer | undefined>;
     getDownloadedBuffersList(): string[];
     private getKeyFromLocation;
-    updateContext(context: AudioContext): void;
     reset(): void;
 }
 
@@ -177,8 +180,43 @@ declare abstract class AbstractAudioRenderer extends AbstractAudioElement {
     abstract renderAudio(context: BaseAudioContext, buffer: AudioBuffer): Promise<AudioBuffer>;
 }
 
+declare class AudioContextManager extends AbstractAudioElement$1 {
+    /** The current event emitter */
+    private eventEmitter;
+    /** The current audio context */
+    private _currentContext;
+    /** The old audio context */
+    private oldAudioContext;
+    /** The previous sample rate setting */
+    private previousSampleRate;
+    constructor(context: AudioContext | undefined | null, configService: ConfigService$1 | null, eventEmitter: EventEmitter$1 | null);
+    private setup;
+    /**
+     * Create new context if needed, for example if sample rate setting have changed
+     * @param principalBuffer The audio buffer
+     * @returns true if a new context was created, false otherwise
+     */
+    createNewContextIfNeeded(principalBuffer: AudioBuffer | null): boolean;
+    /**
+     * Stop previous audio context and create a new one
+     * @param sampleRate New sample rate
+     */
+    private createNewContext;
+    /**
+     * Destroy previous AudioContext
+     */
+    private destroyOldContext;
+    /**
+     * Get the current sample rate used
+     */
+    get currentSampleRate(): number;
+    get currentContext(): AudioContext | null | undefined;
+    get order(): number;
+    get id(): string;
+}
+
 declare class BufferPlayer extends AbstractAudioElement {
-    private context;
+    private _contextManager;
     private buffer;
     private source;
     currentTime: number;
@@ -192,7 +230,7 @@ declare class BufferPlayer extends AbstractAudioElement {
     private onBeforePlayingCallback;
     compatibilityMode: boolean;
     currentNode: AudioNode | null;
-    constructor(context: AudioContext | OfflineAudioContext | null, eventEmitter?: EventEmitter);
+    constructor(contextManager: AudioContextManager | undefined | null, eventEmitter?: EventEmitter);
     /** Init this buffer player */
     init(direct?: boolean): void;
     /**
@@ -258,11 +296,6 @@ declare class BufferPlayer extends AbstractAudioElement {
      */
     on(event: string, callback: EventEmitterCallback): void;
     /**
-     * Set a new audio context
-     * @param context The new audio context
-     */
-    updateContext(context: AudioContext): void;
-    /**
      * Get the time in text format
      */
     get currentTimeDisplay(): string;
@@ -278,6 +311,7 @@ declare class BufferPlayer extends AbstractAudioElement {
      * Get the remaining time in text format
      */
     get remainingTimeDisplay(): string;
+    set contextManager(contextManager: AudioContextManager | undefined);
     get order(): number;
     get id(): string;
 }
@@ -296,6 +330,8 @@ declare class AudioEditor extends AbstractAudioElement {
     private filterManager;
     /** The context manager */
     private contextManager;
+    /** The save buffer manager */
+    private saveBufferManager;
     /** The current offline context */
     private currentOfflineContext;
     /** The audio buffer to be processed */
@@ -309,12 +345,8 @@ declare class AudioEditor extends AbstractAudioElement {
     private bufferPlayer;
     /** The event emitter */
     private eventEmitter;
-    /** If we are currently processing and downloading the buffer */
-    private savingBuffer;
     /** List of audio buffers to fetch */
     private audioBuffersToFetch;
-    /** Callback used when saving audio */
-    private playingStoppedCallback;
     /** true if the user wanted to cancel audio rendering */
     private audioRenderingLastCanceled;
     /** true if initial rendering for the current buffer was done */
@@ -470,24 +502,6 @@ declare class AudioEditor extends AbstractAudioElement {
      * @returns A promise resolved when the audio buffer is downloaded to the user
      */
     saveBuffer(options?: SaveBufferOptions): Promise<boolean>;
-    /**
-     * Save the rendered audio to a buffer, when compatibility mode is disabled
-     * @param options The save options
-     * @returns A promise resolved when the audio buffer is downloaded to the user
-     */
-    private saveBufferDirect;
-    /**
-     * Save the rendered audio to a buffer, when compatibility mode is enabled
-     * @param options The save options
-     * @returns A promise resolved when the audio buffer is downloaded to the user
-     */
-    private saveBufferCompatibilityMode;
-    /**
-     * Download an audio Blob
-     * @param blob The blob
-     * @param options The save options
-     */
-    private downloadAudioBlob;
 }
 
 interface ConstraintULong {

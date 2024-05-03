@@ -18,17 +18,17 @@
  */
 // The audio buffer player
 // Used to play the audio buffer, with time controls, pause/play, stop and loop
-
+import { EventType } from "./model/EventTypeEnum";
+import { EventEmitterCallback } from "./model/EventEmitterCallback";
 import EventEmitter from "./utils/EventEmitter";
 import AbstractAudioElement from "./filters/interfaces/AbstractAudioElement";
 import Constants from "./model/Constants";
-import { EventType } from "./model/EventTypeEnum";
-import { EventEmitterCallback } from "./model/EventEmitterCallback";
+import AudioContextManager from "./audioEditor/AudioContextManager";
 
 // Also used in compatibility mode (which doesn't use audio buffer) with less functions (no time control)
 export default class BufferPlayer extends AbstractAudioElement {
 
-    private context: AudioContext | OfflineAudioContext | null = null;
+    private _contextManager: AudioContextManager | undefined | null;
     private buffer: AudioBuffer | null = null;
     private source: AudioBufferSourceNode | null = null;
     currentTime = 0;
@@ -44,9 +44,9 @@ export default class BufferPlayer extends AbstractAudioElement {
     compatibilityMode = false;
     currentNode: AudioNode | null = null;
 
-    constructor(context: AudioContext | OfflineAudioContext | null, eventEmitter?: EventEmitter) {
+    constructor(contextManager: AudioContextManager | undefined | null, eventEmitter?: EventEmitter) {
         super();
-        this.context = context;
+        this._contextManager = contextManager;
         this.eventEmitter = eventEmitter || new EventEmitter();
     }
 
@@ -54,15 +54,15 @@ export default class BufferPlayer extends AbstractAudioElement {
     init(direct?: boolean) {
         this.playing = false;
 
-        if (this.context) {
-            this.context.resume();
+        if (this._contextManager && this._contextManager.currentContext) {
+            this._contextManager.currentContext.resume();
 
             if (!this.compatibilityMode && this.buffer) {
                 if (this.source != null && !direct) this.source.disconnect();
-                this.source = this.context.createBufferSource();
+                this.source = this._contextManager.currentContext.createBufferSource();
                 this.source.buffer = this.buffer;
                 this.duration = this.buffer.duration * this.speedAudio;
-                this.source.connect(this.context.destination);
+                this.source.connect(this._contextManager.currentContext.destination);
             }
         }
 
@@ -170,8 +170,8 @@ export default class BufferPlayer extends AbstractAudioElement {
                     return;
                 }
             } else {
-                if (this.currentNode && this.context) {
-                    this.currentNode.connect(this.context.destination);
+                if (this.currentNode && this._contextManager && this._contextManager.currentContext) {
+                    this.currentNode.connect(this._contextManager.currentContext.destination);
                 } else {
                     return;
                 }
@@ -291,14 +291,6 @@ export default class BufferPlayer extends AbstractAudioElement {
     }
 
     /**
-     * Set a new audio context
-     * @param context The new audio context
-     */
-    updateContext(context: AudioContext) {
-        this.context = context;
-    }
-
-    /**
      * Get the time in text format
      */
     get currentTimeDisplay() {
@@ -324,6 +316,10 @@ export default class BufferPlayer extends AbstractAudioElement {
      */
     get remainingTimeDisplay() {
         return ("0" + Math.trunc((this.duration - this.displayTime) / 60)).slice(-2) + ":" + ("0" + Math.trunc((this.duration - this.displayTime) % 60)).slice(-2);
+    }
+
+    set contextManager(contextManager: AudioContextManager | undefined) {
+        this._contextManager = contextManager;
     }
 
     get order(): number {

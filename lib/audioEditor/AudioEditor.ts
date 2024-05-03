@@ -10,17 +10,15 @@ import Constants from "../model/Constants";
 import { ConfigService } from "../services/ConfigService";
 import utilFunctions from "../utils/Functions";
 import { FilterSettings } from "../model/filtersSettings/FilterSettings";
-import RecorderWorkerMessage from "../model/RecorderWorkerMessage";
 import { EventEmitterCallback } from "../model/EventEmitterCallback";
 import { FilterState } from "../model/FilterState";
 import GenericConfigService from "../utils/GenericConfigService";
-import getRecorderWorker from "../recorder/getRecorderWorker";
-import { Recorder } from "../recorder/Recorder";
 import ReverbSettings from "../model/filtersSettings/ReverbSettings";
 import BufferDecoderService from "../services/BufferDecoderService";
 import SaveBufferOptions from "../model/SaveBufferOptions";
 import FilterManager from "./FilterManager";
 import AudioContextManager from "./AudioContextManager";
+import SaveBufferManager from "./SaveBufferManager";
 
 export default class AudioEditor extends AbstractAudioElement {
 
@@ -28,6 +26,8 @@ export default class AudioEditor extends AbstractAudioElement {
     private filterManager: FilterManager | undefined;
     /** The context manager */
     private contextManager: AudioContextManager | undefined;
+    /** The save buffer manager */
+    private saveBufferManager: SaveBufferManager | undefined;
 
     /** The current offline context */
     private currentOfflineContext: OfflineAudioContext | null | undefined;
@@ -42,12 +42,8 @@ export default class AudioEditor extends AbstractAudioElement {
     private bufferPlayer: BufferPlayer | undefined;
     /** The event emitter */
     private eventEmitter: EventEmitter | undefined;
-    /** If we are currently processing and downloading the buffer */
-    private savingBuffer = false;
     /** List of audio buffers to fetch */
     private audioBuffersToFetch: string[] = [];
-    /** Callback used when saving audio */
-    private playingStoppedCallback: (() => void) | null = null;
     /** true if the user wanted to cancel audio rendering */
     private audioRenderingLastCanceled = false;
     /** true if initial rendering for the current buffer was done */
@@ -60,13 +56,15 @@ export default class AudioEditor extends AbstractAudioElement {
 
         this.eventEmitter = eventEmitter || new EventEmitter();
         this.configService = configService || new GenericConfigService();
-        this.bufferPlayer = player || new BufferPlayer(context!);
 
-        this.contextManager = new AudioContextManager(context, this.configService, this.eventEmitter, this.bufferPlayer);
-        this.bufferFetcherService = new BufferFetcherService(this.contextManager.currentContext!, this.configService, this.eventEmitter);
-        this.bufferDecoderService = new BufferDecoderService(this.contextManager.currentContext!, this.eventEmitter);
+        this.contextManager = new AudioContextManager(context, this.configService, this.eventEmitter);
+
+        this.bufferPlayer = player || new BufferPlayer(this.contextManager, this.eventEmitter);
+        this.bufferFetcherService = new BufferFetcherService(this.contextManager, this.configService, this.eventEmitter);
+        this.bufferDecoderService = new BufferDecoderService(this.contextManager, this.eventEmitter);
 
         this.filterManager = new FilterManager(this.eventEmitter, this.bufferFetcherService, this.bufferDecoderService, this.configService);
+        this.saveBufferManager = new SaveBufferManager(this.contextManager, this.configService, this.eventEmitter, this.bufferPlayer);
 
         this.audioBuffersToFetch = audioBuffersToFetch || [];
 
@@ -86,14 +84,12 @@ export default class AudioEditor extends AbstractAudioElement {
 
             // Callback called when playing is finished
             this.bufferPlayer.on(EventType.PLAYING_FINISHED, () => {
-                if (this.savingBuffer && this.playingStoppedCallback) {
-                    this.off(EventType.PLAYING_STOPPED, this.playingStoppedCallback);
-                }
-
                 if (this.bufferPlayer && this.bufferPlayer.loop) {
                     this.bufferPlayer.start();
                 }
             });
+
+            this.bufferPlayer.contextManager = this.contextManager;
         }
 
         if (this.audioBuffersToFetch.length > 0) {
@@ -180,19 +176,7 @@ export default class AudioEditor extends AbstractAudioElement {
         if (this.contextManager) {
             const changed = this.contextManager.createNewContextIfNeeded(this.principalBuffer);
 
-            if (changed && this.contextManager.currentContext) {
-                if (this.bufferPlayer) {
-                    this.bufferPlayer.updateContext(this.contextManager.currentContext);
-                }
-        
-                if (this.bufferFetcherService) {
-                    this.bufferFetcherService.updateContext(this.contextManager.currentContext);
-                }
-        
-                if (this.bufferDecoderService) {
-                    this.bufferDecoderService.updateContext(this.contextManager.currentContext);
-                }
-
+            if (changed) {
                 await this.resetBufferFetcher();
             }
     
@@ -605,164 +589,10 @@ export default class AudioEditor extends AbstractAudioElement {
      * @returns A promise resolved when the audio buffer is downloaded to the user
      */
     async saveBuffer(options?: SaveBufferOptions): Promise<boolean> {
-        if (this.savingBuffer) {
-            throw new Error("The buffer is currently saving");
+        if (this.saveBufferManager) {
+            return await this.saveBufferManager?.saveBuffer(this.renderedBuffer, options);
         }
 
-        if (!this.bufferPlayer) {
-            throw new Error("No buffer player was found");
-        }
-
-        this.savingBuffer = true;
-
-        let savingResult = false;
-
-        if (!this.bufferPlayer.compatibilityMode) {
-            savingResult = await this.saveBufferDirect(options);
-        } else {
-            savingResult = await this.saveBufferCompatibilityMode(options);
-        }
-
-        this.savingBuffer = false;
-
-        return savingResult;
-    }
-
-    /**
-     * Save the rendered audio to a buffer, when compatibility mode is disabled
-     * @param options The save options
-     * @returns A promise resolved when the audio buffer is downloaded to the user
-     */
-    private saveBufferDirect(options?: SaveBufferOptions): Promise<boolean> {
-        return new Promise((resolve, reject) => {
-            if (!this.renderedBuffer || (this.contextManager && !this.contextManager.currentContext)) {
-                return reject("No rendered buffer or AudioContext not initialized");
-            }
-
-            const worker = getRecorderWorker(this.configService?.getWorkerBasePath());
-
-            if (worker) {
-                const buffer: Float32Array[] = [];
-
-                for (let i = 0; i < this.renderedBuffer.numberOfChannels; i++) {
-                    buffer.push(this.renderedBuffer.getChannelData(i));
-                }
-
-                worker.onmessage = (e: RecorderWorkerMessage) => {
-                    if (e.data.command == Constants.EXPORT_WAV_COMMAND || e.data.command == Constants.EXPORT_MP3_COMMAND) {
-                        this.downloadAudioBlob(e.data.data, options);
-                    }
-
-                    worker.terminate();
-                    this.savingBuffer = false;
-                    resolve(true);
-                };
-
-                worker.postMessage({
-                    command: Constants.INIT_COMMAND,
-                    config: {
-                        sampleRate: this.renderedBuffer.sampleRate,
-                        numChannels: 2,
-                        bitrate: options?.bitrate || Constants.DEFAULT_MP3_BITRATE
-                    }
-                });
-
-                worker.postMessage({
-                    command: Constants.RECORD_COMMAND,
-                    buffer
-                });
-
-                worker.postMessage({
-                    command: options?.format === "mp3" || Constants.DEFAULT_SAVE_FORMAT === "mp3" ? Constants.EXPORT_MP3_COMMAND : Constants.EXPORT_WAV_COMMAND,
-                    type: Constants.AUDIO_WAV
-                });
-            }
-        });
-    }
-
-    /**
-     * Save the rendered audio to a buffer, when compatibility mode is enabled
-     * @param options The save options
-     * @returns A promise resolved when the audio buffer is downloaded to the user
-     */
-    private saveBufferCompatibilityMode(options?: SaveBufferOptions): Promise<boolean> {
-        return new Promise((resolve, reject) => {
-            if (!this.bufferPlayer) {
-                return reject("No buffer player found");
-            }
-
-            this.bufferPlayer.start().then(() => {
-                if (!this.configService) {
-                    return reject("No config service found");
-                }
-
-                if (!this.filterManager) {
-                    return reject("No filter manager found");
-                }
-
-                const rec = new Recorder({
-                    bufferLen: this.configService.getBufferSize(),
-                    sampleRate: this.configService.getSampleRate(),
-                    numChannels: 2,
-                    workletBasePath: this.configService.getWorkletBasePath(),
-                    workerBasePath: this.configService.getWorkerBasePath(),
-                    mimeType: options?.format == "mp3" ? Constants.AUDIO_MP3 : Constants.AUDIO_WAV,
-                    bitrate: options?.bitrate || Constants.DEFAULT_MP3_BITRATE
-                });
-
-                rec.setup(this.filterManager.currentNodes!.output).then(() => {
-                    rec.record();
-
-                    this.playingStoppedCallback = () => {
-                        rec.kill();
-
-                        this.savingBuffer = false;
-                        this.off(EventType.PLAYING_FINISHED, finishedCallback);
-
-                        if (this.playingStoppedCallback) {
-                            this.off(EventType.PLAYING_STOPPED, this.playingStoppedCallback);
-                        }
-
-                        resolve(true);
-                    };
-
-                    const finishedCallback = () => {
-                        if (this.playingStoppedCallback) {
-                            this.off(EventType.PLAYING_STOPPED, this.playingStoppedCallback);
-                        }
-
-                        rec.stop();
-
-                        const downloadBlobCallback = (blob: Blob) => {
-                            this.downloadAudioBlob(blob, options);
-
-                            this.savingBuffer = false;
-                            this.off(EventType.PLAYING_FINISHED, finishedCallback);
-                            rec.kill();
-
-                            resolve(true);
-                        };
-
-                        if (options?.format === "mp3" || Constants.DEFAULT_SAVE_FORMAT === "mp3") {
-                            rec.exportMP3(downloadBlobCallback);
-                        } else {
-                            rec.exportWAV(downloadBlobCallback);
-                        }
-                    };
-
-                    this.on(EventType.PLAYING_FINISHED, finishedCallback);
-                    this.on(EventType.PLAYING_STOPPED, this.playingStoppedCallback);
-                });
-            });
-        });
-    }
-
-    /**
-     * Download an audio Blob
-     * @param blob The blob
-     * @param options The save options
-     */
-    private downloadAudioBlob(blob: Blob, options?: SaveBufferOptions) {
-        Recorder.forceDownload(blob, "audio-" + new Date().toISOString() + "." + (options?.format || Constants.DEFAULT_SAVE_FORMAT));
+        return false;
     }
 }

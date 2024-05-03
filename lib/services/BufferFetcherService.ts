@@ -1,18 +1,19 @@
-import EventEmitter from "../utils/EventEmitter";
 import { EventType } from "../model/EventTypeEnum";
-import utilFunctions from "../utils/Functions";
 import { ConfigService } from "./ConfigService";
+import utilFunctions from "../utils/Functions";
+import EventEmitter from "../utils/EventEmitter";
+import AudioContextManager from "@/audioEditor/AudioContextManager";
 
 export default class BufferFetcherService {
 
-    private context: AudioContext;
+    private contextManager: AudioContextManager;
     private buffers: Map<string, AudioBuffer> = new Map<string, AudioBuffer>();
     private bufferErrors: string[] = [];
     private eventEmitter: EventEmitter | null;
     private configService: ConfigService | null = null;
 
-    constructor(context: AudioContext, configService: ConfigService, eventEmitter?: EventEmitter) {
-        this.context = context;
+    constructor(contextManager: AudioContextManager, configService: ConfigService, eventEmitter?: EventEmitter) {
+        this.contextManager = contextManager;
         this.eventEmitter = eventEmitter || new EventEmitter();
         this.configService = configService;
     }
@@ -35,8 +36,11 @@ export default class BufferFetcherService {
                 throw EventType.FETCHING_BUFFERS_ERROR;
             } else {
                 const arrayBuffer = await response.arrayBuffer();
-                const buffer = await this.context.decodeAudioData(arrayBuffer);
-                this.buffers.set(this.getKeyFromLocation(realBufferURI), utilFunctions.decodeBuffer(this.context, buffer));
+
+                if (this.contextManager && this.contextManager.currentContext) {
+                    const buffer = await this.contextManager.currentContext.decodeAudioData(arrayBuffer);
+                    this.buffers.set(this.getKeyFromLocation(realBufferURI), utilFunctions.decodeBuffer(this.contextManager.currentContext, buffer));
+                }
             }
     
             this.eventEmitter?.emit(EventType.FINISHED_FETCHING_BUFFERS, realBufferURI);
@@ -71,10 +75,6 @@ export default class BufferFetcherService {
 
     private getKeyFromLocation(location: string) {
         return location.substring(location.lastIndexOf("/") + 1);
-    }
-
-    updateContext(context: AudioContext) {
-        this.context = context;
     }
 
     reset() {

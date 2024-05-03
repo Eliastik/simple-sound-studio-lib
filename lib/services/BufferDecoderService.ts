@@ -1,14 +1,15 @@
-import EventEmitter from "../utils/EventEmitter";
 import { EventType } from "../model/EventTypeEnum";
+import EventEmitter from "../utils/EventEmitter";
 import utilFunctions from "../utils/Functions";
+import AudioContextManager from "@/audioEditor/AudioContextManager";
 
 export default class BufferDecoderService {
 
-    private context: AudioContext;
+    private contextManager: AudioContextManager;
     private eventEmitter: EventEmitter | null;
 
-    constructor(context: AudioContext, eventEmitter?: EventEmitter) {
-        this.context = context;
+    constructor(contextManager: AudioContextManager, eventEmitter?: EventEmitter) {
+        this.contextManager = contextManager;
         this.eventEmitter = eventEmitter || new EventEmitter();
     }
 
@@ -18,13 +19,15 @@ export default class BufferDecoderService {
         }
 
         try {
-            const buffer = await utilFunctions.loadAudioBuffer(this.context, file);
-
-            if (this.eventEmitter) {
-                this.eventEmitter.emit(EventType.DECODED_AUDIO_FILE);
+            if (this.contextManager && this.contextManager.currentContext) {
+                const buffer = await utilFunctions.loadAudioBuffer(this.contextManager.currentContext, file);
+    
+                if (this.eventEmitter) {
+                    this.eventEmitter.emit(EventType.DECODED_AUDIO_FILE);
+                }
+    
+                return buffer;
             }
-
-            return buffer;
         } catch (e) {
             console.error(e);
 
@@ -35,9 +38,5 @@ export default class BufferDecoderService {
         }
 
         return null;
-    }
-
-    updateContext(context: AudioContext) {
-        this.context = context;
     }
 }
