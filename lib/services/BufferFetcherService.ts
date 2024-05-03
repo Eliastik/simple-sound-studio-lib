@@ -36,7 +36,7 @@ export default class BufferFetcherService {
             } else {
                 const arrayBuffer = await response.arrayBuffer();
                 const buffer = await this.context.decodeAudioData(arrayBuffer);
-                this.buffers.set(this.getKeyFromLocation(realBufferURI), await utilFunctions.decodeBuffer(this.context, buffer));
+                this.buffers.set(this.getKeyFromLocation(realBufferURI), utilFunctions.decodeBuffer(this.context, buffer));
             }
     
             this.eventEmitter?.emit(EventType.FINISHED_FETCHING_BUFFERS, realBufferURI);

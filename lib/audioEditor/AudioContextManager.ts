@@ -1,6 +1,8 @@
+import BufferPlayer from "@/BufferPlayer";
 import AbstractAudioElement from "@/filters/interfaces/AbstractAudioElement";
 import Constants from "@/model/Constants";
 import { EventType } from "@/model/EventTypeEnum";
+import { ConfigService } from "@/services/ConfigService";
 import EventEmitter from "@/utils/EventEmitter";
 
 export default class AudioContextManager extends AbstractAudioElement {
@@ -9,14 +11,20 @@ export default class AudioContextManager extends AbstractAudioElement {
     private eventEmitter: EventEmitter | undefined;
     /** The current audio context */
     private _currentContext: AudioContext | null | undefined;
+    /** The old audio context */
+    private oldAudioContext: AudioContext | null | undefined;
     /** The previous sample rate setting */
     private previousSampleRate = Constants.DEFAULT_SAMPLE_RATE;
+    /** The buffer player */
+    private bufferPlayer: BufferPlayer | undefined;
 
-    constructor(context: AudioContext | undefined | null, eventEmitter: EventEmitter | null) {
+    constructor(context: AudioContext | undefined | null, configService: ConfigService | null, eventEmitter: EventEmitter | null, bufferPlayer: BufferPlayer) {
         super();
 
         this._currentContext = context;
         this.eventEmitter = eventEmitter || new EventEmitter();
+        this.bufferPlayer = bufferPlayer;
+        this.configService = configService;
 
         this.setup();
     }
@@ -40,13 +48,13 @@ export default class AudioContextManager extends AbstractAudioElement {
      * @param principalBuffer The audio buffer
      * @returns true if a new context was created, false otherwise
      */
-    async createNewContextIfNeeded(principalBuffer: AudioBuffer | null) {
+    createNewContextIfNeeded(principalBuffer: AudioBuffer | null) {
         const isCompatibilityModeEnabled = this.configService && this.configService.isCompatibilityModeEnabled();
 
         if (isCompatibilityModeEnabled && principalBuffer) {
             // If compatibility mode is enabled, we use the sample rate of the input audio buffer
             if (this.currentSampleRate != principalBuffer.sampleRate) {
-                await this.createNewContext(principalBuffer.sampleRate);
+                this.createNewContext(principalBuffer.sampleRate);
                 this.previousSampleRate = principalBuffer.sampleRate;
 
                 return true;
@@ -61,7 +69,7 @@ export default class AudioContextManager extends AbstractAudioElement {
 
             // If sample rate setting has changed, create a new audio context
             if (currentSampleRate != this.previousSampleRate) {
-                await this.createNewContext(currentSampleRate);
+                this.createNewContext(currentSampleRate);
                 this.previousSampleRate = currentSampleRate;
 
                 return true;
@@ -75,9 +83,10 @@ export default class AudioContextManager extends AbstractAudioElement {
      * Stop previous audio context and create a new one
      * @param sampleRate New sample rate
      */
-    private async createNewContext(sampleRate: number) {
+    private createNewContext(sampleRate: number) {
         if (this._currentContext) {
-            await this._currentContext.close();
+            this.oldAudioContext = this._currentContext;
+            this.destroyOldContext();
         }
 
         const options: AudioContextOptions = {
@@ -92,6 +101,20 @@ export default class AudioContextManager extends AbstractAudioElement {
 
         if (this.eventEmitter) {
             this.eventEmitter.emit(EventType.SAMPLE_RATE_CHANGED, this.currentSampleRate);
+        }
+
+        if (this.bufferPlayer && this.currentContext) {
+            this.bufferPlayer.updateContext(this.currentContext);
+        }
+    }
+
+    /**
+     * Destroy previous AudioContext
+     */
+    private destroyOldContext() {
+        if (this.oldAudioContext) {
+            this.oldAudioContext.close();
+            this.oldAudioContext = null;
         }
     }
 

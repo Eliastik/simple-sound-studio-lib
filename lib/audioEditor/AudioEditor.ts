@@ -57,12 +57,12 @@ export default class AudioEditor extends AbstractAudioElement {
 
     constructor(context?: AudioContext | null, player?: BufferPlayer, eventEmitter?: EventEmitter, configService?: ConfigService, audioBuffersToFetch?: string[]) {
         super();
+
         this.eventEmitter = eventEmitter || new EventEmitter();
-        this.bufferPlayer = player || new BufferPlayer(context!);
         this.configService = configService || new GenericConfigService();
+        this.bufferPlayer = player || new BufferPlayer(context!);
 
-        this.contextManager = new AudioContextManager(context, this.eventEmitter);
-
+        this.contextManager = new AudioContextManager(context, this.configService, this.eventEmitter, this.bufferPlayer);
         this.bufferFetcherService = new BufferFetcherService(this.contextManager.currentContext!, this.configService, this.eventEmitter);
         this.bufferDecoderService = new BufferDecoderService(this.contextManager.currentContext!, this.eventEmitter);
 
@@ -178,11 +178,9 @@ export default class AudioEditor extends AbstractAudioElement {
     /** Prepare the AudioContext before use */
     private async prepareContext() {
         if (this.contextManager) {
-            const changed = await this.contextManager.createNewContextIfNeeded(this.principalBuffer);
+            const changed = this.contextManager.createNewContextIfNeeded(this.principalBuffer);
 
             if (changed && this.contextManager.currentContext) {
-                await this.resetBufferFetcher();
-        
                 if (this.bufferPlayer) {
                     this.bufferPlayer.updateContext(this.contextManager.currentContext);
                 }
@@ -194,6 +192,8 @@ export default class AudioEditor extends AbstractAudioElement {
                 if (this.bufferDecoderService) {
                     this.bufferDecoderService.updateContext(this.contextManager.currentContext);
                 }
+
+                await this.resetBufferFetcher();
             }
     
             if (this.contextManager.currentContext) {
@@ -536,7 +536,7 @@ export default class AudioEditor extends AbstractAudioElement {
      */
     async changeFilterSettings(filterId: string, settings: FilterSettings) {
         if (this.filterManager && this.contextManager && this.contextManager.currentContext && this.principalBuffer) {
-            this.filterManager.changeFilterSettings(filterId, settings);
+            await this.filterManager.changeFilterSettings(filterId, settings);
             await this.reconnectNodesIfNeeded();
         }
     }
@@ -547,7 +547,7 @@ export default class AudioEditor extends AbstractAudioElement {
      */
     async resetFilterSettings(filterId: string) {
         if (this.filterManager && this.contextManager && this.contextManager.currentContext && this.principalBuffer) {
-            this.filterManager.resetFilterSettings(filterId);
+            await this.filterManager.resetFilterSettings(filterId);
             await this.reconnectNodesIfNeeded();
         }
     }

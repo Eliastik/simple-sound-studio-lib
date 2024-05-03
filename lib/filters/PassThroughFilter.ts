@@ -13,10 +13,6 @@ export default class PassThroughFilter extends AbstractAudioFilterWorklet<PassTh
     private samplePerSecond = 0;
     private currentTimeSamplesPerSecond = 0;
 
-    constructor() {
-        super();
-    }
-
     receiveEvent(message: MessageEvent<PassThroughWorkletEvent>): void {
         const currentTime = performance.now();
         const samplesProcessed = message.data.samplesCount;
