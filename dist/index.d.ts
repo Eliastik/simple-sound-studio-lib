@@ -2,6 +2,7 @@ import AudioContextManager$1 from '@/audioEditor/AudioContextManager';
 import { ConfigService as ConfigService$1 } from '@/services/ConfigService';
 import AbstractAudioElement$1 from '@/filters/interfaces/AbstractAudioElement';
 import EventEmitter$1 from '@/utils/EventEmitter';
+import FilterManager from '@/audioEditor/FilterManager';
 
 type EventEmitterCallback = (data: string | number | AudioBuffer | undefined) => void;
 
@@ -332,27 +333,16 @@ declare class AudioEditor extends AbstractAudioElement {
     private contextManager;
     /** The save buffer manager */
     private saveBufferManager;
-    /** The current offline context */
-    private currentOfflineContext;
+    /** The save buffer manager */
+    private audioProcessor;
+    /** The save buffer manager */
+    private bufferManager;
     /** The audio buffer to be processed */
     private principalBuffer;
-    /** The sum of all the samples of the principal buffer,
-     * used to detect the need to enable the compatibility mode */
-    private sumPrincipalBuffer;
-    /** The resulting audio buffer */
-    private renderedBuffer;
     /** The audio player */
     private bufferPlayer;
     /** The event emitter */
     private eventEmitter;
-    /** List of audio buffers to fetch */
-    private audioBuffersToFetch;
-    /** true if the user wanted to cancel audio rendering */
-    private audioRenderingLastCanceled;
-    /** true if initial rendering for the current buffer was done */
-    private initialRenderingDone;
-    /** True if we are downloading initial buffer data */
-    downloadingInitialData: boolean;
     constructor(context?: AudioContext | null, player?: BufferPlayer, eventEmitter?: EventEmitter, configService?: ConfigService, audioBuffersToFetch?: string[]);
     private setup;
     /**
@@ -366,18 +356,6 @@ declare class AudioEditor extends AbstractAudioElement {
      */
     addRenderers(...renderers: AbstractAudioRenderer[]): void;
     /**
-     * Fetch default buffers from network
-     * @param refetch true if we need to refetch the buffers
-     */
-    private fetchBuffers;
-    /**
-     * Reset the buffer fetcher and redownload the buffers. Used when changing sample rate.
-     */
-    private resetBufferFetcher;
-    private resetReverbFilterBuffer;
-    /** Prepare the AudioContext before use */
-    private prepareContext;
-    /**
      * Get the current sample rate used
      */
     get currentSampleRate(): number;
@@ -387,10 +365,6 @@ declare class AudioEditor extends AbstractAudioElement {
     get defaultDeviceSampleRate(): number;
     /** Decode and load an audio buffer from an audio file */
     loadBufferFromFile(file: File): Promise<void>;
-    /**
-     * Reset audio rendering progress
-     */
-    private resetAudioRenderingProgress;
     /** Change the principal audio buffer of this editor */
     loadBuffer(audioBuffer: AudioBuffer): void;
     /**
@@ -406,46 +380,10 @@ declare class AudioEditor extends AbstractAudioElement {
      */
     renderAudio(): Promise<boolean>;
     /**
-     * Setup output buffers/nodes, then process the audio
-     * @param outputContext Output audio context
-     * @param durationAudio Duration of the audio buffer
-     * @param offlineContext An offline context to do the rendering (can be omited, in this case the rendering is done in real time - "compatibility mode")
-     * @returns A promise resolved when the audio processing is done. The promise returns false if the audio processing was cancelled, or if an error occurred.
-     */
-    private setupOutput;
-    /**
-     * Load rendered audio buffer into audio player
-     * @param renderedBuffer Rendered audio buffer - AudioBuffer
-     * @returns false if the rendred audio buffer is invalid, true otherwise
-     */
-    private loadRenderedAudio;
-    /**
-     * Load the initial audio buffer to the buffer player
-     */
-    private loadInitialBuffer;
-    /**
-     * Cancel the audio rendering
-     */
-    cancelAudioRendering(): void;
-    /**
-     * Calculate approximative audio duration according to enabled filters and their settings
-     * @param speedAudio Current audio speed
-     * @returns The audio duration
-     */
-    private calculateAudioDuration;
-    get order(): number;
-    get id(): string;
-    isEnabled(): boolean;
-    /**
      * Check if AudioWorklet are available
      * @returns boolean
      */
     isAudioWorkletAvailable(): boolean;
-    /**
-     * Set compatibility/direct audio rendering mode already checked for auto enabling (if an error occurs rendering in offline context)
-     * @param checked boolean
-     */
-    private setCompatibilityModeChecked;
     /** Filters settings */
     /**
      * Get enabled/disabled state of all filters/renderers
@@ -485,6 +423,10 @@ declare class AudioEditor extends AbstractAudioElement {
      */
     exit(): void;
     /**
+     * Cancel the audio rendering
+     */
+    cancelAudioRendering(): void;
+    /**
      * Subscribe to an event
      * @param event The event ID
      * @param callback The callback function
@@ -502,6 +444,11 @@ declare class AudioEditor extends AbstractAudioElement {
      * @returns A promise resolved when the audio buffer is downloaded to the user
      */
     saveBuffer(options?: SaveBufferOptions): Promise<boolean>;
+    get order(): number;
+    get id(): string;
+    set downloadingInitialData(state: boolean);
+    get downloadingInitialData(): boolean;
+    isEnabled(): boolean;
 }
 
 interface ConstraintULong {
@@ -883,6 +830,16 @@ declare const utilFunctions: {
      * @param value FilterSettingValue
      */
     isSettingValueValid(value: FilterSettingValue): boolean;
+    /**
+     * Calculate approximative audio duration according to enabled filters and their settings
+     * @param speedAudio Current audio speed
+     * @returns The audio duration
+     */
+    calculateAudioDuration(buffer: AudioBuffer, filterManager: FilterManager, speedAudio: number): number;
+    /**
+     * Reset audio rendering progress
+     */
+    resetAudioRenderingProgress(eventEmitter: EventEmitter | undefined): void;
 };
 
 declare enum EventType {

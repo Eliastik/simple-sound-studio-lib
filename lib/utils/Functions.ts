@@ -1,4 +1,7 @@
+import FilterManager from "@/audioEditor/FilterManager";
 import { FilterSettingValue } from "../model/filtersSettings/FilterSettings";
+import EventEmitter from "./EventEmitter";
+import { EventType } from "@/model/EventTypeEnum";
 
 const utilFunctions = {
     calcAudioDuration: (audio: AudioBuffer, speed: number) => {
@@ -111,6 +114,28 @@ const utilFunctions = {
      */
     isSettingValueValid(value: FilterSettingValue) {
         return typeof (value) !== "undefined" && !isNaN(Number(value)) && !(typeof (value) === "string" && value.trim() === "");
+    },
+    /**
+     * Calculate approximative audio duration according to enabled filters and their settings
+     * @param speedAudio Current audio speed
+     * @returns The audio duration
+     */
+    calculateAudioDuration(buffer: AudioBuffer, filterManager: FilterManager, speedAudio: number): number {
+        if (buffer && filterManager) {
+            const duration = this.calcAudioDuration(buffer, speedAudio);
+            return duration + filterManager.getAddingTime();
+        }
+
+        return 0;
+    },
+    /**
+     * Reset audio rendering progress
+     */
+    resetAudioRenderingProgress(eventEmitter: EventEmitter | undefined) {
+        if (eventEmitter) {
+            eventEmitter.emit(EventType.UPDATE_AUDIO_TREATMENT_PERCENT, 0);
+            eventEmitter.emit(EventType.UPDATE_REMAINING_TIME_ESTIMATED, -1);
+        }
     }
 };
 

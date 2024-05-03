@@ -13,12 +13,13 @@ import { FilterSettings } from "../model/filtersSettings/FilterSettings";
 import { EventEmitterCallback } from "../model/EventEmitterCallback";
 import { FilterState } from "../model/FilterState";
 import GenericConfigService from "../utils/GenericConfigService";
-import ReverbSettings from "../model/filtersSettings/ReverbSettings";
 import BufferDecoderService from "../services/BufferDecoderService";
 import SaveBufferOptions from "../model/SaveBufferOptions";
 import FilterManager from "./FilterManager";
 import AudioContextManager from "./AudioContextManager";
 import SaveBufferManager from "./SaveBufferManager";
+import AudioProcessor from "./AudioProcessor";
+import BufferManager from "./BufferManager";
 
 export default class AudioEditor extends AbstractAudioElement {
 
@@ -28,28 +29,17 @@ export default class AudioEditor extends AbstractAudioElement {
     private contextManager: AudioContextManager | undefined;
     /** The save buffer manager */
     private saveBufferManager: SaveBufferManager | undefined;
+    /** The save buffer manager */
+    private audioProcessor: AudioProcessor | undefined;
+    /** The save buffer manager */
+    private bufferManager: BufferManager | undefined;
 
-    /** The current offline context */
-    private currentOfflineContext: OfflineAudioContext | null | undefined;
     /** The audio buffer to be processed */
     private principalBuffer: AudioBuffer | null = null;
-    /** The sum of all the samples of the principal buffer,
-     * used to detect the need to enable the compatibility mode */
-    private sumPrincipalBuffer: number = 0;
-    /** The resulting audio buffer */
-    private renderedBuffer: AudioBuffer | null = null;
     /** The audio player */
     private bufferPlayer: BufferPlayer | undefined;
     /** The event emitter */
     private eventEmitter: EventEmitter | undefined;
-    /** List of audio buffers to fetch */
-    private audioBuffersToFetch: string[] = [];
-    /** true if the user wanted to cancel audio rendering */
-    private audioRenderingLastCanceled = false;
-    /** true if initial rendering for the current buffer was done */
-    private initialRenderingDone = false;
-    /** True if we are downloading initial buffer data */
-    downloadingInitialData = false;
 
     constructor(context?: AudioContext | null, player?: BufferPlayer, eventEmitter?: EventEmitter, configService?: ConfigService, audioBuffersToFetch?: string[]) {
         super();
@@ -65,8 +55,8 @@ export default class AudioEditor extends AbstractAudioElement {
 
         this.filterManager = new FilterManager(this.eventEmitter, this.bufferFetcherService, this.bufferDecoderService, this.configService);
         this.saveBufferManager = new SaveBufferManager(this.contextManager, this.configService, this.eventEmitter, this.bufferPlayer);
-
-        this.audioBuffersToFetch = audioBuffersToFetch || [];
+        this.bufferManager = new BufferManager(this.bufferFetcherService, this.filterManager, this.eventEmitter, audioBuffersToFetch || []);
+        this.audioProcessor = new AudioProcessor(this.contextManager, this.configService, this.eventEmitter, this.bufferPlayer, this.filterManager, this.bufferManager);
 
         // Callback called just before starting audio player
         this.setup();
@@ -77,8 +67,8 @@ export default class AudioEditor extends AbstractAudioElement {
             // Callback called just before starting playing audio, when compatibility mode is enabled
             this.bufferPlayer.onBeforePlaying(async () => {
                 if (this.bufferPlayer && this.bufferPlayer.compatibilityMode
-                    && this.contextManager && this.contextManager.currentContext) {
-                    await this.setupOutput(this.contextManager.currentContext);
+                    && this.contextManager && this.contextManager.currentContext && this.audioProcessor) {
+                    await this.audioProcessor.setupOutput(this.principalBuffer, this.contextManager.currentContext);
                 }
             });
 
@@ -90,10 +80,6 @@ export default class AudioEditor extends AbstractAudioElement {
             });
 
             this.bufferPlayer.contextManager = this.contextManager;
-        }
-
-        if (this.audioBuffersToFetch.length > 0) {
-            this.fetchBuffers(false);
         }
     }
 
@@ -114,75 +100,6 @@ export default class AudioEditor extends AbstractAudioElement {
     addRenderers(...renderers: AbstractAudioRenderer[]) {
         if (this.filterManager) {
             this.filterManager.addRenderers(...renderers);
-        }
-    }
-
-    /**
-     * Fetch default buffers from network
-     * @param refetch true if we need to refetch the buffers
-     */
-    private async fetchBuffers(refetch: boolean) {
-        if (this.downloadingInitialData || !this.bufferFetcherService) {
-            return;
-        }
-
-        this.downloadingInitialData = true;
-
-        if (this.eventEmitter && !refetch) {
-            this.eventEmitter.emit(EventType.LOADING_BUFFERS);
-        }
-
-        try {
-            await this.bufferFetcherService.fetchAllBuffers(this.audioBuffersToFetch);
-            this.downloadingInitialData = false;
-
-            if (this.eventEmitter && !refetch) {
-                this.eventEmitter.emit(EventType.LOADED_BUFFERS);
-            }
-        } catch (e) {
-            if (this.eventEmitter && !refetch) {
-                this.eventEmitter.emit(EventType.LOADING_BUFFERS_ERROR);
-            }
-        }
-    }
-
-    /**
-     * Reset the buffer fetcher and redownload the buffers. Used when changing sample rate.
-     */
-    private async resetBufferFetcher() {
-        if (this.bufferFetcherService) {
-            this.bufferFetcherService.reset();
-            await this.fetchBuffers(true);
-            // Fetch the current select environment for the reverb filter
-            await this.resetReverbFilterBuffer();
-        }
-    }
-
-    private async resetReverbFilterBuffer() {
-        const filterSettings = this.getFiltersSettings();
-        const reverbSettings = filterSettings.get(Constants.FILTERS_NAMES.REVERB);
-
-        if (reverbSettings) {
-            const reverbUrl = (reverbSettings as ReverbSettings).reverbEnvironment?.value;
-
-            if (reverbUrl && reverbUrl !== "custom" && this.bufferFetcherService) {
-                await this.bufferFetcherService.fetchBuffer(reverbUrl);
-            }
-        }
-    }
-
-    /** Prepare the AudioContext before use */
-    private async prepareContext() {
-        if (this.contextManager) {
-            const changed = this.contextManager.createNewContextIfNeeded(this.principalBuffer);
-
-            if (changed) {
-                await this.resetBufferFetcher();
-            }
-    
-            if (this.contextManager.currentContext) {
-                this.contextManager.currentContext.resume();
-            }
         }
     }
 
@@ -216,39 +133,34 @@ export default class AudioEditor extends AbstractAudioElement {
     async loadBufferFromFile(file: File) {
         this.principalBuffer = null;
 
-        await this.prepareContext();
+        if (this.audioProcessor) {
+            await this.audioProcessor.prepareContext(this.principalBuffer);
+        }
 
-        if (this.contextManager && this.contextManager.currentContext && this.bufferDecoderService) {
+        if (this.contextManager && this.contextManager.currentContext && this.bufferDecoderService && this.audioProcessor) {
             this.principalBuffer = await this.bufferDecoderService.decodeBufferFromFile(file);
-            this.initialRenderingDone = false;
+            this.audioProcessor.initialRenderingDone = false;
 
             if (this.principalBuffer) {
-                this.sumPrincipalBuffer = utils.sumAudioBuffer(this.principalBuffer);
+                this.audioProcessor.sumPrincipalBuffer = utils.sumAudioBuffer(this.principalBuffer);
             } else {
                 throw new Error("Error decoding audio file");
             }
 
-            this.resetAudioRenderingProgress();
+            utilFunctions.resetAudioRenderingProgress(this.eventEmitter);
         } else {
             throw new Error("Audio Context is not ready!");
-        }
-    }
-
-    /**
-     * Reset audio rendering progress
-     */
-    private resetAudioRenderingProgress() {
-        if (this.eventEmitter) {
-            this.eventEmitter.emit(EventType.UPDATE_AUDIO_TREATMENT_PERCENT, 0);
-            this.eventEmitter.emit(EventType.UPDATE_REMAINING_TIME_ESTIMATED, -1);
         }
     }
 
     /** Change the principal audio buffer of this editor */
     loadBuffer(audioBuffer: AudioBuffer) {
         this.principalBuffer = audioBuffer;
-        this.sumPrincipalBuffer = utils.sumAudioBuffer(this.principalBuffer);
-        this.initialRenderingDone = false;
+
+        if (this.audioProcessor) {
+            this.audioProcessor.sumPrincipalBuffer = utils.sumAudioBuffer(this.principalBuffer);
+            this.audioProcessor.initialRenderingDone = false;
+        }
     }
 
     /**
@@ -256,7 +168,11 @@ export default class AudioEditor extends AbstractAudioElement {
      * @returns The AudioBuffer
      */
     getOutputBuffer() {
-        return this.renderedBuffer;
+        if (this.audioProcessor) {
+            return this.audioProcessor.renderedBuffer;
+        }
+
+        return null;
     }
 
     /**
@@ -266,179 +182,11 @@ export default class AudioEditor extends AbstractAudioElement {
      * The resulting audio buffer can then be obtained by using the "getOutputBuffer" method.
      */
     async renderAudio(): Promise<boolean> {
-        await this.prepareContext();
-
-        if (!this.contextManager || !this.contextManager.currentContext) {
-            throw new Error("AudioContext is not yet available");
-        }
-
-        if(!this.filterManager) {
-            throw new Error("Filter manager is not available");
-        }
-
-        if (!this.filterManager.entrypointFilter) {
-            throw new Error("Entrypoint filter is not available");
-        }
-
-        if (!this.principalBuffer) {
-            throw new Error("No principal buffer available");
-        }
-
-        // If initial rendering is disabled and compatibility mode is disabled, we stop here
-        if (!this.initialRenderingDone && this.configService && this.configService.isInitialRenderingDisabled() && !this.configService.isCompatibilityModeEnabled()) {
-            this.loadInitialBuffer();
-            this.initialRenderingDone = true;
-            return true;
-        }
-
-        // If switching from compatiblity mode to normal mode, we stop the audio player
-        if (this.configService && this.bufferPlayer && !this.configService.isCompatibilityModeEnabled() && this.bufferPlayer.compatibilityMode) {
-            this.bufferPlayer.stop();
-        }
-
-        const speedAudio = this.filterManager.entrypointFilter.getSpeed();
-        const durationAudio = this.calculateAudioDuration(speedAudio);
-        const offlineContext = new OfflineAudioContext(2, this.contextManager.currentContext.sampleRate * durationAudio, this.contextManager.currentContext.sampleRate);
-        const outputContext = this.configService && this.configService.isCompatibilityModeEnabled() ? this.contextManager.currentContext : offlineContext;
-
-        this.renderedBuffer = await this.filterManager.executeAudioRenderers(this.principalBuffer, outputContext);
-        this.currentOfflineContext = null;
-        this.audioRenderingLastCanceled = false;
-
-
-        this.resetAudioRenderingProgress();
-        this.filterManager.setupPasstroughFilter(durationAudio, this.contextManager.currentContext);
-
-        return await this.setupOutput(outputContext, durationAudio, offlineContext);
-    }
-
-    /**
-     * Setup output buffers/nodes, then process the audio
-     * @param outputContext Output audio context
-     * @param durationAudio Duration of the audio buffer
-     * @param offlineContext An offline context to do the rendering (can be omited, in this case the rendering is done in real time - "compatibility mode")
-     * @returns A promise resolved when the audio processing is done. The promise returns false if the audio processing was cancelled, or if an error occurred.
-     */
-    private async setupOutput(outputContext: BaseAudioContext, durationAudio?: number, offlineContext?: OfflineAudioContext): Promise<boolean> {
-        if (this.renderedBuffer && this.configService && this.eventEmitter && this.bufferPlayer && this.filterManager) {
-            // Initialize worklets then connect the filter nodes
-            await this.filterManager.initializeWorklets(outputContext);
-            await this.filterManager.connectNodes(outputContext, this.renderedBuffer, false, this.configService.isCompatibilityModeEnabled());
-
-            this.filterManager.setupPlayerSpeed(this.bufferPlayer);
-
-            // Standard mode
-            if (!this.configService.isCompatibilityModeEnabled() && offlineContext && this.filterManager.currentNodes) {
-                this.currentOfflineContext = offlineContext;
-                this.filterManager.currentNodes.output.connect(outputContext.destination);
-
-                const renderedBuffer = await offlineContext.startRendering();
-
-                if (this.contextManager && !this.loadRenderedAudio(renderedBuffer)) {
-                    return await this.setupOutput(this.contextManager.currentContext!, durationAudio);
-                }
-
-                if (this.audioRenderingLastCanceled) {
-                    return false;
-                }
-
-                this.eventEmitter.emit(EventType.OFFLINE_AUDIO_RENDERING_FINISHED);
-            } else { // Compatibility mode
-                this.bufferPlayer.setCompatibilityMode(this.filterManager.currentNodes!.output, durationAudio);
-                this.initialRenderingDone = true;
-            }
-
-            this.eventEmitter.emit(EventType.AUDIO_RENDERING_FINISHED);
-
-            return true;
+        if (this.audioProcessor) {
+            return await this.audioProcessor.renderAudio(this.principalBuffer);
         }
 
         return false;
-    }
-
-    /**
-     * Load rendered audio buffer into audio player
-     * @param renderedBuffer Rendered audio buffer - AudioBuffer
-     * @returns false if the rendred audio buffer is invalid, true otherwise
-     */
-    private loadRenderedAudio(renderedBuffer: AudioBuffer): boolean {
-        if (this.eventEmitter && this.bufferPlayer) {
-            if (!this.audioRenderingLastCanceled) {
-                const sumRenderedAudio = utils.sumAudioBuffer(renderedBuffer);
-
-                if (sumRenderedAudio == 0 && this.sumPrincipalBuffer !== 0) {
-                    if (this.configService && !this.configService.isCompatibilityModeChecked()) {
-                        this.setCompatibilityModeChecked(true);
-                        this.configService.enableCompatibilityMode();
-                        this.eventEmitter.emit(EventType.COMPATIBILITY_MODE_AUTO_ENABLED);
-
-                        return false;
-                    }
-
-                    this.eventEmitter.emit(EventType.RENDERING_AUDIO_PROBLEM_DETECTED);
-                }
-
-                this.renderedBuffer = renderedBuffer;
-                this.bufferPlayer.loadBuffer(this.renderedBuffer);
-            } else if (!this.initialRenderingDone) {
-                this.loadInitialBuffer();
-                this.eventEmitter.emit(EventType.CANCELLED_AND_LOADED_INITIAL_AUDIO);
-            }
-
-            this.initialRenderingDone = true;
-        }
-
-        return true;
-    }
-
-    /**
-     * Load the initial audio buffer to the buffer player
-     */
-    private loadInitialBuffer() {
-        if (this.bufferPlayer) {
-            this.renderedBuffer = this.principalBuffer;
-            this.bufferPlayer.loadBuffer(this.principalBuffer!);
-        }
-    }
-
-    /**
-     * Cancel the audio rendering
-     */
-    public cancelAudioRendering() {
-        if (this.currentOfflineContext && !this.audioRenderingLastCanceled && this.filterManager) {
-            this.audioRenderingLastCanceled = true;
-            this.filterManager.disconnectOldNodes(false);
-
-            if (this.eventEmitter) {
-                this.eventEmitter.emit(EventType.CANCELLING_AUDIO_PROCESSING);
-            }
-        }
-    }
-
-    /**
-     * Calculate approximative audio duration according to enabled filters and their settings
-     * @param speedAudio Current audio speed
-     * @returns The audio duration
-     */
-    private calculateAudioDuration(speedAudio: number): number {
-        if (this.principalBuffer && this.filterManager) {
-            const duration = utils.calcAudioDuration(this.principalBuffer, speedAudio);
-            return duration + this.filterManager.getAddingTime();
-        }
-
-        return 0;
-    }
-
-    get order(): number {
-        return -1;
-    }
-
-    get id(): string {
-        return Constants.AUDIO_EDITOR;
-    }
-
-    isEnabled(): boolean {
-        return true;
     }
 
     /**
@@ -451,16 +199,6 @@ export default class AudioEditor extends AbstractAudioElement {
         }
 
         return false;
-    }
-
-    /**
-     * Set compatibility/direct audio rendering mode already checked for auto enabling (if an error occurs rendering in offline context)
-     * @param checked boolean
-     */
-    private setCompatibilityModeChecked(checked: boolean) {
-        if (this.configService) {
-            this.configService.setConfig(Constants.PREFERENCES_KEYS.COMPATIBILITY_MODE_CHECKED, "" + checked);
-        }
     }
 
     /** Filters settings */
@@ -498,7 +236,7 @@ export default class AudioEditor extends AbstractAudioElement {
 
             const speedAudio = this.filterManager.entrypointFilter.getSpeed();
             this.bufferPlayer.speedAudio = speedAudio;
-            this.bufferPlayer.duration = this.calculateAudioDuration(speedAudio) * speedAudio;
+            this.bufferPlayer.duration = utilFunctions.calculateAudioDuration(this.principalBuffer, this.filterManager, speedAudio) * speedAudio;
         }
     }
 
@@ -556,9 +294,18 @@ export default class AudioEditor extends AbstractAudioElement {
             this.bufferPlayer.stop();
             this.bufferPlayer.reset();
         }
-
+        
         this.cancelAudioRendering();
         this.principalBuffer = null;
+    }
+    
+    /**
+     * Cancel the audio rendering
+     */
+    cancelAudioRendering() {
+        if (this.audioProcessor) {
+            this.audioProcessor.cancelAudioRendering();
+        }
     }
 
     /**
@@ -589,10 +336,36 @@ export default class AudioEditor extends AbstractAudioElement {
      * @returns A promise resolved when the audio buffer is downloaded to the user
      */
     async saveBuffer(options?: SaveBufferOptions): Promise<boolean> {
-        if (this.saveBufferManager) {
-            return await this.saveBufferManager?.saveBuffer(this.renderedBuffer, options);
+        if (this.saveBufferManager && this.audioProcessor) {
+            return await this.saveBufferManager?.saveBuffer(this.audioProcessor.renderedBuffer, options);
         }
 
         return false;
+    }
+
+    get order(): number {
+        return -1;
+    }
+
+    get id(): string {
+        return Constants.AUDIO_EDITOR;
+    }
+
+    set downloadingInitialData(state: boolean) {
+        if (this.bufferManager) {
+            this.bufferManager.downloadingInitialData = state;
+        }
+    }
+
+    get downloadingInitialData(): boolean {
+        if (this.bufferManager) {
+            return this.bufferManager.downloadingInitialData;
+        }
+
+        return false;
+    }
+
+    isEnabled(): boolean {
+        return true;
     }
 }
