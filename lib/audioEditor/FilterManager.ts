@@ -255,14 +255,16 @@ export default class FilterManager extends AbstractAudioElement {
     }
 
     /**
-     * Setup the passthrough filter to count audio rendering progress
+     * Setup the total samples property for all filters
      * @param durationAudio Audio duration - number
      */
-    setupPasstroughFilter(durationAudio: number, currentContext: AudioContext | null) {
-        const passthroughFilter = this.filters.find(f => f.id === Constants.FILTERS_NAMES.PASSTHROUGH);
+    setupTotalSamples(durationAudio: number, currentContext: AudioContext | null) {
+        if (currentContext) {
+            const totalSamples = durationAudio * currentContext.sampleRate;
 
-        if (passthroughFilter && currentContext) {
-            (passthroughFilter as PassThroughFilter).totalSamples = durationAudio * currentContext.sampleRate;
+            for (const filter of this.filters) {
+                filter.totalSamples = totalSamples;
+            }
         }
     }
 

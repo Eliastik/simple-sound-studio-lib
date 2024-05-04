@@ -7,6 +7,8 @@ export default abstract class AbstractAudioFilter extends AbstractAudioElement {
 
     private defaultSettings: FilterSettings | null = null;
     eventEmitter: EventEmitter | undefined = undefined;
+    /** Total sample of the input audio buffer */
+    protected _totalSamples = 0;
 
     /** Return a input and output AudioNode of the filter */
     abstract getNode(context: BaseAudioContext): AudioFilterNodes;
@@ -52,5 +54,9 @@ export default abstract class AbstractAudioFilter extends AbstractAudioElement {
     */
     public async bufferFetcherReseted(): Promise<boolean> {
         return false;
+    }
+
+    set totalSamples(value: number) {
+        this._totalSamples = value;
     }
 }

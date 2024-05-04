@@ -6,8 +6,7 @@ import PassThroughWorkletEvent from "@/model/PassThroughWorkletEvent";
 import { EventType } from "@/model/EventTypeEnum";
 
 export default class PassThroughFilter extends AbstractAudioFilterWorklet<PassThroughWorkletEvent> {
-    
-    private _totalSamples = 0;
+
     private currentTime = 0;
     private lastSampleCount = 0;
     private samplePerSecond = 0;
@@ -65,7 +64,7 @@ export default class PassThroughFilter extends AbstractAudioFilterWorklet<PassTh
             this.calculateSmoothedSamplePerSecond(timeDifferenceSamplePerSecond, samplesProcessed);
 
             const remainingTimeSeconds = remainingSamples / this.samplePerSecond;
-            
+
             this.currentTimeSamplesPerSecond = currentTime;
             this.lastSampleCount = samplesProcessed;
 
@@ -107,7 +106,7 @@ export default class PassThroughFilter extends AbstractAudioFilterWorklet<PassTh
     }
 
     set totalSamples(value: number) {
-        this._totalSamples = value;
+        super.totalSamples = value;
         this.currentTime = 0;
         this.currentTimeSamplesPerSecond = 0;
         this.samplePerSecond = 0;
@@ -123,5 +122,5 @@ export default class PassThroughFilter extends AbstractAudioFilterWorklet<PassTh
     }
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    async setSetting(settingId: string, value: FilterSettingValue) {}
+    async setSetting(settingId: string, value: FilterSettingValue) { }
 }

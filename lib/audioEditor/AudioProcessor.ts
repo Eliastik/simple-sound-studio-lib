@@ -117,7 +117,7 @@ export default class AudioProcessor extends AbstractAudioElement {
 
 
         utils.resetAudioRenderingProgress(this.eventEmitter);
-        this.filterManager.setupPasstroughFilter(durationAudio, this.contextManager.currentContext);
+        this.filterManager.setupTotalSamples(durationAudio, this.contextManager.currentContext);
 
         return await this.setupOutput(principalBuffer, outputContext, durationAudio, offlineContext);
     }

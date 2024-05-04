@@ -158,6 +158,8 @@ interface FilterSettings {
 declare abstract class AbstractAudioFilter extends AbstractAudioElement {
     private defaultSettings;
     eventEmitter: EventEmitter | undefined;
+    /** Total sample of the input audio buffer */
+    protected _totalSamples: number;
     /** Return a input and output AudioNode of the filter */
     abstract getNode(context: BaseAudioContext): AudioFilterNodes;
     /** Return an object with current settings of this filter */
@@ -179,6 +181,7 @@ declare abstract class AbstractAudioFilter extends AbstractAudioElement {
      * @returns boolean
     */
     bufferFetcherReseted(): Promise<boolean>;
+    set totalSamples(value: number);
 }
 
 declare abstract class AbstractAudioRenderer extends AbstractAudioElement {
