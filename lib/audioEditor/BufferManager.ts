@@ -96,6 +96,6 @@ export default class BufferManager extends AbstractAudioElement {
     }
 
     get id(): string {
-        return "BufferManager";
+        return Constants.BUFFER_MANAGER;
     }
 }

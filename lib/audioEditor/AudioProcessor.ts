@@ -8,11 +8,14 @@ import { EventType } from "@/model/EventTypeEnum";
 import utils from "../utils/Functions";
 import Constants from "@/model/Constants";
 import BufferManager from "./BufferManager";
+import RendererManager from "./RendererManager";
 
 export default class AudioProcessor extends AbstractAudioElement {
     
     /** The filter manager */
     private filterManager: FilterManager | undefined;
+    /** The filter manager */
+    private rendererManager: RendererManager | undefined;
     /** The context manager */
     private contextManager: AudioContextManager | undefined;
     /** The current event emitter */
@@ -35,7 +38,7 @@ export default class AudioProcessor extends AbstractAudioElement {
      * used to detect the need to enable the compatibility mode */
     sumPrincipalBuffer: number = 0;
 
-    constructor(contextManager: AudioContextManager | undefined, configService: ConfigService | null, eventEmitter: EventEmitter | null, bufferPlayer: BufferPlayer, filterManager: FilterManager, bufferManager: BufferManager) {
+    constructor(contextManager: AudioContextManager | undefined, configService: ConfigService | null, eventEmitter: EventEmitter | null, bufferPlayer: BufferPlayer, filterManager: FilterManager, rendererManager:RendererManager, bufferManager: BufferManager) {
         super();
 
         this.contextManager = contextManager;
@@ -43,6 +46,7 @@ export default class AudioProcessor extends AbstractAudioElement {
         this.bufferPlayer = bufferPlayer;
         this.configService = configService;
         this.filterManager = filterManager;
+        this.rendererManager = rendererManager;
         this.bufferManager = bufferManager;
     }
 
@@ -78,6 +82,10 @@ export default class AudioProcessor extends AbstractAudioElement {
             throw new Error("Filter manager is not available");
         }
 
+        if (!this.rendererManager) {
+            throw new Error("Renderer manager is not available");
+        }
+
         if (!this.filterManager.entrypointFilter) {
             throw new Error("Entrypoint filter is not available");
         }
@@ -103,7 +111,7 @@ export default class AudioProcessor extends AbstractAudioElement {
         const offlineContext = new OfflineAudioContext(2, this.contextManager.currentContext.sampleRate * durationAudio, this.contextManager.currentContext.sampleRate);
         const outputContext = this.configService && this.configService.isCompatibilityModeEnabled() ? this.contextManager.currentContext : offlineContext;
 
-        this._renderedBuffer = await this.filterManager.executeAudioRenderers(principalBuffer, outputContext);
+        this._renderedBuffer = await this.rendererManager.executeAudioRenderers(principalBuffer, outputContext);
         this.currentOfflineContext = null;
         this.audioRenderingLastCanceled = false;
 
@@ -236,6 +244,6 @@ export default class AudioProcessor extends AbstractAudioElement {
     }
 
     get id(): string {
-        return "FilterManager";
+        return Constants.AUDIO_PROCESSOR;
     }
 }

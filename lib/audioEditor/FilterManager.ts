@@ -5,7 +5,6 @@ import EchoFilter from "../filters/EchoFilter";
 import HighPassFilter from "../filters/HighPassFilter";
 import LimiterFilter from "../filters/LimiterFilter";
 import LowPassFilter from "../filters/LowPassFilter";
-import ReturnAudioRenderer from "../filters/ReturnAudioRenderer";
 import ReverbFilter from "../filters/ReverbFilter";
 import SoundtouchWrapperFilter from "../filters/SountouchWrapperFilter";
 import TelephonizerFilter from "../filters/TelephonizerFilter";
@@ -13,7 +12,6 @@ import VocoderFilter from "../filters/VocoderFilter";
 import PassThroughFilter from "../filters/PassThroughFilter";
 import AbstractAudioFilter from "@/filters/interfaces/AbstractAudioFilter";
 import AudioFilterEntrypointInterface from "@/filters/interfaces/AudioFilterEntrypointInterface";
-import AbstractAudioRenderer from "@/filters/interfaces/AbstractAudioRenderer";
 import { AudioFilterNodes } from "@/model/AudioNodes";
 import AbstractAudioFilterWorklet from "@/filters/interfaces/AbstractAudioFilterWorklet";
 import EventEmitter from "@/utils/EventEmitter";
@@ -30,8 +28,6 @@ export default class FilterManager extends AbstractAudioElement {
 
     /** A list of filters */
     private filters: AbstractAudioFilter[] = [];
-    /** A list of renderers */
-    private renderers: AbstractAudioRenderer[] = [];
     /** The entrypoint filter */
     private _entryPointFilter: (AbstractAudioFilter & AudioFilterEntrypointInterface) | null = null;
     /** The current connected nodes */
@@ -47,7 +43,6 @@ export default class FilterManager extends AbstractAudioElement {
         this.bufferDecoderService = bufferDecoderService;
 
         this.setupDefaultFilters();
-        this.setupDefaultRenderers();
     }
 
     /**
@@ -64,20 +59,6 @@ export default class FilterManager extends AbstractAudioElement {
         }
 
         this.filters.push(...filters);
-    }
-
-    /**
-     * Add a new custom renderer for this audio editor
-     * @param renderers One or more AbstractAudioRenderer
-     */
-    addRenderers(...renderers: AbstractAudioRenderer[]) {
-        for (const renderer of renderers) {
-            renderer.bufferFetcherService = this.bufferFetcherService;
-            renderer.bufferDecoderService = this.bufferDecoderService;
-            renderer.configService = this.configService;
-        }
-
-        this.renderers.push(...renderers);
     }
 
     /** Setup all audio filters */
@@ -98,20 +79,14 @@ export default class FilterManager extends AbstractAudioElement {
         this.addFilters(bassBooster, bitCrusher, echo, highPass, lowPass, reverb, limiterFilter, telephonizerFilter, soundtouchWrapper, vocoder, passthrough);
     }
 
-    /** Setup the renderers */
-    private setupDefaultRenderers() {
-        const returnAudio = new ReturnAudioRenderer();
-        this.addRenderers(returnAudio);
-    }
-
     /**
-     * Get enabled/disabled state of all filters/renderers
+     * Get enabled/disabled state of all filters
      * @returns The filters state (enabled/disabled)
      */
     getFiltersState(): FilterState {
         const state: FilterState = {};
 
-        [...this.filters, ...this.renderers].forEach(filter => {
+        this.filters.forEach(filter => {
             state[filter.id] = filter.isEnabled();
         });
 
@@ -138,14 +113,9 @@ export default class FilterManager extends AbstractAudioElement {
      */
     toggleFilter(filterId: string) {
         const filter = this.filters.find(f => f.id === filterId);
-        const renderer = this.renderers.find(f => f.id === filterId);
 
         if (filter) {
             filter.toggle();
-        }
-
-        if (renderer) {
-            renderer.toggle();
         }
     }
 
@@ -165,8 +135,8 @@ export default class FilterManager extends AbstractAudioElement {
     }
 
     /**
-     * Reset the settings of a filter/renderer
-     * @param filterId Id of the filter/renderer
+     * Reset the settings of a filter
+     * @param filterId Id of the filter
      */
     async resetFilterSettings(filterId: string) {
         const filter = this.filters.find(f => f.id === filterId);
@@ -177,10 +147,10 @@ export default class FilterManager extends AbstractAudioElement {
     }
 
     /**
-     * Reset all filters/renderers state (enabled/disabled) based on their default states
+     * Reset all filters state (enabled/disabled) based on their default states
      */
     resetAllFiltersState() {
-        [...this.filters, ...this.renderers].forEach(element => {
+        this.filters.forEach(element => {
             if (element.isDefaultEnabled()) {
                 element.enable();
             } else {
@@ -272,23 +242,6 @@ export default class FilterManager extends AbstractAudioElement {
             }
         }
     }
-    
-    /**
-     * Execute audio renderers then returns audio buffer rendered
-     * @param buffer The buffer to process
-     * @param outputContext The output context
-     * @returns Audio buffer rendered
-     */
-    async executeAudioRenderers(buffer: AudioBuffer, outputContext: AudioContext | OfflineAudioContext) {
-        let currentBuffer = buffer;
-
-        for (const renderer of this.renderers.sort((a, b) => a.order - b.order)) {
-            if (renderer.isEnabled()) {
-                currentBuffer = await renderer.renderAudio(outputContext, currentBuffer);
-            }
-        }
-        return currentBuffer;
-    }
 
     setupPlayerSpeed(bufferPlayer: BufferPlayer) {
         if (this._entryPointFilter) {
@@ -334,6 +287,6 @@ export default class FilterManager extends AbstractAudioElement {
     }
 
     get id(): string {
-        return "FilterManager";
+        return Constants.FILTER_MANAGER;
     }
 }

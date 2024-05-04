@@ -329,6 +329,8 @@ interface SaveBufferOptions {
 declare class AudioEditor extends AbstractAudioElement {
     /** The filter manager */
     private filterManager;
+    /** The renderer manager */
+    private rendererManager;
     /** The context manager */
     private contextManager;
     /** The save buffer manager */
@@ -403,14 +405,14 @@ declare class AudioEditor extends AbstractAudioElement {
      */
     toggleFilter(filterId: string): void;
     /**
-     * Change a filter/renderer setting
+     * Change a filter setting
      * @param filterId Filter ID
      * @param settings Filter setting (key/value)
      */
     changeFilterSettings(filterId: string, settings: FilterSettings): Promise<void>;
     /**
-     * Reset the settings of a filter/renderer
-     * @param filterId Id of the filter/renderer
+     * Reset the settings of a filter
+     * @param filterId Id of the filter
      */
     resetFilterSettings(filterId: string): Promise<void>;
     /**
@@ -444,11 +446,10 @@ declare class AudioEditor extends AbstractAudioElement {
      * @returns A promise resolved when the audio buffer is downloaded to the user
      */
     saveBuffer(options?: SaveBufferOptions): Promise<boolean>;
-    get order(): number;
-    get id(): string;
     set downloadingInitialData(state: boolean);
     get downloadingInitialData(): boolean;
-    isEnabled(): boolean;
+    get order(): number;
+    get id(): string;
 }
 
 interface ConstraintULong {
@@ -720,6 +721,12 @@ declare const Constants: {
     AUDIO_EDITOR: string;
     VOICE_RECORDER: string;
     BUFFER_PLAYER: string;
+    AUDIO_CONTEXT_MANAGER: string;
+    AUDIO_PROCESSOR: string;
+    BUFFER_MANAGER: string;
+    FILTER_MANAGER: string;
+    RENDERER_MANAGER: string;
+    SAVE_BUFFER_MANAGER: string;
     EXPORT_WAV_COMMAND: string;
     EXPORT_MP3_COMMAND: string;
     AUDIO_WAV: string;

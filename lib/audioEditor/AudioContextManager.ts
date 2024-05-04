@@ -130,6 +130,6 @@ export default class AudioContextManager extends AbstractAudioElement {
     }
 
     get id(): string {
-        return "ContextManager";
+        return Constants.AUDIO_CONTEXT_MANAGER;
     }
 }

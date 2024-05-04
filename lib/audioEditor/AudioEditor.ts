@@ -20,11 +20,14 @@ import AudioContextManager from "./AudioContextManager";
 import SaveBufferManager from "./SaveBufferManager";
 import AudioProcessor from "./AudioProcessor";
 import BufferManager from "./BufferManager";
+import RendererManager from "./RendererManager";
 
 export default class AudioEditor extends AbstractAudioElement {
 
     /** The filter manager */
     private filterManager: FilterManager | undefined;
+    /** The renderer manager */
+    private rendererManager: RendererManager | undefined;
     /** The context manager */
     private contextManager: AudioContextManager | undefined;
     /** The save buffer manager */
@@ -54,9 +57,10 @@ export default class AudioEditor extends AbstractAudioElement {
         this.bufferDecoderService = new BufferDecoderService(this.contextManager, this.eventEmitter);
 
         this.filterManager = new FilterManager(this.eventEmitter, this.bufferFetcherService, this.bufferDecoderService, this.configService);
+        this.rendererManager = new RendererManager(this.eventEmitter, this.bufferFetcherService, this.bufferDecoderService, this.configService);
         this.saveBufferManager = new SaveBufferManager(this.contextManager, this.configService, this.eventEmitter, this.bufferPlayer);
         this.bufferManager = new BufferManager(this.bufferFetcherService, this.filterManager, this.eventEmitter, audioBuffersToFetch || []);
-        this.audioProcessor = new AudioProcessor(this.contextManager, this.configService, this.eventEmitter, this.bufferPlayer, this.filterManager, this.bufferManager);
+        this.audioProcessor = new AudioProcessor(this.contextManager, this.configService, this.eventEmitter, this.bufferPlayer, this.filterManager, this.rendererManager, this.bufferManager);
 
         // Callback called just before starting audio player
         this.setup();
@@ -98,8 +102,8 @@ export default class AudioEditor extends AbstractAudioElement {
      * @param renderers One or more AbstractAudioRenderer
      */
     addRenderers(...renderers: AbstractAudioRenderer[]) {
-        if (this.filterManager) {
-            this.filterManager.addRenderers(...renderers);
+        if (this.rendererManager) {
+            this.rendererManager.addRenderers(...renderers);
         }
     }
 
@@ -208,8 +212,11 @@ export default class AudioEditor extends AbstractAudioElement {
      * @returns The filters state (enabled/disabled)
      */
     getFiltersState(): FilterState {
-        if (this.filterManager) {
-            return this.filterManager.getFiltersState();
+        if (this.filterManager && this.rendererManager) {
+            return {
+                ...this.filterManager.getFiltersState(),
+                ...this.rendererManager.getRenderersState()
+            };
         }
 
         return {};
@@ -245,30 +252,34 @@ export default class AudioEditor extends AbstractAudioElement {
      * @param filterId The filter/renderer ID
      */
     toggleFilter(filterId: string) {
-        if (this.filterManager && this.contextManager && this.contextManager.currentContext && this.principalBuffer) {
+        if (this.rendererManager) {
+            this.rendererManager.toggleRenderer(filterId);
+        }
+
+        if (this.filterManager) {
             this.filterManager.toggleFilter(filterId);
             this.reconnectNodesIfNeeded();
         }
     }
 
     /**
-     * Change a filter/renderer setting
+     * Change a filter setting
      * @param filterId Filter ID
      * @param settings Filter setting (key/value)
      */
     async changeFilterSettings(filterId: string, settings: FilterSettings) {
-        if (this.filterManager && this.contextManager && this.contextManager.currentContext && this.principalBuffer) {
+        if (this.filterManager) {
             await this.filterManager.changeFilterSettings(filterId, settings);
             await this.reconnectNodesIfNeeded();
         }
     }
 
     /**
-     * Reset the settings of a filter/renderer
-     * @param filterId Id of the filter/renderer
+     * Reset the settings of a filter
+     * @param filterId Id of the filter
      */
     async resetFilterSettings(filterId: string) {
-        if (this.filterManager && this.contextManager && this.contextManager.currentContext && this.principalBuffer) {
+        if (this.filterManager) {
             await this.filterManager.resetFilterSettings(filterId);
             await this.reconnectNodesIfNeeded();
         }
@@ -278,7 +289,11 @@ export default class AudioEditor extends AbstractAudioElement {
      * Reset all filters/renderers state (enabled/disabled) based on their default states
      */
     resetAllFiltersState() {
-        if (this.filterManager && this.contextManager && this.contextManager.currentContext && this.principalBuffer) {
+        if (this.rendererManager) {
+            this.rendererManager.resetAllRenderersState();
+        }
+
+        if (this.filterManager) {
             this.filterManager.resetAllFiltersState();
             this.reconnectNodesIfNeeded();
         }
@@ -294,11 +309,11 @@ export default class AudioEditor extends AbstractAudioElement {
             this.bufferPlayer.stop();
             this.bufferPlayer.reset();
         }
-        
+
         this.cancelAudioRendering();
         this.principalBuffer = null;
     }
-    
+
     /**
      * Cancel the audio rendering
      */
@@ -343,14 +358,6 @@ export default class AudioEditor extends AbstractAudioElement {
         return false;
     }
 
-    get order(): number {
-        return -1;
-    }
-
-    get id(): string {
-        return Constants.AUDIO_EDITOR;
-    }
-
     set downloadingInitialData(state: boolean) {
         if (this.bufferManager) {
             this.bufferManager.downloadingInitialData = state;
@@ -365,7 +372,11 @@ export default class AudioEditor extends AbstractAudioElement {
         return false;
     }
 
-    isEnabled(): boolean {
-        return true;
+    get order(): number {
+        return -1;
+    }
+
+    get id(): string {
+        return Constants.AUDIO_EDITOR;
     }
 }

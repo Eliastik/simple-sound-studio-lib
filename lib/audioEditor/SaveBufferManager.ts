@@ -232,6 +232,6 @@ export default class SaveBufferManager extends AbstractAudioElement {
     }
 
     get id(): string {
-        return "SaveBufferManager";
+        return Constants.SAVE_BUFFER_MANAGER;
     }
 }
