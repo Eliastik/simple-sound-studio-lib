@@ -1,13 +1,12 @@
 import AbstractAudioElement from "@/filters/interfaces/AbstractAudioElement";
 import Constants from "@/model/Constants";
 import { EventType } from "@/model/EventTypeEnum";
-import ReverbSettings from "@/model/filtersSettings/ReverbSettings";
 import EventEmitter from "@/utils/EventEmitter";
 import FilterManager from "./FilterManager";
 import BufferFetcherService from "@/services/BufferFetcherService";
 
 export default class BufferManager extends AbstractAudioElement {
-    
+
     /** The filter manager */
     private filterManager: FilterManager | undefined;
     /** The current event emitter */
@@ -70,23 +69,11 @@ export default class BufferManager extends AbstractAudioElement {
     async resetBufferFetcher() {
         if (this.bufferFetcherService) {
             this.bufferFetcherService.reset();
-            await this.fetchBuffers(true);
-            // Fetch the current select environment for the reverb filter
-            await this.resetReverbFilterBuffer();
-        }
-    }
 
-    private async resetReverbFilterBuffer() {
-        if (this.filterManager) {
-            const filterSettings = this.filterManager.getFiltersSettings();
-            const reverbSettings = filterSettings.get(Constants.FILTERS_NAMES.REVERB);
-    
-            if (reverbSettings) {
-                const reverbUrl = (reverbSettings as ReverbSettings).reverbEnvironment?.value;
-    
-                if (reverbUrl && reverbUrl !== "custom" && this.bufferFetcherService) {
-                    await this.bufferFetcherService.fetchBuffer(reverbUrl);
-                }
+            await this.fetchBuffers(true);
+
+            if (this.filterManager) {
+                await this.filterManager.resetFilterBuffers();
             }
         }
     }

@@ -11,7 +11,7 @@ import BufferManager from "./BufferManager";
 import RendererManager from "./RendererManager";
 
 export default class AudioProcessor extends AbstractAudioElement {
-    
+
     /** The filter manager */
     private filterManager: FilterManager | undefined;
     /** The filter manager */
@@ -38,7 +38,7 @@ export default class AudioProcessor extends AbstractAudioElement {
      * used to detect the need to enable the compatibility mode */
     sumPrincipalBuffer: number = 0;
 
-    constructor(contextManager: AudioContextManager | undefined, configService: ConfigService | null, eventEmitter: EventEmitter | null, bufferPlayer: BufferPlayer, filterManager: FilterManager, rendererManager:RendererManager, bufferManager: BufferManager) {
+    constructor(contextManager: AudioContextManager | undefined, configService: ConfigService | null, eventEmitter: EventEmitter | null, bufferPlayer: BufferPlayer, filterManager: FilterManager, rendererManager: RendererManager, bufferManager: BufferManager) {
         super();
 
         this.contextManager = contextManager;
@@ -58,7 +58,7 @@ export default class AudioProcessor extends AbstractAudioElement {
             if (changed && this.bufferManager) {
                 await this.bufferManager.resetBufferFetcher();
             }
-    
+
             if (this.contextManager.currentContext) {
                 this.contextManager.currentContext.resume();
             }
@@ -78,7 +78,7 @@ export default class AudioProcessor extends AbstractAudioElement {
             throw new Error("AudioContext is not yet available");
         }
 
-        if(!this.filterManager) {
+        if (!this.filterManager) {
             throw new Error("Filter manager is not available");
         }
 
@@ -121,7 +121,14 @@ export default class AudioProcessor extends AbstractAudioElement {
 
         return await this.setupOutput(principalBuffer, outputContext, durationAudio, offlineContext);
     }
-    
+
+    private setupPlayerSpeed(bufferPlayer: BufferPlayer) {
+        if (this.filterManager && this.filterManager.entrypointFilter) {
+            const speedAudio = this.filterManager.entrypointFilter.getSpeed();
+            bufferPlayer.speedAudio = speedAudio;
+        }
+    }
+
     /**
      * Setup output buffers/nodes, then process the audio
      * @param outputContext Output audio context
@@ -135,7 +142,7 @@ export default class AudioProcessor extends AbstractAudioElement {
             await this.filterManager.initializeWorklets(outputContext);
             await this.filterManager.connectNodes(outputContext, this._renderedBuffer, false, this.configService.isCompatibilityModeEnabled());
 
-            this.filterManager.setupPlayerSpeed(this.bufferPlayer);
+            this.setupPlayerSpeed(this.bufferPlayer);
 
             // Standard mode
             if (!this.configService.isCompatibilityModeEnabled() && offlineContext && this.filterManager.currentNodes) {

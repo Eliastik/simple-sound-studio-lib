@@ -15,7 +15,6 @@ import AudioFilterEntrypointInterface from "@/filters/interfaces/AudioFilterEntr
 import { AudioFilterNodes } from "@/model/AudioNodes";
 import AbstractAudioFilterWorklet from "@/filters/interfaces/AbstractAudioFilterWorklet";
 import EventEmitter from "@/utils/EventEmitter";
-import BufferPlayer from "@/BufferPlayer";
 import { FilterState } from "@/model/FilterState";
 import { FilterSettings } from "@/model/filtersSettings/FilterSettings";
 import Constants from "@/model/Constants";
@@ -243,16 +242,9 @@ export default class FilterManager extends AbstractAudioElement {
         }
     }
 
-    setupPlayerSpeed(bufferPlayer: BufferPlayer) {
-        if (this._entryPointFilter) {
-            const speedAudio = this._entryPointFilter.getSpeed();
-            bufferPlayer.speedAudio = speedAudio;
-        }
-    }
-
     getAddingTime() {
         let duration = 0;
-        
+
         for (const filter of this.filters) {
             if (filter.isEnabled()) {
                 duration += filter.getAddingTime();
@@ -271,6 +263,15 @@ export default class FilterManager extends AbstractAudioElement {
 
         if (passthroughFilter && currentContext) {
             (passthroughFilter as PassThroughFilter).totalSamples = durationAudio * currentContext.sampleRate;
+        }
+    }
+
+    /**
+     * Call the bufferFetcherReseted method for each filter
+     */
+    async resetFilterBuffers() {
+        for (const filter of this.filters) {
+            await filter.bufferFetcherReseted();
         }
     }
 

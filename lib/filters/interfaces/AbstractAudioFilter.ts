@@ -45,4 +45,12 @@ export default abstract class AbstractAudioFilter extends AbstractAudioElement {
     public isWorklet() {
         return false;
     }
+
+    /**
+     * Called when the buffer fetcher was reseted
+     * @returns boolean
+    */
+    public async bufferFetcherReseted(): Promise<boolean> {
+        return false;
+    }
 }

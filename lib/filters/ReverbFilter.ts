@@ -139,4 +139,19 @@ export default class ReverbFilter extends AbstractAudioFilter {
             }
         }
     }
+    
+    async bufferFetcherReseted() {
+        const reverbSettings = this.getSettings();
+    
+        if (reverbSettings) {
+            const reverbUrl = (reverbSettings as ReverbSettings).reverbEnvironment?.value;
+    
+            if (reverbUrl && reverbUrl !== "custom" && this.bufferFetcherService) {
+                await this.bufferFetcherService.fetchBuffer(reverbUrl);
+                return true;
+            }
+        }
+
+        return false;
+    }
 }

@@ -174,6 +174,11 @@ declare abstract class AbstractAudioFilter extends AbstractAudioElement {
     resetSettings(): Promise<void>;
     /** Return if the current filter use an audio worklet */
     isWorklet(): boolean;
+    /**
+     * Called when the buffer fetcher was reseted
+     * @returns boolean
+    */
+    bufferFetcherReseted(): Promise<boolean>;
 }
 
 declare abstract class AbstractAudioRenderer extends AbstractAudioElement {
