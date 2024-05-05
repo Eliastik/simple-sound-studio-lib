@@ -25,12 +25,13 @@ import EventEmitter from "./utils/EventEmitter";
 import { EventType } from "./model/EventTypeEnum";
 import AudioConstraintWrapper from "./model/AudioConstraintWrapper";
 import { RecorderSettings } from "./model/RecorderSettings";
-import { ConfigService } from "./services/ConfigService";
+import { ConfigService } from "./services/interfaces/ConfigService";
 import AbstractAudioElement from "./filters/interfaces/AbstractAudioElement";
 import Constants from "./model/Constants";
 import { EventEmitterCallback } from "./model/EventEmitterCallback";
 import { AudioConstraint } from "./model/AudioConstraint";
 import Recorder from "./recorder/Recorder";
+import EventEmitterInterface from "./utils/interfaces/EventEmitterInterface";
 
 export default class VoiceRecorder extends AbstractAudioElement {
 
@@ -51,11 +52,11 @@ export default class VoiceRecorder extends AbstractAudioElement {
             sampleRate: { ideal: 44100 }
         }
     };
-    private eventEmitter: EventEmitter | null = null;
+    private eventEmitter: EventEmitterInterface | null = null;
     private previousSampleRate = Constants.DEFAULT_SAMPLE_RATE;
     private sampleRateConfigNotSupported = false;
 
-    constructor(context?: AudioContext | null, eventEmitter?: EventEmitter, configService?: ConfigService) {
+    constructor(context?: AudioContext | null, eventEmitter?: EventEmitterInterface, configService?: ConfigService) {
         super();
         this.context = context;
         this.eventEmitter = eventEmitter || new EventEmitter();

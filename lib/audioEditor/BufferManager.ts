@@ -2,21 +2,30 @@ import AbstractAudioElement from "@/filters/interfaces/AbstractAudioElement";
 import Constants from "@/model/Constants";
 import { EventType } from "@/model/EventTypeEnum";
 import EventEmitter from "@/utils/EventEmitter";
-import FilterManager from "./FilterManager";
-import BufferFetcherService from "@/services/BufferFetcherService";
+import BufferManagerInterface from "./interfaces/BufferManagerInterface";
+import { inject, injectable } from "inversify";
+import { TYPES } from "@/inversify.types";
+import EventEmitterInterface from "@/utils/interfaces/EventEmitterInterface";
+import type FilterManagerInterface from "./interfaces/FilterManagerInterface";
+import type BufferFetcherServiceInterface from "@/services/interfaces/BufferFetcherServiceInterface";
 
-export default class BufferManager extends AbstractAudioElement {
+@injectable()
+export default class BufferManager extends AbstractAudioElement implements BufferManagerInterface {
 
     /** The filter manager */
-    private filterManager: FilterManager | undefined;
+    private filterManager: FilterManagerInterface | undefined;
     /** The current event emitter */
-    private eventEmitter: EventEmitter | undefined;
+    private eventEmitter: EventEmitterInterface | undefined;
     /** True if we are downloading initial buffer data */
     downloadingInitialData = false;
     /** List of audio buffers to fetch */
     private audioBuffersToFetch: string[] = [];
 
-    constructor(bufferFetcherService: BufferFetcherService, filterManager: FilterManager, eventEmitter: EventEmitter | null, audioBuffersToFetch: string[]) {
+    constructor(
+        @inject(TYPES.BufferFetcherService) bufferFetcherService: BufferFetcherServiceInterface,
+        @inject(TYPES.FilterManager) filterManager: FilterManagerInterface,
+        @inject(TYPES.EventEmitter) eventEmitter: EventEmitterInterface | null,
+        @inject(TYPES.AudioBuffersToFetch) audioBuffersToFetch: string[]) {
         super();
 
         this.bufferFetcherService = bufferFetcherService;
@@ -63,9 +72,6 @@ export default class BufferManager extends AbstractAudioElement {
         }
     }
 
-    /**
-     * Reset the buffer fetcher and redownload the buffers. Used when changing sample rate.
-     */
     async resetBufferFetcher() {
         if (this.bufferFetcherService) {
             this.bufferFetcherService.reset();

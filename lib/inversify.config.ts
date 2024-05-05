@@ -1,0 +1,41 @@
+import "reflect-metadata";
+import { Container } from "inversify";
+import { TYPES } from "./inversify.types";
+import AudioContextManagerInterface from "./audioEditor/interfaces/AudioContextManagerInterface";
+import AudioContextManager from "./audioEditor/AudioContextManager";
+import AudioEditorInterface from "./audioEditor/interfaces/AudioEditorInterface";
+import AudioProcessorInterface from "./audioEditor/interfaces/AudioProcessorInterface";
+import BufferManagerInterface from "./audioEditor/interfaces/BufferManagerInterface";
+import FilterManagerInterface from "./audioEditor/interfaces/FilterManagerInterface";
+import RendererManagerInterface from "./audioEditor/interfaces/RendererManagerInterface";
+import SaveBufferManagerInterface from "./audioEditor/interfaces/SaveBufferManagerInteface";
+import AudioEditor from "./audioEditor/AudioEditor";
+import AudioProcessor from "./audioEditor/AudioProcessor";
+import BufferManager from "./audioEditor/BufferManager";
+import FilterManager from "./audioEditor/FilterManager";
+import RendererManager from "./audioEditor/RendererManager";
+import SaveBufferManager from "./audioEditor/SaveBufferManager";
+import EventEmitterInterface from "./utils/interfaces/EventEmitterInterface";
+import EventEmitter from "./utils/EventEmitter";
+import BufferPlayerInterface from "./bufferPlayer/interfaces/BufferPlayerInterface";
+import BufferPlayer from "./bufferPlayer/BufferPlayer";
+import BufferFetcherServiceInterface from "./services/interfaces/BufferFetcherServiceInterface";
+import BufferDecoderServiceInterface from "./services/interfaces/BufferDecoderServiceInterface";
+import BufferFetcherService from "./services/BufferFetcherService";
+import BufferDecoderService from "./services/BufferDecoderService";
+
+const audioEditorContainer = new Container({ defaultScope: "Singleton" });
+
+audioEditorContainer.bind<AudioContextManagerInterface>(TYPES.AudioContextManager).to(AudioContextManager);
+audioEditorContainer.bind<AudioEditorInterface>(TYPES.AudioEditor).to(AudioEditor);
+audioEditorContainer.bind<AudioProcessorInterface>(TYPES.AudioProcessor).to(AudioProcessor);
+audioEditorContainer.bind<BufferManagerInterface>(TYPES.BufferManager).to(BufferManager);
+audioEditorContainer.bind<FilterManagerInterface>(TYPES.FilterManager).to(FilterManager);
+audioEditorContainer.bind<RendererManagerInterface>(TYPES.RendererManager).to(RendererManager);
+audioEditorContainer.bind<SaveBufferManagerInterface>(TYPES.SaveBufferManager).to(SaveBufferManager);
+audioEditorContainer.bind<EventEmitterInterface>(TYPES.EventEmitter).to(EventEmitter);
+audioEditorContainer.bind<BufferPlayerInterface>(TYPES.BufferPlayer).to(BufferPlayer);
+audioEditorContainer.bind<BufferFetcherServiceInterface>(TYPES.BufferFetcherService).to(BufferFetcherService);
+audioEditorContainer.bind<BufferDecoderServiceInterface>(TYPES.BufferDecoderService).to(BufferDecoderService);
+
+export { audioEditorContainer };

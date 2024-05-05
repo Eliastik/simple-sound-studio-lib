@@ -1,12 +1,15 @@
 import AbstractAudioElement from "./AbstractAudioElement";
 import { AudioFilterNodes } from "../../model/AudioNodes";
 import { FilterSettingValue, FilterSettings } from "../../model/filtersSettings/FilterSettings";
-import EventEmitter from "../../utils/EventEmitter";
+import EventEmitterInterface from "@/utils/interfaces/EventEmitterInterface";
+import { TYPES } from "@/inversify.types";
+import { inject } from "inversify";
 
 export default abstract class AbstractAudioFilter extends AbstractAudioElement {
 
     private defaultSettings: FilterSettings | null = null;
-    eventEmitter: EventEmitter | undefined = undefined;
+    @inject(TYPES.EventEmitter)
+        eventEmitter: EventEmitterInterface | undefined = undefined;
     /** Total sample of the input audio buffer */
     protected _totalSamples = 0;
 

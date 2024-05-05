@@ -1,7 +1,10 @@
+import { injectable } from "inversify";
 import AudioEditorEvents from "../model/AudioEditorEvent";
 import { EventEmitterCallback } from "../model/EventEmitterCallback";
+import EventEmitterInterface from "./interfaces/EventEmitterInterface";
 
-class EventEmitter {
+@injectable()
+export default class EventEmitter implements EventEmitterInterface {
     listeners: AudioEditorEvents = {};
     
     constructor() {
@@ -29,5 +32,3 @@ class EventEmitter {
         }
     }
 }
-
-export default EventEmitter;

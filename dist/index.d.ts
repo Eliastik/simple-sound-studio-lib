@@ -1,29 +1,24 @@
+import { Container } from 'inversify';
+import BufferFetcherServiceInterface from '@/services/interfaces/BufferFetcherServiceInterface';
+import BufferDecoderServiceInterface from '@/services/interfaces/BufferDecoderServiceInterface';
+import EventEmitterInterface$1 from '@/utils/interfaces/EventEmitterInterface';
+import AbstractAudioFilter$1 from '@/filters/interfaces/AbstractAudioFilter';
+import AbstractAudioRenderer$1 from '@/filters/interfaces/AbstractAudioRenderer';
+import { EventEmitterCallback as EventEmitterCallback$1 } from '@/model/EventEmitterCallback';
+import { FilterState as FilterState$1 } from '@/model/FilterState';
+import SaveBufferOptions$1 from '@/model/SaveBufferOptions';
+import { FilterSettings as FilterSettings$1 } from '@/model/filtersSettings/FilterSettings';
+import BufferPlayerInterface$1 from '@/bufferPlayer/interfaces/BufferPlayerInterface';
+import * as ConfigService$1 from '@/services/interfaces/ConfigService';
+import { ConfigService as ConfigService$2 } from '@/services/interfaces/ConfigService';
 import AudioContextManager$1 from '@/audioEditor/AudioContextManager';
-import { ConfigService as ConfigService$1 } from '@/services/ConfigService';
-import AbstractAudioElement$1 from '@/filters/interfaces/AbstractAudioElement';
-import EventEmitter$1 from '@/utils/EventEmitter';
-import FilterManager from '@/audioEditor/FilterManager';
+import AudioContextManagerInterface$1 from '@/audioEditor/interfaces/AudioContextManagerInterface';
+import AudioEditorEvents$1 from '@/model/AudioEditorEvent';
+import FilterManagerInterface from '@/audioEditor/interfaces/FilterManagerInterface';
+import AudioEditorInterface$1 from '@/audioEditor/interfaces/AudioEditorInterface';
+import VoiceRecorder$1 from '@/VoiceRecorder';
 
-type EventEmitterCallback = (data: string | number | AudioBuffer | undefined) => void;
-
-interface AudioEditorEvents {
-    [key: string]: EventEmitterCallback[];
-}
-
-declare class EventEmitter {
-    listeners: AudioEditorEvents;
-    constructor();
-    on(event: string, callback: EventEmitterCallback): void;
-    emit(event: string, data?: string | number | AudioBuffer): void;
-    off(event: string, callback: EventEmitterCallback): void;
-}
-
-declare class BufferDecoderService {
-    private contextManager;
-    private eventEmitter;
-    constructor(contextManager: AudioContextManager$1, eventEmitter?: EventEmitter);
-    decodeBufferFromFile(file: File): Promise<AudioBuffer | null>;
-}
+declare const audioEditorContainer: Container;
 
 interface ConfigService {
     /**
@@ -91,27 +86,11 @@ interface ConfigService {
     isInitialRenderingDisabled(): boolean;
 }
 
-declare class BufferFetcherService {
-    private contextManager;
-    private buffers;
-    private bufferErrors;
-    private eventEmitter;
-    private configService;
-    constructor(contextManager: AudioContextManager$1, configService: ConfigService, eventEmitter?: EventEmitter);
-    fetchBuffer(bufferURI: string, force?: boolean): Promise<void>;
-    fetchAllBuffers(bufferURIs: string[]): Promise<void>;
-    getAudioBuffer(filename: string): AudioBuffer | undefined;
-    getOrFetchAudioBuffer(filename: string): Promise<AudioBuffer | undefined>;
-    getDownloadedBuffersList(): string[];
-    private getKeyFromLocation;
-    reset(): void;
-}
-
 declare abstract class AbstractAudioElement {
     private enabled;
     private defaultEnabled;
-    bufferFetcherService: BufferFetcherService | null;
-    bufferDecoderService: BufferDecoderService | null;
+    bufferFetcherService: BufferFetcherServiceInterface | null;
+    bufferDecoderService: BufferDecoderServiceInterface | null;
     configService: ConfigService | null;
     /** Returns the order in which the filter/renderer needs to be applied */
     abstract get order(): number;
@@ -157,7 +136,7 @@ interface FilterSettings {
 
 declare abstract class AbstractAudioFilter extends AbstractAudioElement {
     private defaultSettings;
-    eventEmitter: EventEmitter | undefined;
+    eventEmitter: EventEmitterInterface$1 | undefined;
     /** Total sample of the input audio buffer */
     protected _totalSamples: number;
     /** Return a input and output AudioNode of the filter */
@@ -189,22 +168,199 @@ declare abstract class AbstractAudioRenderer extends AbstractAudioElement {
     abstract renderAudio(context: BaseAudioContext, buffer: AudioBuffer): Promise<AudioBuffer>;
 }
 
-declare class AudioContextManager extends AbstractAudioElement$1 {
+type EventEmitterCallback = (data: string | number | AudioBuffer | undefined) => void;
+
+interface FilterState {
+    [filterId: string]: boolean;
+}
+
+interface SaveBufferOptions {
+    format?: "mp3" | "wav";
+    bitrate?: number;
+}
+
+interface AudioEditorInterface {
+    /**
+     * Add a new custom filter for this audio editor
+     * @param filters One or more AbstractAudioFilter
+     */
+    addFilters(...filters: AbstractAudioFilter$1[]): void;
+    /**
+     * Add a new custom renderer for this audio editor
+     * @param renderers One or more AbstractAudioRenderer
+     */
+    addRenderers(...renderers: AbstractAudioRenderer$1[]): void;
+    /**
+     * Get the current sample rate used
+     */
+    get currentSampleRate(): number;
+    /**
+     * Get the default device sample rate
+     */
+    get defaultDeviceSampleRate(): number;
+    /** Decode and load an audio buffer from an audio file */
+    loadBufferFromFile(file: File): Promise<void>;
+    /** Change the principal audio buffer of this editor */
+    loadBuffer(audioBuffer: AudioBuffer): void;
+    /**
+     * Get the rendered audio buffer
+     * @returns The AudioBuffer
+     */
+    getOutputBuffer(): AudioBuffer | null;
+    /**
+     * Render the audio to a buffer
+     * @returns A promise resolved when the audio processing is finished.
+     * The promise return false if the audio processing was cancelled or if an error occurred.
+     * The resulting audio buffer can then be obtained by using the "getOutputBuffer" method.
+     */
+    renderAudio(): Promise<boolean>;
+    /**
+     * Check if AudioWorklet are available
+     * @returns boolean
+     */
+    isAudioWorkletAvailable(): boolean;
+    /**
+     * Get enabled/disabled state of all filters/renderers
+     * @returns The filters state (enabled/disabled)
+     */
+    getFiltersState(): FilterState$1;
+    /**
+     * Get the settings of all filters/renderers
+     * @returns
+     */
+    getFiltersSettings(): Map<string, FilterSettings$1>;
+    /** Reconnect the nodes if the compatibility/direct mode is enabled */
+    reconnectNodesIfNeeded(): Promise<void>;
+    /**
+     * Toggle enabled/disabled state for a filter/renderer
+     * @param filterId The filter/renderer ID
+     */
+    toggleFilter(filterId: string): void;
+    /**
+     * Change a filter setting
+     * @param filterId Filter ID
+     * @param settings Filter setting (key/value)
+     */
+    changeFilterSettings(filterId: string, settings: FilterSettings$1): Promise<void>;
+    /**
+     * Reset the settings of a filter
+     * @param filterId Id of the filter
+     */
+    resetFilterSettings(filterId: string): Promise<void>;
+    /**
+     * Reset all filters/renderers state (enabled/disabled) based on their default states
+     */
+    resetAllFiltersState(): void;
+    /**
+     * Exit/reset the audio editor basic state
+     */
+    exit(): void;
+    /**
+     * Cancel the audio rendering
+     */
+    cancelAudioRendering(): void;
+    /**
+     * Subscribe to an event
+     * @param event The event ID
+     * @param callback The callback function
+     */
+    on(event: string, callback: EventEmitterCallback$1): void;
+    /**
+     * Unsubscribe to an event
+     * @param event The event ID
+     * @param callback The callback function
+     */
+    off(event: string, callback: EventEmitterCallback$1): void;
+    /**
+     * Save the rendered audio to a buffer
+     * @param options The save options
+     * @returns A promise resolved when the audio buffer is downloaded to the user
+     */
+    saveBuffer(options?: SaveBufferOptions$1): Promise<boolean>;
+    set downloadingInitialData(state: boolean);
+    get downloadingInitialData(): boolean;
+}
+
+declare class AudioEditor extends AbstractAudioElement implements AudioEditorInterface {
+    /** The filter manager */
+    private filterManager;
+    /** The renderer manager */
+    private rendererManager;
+    /** The context manager */
+    private contextManager;
+    /** The save buffer manager */
+    private saveBufferManager;
+    /** The save buffer manager */
+    private audioProcessor;
+    /** The save buffer manager */
+    private bufferManager;
+    /** The audio player */
+    private bufferPlayer;
+    /** The event emitter */
+    private eventEmitter;
+    /** The audio buffer to be processed */
+    private principalBuffer;
+    constructor(player?: BufferPlayerInterface$1, eventEmitter?: EventEmitterInterface$1, configService?: ConfigService$1.ConfigService);
+    private setup;
+    addFilters(...filters: AbstractAudioFilter[]): void;
+    addRenderers(...renderers: AbstractAudioRenderer[]): void;
+    get currentSampleRate(): number;
+    get defaultDeviceSampleRate(): number;
+    loadBufferFromFile(file: File): Promise<void>;
+    loadBuffer(audioBuffer: AudioBuffer): void;
+    getOutputBuffer(): AudioBuffer | null;
+    renderAudio(): Promise<boolean>;
+    isAudioWorkletAvailable(): boolean;
+    /** Filters settings */
+    getFiltersState(): FilterState;
+    getFiltersSettings(): Map<string, FilterSettings>;
+    reconnectNodesIfNeeded(): Promise<void>;
+    toggleFilter(filterId: string): void;
+    changeFilterSettings(filterId: string, settings: FilterSettings): Promise<void>;
+    resetFilterSettings(filterId: string): Promise<void>;
+    resetAllFiltersState(): void;
+    /** Events and exit */
+    exit(): void;
+    cancelAudioRendering(): void;
+    on(event: string, callback: EventEmitterCallback): void;
+    off(event: string, callback: EventEmitterCallback): void;
+    saveBuffer(options?: SaveBufferOptions): Promise<boolean>;
+    set downloadingInitialData(state: boolean);
+    get downloadingInitialData(): boolean;
+    get order(): number;
+    get id(): string;
+}
+
+interface AudioContextManagerInterface {
+    /**
+     * Create new context if needed, for example if sample rate setting have changed
+     * @param principalBuffer The audio buffer
+     * @returns true if a new context was created, false otherwise
+     */
+    createNewContextIfNeeded(principalBuffer: AudioBuffer | null): boolean;
+    /**
+     * Get the current sample rate used
+     */
+    get currentSampleRate(): number;
+    /**
+     * Return the current audio context
+     */
+    get currentContext(): AudioContext | null | undefined;
+}
+
+declare class AudioContextManager implements AudioContextManagerInterface {
     /** The current event emitter */
     private eventEmitter;
+    /** The config service */
+    private configService;
     /** The current audio context */
     private _currentContext;
     /** The old audio context */
     private oldAudioContext;
     /** The previous sample rate setting */
     private previousSampleRate;
-    constructor(context: AudioContext | undefined | null, configService: ConfigService$1 | null, eventEmitter: EventEmitter$1 | null);
+    constructor(configService: ConfigService$2 | null, eventEmitter: EventEmitterInterface$1 | null);
     private setup;
-    /**
-     * Create new context if needed, for example if sample rate setting have changed
-     * @param principalBuffer The audio buffer
-     * @returns true if a new context was created, false otherwise
-     */
     createNewContextIfNeeded(principalBuffer: AudioBuffer | null): boolean;
     /**
      * Stop previous audio context and create a new one
@@ -215,16 +371,97 @@ declare class AudioContextManager extends AbstractAudioElement$1 {
      * Destroy previous AudioContext
      */
     private destroyOldContext;
-    /**
-     * Get the current sample rate used
-     */
     get currentSampleRate(): number;
     get currentContext(): AudioContext | null | undefined;
-    get order(): number;
-    get id(): string;
 }
 
-declare class BufferPlayer extends AbstractAudioElement {
+interface BufferPlayerInterface {
+    /** Init this buffer player */
+    init(direct?: boolean): void;
+    /**
+     * Load an audio buffer
+     * @param buffer The buffer
+     */
+    loadBuffer(buffer: AudioBuffer): void;
+    /**
+     * Enable compatibility mode
+     * @param currentNode Current audio node to read
+     * @param duration The audio duration
+     */
+    setCompatibilityMode(currentNode: AudioNode, duration?: number): void;
+    /**
+     * Reset this player
+     */
+    reset(direct?: boolean): void;
+    /**
+     * Stop playing the audio
+     */
+    stop(): void;
+    /**
+     * Start playing the audio
+     */
+    start(direct?: boolean): Promise<void>;
+    /**
+     * Play audio directly, without stopping previous audio play
+     */
+    playDirect(): void;
+    /**
+     * Pause the audio
+     */
+    pause(): void;
+    /**
+    * Set the current starting time of this player
+    * @param percent Where to start playing, in percent
+    */
+    setTimePercent(percent: number): void;
+    /**
+      * Set the current starting time of this player
+      * @param time Where to start playing, in milliseconds
+      */
+    setTime(time: number): void;
+    /**
+      * Callback called just before starting playing the audio
+      * @param callback The callback
+      */
+    onBeforePlaying(callback: () => void): void;
+    /**
+      * Enable/disable loop playing
+      */
+    toggleLoop(): void;
+    /**
+      * Observe an event
+      * @param event The event name
+      * @param callback Callback called when an event of this type occurs
+      */
+    on(event: string, callback: EventEmitterCallback$1): void;
+    /**
+     * Get the time in text format
+     */
+    get currentTimeDisplay(): string;
+    /**
+     * Get the audio duration in text format
+     */
+    get maxTimeDisplay(): string;
+    /**
+     * Get the percent played
+     */
+    get percent(): number;
+    /**
+     * Get the remaining time in text format
+     */
+    get remainingTimeDisplay(): string;
+    set contextManager(contextManager: AudioContextManager$1 | undefined);
+    set compatibilityMode(compatibilityMode: boolean);
+    get compatibilityMode(): boolean;
+    set loop(loop: boolean);
+    get loop(): boolean;
+    set speedAudio(speedAudio: number);
+    get speedAudio(): number;
+    set duration(duration: number);
+    get duration(): number;
+}
+
+declare class BufferPlayer extends AbstractAudioElement implements BufferPlayerInterface {
     private _contextManager;
     private buffer;
     private source;
@@ -239,7 +476,7 @@ declare class BufferPlayer extends AbstractAudioElement {
     private onBeforePlayingCallback;
     compatibilityMode: boolean;
     currentNode: AudioNode | null;
-    constructor(contextManager: AudioContextManager | undefined | null, eventEmitter?: EventEmitter);
+    constructor(contextManager: AudioContextManagerInterface$1 | undefined | null, eventEmitter?: EventEmitterInterface$1);
     /** Init this buffer player */
     init(direct?: boolean): void;
     /**
@@ -325,141 +562,6 @@ declare class BufferPlayer extends AbstractAudioElement {
     get id(): string;
 }
 
-interface FilterState {
-    [filterId: string]: boolean;
-}
-
-interface SaveBufferOptions {
-    format?: "mp3" | "wav";
-    bitrate?: number;
-}
-
-declare class AudioEditor extends AbstractAudioElement {
-    /** The filter manager */
-    private filterManager;
-    /** The renderer manager */
-    private rendererManager;
-    /** The context manager */
-    private contextManager;
-    /** The save buffer manager */
-    private saveBufferManager;
-    /** The save buffer manager */
-    private audioProcessor;
-    /** The save buffer manager */
-    private bufferManager;
-    /** The audio buffer to be processed */
-    private principalBuffer;
-    /** The audio player */
-    private bufferPlayer;
-    /** The event emitter */
-    private eventEmitter;
-    constructor(context?: AudioContext | null, player?: BufferPlayer, eventEmitter?: EventEmitter, configService?: ConfigService, audioBuffersToFetch?: string[]);
-    private setup;
-    /**
-     * Add a new custom filter for this audio editor
-     * @param filters One or more AbstractAudioFilter
-     */
-    addFilters(...filters: AbstractAudioFilter[]): void;
-    /**
-     * Add a new custom renderer for this audio editor
-     * @param renderers One or more AbstractAudioRenderer
-     */
-    addRenderers(...renderers: AbstractAudioRenderer[]): void;
-    /**
-     * Get the current sample rate used
-     */
-    get currentSampleRate(): number;
-    /**
-     * Get the default device sample rate
-     */
-    get defaultDeviceSampleRate(): number;
-    /** Decode and load an audio buffer from an audio file */
-    loadBufferFromFile(file: File): Promise<void>;
-    /** Change the principal audio buffer of this editor */
-    loadBuffer(audioBuffer: AudioBuffer): void;
-    /**
-     * Get the rendered audio buffer
-     * @returns The AudioBuffer
-     */
-    getOutputBuffer(): AudioBuffer | null;
-    /**
-     * Render the audio to a buffer
-     * @returns A promise resolved when the audio processing is finished.
-     * The promise return false if the audio processing was cancelled or if an error occurred.
-     * The resulting audio buffer can then be obtained by using the "getOutputBuffer" method.
-     */
-    renderAudio(): Promise<boolean>;
-    /**
-     * Check if AudioWorklet are available
-     * @returns boolean
-     */
-    isAudioWorkletAvailable(): boolean;
-    /** Filters settings */
-    /**
-     * Get enabled/disabled state of all filters/renderers
-     * @returns The filters state (enabled/disabled)
-     */
-    getFiltersState(): FilterState;
-    /**
-     * Get the settings of all filters/renderers
-     * @returns
-     */
-    getFiltersSettings(): Map<string, FilterSettings>;
-    /** Reconnect the nodes if the compatibility/direct mode is enabled */
-    reconnectNodesIfNeeded(): Promise<void>;
-    /**
-     * Toggle enabled/disabled state for a filter/renderer
-     * @param filterId The filter/renderer ID
-     */
-    toggleFilter(filterId: string): void;
-    /**
-     * Change a filter setting
-     * @param filterId Filter ID
-     * @param settings Filter setting (key/value)
-     */
-    changeFilterSettings(filterId: string, settings: FilterSettings): Promise<void>;
-    /**
-     * Reset the settings of a filter
-     * @param filterId Id of the filter
-     */
-    resetFilterSettings(filterId: string): Promise<void>;
-    /**
-     * Reset all filters/renderers state (enabled/disabled) based on their default states
-     */
-    resetAllFiltersState(): void;
-    /** Events and exit */
-    /**
-     * Exit/reset the audio editor basic state
-     */
-    exit(): void;
-    /**
-     * Cancel the audio rendering
-     */
-    cancelAudioRendering(): void;
-    /**
-     * Subscribe to an event
-     * @param event The event ID
-     * @param callback The callback function
-     */
-    on(event: string, callback: EventEmitterCallback): void;
-    /**
-     * Unsubscribe to an event
-     * @param event The event ID
-     * @param callback The callback function
-     */
-    off(event: string, callback: EventEmitterCallback): void;
-    /**
-     * Save the rendered audio to a buffer
-     * @param options The save options
-     * @returns A promise resolved when the audio buffer is downloaded to the user
-     */
-    saveBuffer(options?: SaveBufferOptions): Promise<boolean>;
-    set downloadingInitialData(state: boolean);
-    get downloadingInitialData(): boolean;
-    get order(): number;
-    get id(): string;
-}
-
 interface ConstraintULong {
     min?: number;
     max?: number;
@@ -482,6 +584,14 @@ interface RecorderSettings {
     audioFeedback: boolean;
 }
 
+interface EventEmitterInterface {
+    on(event: string, callback: EventEmitterCallback$1): void;
+    emit(event: string, data?: string | number | AudioBuffer): void;
+    off(event: string, callback: EventEmitterCallback$1): void;
+    get listeners(): AudioEditorEvents$1;
+    set listeners(listeners: AudioEditorEvents$1);
+}
+
 declare class VoiceRecorder extends AbstractAudioElement {
     private context;
     private input;
@@ -496,7 +606,7 @@ declare class VoiceRecorder extends AbstractAudioElement {
     private eventEmitter;
     private previousSampleRate;
     private sampleRateConfigNotSupported;
-    constructor(context?: AudioContext | null, eventEmitter?: EventEmitter, configService?: ConfigService);
+    constructor(context?: AudioContext | null, eventEmitter?: EventEmitterInterface, configService?: ConfigService);
     /** Initialize this voice recorder */
     init(): Promise<void>;
     /**
@@ -803,6 +913,18 @@ declare const Constants: {
     DEFAULT_MP3_BITRATE: number;
 };
 
+interface AudioEditorEvents {
+    [key: string]: EventEmitterCallback[];
+}
+
+declare class EventEmitter implements EventEmitterInterface {
+    listeners: AudioEditorEvents;
+    constructor();
+    on(event: string, callback: EventEmitterCallback): void;
+    emit(event: string, data?: string | number | AudioBuffer): void;
+    off(event: string, callback: EventEmitterCallback): void;
+}
+
 /**
  * Default implementation for a ConfigService, using a built-in map.
  * The configuration is not stored in localstorage in this case.
@@ -850,11 +972,11 @@ declare const utilFunctions: {
      * @param speedAudio Current audio speed
      * @returns The audio duration
      */
-    calculateAudioDuration(buffer: AudioBuffer, filterManager: FilterManager, speedAudio: number): number;
+    calculateAudioDuration(buffer: AudioBuffer, filterManager: FilterManagerInterface, speedAudio: number): number;
     /**
      * Reset audio rendering progress
      */
-    resetAudioRenderingProgress(eventEmitter: EventEmitter | undefined): void;
+    resetAudioRenderingProgress(eventEmitter: EventEmitterInterface | undefined): void;
 };
 
 declare enum EventType {
@@ -893,4 +1015,16 @@ declare enum EventType {
     CANCELLING_AUDIO_PROCESSING = "cancellingAudioProcessing"
 }
 
-export { AbstractAudioElement, AbstractAudioFilter, AbstractAudioFilterWorklet, AbstractAudioRenderer, AudioEditor, type AudioFilterEntrypointInterface, type AudioFilterNodes, BufferPlayer, type ConfigService, Constants, EventEmitter, type EventEmitterCallback, EventType, type FilterSettingValue, type FilterSettings, type FilterState, GenericConfigService, type GenericSettingValueAdditionalData, type RecorderSettings, type SaveBufferOptions, type SelectFormValue, utilFunctions as UtilFunctions, VoiceRecorder };
+declare class SoundStudioFactory {
+    private static voiceRecorder;
+    private static ready;
+    static createAudioEditor(configService?: ConfigService$2, buffersToFetch?: string[]): AudioEditorInterface$1;
+    static createVoiceRecorder(): VoiceRecorder$1;
+    static getAudioEditorInstance(): AudioEditorInterface$1 | null;
+    static getAudioPlayerInstance(): BufferPlayerInterface$1 | null;
+    static getAudioRecorderInstance(): VoiceRecorder$1 | null;
+    static getEventEmitterInstance(): EventEmitterInterface | null;
+    static getConfigServiceInstance(): ConfigService$2 | undefined;
+}
+
+export { AbstractAudioElement, AbstractAudioFilter, AbstractAudioFilterWorklet, AbstractAudioRenderer, AudioEditor, type AudioFilterEntrypointInterface, type AudioFilterNodes, BufferPlayer, type ConfigService, Constants, EventEmitter, type EventEmitterCallback, EventType, type FilterSettingValue, type FilterSettings, type FilterState, GenericConfigService, type GenericSettingValueAdditionalData, type RecorderSettings, type SaveBufferOptions, type SelectFormValue, SoundStudioFactory, utilFunctions as UtilFunctions, VoiceRecorder, audioEditorContainer };

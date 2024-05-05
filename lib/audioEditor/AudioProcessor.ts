@@ -1,29 +1,34 @@
-import BufferPlayer from "@/BufferPlayer";
 import EventEmitter from "@/utils/EventEmitter";
-import AudioContextManager from "./AudioContextManager";
 import AbstractAudioElement from "@/filters/interfaces/AbstractAudioElement";
-import FilterManager from "./FilterManager";
-import { ConfigService } from "@/services/ConfigService";
 import { EventType } from "@/model/EventTypeEnum";
 import utils from "../utils/Functions";
 import Constants from "@/model/Constants";
-import BufferManager from "./BufferManager";
-import RendererManager from "./RendererManager";
+import AudioProcessorInterface from "./interfaces/AudioProcessorInterface";
+import { inject, injectable } from "inversify";
+import { ConfigService } from "@/services/interfaces/ConfigService";
+import type BufferPlayerInterface from "@/bufferPlayer/interfaces/BufferPlayerInterface";
+import type BufferManagerInterface from "./interfaces/BufferManagerInterface";
+import EventEmitterInterface from "@/utils/interfaces/EventEmitterInterface";
+import AudioContextManagerInterface from "./interfaces/AudioContextManagerInterface";
+import type RendererManagerInterface from "./interfaces/RendererManagerInterface";
+import type FilterManagerInterface from "./interfaces/FilterManagerInterface";
+import { TYPES } from "@/inversify.types";
 
-export default class AudioProcessor extends AbstractAudioElement {
+@injectable()
+export default class AudioProcessor extends AbstractAudioElement implements AudioProcessorInterface {
 
     /** The filter manager */
-    private filterManager: FilterManager | undefined;
+    private filterManager: FilterManagerInterface | undefined;
     /** The filter manager */
-    private rendererManager: RendererManager | undefined;
+    private rendererManager: RendererManagerInterface | undefined;
     /** The context manager */
-    private contextManager: AudioContextManager | undefined;
+    private contextManager: AudioContextManagerInterface | undefined;
     /** The current event emitter */
-    private eventEmitter: EventEmitter | undefined;
+    private eventEmitter: EventEmitterInterface | undefined;
     /** The audio player */
-    private bufferPlayer: BufferPlayer | undefined;
+    private bufferPlayer: BufferPlayerInterface | undefined;
     /** The save buffer manager */
-    private bufferManager: BufferManager | undefined;
+    private bufferManager: BufferManagerInterface | undefined;
 
     /** The current offline context */
     private currentOfflineContext: OfflineAudioContext | null | undefined;
@@ -38,7 +43,14 @@ export default class AudioProcessor extends AbstractAudioElement {
      * used to detect the need to enable the compatibility mode */
     sumPrincipalBuffer: number = 0;
 
-    constructor(contextManager: AudioContextManager | undefined, configService: ConfigService | null, eventEmitter: EventEmitter | null, bufferPlayer: BufferPlayer, filterManager: FilterManager, rendererManager: RendererManager, bufferManager: BufferManager) {
+    constructor(
+        @inject(TYPES.AudioContextManager) contextManager: AudioContextManagerInterface | undefined,
+        @inject(TYPES.ConfigService) configService: ConfigService | null,
+        @inject(TYPES.EventEmitter) eventEmitter: EventEmitterInterface | null,
+        @inject(TYPES.BufferPlayer) bufferPlayer: BufferPlayerInterface, 
+        @inject(TYPES.FilterManager) filterManager: FilterManagerInterface,
+        @inject(TYPES.RendererManager) rendererManager:RendererManagerInterface,
+        @inject(TYPES.BufferManager) bufferManager: BufferManagerInterface) {
         super();
 
         this.contextManager = contextManager;
@@ -50,7 +62,6 @@ export default class AudioProcessor extends AbstractAudioElement {
         this.bufferManager = bufferManager;
     }
 
-    /** Prepare the AudioContext before use */
     async prepareContext(principalBuffer: AudioBuffer | null) {
         if (this.contextManager) {
             const changed = this.contextManager.createNewContextIfNeeded(principalBuffer);
@@ -65,12 +76,6 @@ export default class AudioProcessor extends AbstractAudioElement {
         }
     }
 
-    /**
-     * Render the audio to a buffer
-     * @returns A promise resolved when the audio processing is finished.
-     * The promise return false if the audio processing was cancelled or if an error occurred.
-     * The resulting audio buffer can then be obtained by using the "getOutputBuffer" method.
-     */
     async renderAudio(principalBuffer: AudioBuffer | null): Promise<boolean> {
         await this.prepareContext(principalBuffer);
 
@@ -122,20 +127,13 @@ export default class AudioProcessor extends AbstractAudioElement {
         return await this.setupOutput(principalBuffer, outputContext, durationAudio, offlineContext);
     }
 
-    private setupPlayerSpeed(bufferPlayer: BufferPlayer) {
+    private setupPlayerSpeed(bufferPlayer: BufferPlayerInterface) {
         if (this.filterManager && this.filterManager.entrypointFilter) {
             const speedAudio = this.filterManager.entrypointFilter.getSpeed();
             bufferPlayer.speedAudio = speedAudio;
         }
     }
 
-    /**
-     * Setup output buffers/nodes, then process the audio
-     * @param outputContext Output audio context
-     * @param durationAudio Duration of the audio buffer
-     * @param offlineContext An offline context to do the rendering (can be omited, in this case the rendering is done in real time - "compatibility mode")
-     * @returns A promise resolved when the audio processing is done. The promise returns false if the audio processing was cancelled, or if an error occurred.
-     */
     async setupOutput(principalBuffer: AudioBuffer | null, outputContext: BaseAudioContext, durationAudio?: number, offlineContext?: OfflineAudioContext): Promise<boolean> {
         if (this._renderedBuffer && this.configService && this.eventEmitter && this.bufferPlayer && this.filterManager) {
             // Initialize worklets then connect the filter nodes
@@ -218,9 +216,6 @@ export default class AudioProcessor extends AbstractAudioElement {
         }
     }
 
-    /**
-     * Cancel the audio rendering
-     */
     public cancelAudioRendering() {
         if (this.currentOfflineContext && !this.audioRenderingLastCanceled && this.filterManager) {
             this.audioRenderingLastCanceled = true;

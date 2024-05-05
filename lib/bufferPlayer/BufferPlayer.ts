@@ -18,17 +18,23 @@
  */
 // The audio buffer player
 // Used to play the audio buffer, with time controls, pause/play, stop and loop
-import { EventType } from "./model/EventTypeEnum";
-import { EventEmitterCallback } from "./model/EventEmitterCallback";
-import EventEmitter from "./utils/EventEmitter";
-import AbstractAudioElement from "./filters/interfaces/AbstractAudioElement";
-import Constants from "./model/Constants";
-import AudioContextManager from "./audioEditor/AudioContextManager";
+import { EventType } from "../model/EventTypeEnum";
+import { EventEmitterCallback } from "../model/EventEmitterCallback";
+import EventEmitter from "../utils/EventEmitter";
+import AbstractAudioElement from "../filters/interfaces/AbstractAudioElement";
+import Constants from "../model/Constants";
+import AudioContextManager from "../audioEditor/AudioContextManager";
+import { TYPES } from "../inversify.types";
+import { inject, injectable } from "inversify";
+import BufferPlayerInterface from "./interfaces/BufferPlayerInterface";
+import AudioContextManagerInterface from "@/audioEditor/interfaces/AudioContextManagerInterface";
+import type EventEmitterInterface from "@/utils/interfaces/EventEmitterInterface";
 
 // Also used in compatibility mode (which doesn't use audio buffer) with less functions (no time control)
-export default class BufferPlayer extends AbstractAudioElement {
+@injectable()
+export default class BufferPlayer extends AbstractAudioElement implements BufferPlayerInterface {
 
-    private _contextManager: AudioContextManager | undefined | null;
+    private _contextManager: AudioContextManagerInterface | undefined | null;
     private buffer: AudioBuffer | null = null;
     private source: AudioBufferSourceNode | null = null;
     currentTime = 0;
@@ -38,13 +44,15 @@ export default class BufferPlayer extends AbstractAudioElement {
     playing = false;
     loop = false;
     speedAudio = 1;
-    private eventEmitter: EventEmitter | null;
+    private eventEmitter: EventEmitterInterface | null;
     private onBeforePlayingCallback: () => void = async () => {};
 
     compatibilityMode = false;
     currentNode: AudioNode | null = null;
 
-    constructor(contextManager: AudioContextManager | undefined | null, eventEmitter?: EventEmitter) {
+    constructor(
+        @inject(TYPES.AudioContextManager) contextManager: AudioContextManagerInterface | undefined | null,
+        @inject(TYPES.EventEmitter) eventEmitter?: EventEmitterInterface) {
         super();
         this._contextManager = contextManager;
         this.eventEmitter = eventEmitter || new EventEmitter();

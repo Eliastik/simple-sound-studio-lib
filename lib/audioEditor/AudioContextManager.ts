@@ -1,24 +1,33 @@
+import { inject, injectable } from "inversify";
 import { EventType } from "@/model/EventTypeEnum";
-import { ConfigService } from "@/services/ConfigService";
-import AbstractAudioElement from "@/filters/interfaces/AbstractAudioElement";
 import Constants from "@/model/Constants";
 import EventEmitter from "@/utils/EventEmitter";
+import AudioContextManagerInterface from "./interfaces/AudioContextManagerInterface";
+import { ConfigService } from "@/services/interfaces/ConfigService";
+import EventEmitterInterface from "@/utils/interfaces/EventEmitterInterface";
+import { TYPES } from "@/inversify.types";
 
-export default class AudioContextManager extends AbstractAudioElement {
+@injectable()
+export default class AudioContextManager implements AudioContextManagerInterface {
 
     /** The current event emitter */
-    private eventEmitter: EventEmitter | undefined;
+    private eventEmitter: EventEmitterInterface | undefined;
+
+    /** The config service */
+    private configService: ConfigService | null;
+
     /** The current audio context */
     private _currentContext: AudioContext | null | undefined;
+
     /** The old audio context */
     private oldAudioContext: AudioContext | null | undefined;
+
     /** The previous sample rate setting */
     private previousSampleRate = Constants.DEFAULT_SAMPLE_RATE;
 
-    constructor(context: AudioContext | undefined | null, configService: ConfigService | null, eventEmitter: EventEmitter | null) {
-        super();
-
-        this._currentContext = context;
+    constructor(
+        @inject(TYPES.ConfigService) configService: ConfigService | null,
+        @inject(TYPES.EventEmitter) eventEmitter: EventEmitterInterface | null) {
         this.eventEmitter = eventEmitter || new EventEmitter();
         this.configService = configService;
 
@@ -39,11 +48,6 @@ export default class AudioContextManager extends AbstractAudioElement {
         }
     }
 
-    /**
-     * Create new context if needed, for example if sample rate setting have changed
-     * @param principalBuffer The audio buffer
-     * @returns true if a new context was created, false otherwise
-     */
     createNewContextIfNeeded(principalBuffer: AudioBuffer | null) {
         const isCompatibilityModeEnabled = this.configService && this.configService.isCompatibilityModeEnabled();
 
@@ -110,9 +114,6 @@ export default class AudioContextManager extends AbstractAudioElement {
         }
     }
 
-    /**
-     * Get the current sample rate used
-     */
     get currentSampleRate(): number {
         if (this.currentContext) {
             return this.currentContext.sampleRate;
@@ -123,13 +124,5 @@ export default class AudioContextManager extends AbstractAudioElement {
 
     get currentContext() {
         return this._currentContext;
-    }
-
-    get order(): number {
-        return -1;
-    }
-
-    get id(): string {
-        return Constants.AUDIO_CONTEXT_MANAGER;
     }
 }

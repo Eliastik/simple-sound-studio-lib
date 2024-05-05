@@ -1,34 +1,43 @@
-
+import { inject, injectable } from "inversify";
+import { TYPES } from "../inversify.types";
 import { Recorder } from "../recorder/Recorder";
 import { EventType } from "@/model/EventTypeEnum";
-import { ConfigService } from "@/services/ConfigService";
-import BufferPlayer from "@/BufferPlayer";
 import AbstractAudioElement from "@/filters/interfaces/AbstractAudioElement";
 import SaveBufferOptions from "@/model/SaveBufferOptions";
 import EventEmitter from "@/utils/EventEmitter";
-import AudioContextManager from "./AudioContextManager";
 import Constants from "@/model/Constants";
 import FilterManager from "./FilterManager";
 import RecorderWorkerMessage from "../model/RecorderWorkerMessage";
 import getRecorderWorker from "../recorder/getRecorderWorker";
+import SaveBufferManagerInterface from "./interfaces/SaveBufferManagerInteface";
+import { ConfigService } from "@/services/interfaces/ConfigService";
+import type BufferPlayerInterface from "@/bufferPlayer/interfaces/BufferPlayerInterface";
+import AudioContextManagerInterface from "./interfaces/AudioContextManagerInterface";
+import EventEmitterInterface from "@/utils/interfaces/EventEmitterInterface";
 
-export default class SaveBufferManager extends AbstractAudioElement {
+@injectable()
+export default class SaveBufferManager extends AbstractAudioElement implements SaveBufferManagerInterface {
     
     /** The filter manager */
     private filterManager: FilterManager | undefined;
     /** The context manager */
-    private contextManager: AudioContextManager | undefined;
+    private contextManager: AudioContextManagerInterface | undefined;
     /** The current event emitter */
-    private eventEmitter: EventEmitter | undefined;
+    private eventEmitter: EventEmitterInterface | undefined;
     /** The audio player */
-    private bufferPlayer: BufferPlayer | undefined;
+    private bufferPlayer: BufferPlayerInterface | undefined;
 
     /** If we are currently processing and downloading the buffer */
     private savingBuffer = false;
     /** Callback used when saving audio */
     private playingStoppedCallback: (() => void) | null = null;
 
-    constructor(contextManager: AudioContextManager | undefined, configService: ConfigService | null, eventEmitter: EventEmitter | null, bufferPlayer: BufferPlayer) {
+    constructor(
+        @inject(TYPES.AudioContextManager) contextManager: AudioContextManagerInterface | undefined,
+        @inject(TYPES.ConfigService) configService: ConfigService | null,
+        @inject(TYPES.EventEmitter) eventEmitter: EventEmitterInterface | null,
+        @inject(TYPES.BufferPlayer) bufferPlayer: BufferPlayerInterface
+    ) {
         super();
 
         this.contextManager = contextManager;
@@ -51,11 +60,6 @@ export default class SaveBufferManager extends AbstractAudioElement {
         }
     }
 
-    /**
-     * Save the rendered audio to a buffer
-     * @param options The save options
-     * @returns A promise resolved when the audio buffer is downloaded to the user
-     */
     async saveBuffer(renderedBuffer: AudioBuffer | null, options?: SaveBufferOptions): Promise<boolean> {
         if (this.savingBuffer) {
             throw new Error("The buffer is currently saving");

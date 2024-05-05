@@ -1,14 +1,23 @@
-import BufferDecoderService from "../../services/BufferDecoderService";
-import BufferFetcherService from "../../services/BufferFetcherService";
-import { ConfigService } from "../../services/ConfigService";
+import { inject, injectable } from "inversify";
+import { ConfigService } from "../../services/interfaces/ConfigService";
+import { TYPES } from "@/inversify.types";
+import BufferFetcherServiceInterface from "@/services/interfaces/BufferFetcherServiceInterface";
+import BufferDecoderServiceInterface from "@/services/interfaces/BufferDecoderServiceInterface";
 
+@injectable()
 export default abstract class AbstractAudioElement {
 
     private enabled = false;
     private defaultEnabled = false;
-    bufferFetcherService: BufferFetcherService | null = null;
-    bufferDecoderService: BufferDecoderService | null = null;
-    configService: ConfigService | null = null;
+
+    @inject(TYPES.BufferFetcherService)
+        bufferFetcherService: BufferFetcherServiceInterface | null = null;
+
+    @inject(TYPES.BufferDecoderService)
+        bufferDecoderService: BufferDecoderServiceInterface | null = null;
+    
+    @inject(TYPES.ConfigService)
+        configService: ConfigService | null = null;
 
     /** Returns the order in which the filter/renderer needs to be applied */
     abstract get order(): number;

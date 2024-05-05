@@ -18,12 +18,17 @@ import EventEmitter from "@/utils/EventEmitter";
 import { FilterState } from "@/model/FilterState";
 import { FilterSettings } from "@/model/filtersSettings/FilterSettings";
 import Constants from "@/model/Constants";
-import BufferFetcherService from "@/services/BufferFetcherService";
-import BufferDecoderService from "@/services/BufferDecoderService";
-import { ConfigService } from "@/services/ConfigService";
-import GenericConfigService from "@/utils/GenericConfigService";
+import FilterManagerInterface from "./interfaces/FilterManagerInterface";
+import { inject, injectable } from "inversify";
+import type { ConfigService } from "@/services/interfaces/ConfigService";
+import GenericConfigService from "@/services/GenericConfigService";
+import { TYPES } from "@/inversify.types";
+import type BufferFetcherServiceInterface from "@/services/interfaces/BufferFetcherServiceInterface";
+import type BufferDecoderServiceInterface from "@/services/interfaces/BufferDecoderServiceInterface";
+import EventEmitterInterface from "@/utils/interfaces/EventEmitterInterface";
 
-export default class FilterManager extends AbstractAudioElement {
+@injectable()
+export default class FilterManager extends AbstractAudioElement implements FilterManagerInterface {
 
     /** A list of filters */
     private filters: AbstractAudioFilter[] = [];
@@ -32,9 +37,13 @@ export default class FilterManager extends AbstractAudioElement {
     /** The current connected nodes */
     private _currentNodes: AudioFilterNodes | null = null;
     /** The current event emitter */
-    private eventEmitter: EventEmitter | undefined;
+    private eventEmitter: EventEmitterInterface | undefined;
 
-    constructor(eventEmitter: EventEmitter | null, bufferFetcherService: BufferFetcherService, bufferDecoderService: BufferDecoderService, configService: ConfigService) {
+    constructor(
+        @inject(TYPES.EventEmitter) eventEmitter: EventEmitterInterface | null,
+        @inject(TYPES.BufferFetcherService) bufferFetcherService: BufferFetcherServiceInterface,
+        @inject(TYPES.BufferDecoderService) bufferDecoderService: BufferDecoderServiceInterface,
+        @inject(TYPES.ConfigService) configService: ConfigService) {
         super();
         this.eventEmitter = eventEmitter || new EventEmitter();
         this.configService = configService || new GenericConfigService();

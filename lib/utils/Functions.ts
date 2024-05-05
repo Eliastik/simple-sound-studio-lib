@@ -1,7 +1,7 @@
-import FilterManager from "@/audioEditor/FilterManager";
 import { FilterSettingValue } from "../model/filtersSettings/FilterSettings";
-import EventEmitter from "./EventEmitter";
 import { EventType } from "@/model/EventTypeEnum";
+import FilterManagerInterface from "@/audioEditor/interfaces/FilterManagerInterface";
+import EventEmitterInterface from "./interfaces/EventEmitterInterface";
 
 const utilFunctions = {
     calcAudioDuration: (audio: AudioBuffer, speed: number) => {
@@ -120,7 +120,7 @@ const utilFunctions = {
      * @param speedAudio Current audio speed
      * @returns The audio duration
      */
-    calculateAudioDuration(buffer: AudioBuffer, filterManager: FilterManager, speedAudio: number): number {
+    calculateAudioDuration(buffer: AudioBuffer, filterManager: FilterManagerInterface, speedAudio: number): number {
         if (buffer && filterManager) {
             const duration = this.calcAudioDuration(buffer, speedAudio);
             return duration + filterManager.getAddingTime();
@@ -131,7 +131,7 @@ const utilFunctions = {
     /**
      * Reset audio rendering progress
      */
-    resetAudioRenderingProgress(eventEmitter: EventEmitter | undefined) {
+    resetAudioRenderingProgress(eventEmitter: EventEmitterInterface | undefined) {
         if (eventEmitter) {
             eventEmitter.emit(EventType.UPDATE_AUDIO_TREATMENT_PERCENT, 0);
             eventEmitter.emit(EventType.UPDATE_REMAINING_TIME_ESTIMATED, -1);

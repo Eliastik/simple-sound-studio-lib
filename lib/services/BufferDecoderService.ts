@@ -1,14 +1,21 @@
+import type AudioContextManagerInterface from "@/audioEditor/interfaces/AudioContextManagerInterface";
 import { EventType } from "../model/EventTypeEnum";
 import EventEmitter from "../utils/EventEmitter";
 import utilFunctions from "../utils/Functions";
-import AudioContextManager from "@/audioEditor/AudioContextManager";
+import BufferDecoderServiceInterface from "./interfaces/BufferDecoderServiceInterface";
+import { inject, injectable } from "inversify";
+import type EventEmitterInterface from "@/utils/interfaces/EventEmitterInterface";
+import { TYPES } from "@/inversify.types";
 
-export default class BufferDecoderService {
+@injectable()
+export default class BufferDecoderService implements BufferDecoderServiceInterface {
 
-    private contextManager: AudioContextManager;
-    private eventEmitter: EventEmitter | null;
+    private contextManager: AudioContextManagerInterface;
+    private eventEmitter: EventEmitterInterface | null;
 
-    constructor(contextManager: AudioContextManager, eventEmitter?: EventEmitter) {
+    constructor(
+        @inject(TYPES.AudioContextManager) contextManager: AudioContextManagerInterface,
+        @inject(TYPES.EventEmitter) eventEmitter?: EventEmitterInterface) {
         this.contextManager = contextManager;
         this.eventEmitter = eventEmitter || new EventEmitter();
     }

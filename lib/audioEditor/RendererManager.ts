@@ -1,24 +1,28 @@
 import AbstractAudioElement from "@/filters/interfaces/AbstractAudioElement";
 import ReturnAudioRenderer from "../filters/ReturnAudioRenderer";
 import AbstractAudioRenderer from "@/filters/interfaces/AbstractAudioRenderer";
-import EventEmitter from "@/utils/EventEmitter";
 import { FilterState } from "@/model/FilterState";
-import BufferFetcherService from "@/services/BufferFetcherService";
-import BufferDecoderService from "@/services/BufferDecoderService";
-import { ConfigService } from "@/services/ConfigService";
-import GenericConfigService from "@/utils/GenericConfigService";
 import Constants from "@/model/Constants";
+import RendererManagerInterface from "./interfaces/RendererManagerInterface";
+import { inject, injectable } from "inversify";
+import { TYPES } from "@/inversify.types";
+import GenericConfigService from "@/services/GenericConfigService";
+import type { ConfigService } from "@/services/interfaces/ConfigService";
+import type BufferFetcherServiceInterface from "@/services/interfaces/BufferFetcherServiceInterface";
+import type BufferDecoderServiceInterface from "@/services/interfaces/BufferDecoderServiceInterface";
 
-export default class RendererManager extends AbstractAudioElement {
+@injectable()
+export default class RendererManager extends AbstractAudioElement implements RendererManagerInterface {
 
     /** A list of renderers */
     private renderers: AbstractAudioRenderer[] = [];
     /** The current event emitter */
-    private eventEmitter: EventEmitter | undefined;
 
-    constructor(eventEmitter: EventEmitter | null, bufferFetcherService: BufferFetcherService, bufferDecoderService: BufferDecoderService, configService: ConfigService) {
+    constructor(
+        @inject(TYPES.BufferFetcherService) bufferFetcherService: BufferFetcherServiceInterface,
+        @inject(TYPES.BufferDecoderService) bufferDecoderService: BufferDecoderServiceInterface,
+        @inject(TYPES.ConfigService) configService: ConfigService) {
         super();
-        this.eventEmitter = eventEmitter || new EventEmitter();
         this.configService = configService || new GenericConfigService();
         this.bufferFetcherService = bufferFetcherService;
         this.bufferDecoderService = bufferDecoderService;
@@ -26,10 +30,6 @@ export default class RendererManager extends AbstractAudioElement {
         this.setupDefaultRenderers();
     }
 
-    /**
-     * Add a new custom renderer for this audio editor
-     * @param renderers One or more AbstractAudioRenderer
-     */
     addRenderers(...renderers: AbstractAudioRenderer[]) {
         for (const renderer of renderers) {
             renderer.bufferFetcherService = this.bufferFetcherService;
@@ -46,10 +46,6 @@ export default class RendererManager extends AbstractAudioElement {
         this.addRenderers(returnAudio);
     }
 
-    /**
-     * Get enabled/disabled state of all filters/renderers
-     * @returns The filters state (enabled/disabled)
-     */
     getRenderersState(): FilterState {
         const state: FilterState = {};
 
@@ -60,10 +56,6 @@ export default class RendererManager extends AbstractAudioElement {
         return state;
     }
 
-    /**
-     * Toggle enabled/disabled state for a renderer
-     * @param filterId The renderer ID
-     */
     toggleRenderer(rendererId: string) {
         const renderer = this.renderers.find(f => f.id === rendererId);
 
@@ -72,9 +64,6 @@ export default class RendererManager extends AbstractAudioElement {
         }
     }
 
-    /**
-     * Reset all renderers state (enabled/disabled) based on their default states
-     */
     resetAllRenderersState() {
         this.renderers.forEach(element => {
             if (element.isDefaultEnabled()) {
@@ -84,13 +73,7 @@ export default class RendererManager extends AbstractAudioElement {
             }
         });
     }
-    
-    /**
-     * Execute audio renderers then returns audio buffer rendered
-     * @param buffer The buffer to process
-     * @param outputContext The output context
-     * @returns Audio buffer rendered
-     */
+
     async executeAudioRenderers(buffer: AudioBuffer, outputContext: AudioContext | OfflineAudioContext) {
         let currentBuffer = buffer;
 

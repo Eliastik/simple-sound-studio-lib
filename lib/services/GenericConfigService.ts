@@ -1,10 +1,12 @@
+import { injectable } from "inversify";
 import Constants from "../model/Constants";
-import { ConfigService } from "../services/ConfigService";
+import { ConfigService } from "./interfaces/ConfigService";
 
 /**
  * Default implementation for a ConfigService, using a built-in map.
  * The configuration is not stored in localstorage in this case.
  */
+@injectable()
 export default class GenericConfigService implements ConfigService {
 
     private mapConfig = new Map<string, string>();

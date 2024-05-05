@@ -14,8 +14,10 @@
   "module": "dist/esm/SimpleSoundStudioLibrary.js",
   "types": "dist/index.d.ts",
   "dependencies": {
+    "inversify": "^6.0.2",
     "lamejs": "^1.2.1",
     "lodash": "^4.17.21",
+    "reflect-metadata": "^0.2.2",
     "soundtouchjs": "^0.1.30"
   },
   "devDependencies": {

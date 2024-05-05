@@ -54,7 +54,9 @@ const bundleConfig = [
                 sourceMap: true,
                 inlineSources: true,
                 inlineSourceMap: true,
-                noEmit: true
+                noEmit: true,
+                experimentalDecorators: true,
+                emitDecoratorMetadata: true
             }),
             terser({
                 sourceMap: true

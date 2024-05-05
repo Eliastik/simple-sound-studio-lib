@@ -1,18 +1,26 @@
 import { EventType } from "../model/EventTypeEnum";
-import { ConfigService } from "./ConfigService";
+import type { ConfigService } from "./interfaces/ConfigService";
 import utilFunctions from "../utils/Functions";
 import EventEmitter from "../utils/EventEmitter";
-import AudioContextManager from "@/audioEditor/AudioContextManager";
+import BufferFetcherServiceInterface from "./interfaces/BufferFetcherServiceInterface";
+import { inject, injectable } from "inversify";
+import type EventEmitterInterface from "@/utils/interfaces/EventEmitterInterface";
+import type AudioContextManagerInterface from "@/audioEditor/interfaces/AudioContextManagerInterface";
+import { TYPES } from "@/inversify.types";
 
-export default class BufferFetcherService {
+@injectable()
+export default class BufferFetcherService implements BufferFetcherServiceInterface {
 
-    private contextManager: AudioContextManager;
+    private contextManager: AudioContextManagerInterface;
     private buffers: Map<string, AudioBuffer> = new Map<string, AudioBuffer>();
     private bufferErrors: string[] = [];
-    private eventEmitter: EventEmitter | null;
+    private eventEmitter: EventEmitterInterface | null;
     private configService: ConfigService | null = null;
 
-    constructor(contextManager: AudioContextManager, configService: ConfigService, eventEmitter?: EventEmitter) {
+    constructor(
+        @inject(TYPES.AudioContextManager) contextManager: AudioContextManagerInterface,
+        @inject(TYPES.ConfigService) configService: ConfigService,
+        @inject(TYPES.EventEmitter) eventEmitter?: EventEmitterInterface) {
         this.contextManager = contextManager;
         this.eventEmitter = eventEmitter || new EventEmitter();
         this.configService = configService;
