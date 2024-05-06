@@ -19,19 +19,19 @@ export default interface FilterManagerInterface {
     getFiltersState(): FilterState;
 
     /**
-     * Get the settings of all filters/renderers
+     * Get the settings of all filters
      * @returns 
      */
     getFiltersSettings(): Map<string, FilterSettings>;
 
     /**
-     * Toggle enabled/disabled state for a filter/renderer
-     * @param filterId The filter/renderer ID
+     * Toggle enabled/disabled state for a filter
+     * @param filterId The filter ID
      */
     toggleFilter(filterId: string): void;
 
     /**
-     * Change a filter/renderer setting
+     * Change a filter setting
      * @param filterId Filter ID
      * @param settings Filter setting (key/value)
      */
@@ -53,6 +53,7 @@ export default interface FilterManagerInterface {
      * @param context The Audio Context
      * @param buffer  The Audio Buffer
      * @param keepCurrentInputOutput Keep current first input/output nodes?
+     * @param isCompatibilityMode Is compatibility mode enabled?
      */
     connectNodes(context: BaseAudioContext, buffer: AudioBuffer, keepCurrentInputOutput: boolean, isCompatibilityMode: boolean): void;
 
@@ -62,9 +63,14 @@ export default interface FilterManagerInterface {
      */
     disconnectOldNodes(keepCurrentOutput: boolean): void;
 
-    /** Initialize worklets filters */
+    /**
+     * Initialize worklets filters
+     */
     initializeWorklets(context: BaseAudioContext): Promise<void>;
 
+    /**
+     * Get the total time the filters add to the audio duration
+     */
     getAddingTime(): number;
 
     /**
@@ -78,7 +84,13 @@ export default interface FilterManagerInterface {
      */
     resetFilterBuffers(): Promise<void>;
 
+    /**
+     * Returns the entrypoint filter
+     */
     get entrypointFilter(): (AbstractAudioFilter & AudioFilterEntrypointInterface) | null;
 
+    /**
+     * Get current audio nodes
+     */
     get currentNodes(): AudioFilterNodes | null;
 }

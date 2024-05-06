@@ -11,8 +11,7 @@ import { FilterSettings as FilterSettings$1 } from '@/model/filtersSettings/Filt
 import BufferPlayerInterface$1 from '@/bufferPlayer/interfaces/BufferPlayerInterface';
 import * as ConfigService$1 from '@/services/interfaces/ConfigService';
 import { ConfigService as ConfigService$2 } from '@/services/interfaces/ConfigService';
-import AudioContextManager$1 from '@/audioEditor/AudioContextManager';
-import AudioContextManagerInterface$1 from '@/audioEditor/interfaces/AudioContextManagerInterface';
+import AudioContextManagerInterface from '@/audioEditor/interfaces/AudioContextManagerInterface';
 import AudioEditorEvents$1 from '@/model/AudioEditorEvent';
 import FilterManagerInterface from '@/audioEditor/interfaces/FilterManagerInterface';
 import AudioEditorInterface$1 from '@/audioEditor/interfaces/AudioEditorInterface';
@@ -331,52 +330,11 @@ declare class AudioEditor extends AbstractAudioElement implements AudioEditorInt
     get id(): string;
 }
 
-interface AudioContextManagerInterface {
-    /**
-     * Create new context if needed, for example if sample rate setting have changed
-     * @param principalBuffer The audio buffer
-     * @returns true if a new context was created, false otherwise
-     */
-    createNewContextIfNeeded(principalBuffer: AudioBuffer | null): boolean;
-    /**
-     * Get the current sample rate used
-     */
-    get currentSampleRate(): number;
-    /**
-     * Return the current audio context
-     */
-    get currentContext(): AudioContext | null | undefined;
-}
-
-declare class AudioContextManager implements AudioContextManagerInterface {
-    /** The current event emitter */
-    private eventEmitter;
-    /** The config service */
-    private configService;
-    /** The current audio context */
-    private _currentContext;
-    /** The old audio context */
-    private oldAudioContext;
-    /** The previous sample rate setting */
-    private previousSampleRate;
-    constructor(configService: ConfigService$2 | null, eventEmitter: EventEmitterInterface$1 | null);
-    private setup;
-    createNewContextIfNeeded(principalBuffer: AudioBuffer | null): boolean;
-    /**
-     * Stop previous audio context and create a new one
-     * @param sampleRate New sample rate
-     */
-    private createNewContext;
-    /**
-     * Destroy previous AudioContext
-     */
-    private destroyOldContext;
-    get currentSampleRate(): number;
-    get currentContext(): AudioContext | null | undefined;
-}
-
 interface BufferPlayerInterface {
-    /** Init this buffer player */
+    /**
+     * Init this buffer player
+     * @param direct Play audio buffer directly without stopping previous play?
+     */
     init(direct?: boolean): void;
     /**
      * Load an audio buffer
@@ -391,6 +349,7 @@ interface BufferPlayerInterface {
     setCompatibilityMode(currentNode: AudioNode, duration?: number): void;
     /**
      * Reset this player
+     * @param direct Play audio buffer directly without stopping previous play?
      */
     reset(direct?: boolean): void;
     /**
@@ -399,6 +358,7 @@ interface BufferPlayerInterface {
     stop(): void;
     /**
      * Start playing the audio
+     * @param direct Play audio buffer directly without stopping previous play?
      */
     start(direct?: boolean): Promise<void>;
     /**
@@ -450,14 +410,37 @@ interface BufferPlayerInterface {
      * Get the remaining time in text format
      */
     get remainingTimeDisplay(): string;
-    set contextManager(contextManager: AudioContextManager$1 | undefined);
+    /**
+     * Enable or disable compatibility mode (AudioContext vs OfflineAudioContext)
+     */
     set compatibilityMode(compatibilityMode: boolean);
+    /**
+     * Is compatibility mode enabled?
+     */
     get compatibilityMode(): boolean;
+    /**
+     * Set to true to play audio in loop
+     */
     set loop(loop: boolean);
+    /**
+     * Is audio playing in loop?
+     */
     get loop(): boolean;
+    /**
+     * Set the audio speed
+     */
     set speedAudio(speedAudio: number);
+    /**
+     * Get the audio speed
+     */
     get speedAudio(): number;
+    /**
+     * Set the audio duration
+     */
     set duration(duration: number);
+    /**
+     * Get the audio duration
+     */
     get duration(): number;
 }
 
@@ -476,88 +459,30 @@ declare class BufferPlayer extends AbstractAudioElement implements BufferPlayerI
     private onBeforePlayingCallback;
     compatibilityMode: boolean;
     currentNode: AudioNode | null;
-    constructor(contextManager: AudioContextManagerInterface$1 | undefined | null, eventEmitter?: EventEmitterInterface$1);
-    /** Init this buffer player */
+    constructor(contextManager: AudioContextManagerInterface | undefined | null, eventEmitter?: EventEmitterInterface$1);
     init(direct?: boolean): void;
-    /**
-     * Load an audio buffer
-     * @param buffer The buffer
-     */
     loadBuffer(buffer: AudioBuffer): void;
-    /**
-     * Enable compatibility mode
-     * @param currentNode Current audio node to read
-     * @param duration The audio duration
-     */
     setCompatibilityMode(currentNode: AudioNode, duration?: number): void;
-    /**
-     * Reset this player
-     */
     reset(direct?: boolean): void;
-    /**
-     * Stop playing the audio
-     */
     stop(): void;
     /**
      * Clear old intervals
      */
     private clearIntervals;
-    /**
-     * Start playing the audio
-     */
     start(direct?: boolean): Promise<void>;
-    /**
-     * Play audio directly, without stopping previous audio play
-     */
     playDirect(): Promise<void>;
-    /**
-     * Pause the audio
-     */
     pause(): void;
     /** Send an event to update the informations of this player */
     private updateInfos;
-    /**
-     * Set the current starting time of this player
-     * @param percent Where to start playing, in percent
-     */
     setTimePercent(percent: number): void;
-    /**
-     * Set the current starting time of this player
-     * @param time Where to start playing, in milliseconds
-     */
     setTime(time: number): void;
-    /**
-     * Callback called just before starting playing the audio
-     * @param callback The callback
-     */
     onBeforePlaying(callback: () => void): void;
-    /**
-     * Enable/disable loop playing
-     */
     toggleLoop(): void;
-    /**
-     * Observe an event
-     * @param event The event name
-     * @param callback Callback called when an event of this type occurs
-     */
     on(event: string, callback: EventEmitterCallback): void;
-    /**
-     * Get the time in text format
-     */
     get currentTimeDisplay(): string;
-    /**
-     * Get the audio duration in text format
-     */
     get maxTimeDisplay(): string;
-    /**
-     * Get the percent played
-     */
     get percent(): number;
-    /**
-     * Get the remaining time in text format
-     */
     get remainingTimeDisplay(): string;
-    set contextManager(contextManager: AudioContextManager | undefined);
     get order(): number;
     get id(): string;
 }

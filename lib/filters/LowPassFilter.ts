@@ -6,11 +6,6 @@ import utilFunctions from "../utils/Functions";
 
 export default class LowPassFilter extends AbstractAudioFilter {
     private lowFrequency = 3500;
-
-    constructor(lowFrequency: number) {
-        super();
-        this.lowFrequency = lowFrequency;
-    }
     
     getNode(context: BaseAudioContext) {
         const lowPassFilter = context.createBiquadFilter();

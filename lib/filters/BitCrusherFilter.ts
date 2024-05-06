@@ -8,12 +8,6 @@ import utilFunctions from "../utils/Functions";
 export default class BitCrusherFilter extends AbstractAudioFilterWorklet<void> {
     private bits = 16;
     private normFreq = 0.9;
-
-    constructor(bits: number, normFreq: number) {
-        super();
-        this.bits = bits;
-        this.normFreq = normFreq;
-    }
     
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     receiveEvent(message: MessageEvent<void>): void {

@@ -86,6 +86,7 @@ export default class SaveBufferManager extends AbstractAudioElement implements S
 
     /**
      * Save the rendered audio to a buffer, when compatibility mode is disabled
+     * @param renderedBuffer The rendered buffer to save
      * @param options The save options
      * @returns A promise resolved when the audio buffer is downloaded to the user
      */
@@ -138,7 +139,7 @@ export default class SaveBufferManager extends AbstractAudioElement implements S
 
     /**
      * Save the rendered audio to a buffer, when compatibility mode is enabled
-     * @param options The save options
+     * @param options The save options - see SaveBufferOptions
      * @returns A promise resolved when the audio buffer is downloaded to the user
      */
     private saveBufferCompatibilityMode(options?: SaveBufferOptions): Promise<boolean> {
@@ -225,7 +226,7 @@ export default class SaveBufferManager extends AbstractAudioElement implements S
     /**
      * Download an audio Blob
      * @param blob The blob
-     * @param options The save options
+     * @param options The save options - see SaveBufferOptions
      */
     private downloadAudioBlob(blob: Blob, options?: SaveBufferOptions) {
         Recorder.forceDownload(blob, "audio-" + new Date().toISOString() + "." + (options?.format || Constants.DEFAULT_SAVE_FORMAT));

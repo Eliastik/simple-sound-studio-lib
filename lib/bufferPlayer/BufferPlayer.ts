@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2019-2023 Eliastik (eliastiksofts.com)
+ * Copyright (C) 2019-2024 Eliastik (eliastiksofts.com)
  *
  * This file is part of "Simple Voice Changer".
  *
@@ -23,7 +23,6 @@ import { EventEmitterCallback } from "../model/EventEmitterCallback";
 import EventEmitter from "../utils/EventEmitter";
 import AbstractAudioElement from "../filters/interfaces/AbstractAudioElement";
 import Constants from "../model/Constants";
-import AudioContextManager from "../audioEditor/AudioContextManager";
 import { TYPES } from "../inversify.types";
 import { inject, injectable } from "inversify";
 import BufferPlayerInterface from "./interfaces/BufferPlayerInterface";
@@ -58,7 +57,6 @@ export default class BufferPlayer extends AbstractAudioElement implements Buffer
         this.eventEmitter = eventEmitter || new EventEmitter();
     }
 
-    /** Init this buffer player */
     init(direct?: boolean) {
         this.playing = false;
 
@@ -77,10 +75,6 @@ export default class BufferPlayer extends AbstractAudioElement implements Buffer
         this.updateInfos();
     }
 
-    /**
-     * Load an audio buffer
-     * @param buffer The buffer
-     */
     loadBuffer(buffer: AudioBuffer) {
         this.compatibilityMode = false;
         this.reset();
@@ -88,11 +82,6 @@ export default class BufferPlayer extends AbstractAudioElement implements Buffer
         this.init();
     }
 
-    /**
-     * Enable compatibility mode
-     * @param currentNode Current audio node to read
-     * @param duration The audio duration
-     */
     setCompatibilityMode(currentNode: AudioNode, duration?: number) {
         this.compatibilityMode = true;
         this.reset();
@@ -106,9 +95,6 @@ export default class BufferPlayer extends AbstractAudioElement implements Buffer
         this.updateInfos();
     }
 
-    /**
-     * Reset this player
-     */
     reset(direct?: boolean) {
         this.clearIntervals();
 
@@ -120,9 +106,6 @@ export default class BufferPlayer extends AbstractAudioElement implements Buffer
         }
     }
 
-    /**
-     * Stop playing the audio
-     */
     stop() {
         this.clearIntervals();
 
@@ -155,9 +138,6 @@ export default class BufferPlayer extends AbstractAudioElement implements Buffer
         this.intervals = [];
     }
 
-    /**
-     * Start playing the audio
-     */
     async start(direct?: boolean) {
         if (this.source || this.compatibilityMode) {
             if (!direct) {
@@ -214,9 +194,6 @@ export default class BufferPlayer extends AbstractAudioElement implements Buffer
         }
     }
 
-    /**
-     * Play audio directly, without stopping previous audio play
-     */
     async playDirect() {
         if (!this.compatibilityMode) {
             this.start(true);
@@ -226,9 +203,6 @@ export default class BufferPlayer extends AbstractAudioElement implements Buffer
         }
     }
 
-    /**
-     * Pause the audio
-     */
     pause() {
         this.stop();
     }
@@ -238,10 +212,6 @@ export default class BufferPlayer extends AbstractAudioElement implements Buffer
         this.eventEmitter?.emit(EventType.PLAYING_UPDATE);
     }
 
-    /**
-     * Set the current starting time of this player
-     * @param percent Where to start playing, in percent
-     */
     setTimePercent(percent: number) {
         if(!this.compatibilityMode) {
             this.currentTime = Math.round(this.duration * (percent / 100));
@@ -256,10 +226,6 @@ export default class BufferPlayer extends AbstractAudioElement implements Buffer
         }
     }
 
-    /**
-     * Set the current starting time of this player
-     * @param time Where to start playing, in milliseconds
-     */
     setTime(time: number) {
         if (!this.compatibilityMode) {
             this.currentTime = time;
@@ -274,60 +240,32 @@ export default class BufferPlayer extends AbstractAudioElement implements Buffer
         }
     }
 
-    /**
-     * Callback called just before starting playing the audio
-     * @param callback The callback
-     */
     onBeforePlaying(callback: () => void) {
         this.onBeforePlayingCallback = callback;
     }
 
-    /**
-     * Enable/disable loop playing
-     */
     toggleLoop() {
         this.loop = !this.loop;
     }
 
-    /**
-     * Observe an event
-     * @param event The event name
-     * @param callback Callback called when an event of this type occurs
-     */
     on(event: string, callback: EventEmitterCallback) {
         this.eventEmitter?.on(event, callback);
     }
 
-    /**
-     * Get the time in text format
-     */
     get currentTimeDisplay() {
         return ("0" + Math.trunc(this.displayTime / 60)).slice(-2) + ":" + ("0" + Math.trunc(this.displayTime % 60)).slice(-2);
     }
 
-    /** 
-     * Get the audio duration in text format
-     */
     get maxTimeDisplay() {
         return ("0" + Math.trunc(this.duration / 60)).slice(-2) + ":" + ("0" + Math.trunc(this.duration % 60)).slice(-2);
     }
 
-    /**
-     * Get the percent played
-     */
     get percent() {
         return (100 - Math.round((this.duration - this.displayTime) / this.duration * 100));
     }
 
-    /**
-     * Get the remaining time in text format
-     */
     get remainingTimeDisplay() {
         return ("0" + Math.trunc((this.duration - this.displayTime) / 60)).slice(-2) + ":" + ("0" + Math.trunc((this.duration - this.displayTime) % 60)).slice(-2);
-    }
-
-    set contextManager(contextManager: AudioContextManager | undefined) {
-        this._contextManager = contextManager;
     }
 
     get order(): number {

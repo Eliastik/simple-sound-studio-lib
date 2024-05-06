@@ -5,10 +5,6 @@ import Vocoder from "../utils/Vocoder";
 
 export default class VocoderRenderer extends AbstractAudioRenderer {
 
-    constructor() {
-        super();
-    }
-
     renderAudio(context: BaseAudioContext, buffer: AudioBuffer): Promise<AudioBuffer> {
         return new Promise(resolve => {
             const durationAudio = Functions.calcAudioDuration(buffer, 1);

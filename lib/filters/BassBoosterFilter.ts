@@ -10,14 +10,6 @@ export default class BassBoosterFilter extends AbstractAudioFilter {
     private dbBooster = 15;
     private dbReduce = -2;
 
-    constructor(frequencyBooster: number, dbBooster: number, frequencyReduce: number, dbReduce: number) {
-        super();
-        this.frequencyBooster = frequencyBooster;
-        this.dbBooster = dbBooster;
-        this.frequencyReduce = frequencyReduce;
-        this.dbReduce = dbReduce;
-    }
-
     getNode(context: BaseAudioContext) {
         const bassBoostFilter = context.createBiquadFilter();
         bassBoostFilter.type = "lowshelf";

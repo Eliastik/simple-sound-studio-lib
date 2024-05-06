@@ -10,8 +10,8 @@ export default interface RendererManagerInterface {
     addRenderers(...renderers: AbstractAudioRenderer[]): void;
 
     /**
-     * Get enabled/disabled state of all filters/renderers
-     * @returns The filters state (enabled/disabled)
+     * Get enabled/disabled state of all renderers
+     * @returns The renderers state (enabled/disabled)
      */
     getRenderersState(): FilterState;
 

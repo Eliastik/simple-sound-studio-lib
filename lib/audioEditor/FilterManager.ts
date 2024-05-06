@@ -1,15 +1,4 @@
 import AbstractAudioElement from "@/filters/interfaces/AbstractAudioElement";
-import BassBoosterFilter from "../filters/BassBoosterFilter";
-import BitCrusherFilter from "../filters/BitCrusherFilter";
-import EchoFilter from "../filters/EchoFilter";
-import HighPassFilter from "../filters/HighPassFilter";
-import LimiterFilter from "../filters/LimiterFilter";
-import LowPassFilter from "../filters/LowPassFilter";
-import ReverbFilter from "../filters/ReverbFilter";
-import SoundtouchWrapperFilter from "../filters/SountouchWrapperFilter";
-import TelephonizerFilter from "../filters/TelephonizerFilter";
-import VocoderFilter from "../filters/VocoderFilter";
-import PassThroughFilter from "../filters/PassThroughFilter";
 import AbstractAudioFilter from "@/filters/interfaces/AbstractAudioFilter";
 import AudioFilterEntrypointInterface from "@/filters/interfaces/AudioFilterEntrypointInterface";
 import { AudioFilterNodes } from "@/model/AudioNodes";
@@ -19,7 +8,7 @@ import { FilterState } from "@/model/FilterState";
 import { FilterSettings } from "@/model/filtersSettings/FilterSettings";
 import Constants from "@/model/Constants";
 import FilterManagerInterface from "./interfaces/FilterManagerInterface";
-import { inject, injectable } from "inversify";
+import { inject, injectable, multiInject } from "inversify";
 import type { ConfigService } from "@/services/interfaces/ConfigService";
 import GenericConfigService from "@/services/GenericConfigService";
 import { TYPES } from "@/inversify.types";
@@ -31,11 +20,16 @@ import EventEmitterInterface from "@/utils/interfaces/EventEmitterInterface";
 export default class FilterManager extends AbstractAudioElement implements FilterManagerInterface {
 
     /** A list of filters */
+    @multiInject(TYPES.Filters)
     private filters: AbstractAudioFilter[] = [];
+
     /** The entrypoint filter */
+    @inject(TYPES.EntryPointFilter)
     private _entryPointFilter: (AbstractAudioFilter & AudioFilterEntrypointInterface) | null = null;
+
     /** The current connected nodes */
     private _currentNodes: AudioFilterNodes | null = null;
+
     /** The current event emitter */
     private eventEmitter: EventEmitterInterface | undefined;
 
@@ -49,14 +43,8 @@ export default class FilterManager extends AbstractAudioElement implements Filte
         this.configService = configService || new GenericConfigService();
         this.bufferFetcherService = bufferFetcherService;
         this.bufferDecoderService = bufferDecoderService;
-
-        this.setupDefaultFilters();
     }
 
-    /**
-     * Add a new custom filter for this audio editor
-     * @param filters One or more AbstractAudioFilter
-     */
     addFilters(...filters: AbstractAudioFilter[]) {
         for (const filter of filters) {
             filter.initializeDefaultSettings();
@@ -69,28 +57,6 @@ export default class FilterManager extends AbstractAudioElement implements Filte
         this.filters.push(...filters);
     }
 
-    /** Setup all audio filters */
-    private setupDefaultFilters() {
-        const bassBooster = new BassBoosterFilter(200, 15, 200, -2);
-        const bitCrusher = new BitCrusherFilter(16, 0.9);
-        const echo = new EchoFilter(0.2, 0.75);
-        const highPass = new HighPassFilter(3500);
-        const lowPass = new LowPassFilter(3500);
-        const reverb = new ReverbFilter();
-        const soundtouchWrapper = new SoundtouchWrapperFilter();
-        const limiterFilter = new LimiterFilter(0, 0, 0, 3, -0.05, 0.1);
-        const telephonizerFilter = new TelephonizerFilter();
-        const vocoder = new VocoderFilter();
-        const passthrough = new PassThroughFilter();
-
-        this._entryPointFilter = soundtouchWrapper;
-        this.addFilters(bassBooster, bitCrusher, echo, highPass, lowPass, reverb, limiterFilter, telephonizerFilter, soundtouchWrapper, vocoder, passthrough);
-    }
-
-    /**
-     * Get enabled/disabled state of all filters
-     * @returns The filters state (enabled/disabled)
-     */
     getFiltersState(): FilterState {
         const state: FilterState = {};
 
@@ -101,10 +67,6 @@ export default class FilterManager extends AbstractAudioElement implements Filte
         return state;
     }
 
-    /**
-     * Get the settings of all filters/renderers
-     * @returns 
-     */
     getFiltersSettings(): Map<string, FilterSettings> {
         const settings = new Map<string, FilterSettings>();
 
@@ -115,10 +77,6 @@ export default class FilterManager extends AbstractAudioElement implements Filte
         return settings;
     }
 
-    /**
-     * Toggle enabled/disabled state for a filter/renderer
-     * @param filterId The filter/renderer ID
-     */
     toggleFilter(filterId: string) {
         const filter = this.filters.find(f => f.id === filterId);
 
@@ -127,11 +85,6 @@ export default class FilterManager extends AbstractAudioElement implements Filte
         }
     }
 
-    /**
-     * Change a filter/renderer setting
-     * @param filterId Filter ID
-     * @param settings Filter setting (key/value)
-     */
     async changeFilterSettings(filterId: string, settings: FilterSettings) {
         const filter = this.filters.find(f => f.id === filterId);
 
@@ -142,10 +95,6 @@ export default class FilterManager extends AbstractAudioElement implements Filte
         }
     }
 
-    /**
-     * Reset the settings of a filter
-     * @param filterId Id of the filter
-     */
     async resetFilterSettings(filterId: string) {
         const filter = this.filters.find(f => f.id === filterId);
 
@@ -154,9 +103,6 @@ export default class FilterManager extends AbstractAudioElement implements Filte
         }
     }
 
-    /**
-     * Reset all filters state (enabled/disabled) based on their default states
-     */
     resetAllFiltersState() {
         this.filters.forEach(element => {
             if (element.isDefaultEnabled()) {
@@ -167,12 +113,6 @@ export default class FilterManager extends AbstractAudioElement implements Filte
         });
     }
 
-    /**
-     * Connect the Audio API nodes of the enabled filters
-     * @param context The Audio Context
-     * @param buffer  The Audio Buffer
-     * @param keepCurrentInputOutput Keep current first input/output nodes?
-     */
     async connectNodes(context: BaseAudioContext, buffer: AudioBuffer, keepCurrentInputOutput: boolean, isCompatibilityMode: boolean) {
         if (!this._entryPointFilter) {
             return;
@@ -221,10 +161,6 @@ export default class FilterManager extends AbstractAudioElement implements Filte
         };
     }
 
-    /**
-     * Disconnect old audio nodes
-     * @param keepCurrentOutput Keeps current output nodes?
-     */
     disconnectOldNodes(keepCurrentOutput: boolean) {
         if (this._currentNodes) {
             this._currentNodes.input.disconnect();
@@ -242,7 +178,6 @@ export default class FilterManager extends AbstractAudioElement implements Filte
         }
     }
 
-    /** Initialize worklets filters */
     async initializeWorklets(context: BaseAudioContext) {
         for (const filter of this.filters) {
             if (filter.isWorklet()) {
@@ -263,10 +198,6 @@ export default class FilterManager extends AbstractAudioElement implements Filte
         return duration;
     }
 
-    /**
-     * Setup the total samples property for all filters
-     * @param durationAudio Audio duration - number
-     */
     setupTotalSamples(durationAudio: number, currentContext: AudioContext | null) {
         if (currentContext) {
             const totalSamples = durationAudio * currentContext.sampleRate;
@@ -277,9 +208,6 @@ export default class FilterManager extends AbstractAudioElement implements Filte
         }
     }
 
-    /**
-     * Call the bufferFetcherReseted method for each filter
-     */
     async resetFilterBuffers() {
         for (const filter of this.filters) {
             await filter.bufferFetcherReseted();

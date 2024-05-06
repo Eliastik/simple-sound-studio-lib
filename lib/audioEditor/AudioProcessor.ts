@@ -39,9 +39,9 @@ export default class AudioProcessor extends AbstractAudioElement implements Audi
 
     /** true if initial rendering for the current buffer was done */
     initialRenderingDone = false;
-    /** The sum of all the samples of the principal buffer,
+    /** The sum of all the samples of the input buffer,
      * used to detect the need to enable the compatibility mode */
-    sumPrincipalBuffer: number = 0;
+    sumInputBuffer: number = 0;
 
     constructor(
         @inject(TYPES.AudioContextManager) contextManager: AudioContextManagerInterface | undefined,
@@ -62,9 +62,9 @@ export default class AudioProcessor extends AbstractAudioElement implements Audi
         this.bufferManager = bufferManager;
     }
 
-    async prepareContext(principalBuffer: AudioBuffer | null) {
+    async prepareContext(inputBuffer: AudioBuffer | null) {
         if (this.contextManager) {
-            const changed = this.contextManager.createNewContextIfNeeded(principalBuffer);
+            const changed = this.contextManager.createNewContextIfNeeded(inputBuffer);
 
             if (changed && this.bufferManager) {
                 await this.bufferManager.resetBufferFetcher();
@@ -76,8 +76,8 @@ export default class AudioProcessor extends AbstractAudioElement implements Audi
         }
     }
 
-    async renderAudio(principalBuffer: AudioBuffer | null): Promise<boolean> {
-        await this.prepareContext(principalBuffer);
+    async renderAudio(inputBuffer: AudioBuffer | null): Promise<boolean> {
+        await this.prepareContext(inputBuffer);
 
         if (!this.contextManager || !this.contextManager.currentContext) {
             throw new Error("AudioContext is not yet available");
@@ -95,13 +95,13 @@ export default class AudioProcessor extends AbstractAudioElement implements Audi
             throw new Error("Entrypoint filter is not available");
         }
 
-        if (!principalBuffer) {
+        if (!inputBuffer) {
             throw new Error("No principal buffer available");
         }
 
         // If initial rendering is disabled and compatibility mode is disabled, we stop here
         if (!this.initialRenderingDone && this.configService && this.configService.isInitialRenderingDisabled() && !this.configService.isCompatibilityModeEnabled()) {
-            this.loadInitialBuffer(principalBuffer);
+            this.loadInitialBuffer(inputBuffer);
             this.initialRenderingDone = true;
             return true;
         }
@@ -112,11 +112,11 @@ export default class AudioProcessor extends AbstractAudioElement implements Audi
         }
 
         const speedAudio = this.filterManager.entrypointFilter.getSpeed();
-        const durationAudio = utils.calculateAudioDuration(principalBuffer, this.filterManager, speedAudio);
+        const durationAudio = utils.calculateAudioDuration(inputBuffer, this.filterManager, speedAudio);
         const offlineContext = new OfflineAudioContext(2, this.contextManager.currentContext.sampleRate * durationAudio, this.contextManager.currentContext.sampleRate);
         const outputContext = this.configService && this.configService.isCompatibilityModeEnabled() ? this.contextManager.currentContext : offlineContext;
 
-        this._renderedBuffer = await this.rendererManager.executeAudioRenderers(principalBuffer, outputContext);
+        this._renderedBuffer = await this.rendererManager.executeAudioRenderers(inputBuffer, outputContext);
         this.currentOfflineContext = null;
         this.audioRenderingLastCanceled = false;
 
@@ -124,7 +124,7 @@ export default class AudioProcessor extends AbstractAudioElement implements Audi
         utils.resetAudioRenderingProgress(this.eventEmitter);
         this.filterManager.setupTotalSamples(durationAudio, this.contextManager.currentContext);
 
-        return await this.setupOutput(principalBuffer, outputContext, durationAudio, offlineContext);
+        return await this.setupOutput(inputBuffer, outputContext, durationAudio, offlineContext);
     }
 
     private setupPlayerSpeed(bufferPlayer: BufferPlayerInterface) {
@@ -134,7 +134,7 @@ export default class AudioProcessor extends AbstractAudioElement implements Audi
         }
     }
 
-    async setupOutput(principalBuffer: AudioBuffer | null, outputContext: BaseAudioContext, durationAudio?: number, offlineContext?: OfflineAudioContext): Promise<boolean> {
+    async setupOutput(inputBuffer: AudioBuffer | null, outputContext: BaseAudioContext, durationAudio?: number, offlineContext?: OfflineAudioContext): Promise<boolean> {
         if (this._renderedBuffer && this.configService && this.eventEmitter && this.bufferPlayer && this.filterManager) {
             // Initialize worklets then connect the filter nodes
             await this.filterManager.initializeWorklets(outputContext);
@@ -149,8 +149,8 @@ export default class AudioProcessor extends AbstractAudioElement implements Audi
 
                 const renderedBuffer = await offlineContext.startRendering();
 
-                if (this.contextManager && !this.loadRenderedAudio(principalBuffer, renderedBuffer)) {
-                    return await this.setupOutput(principalBuffer, this.contextManager.currentContext!, durationAudio);
+                if (this.contextManager && !this.loadRenderedAudio(inputBuffer, renderedBuffer)) {
+                    return await this.setupOutput(inputBuffer, this.contextManager.currentContext!, durationAudio);
                 }
 
                 if (this.audioRenderingLastCanceled) {
@@ -176,12 +176,12 @@ export default class AudioProcessor extends AbstractAudioElement implements Audi
      * @param renderedBuffer Rendered audio buffer - AudioBuffer
      * @returns false if the rendred audio buffer is invalid, true otherwise
      */
-    private loadRenderedAudio(principalBuffer: AudioBuffer | null, renderedBuffer: AudioBuffer): boolean {
+    private loadRenderedAudio(inputBuffer: AudioBuffer | null, renderedBuffer: AudioBuffer): boolean {
         if (this.eventEmitter && this.bufferPlayer) {
             if (!this.audioRenderingLastCanceled) {
                 const sumRenderedAudio = utils.sumAudioBuffer(renderedBuffer);
 
-                if (sumRenderedAudio == 0 && this.sumPrincipalBuffer !== 0) {
+                if (sumRenderedAudio == 0 && this.sumInputBuffer !== 0) {
                     if (this.configService && !this.configService.isCompatibilityModeChecked()) {
                         this.setCompatibilityModeChecked(true);
                         this.configService.enableCompatibilityMode();
@@ -196,7 +196,7 @@ export default class AudioProcessor extends AbstractAudioElement implements Audi
                 this._renderedBuffer = renderedBuffer;
                 this.bufferPlayer.loadBuffer(this._renderedBuffer);
             } else if (!this.initialRenderingDone) {
-                this.loadInitialBuffer(principalBuffer);
+                this.loadInitialBuffer(inputBuffer);
                 this.eventEmitter.emit(EventType.CANCELLED_AND_LOADED_INITIAL_AUDIO);
             }
 
@@ -209,10 +209,10 @@ export default class AudioProcessor extends AbstractAudioElement implements Audi
     /**
      * Load the initial audio buffer to the buffer player
      */
-    private loadInitialBuffer(principalBuffer: AudioBuffer | null) {
+    private loadInitialBuffer(inputBuffer: AudioBuffer | null) {
         if (this.bufferPlayer) {
-            this._renderedBuffer = principalBuffer;
-            this.bufferPlayer.loadBuffer(principalBuffer!);
+            this._renderedBuffer = inputBuffer;
+            this.bufferPlayer.loadBuffer(inputBuffer!);
         }
     }
 

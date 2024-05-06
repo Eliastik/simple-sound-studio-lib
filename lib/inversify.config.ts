@@ -23,6 +23,21 @@ import BufferFetcherServiceInterface from "./services/interfaces/BufferFetcherSe
 import BufferDecoderServiceInterface from "./services/interfaces/BufferDecoderServiceInterface";
 import BufferFetcherService from "./services/BufferFetcherService";
 import BufferDecoderService from "./services/BufferDecoderService";
+import AbstractAudioRenderer from "./filters/interfaces/AbstractAudioRenderer";
+import ReturnAudioRenderer from "./filters/ReturnAudioRenderer";
+import BassBoosterFilter from "./filters/BassBoosterFilter";
+import BitCrusherFilter from "./filters/BitCrusherFilter";
+import EchoFilter from "./filters/EchoFilter";
+import HighPassFilter from "./filters/HighPassFilter";
+import LimiterFilter from "./filters/LimiterFilter";
+import LowPassFilter from "./filters/LowPassFilter";
+import ReverbFilter from "./filters/ReverbFilter";
+import SoundtouchWrapperFilter from "./filters/SountouchWrapperFilter";
+import TelephonizerFilter from "./filters/TelephonizerFilter";
+import VocoderFilter from "./filters/VocoderFilter";
+import PassThroughFilter from "./filters/PassThroughFilter";
+import AbstractAudioFilter from "./filters/interfaces/AbstractAudioFilter";
+import AudioFilterEntrypointInterface from "./filters/interfaces/AudioFilterEntrypointInterface";
 
 const audioEditorContainer = new Container({ defaultScope: "Singleton" });
 
@@ -37,5 +52,24 @@ audioEditorContainer.bind<EventEmitterInterface>(TYPES.EventEmitter).to(EventEmi
 audioEditorContainer.bind<BufferPlayerInterface>(TYPES.BufferPlayer).to(BufferPlayer);
 audioEditorContainer.bind<BufferFetcherServiceInterface>(TYPES.BufferFetcherService).to(BufferFetcherService);
 audioEditorContainer.bind<BufferDecoderServiceInterface>(TYPES.BufferDecoderService).to(BufferDecoderService);
+
+// Entrypoint filter
+audioEditorContainer.bind<AudioFilterEntrypointInterface>(TYPES.EntryPointFilter).to(SoundtouchWrapperFilter);
+
+// Renderers
+audioEditorContainer.bind<AbstractAudioRenderer>(TYPES.Renderers).to(ReturnAudioRenderer);
+
+// Filters
+audioEditorContainer.bind<AbstractAudioFilter>(TYPES.Filters).to(BassBoosterFilter);
+audioEditorContainer.bind<AbstractAudioFilter>(TYPES.Filters).to(BitCrusherFilter);
+audioEditorContainer.bind<AbstractAudioFilter>(TYPES.Filters).to(EchoFilter);
+audioEditorContainer.bind<AbstractAudioFilter>(TYPES.Filters).to(HighPassFilter);
+audioEditorContainer.bind<AbstractAudioFilter>(TYPES.Filters).to(LimiterFilter);
+audioEditorContainer.bind<AbstractAudioFilter>(TYPES.Filters).to(LowPassFilter);
+audioEditorContainer.bind<AbstractAudioFilter>(TYPES.Filters).to(ReverbFilter);
+audioEditorContainer.bind<AbstractAudioFilter>(TYPES.Filters).to(SoundtouchWrapperFilter);
+audioEditorContainer.bind<AbstractAudioFilter>(TYPES.Filters).to(TelephonizerFilter);
+audioEditorContainer.bind<AbstractAudioFilter>(TYPES.Filters).to(VocoderFilter);
+audioEditorContainer.bind<AbstractAudioFilter>(TYPES.Filters).to(PassThroughFilter);
 
 export { audioEditorContainer };

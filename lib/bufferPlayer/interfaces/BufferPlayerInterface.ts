@@ -1,9 +1,11 @@
-import AudioContextManager from "@/audioEditor/AudioContextManager";
 import { EventEmitterCallback } from "@/model/EventEmitterCallback";
 
 export default interface BufferPlayerInterface {
 
-    /** Init this buffer player */
+    /**
+     * Init this buffer player
+     * @param direct Play audio buffer directly without stopping previous play?
+     */
     init(direct?: boolean): void;
 
     /**
@@ -21,6 +23,7 @@ export default interface BufferPlayerInterface {
 
     /**
      * Reset this player
+     * @param direct Play audio buffer directly without stopping previous play?
      */
     reset(direct?: boolean): void;
 
@@ -31,6 +34,7 @@ export default interface BufferPlayerInterface {
 
     /**
      * Start playing the audio
+     * @param direct Play audio buffer directly without stopping previous play?
      */
     start(direct?: boolean): Promise<void>;
 
@@ -94,21 +98,43 @@ export default interface BufferPlayerInterface {
      */
     get remainingTimeDisplay(): string;
 
-    set contextManager(contextManager: AudioContextManager | undefined);
-
+    /**
+     * Enable or disable compatibility mode (AudioContext vs OfflineAudioContext)
+     */
     set compatibilityMode(compatibilityMode: boolean);
 
+    /**
+     * Is compatibility mode enabled?
+     */
     get compatibilityMode(): boolean;
 
+    /**
+     * Set to true to play audio in loop
+     */
     set loop(loop: boolean);
 
+    /**
+     * Is audio playing in loop?
+     */
     get loop(): boolean;
 
+    /**
+     * Set the audio speed
+     */
     set speedAudio(speedAudio: number);
 
+    /**
+     * Get the audio speed
+     */
     get speedAudio(): number;
 
+    /**
+     * Set the audio duration
+     */
     set duration(duration: number);
 
+    /**
+     * Get the audio duration
+     */
     get duration(): number;
 }

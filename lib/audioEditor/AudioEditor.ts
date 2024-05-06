@@ -140,7 +140,7 @@ export default class AudioEditor extends AbstractAudioElement implements AudioEd
             this.audioProcessor.initialRenderingDone = false;
 
             if (this.principalBuffer) {
-                this.audioProcessor.sumPrincipalBuffer = utils.sumAudioBuffer(this.principalBuffer);
+                this.audioProcessor.sumInputBuffer = utils.sumAudioBuffer(this.principalBuffer);
             } else {
                 throw new Error("Error decoding audio file");
             }
@@ -155,7 +155,7 @@ export default class AudioEditor extends AbstractAudioElement implements AudioEd
         this.principalBuffer = audioBuffer;
 
         if (this.audioProcessor) {
-            this.audioProcessor.sumPrincipalBuffer = utils.sumAudioBuffer(this.principalBuffer);
+            this.audioProcessor.sumInputBuffer = utils.sumAudioBuffer(this.principalBuffer);
             this.audioProcessor.initialRenderingDone = false;
         }
     }

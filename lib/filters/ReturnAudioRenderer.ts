@@ -2,6 +2,7 @@ import AbstractAudioRenderer from "./interfaces/AbstractAudioRenderer";
 import Constants from "../model/Constants";
 
 export default class ReturnAudioRenderer extends AbstractAudioRenderer {
+
     renderAudio(context: BaseAudioContext, buffer: AudioBuffer): Promise<AudioBuffer> {
         return new Promise(resolve => {
             const numChannels = buffer.numberOfChannels;

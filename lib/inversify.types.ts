@@ -11,7 +11,10 @@ const TYPES = {
     BufferPlayer: Symbol.for("BufferPlayer"),
     BufferDecoderService: Symbol.for("BufferDecoderService"),
     BufferFetcherService: Symbol.for("BufferFetcherService"),
-    AudioBuffersToFetch: Symbol.for("AudioBuffersToFetch")
+    AudioBuffersToFetch: Symbol.for("AudioBuffersToFetch"),
+    Renderers: Symbol.for("Renderers"),
+    Filters: Symbol.for("Filters"),
+    EntryPointFilter: Symbol.for("EntryPointFilter")
 };
 
 export { TYPES };

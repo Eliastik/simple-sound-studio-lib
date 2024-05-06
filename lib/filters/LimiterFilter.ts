@@ -13,15 +13,8 @@ export default class LimiterFilter extends AbstractAudioFilterWorklet<void> {
     private threshold = -0.05; // dB
     private lookAheadTime = 0.1; // s
 
-    constructor(preGain: number, postGain: number, attackTime: number, releaseTime: number, threshold: number, lookAheadTime: number) {
+    constructor() {
         super();
-        this.preGain = preGain || this.preGain;
-        this.postGain = postGain || this.postGain;
-        this.attackTime = attackTime || this.attackTime;
-        this.releaseTime = releaseTime || this.releaseTime;
-        this.threshold = threshold || this.threshold;
-        this.lookAheadTime = lookAheadTime || this.lookAheadTime;
-        this.keepCurrentNodeIfPossible = true;
         this.enable();
         this.setDefaultEnabled(true);
     }

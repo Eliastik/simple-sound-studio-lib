@@ -8,12 +8,6 @@ export default class EchoFilter extends AbstractAudioFilter {
     private delay = 0.2;
     private gain = 0.75;
 
-    constructor(delay: number, gain: number) {
-        super();
-        this.delay = delay;
-        this.gain = gain;
-    }
-
     getNode(context: BaseAudioContext) {
         const delayNode = context.createDelay(179);
         delayNode.delayTime.value = this.delay;

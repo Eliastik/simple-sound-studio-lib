@@ -1,11 +1,10 @@
+import { inject, injectable, multiInject } from "inversify";
+import { TYPES } from "@/inversify.types";
 import AbstractAudioElement from "@/filters/interfaces/AbstractAudioElement";
-import ReturnAudioRenderer from "../filters/ReturnAudioRenderer";
 import AbstractAudioRenderer from "@/filters/interfaces/AbstractAudioRenderer";
 import { FilterState } from "@/model/FilterState";
 import Constants from "@/model/Constants";
 import RendererManagerInterface from "./interfaces/RendererManagerInterface";
-import { inject, injectable } from "inversify";
-import { TYPES } from "@/inversify.types";
 import GenericConfigService from "@/services/GenericConfigService";
 import type { ConfigService } from "@/services/interfaces/ConfigService";
 import type BufferFetcherServiceInterface from "@/services/interfaces/BufferFetcherServiceInterface";
@@ -15,8 +14,8 @@ import type BufferDecoderServiceInterface from "@/services/interfaces/BufferDeco
 export default class RendererManager extends AbstractAudioElement implements RendererManagerInterface {
 
     /** A list of renderers */
+    @multiInject(TYPES.Renderers)
     private renderers: AbstractAudioRenderer[] = [];
-    /** The current event emitter */
 
     constructor(
         @inject(TYPES.BufferFetcherService) bufferFetcherService: BufferFetcherServiceInterface,
@@ -26,8 +25,6 @@ export default class RendererManager extends AbstractAudioElement implements Ren
         this.configService = configService || new GenericConfigService();
         this.bufferFetcherService = bufferFetcherService;
         this.bufferDecoderService = bufferDecoderService;
-
-        this.setupDefaultRenderers();
     }
 
     addRenderers(...renderers: AbstractAudioRenderer[]) {
@@ -38,12 +35,6 @@ export default class RendererManager extends AbstractAudioElement implements Ren
         }
 
         this.renderers.push(...renderers);
-    }
-
-    /** Setup the renderers */
-    private setupDefaultRenderers() {
-        const returnAudio = new ReturnAudioRenderer();
-        this.addRenderers(returnAudio);
     }
 
     getRenderersState(): FilterState {
