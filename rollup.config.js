@@ -14,7 +14,7 @@ const workletFiles = [
 
 const workerFiles = [
     "lib/recorder/worker/RecorderWorker.ts"
-]
+];
 
 const bundleConfig = [
     {
