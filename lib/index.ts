@@ -1,7 +1,7 @@
 import { audioEditorContainer } from "./inversify.config";
 import AudioEditor from "./audioEditor/AudioEditor";
 import BufferPlayer from "./bufferPlayer/BufferPlayer";
-import VoiceRecorder from "./VoiceRecorder";
+import VoiceRecorder from "./voiceRecorder/VoiceRecorder";
 import AbstractAudioElement from "./filters/interfaces/AbstractAudioElement";
 import AbstractAudioFilter from "./filters/interfaces/AbstractAudioFilter";
 import AbstractAudioFilterWorklet from "./filters/interfaces/AbstractAudioFilterWorklet";

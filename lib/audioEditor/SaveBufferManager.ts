@@ -17,13 +17,13 @@ import EventEmitterInterface from "@/utils/interfaces/EventEmitterInterface";
 
 @injectable()
 export default class SaveBufferManager extends AbstractAudioElement implements SaveBufferManagerInterface {
-    
+
     /** The filter manager */
     private filterManager: FilterManager | undefined;
+
     /** The context manager */
     private contextManager: AudioContextManagerInterface | undefined;
-    /** The current event emitter */
-    private eventEmitter: EventEmitterInterface | undefined;
+
     /** The audio player */
     private bufferPlayer: BufferPlayerInterface | undefined;
 
@@ -177,7 +177,7 @@ export default class SaveBufferManager extends AbstractAudioElement implements S
 
                         if (this.eventEmitter) {
                             this.eventEmitter.off(EventType.PLAYING_FINISHED, finishedCallback);
-    
+
                             if (this.playingStoppedCallback) {
                                 this.eventEmitter.off(EventType.PLAYING_STOPPED, this.playingStoppedCallback);
                             }
@@ -201,7 +201,7 @@ export default class SaveBufferManager extends AbstractAudioElement implements S
                             if (this.eventEmitter) {
                                 this.eventEmitter.off(EventType.PLAYING_FINISHED, finishedCallback);
                             }
-                            
+
                             rec.kill();
 
                             resolve(true);

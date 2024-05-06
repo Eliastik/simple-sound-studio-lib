@@ -56,10 +56,6 @@ export default class AudioEditor extends AbstractAudioElement implements AudioEd
     @inject(TYPES.BufferPlayer)
     private bufferPlayer: BufferPlayerInterface | undefined;
 
-    /** The event emitter */
-    @inject(TYPES.EventEmitter)
-    private eventEmitter: EventEmitterInterface | undefined;
-
     /** The audio buffer to be processed */
     private principalBuffer: AudioBuffer | null = null;
 

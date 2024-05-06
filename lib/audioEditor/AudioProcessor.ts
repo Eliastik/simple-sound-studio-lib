@@ -19,14 +19,16 @@ export default class AudioProcessor extends AbstractAudioElement implements Audi
 
     /** The filter manager */
     private filterManager: FilterManagerInterface | undefined;
+
     /** The filter manager */
     private rendererManager: RendererManagerInterface | undefined;
+
     /** The context manager */
     private contextManager: AudioContextManagerInterface | undefined;
-    /** The current event emitter */
-    private eventEmitter: EventEmitterInterface | undefined;
+
     /** The audio player */
     private bufferPlayer: BufferPlayerInterface | undefined;
+    
     /** The save buffer manager */
     private bufferManager: BufferManagerInterface | undefined;
 

@@ -13,9 +13,10 @@ import * as ConfigService$1 from '@/services/interfaces/ConfigService';
 import { ConfigService as ConfigService$2 } from '@/services/interfaces/ConfigService';
 import AudioContextManagerInterface from '@/audioEditor/interfaces/AudioContextManagerInterface';
 import AudioEditorEvents$1 from '@/model/AudioEditorEvent';
+import { RecorderSettings as RecorderSettings$1 } from '@/model/RecorderSettings';
 import FilterManagerInterface from '@/audioEditor/interfaces/FilterManagerInterface';
 import AudioEditorInterface$1 from '@/audioEditor/interfaces/AudioEditorInterface';
-import VoiceRecorder$1 from '@/VoiceRecorder';
+import VoiceRecorderInterface$1 from '@/voiceRecorder/interfaces/VoiceRecorderInterface';
 
 declare const audioEditorContainer: Container;
 
@@ -86,11 +87,14 @@ interface ConfigService {
 }
 
 declare abstract class AbstractAudioElement {
+    /** Is this element enabled? */
     private enabled;
+    /** Is this element enabled by default? */
     private defaultEnabled;
     bufferFetcherService: BufferFetcherServiceInterface | null;
     bufferDecoderService: BufferDecoderServiceInterface | null;
     configService: ConfigService | null;
+    eventEmitter: EventEmitterInterface$1 | undefined;
     /** Returns the order in which the filter/renderer needs to be applied */
     abstract get order(): number;
     /** Returns the id of this filter/renderer */
@@ -134,8 +138,8 @@ interface FilterSettings {
 }
 
 declare abstract class AbstractAudioFilter extends AbstractAudioElement {
+    /** The default settings */
     private defaultSettings;
-    eventEmitter: EventEmitterInterface$1 | undefined;
     /** Total sample of the input audio buffer */
     protected _totalSamples: number;
     /** Return a input and output AudioNode of the filter */
@@ -295,8 +299,6 @@ declare class AudioEditor extends AbstractAudioElement implements AudioEditorInt
     private bufferManager;
     /** The audio player */
     private bufferPlayer;
-    /** The event emitter */
-    private eventEmitter;
     /** The audio buffer to be processed */
     private principalBuffer;
     constructor(player?: BufferPlayerInterface$1, eventEmitter?: EventEmitterInterface$1, configService?: ConfigService$1.ConfigService);
@@ -455,7 +457,6 @@ declare class BufferPlayer extends AbstractAudioElement implements BufferPlayerI
     playing: boolean;
     loop: boolean;
     speedAudio: number;
-    private eventEmitter;
     private onBeforePlayingCallback;
     compatibilityMode: boolean;
     currentNode: AudioNode | null;
@@ -517,8 +518,79 @@ interface EventEmitterInterface {
     set listeners(listeners: AudioEditorEvents$1);
 }
 
-declare class VoiceRecorder extends AbstractAudioElement {
-    private context;
+interface VoiceRecorderInterface {
+    /** Initialize this voice recorder */
+    init(): Promise<void>;
+    /**
+     * Enable or disable audio feedback
+     * @param enable boolean
+     */
+    audioFeedback(enable: boolean): void;
+    /**
+     * Enable/disable noise suppression
+     * @param enable boolean
+     */
+    setNoiseSuppression(enable: boolean): void;
+    /**
+     * Enable/disable auto gain
+     * @param enable boolean
+     */
+    setAutoGain(enable: boolean): void;
+    /**
+     * Enable/disable echo cancellation
+     * @param enable boolean
+     */
+    setEchoCancellation(enable: boolean): void;
+    /**
+     * Change audio input
+     * @param deviceId Device ID
+     * @param groupId Group ID (optional)
+     */
+    changeInput(deviceId: string, groupId: string | undefined): void;
+    /**
+     * Start audio recording
+     */
+    record(): Promise<void>;
+    /**
+     * Stop audio recording
+     */
+    stop(): Promise<void>;
+    /**
+     * Pause audio recording
+     */
+    pause(): void;
+    /**
+     * Reset this voice recorder
+     */
+    reset(): void;
+    /**
+     * Get current recording time in text format
+     */
+    get currentTimeDisplay(): string;
+    /**
+     * Get current recording time in seconds
+     */
+    get currentTime(): number;
+    /**
+     * Get the current settings for this voice recorder
+     * @returns RecorderSettings
+     */
+    getSettings(): RecorderSettings$1;
+    /**
+     * Observe an event
+     * @param event The event name
+     * @param callback Callback called when an event of this type occurs
+     */
+    on(event: string, callback: EventEmitterCallback$1): void;
+    /**
+     * Check if browser is compatible with audio recording
+     * @returns boolean
+     */
+    isRecordingAvailable(): boolean;
+}
+
+declare class VoiceRecorder extends AbstractAudioElement implements VoiceRecorderInterface {
+    private contextManager;
     private input;
     private stream;
     private recorder;
@@ -528,28 +600,13 @@ declare class VoiceRecorder extends AbstractAudioElement {
     private recording;
     private deviceList;
     private constraints;
-    private eventEmitter;
-    private previousSampleRate;
     private sampleRateConfigNotSupported;
-    constructor(context?: AudioContext | null, eventEmitter?: EventEmitterInterface, configService?: ConfigService);
-    /** Initialize this voice recorder */
+    constructor(contextManager?: AudioContextManagerInterface | null, eventEmitter?: EventEmitterInterface, configService?: ConfigService);
     init(): Promise<void>;
-    /**
-     * Create new context if needed, for example if sample rate setting have changed
-     */
-    private createNewContextIfNeeded;
-    /**
-     * Stop previous audio context and create a new one
-     */
-    private createNewContext;
     private successCallback;
     private errorCallback;
     private notFoundErrorCallback;
     private unknownErrorCallback;
-    /**
-     * Enable or disable audio feedback
-     * @param enable boolean
-     */
     audioFeedback(enable: boolean): void;
     /**
      * Get current constraints/settings
@@ -572,74 +629,26 @@ declare class VoiceRecorder extends AbstractAudioElement {
      * @param precAudioFeedback Has audio feedback?
      */
     private setup;
-    /**
-     * Enable/disable noise suppression
-     * @param enable boolean
-     */
     setNoiseSuppression(enable: boolean): void;
-    /**
-     * Enable/disable auto gain
-     * @param enable boolean
-     */
     setAutoGain(enable: boolean): void;
-    /**
-     * Enable/disable echo cancellation
-     * @param enable boolean
-     */
     setEchoCancellation(enable: boolean): void;
     /**
      * Update current audio input list
      */
     private updateInputList;
-    /**
-     * Change audio input
-     * @param deviceId Device ID
-     * @param groupId Group ID (optional)
-     */
     changeInput(deviceId: string, groupId: string | undefined): void;
-    /**
-     * Start audio recording
-     */
     record(): Promise<void>;
-    /**
-     * Stop audio recording
-     */
     stop(): Promise<void>;
-    /**
-     * Pause audio recording
-     */
     pause(): void;
     /**
      * Stop stream
      */
     private stopStream;
-    /**
-     * Reset this voice recorder
-     */
     reset(): void;
-    /**
-     * Get current recording time in text format
-     */
     get currentTimeDisplay(): string;
-    /**
-     * Get current recording time in seconds
-     */
     get currentTime(): number;
-    /**
-     * Get the current settings for this voice recorder
-     * @returns RecorderSettings
-     */
     getSettings(): RecorderSettings;
-    /**
-     * Observe an event
-     * @param event The event name
-     * @param callback Callback called when an event of this type occurs
-     */
     on(event: string, callback: EventEmitterCallback): void;
-    /**
-     * Check if browser is compatible with audio recording
-     * @returns boolean
-     */
     isRecordingAvailable(): boolean;
     get order(): number;
     get id(): string;
@@ -941,13 +950,12 @@ declare enum EventType {
 }
 
 declare class SoundStudioFactory {
-    private static voiceRecorder;
     private static ready;
     static createAudioEditor(configService?: ConfigService$2, buffersToFetch?: string[]): AudioEditorInterface$1;
-    static createVoiceRecorder(): VoiceRecorder$1;
+    static createVoiceRecorder(): VoiceRecorderInterface$1;
     static getAudioEditorInstance(): AudioEditorInterface$1 | null;
     static getAudioPlayerInstance(): BufferPlayerInterface$1 | null;
-    static getAudioRecorderInstance(): VoiceRecorder$1 | null;
+    static getAudioRecorderInstance(): VoiceRecorderInterface$1 | null;
     static getEventEmitterInstance(): EventEmitterInterface | null;
     static getConfigServiceInstance(): ConfigService$2 | undefined;
 }

@@ -9,40 +9,38 @@ import { FilterSettings } from "@/model/filtersSettings/FilterSettings";
 import Constants from "@/model/Constants";
 import FilterManagerInterface from "./interfaces/FilterManagerInterface";
 import { inject, injectable, multiInject } from "inversify";
-import type { ConfigService } from "@/services/interfaces/ConfigService";
-import GenericConfigService from "@/services/GenericConfigService";
 import { TYPES } from "@/inversify.types";
-import type BufferFetcherServiceInterface from "@/services/interfaces/BufferFetcherServiceInterface";
-import type BufferDecoderServiceInterface from "@/services/interfaces/BufferDecoderServiceInterface";
 import EventEmitterInterface from "@/utils/interfaces/EventEmitterInterface";
 
 @injectable()
 export default class FilterManager extends AbstractAudioElement implements FilterManagerInterface {
 
     /** A list of filters */
-    @multiInject(TYPES.Filters)
     private filters: AbstractAudioFilter[] = [];
 
     /** The entrypoint filter */
-    @inject(TYPES.EntryPointFilter)
     private _entryPointFilter: (AbstractAudioFilter & AudioFilterEntrypointInterface) | null = null;
 
     /** The current connected nodes */
     private _currentNodes: AudioFilterNodes | null = null;
 
-    /** The current event emitter */
-    private eventEmitter: EventEmitterInterface | undefined;
-
     constructor(
         @inject(TYPES.EventEmitter) eventEmitter: EventEmitterInterface | null,
-        @inject(TYPES.BufferFetcherService) bufferFetcherService: BufferFetcherServiceInterface,
-        @inject(TYPES.BufferDecoderService) bufferDecoderService: BufferDecoderServiceInterface,
-        @inject(TYPES.ConfigService) configService: ConfigService) {
+        @multiInject(TYPES.Filters) filters: AbstractAudioFilter[],
+        @inject(TYPES.EntryPointFilter) entryPointFilter: (AbstractAudioFilter & AudioFilterEntrypointInterface) | null
+    ) {
         super();
         this.eventEmitter = eventEmitter || new EventEmitter();
-        this.configService = configService || new GenericConfigService();
-        this.bufferFetcherService = bufferFetcherService;
-        this.bufferDecoderService = bufferDecoderService;
+        this.filters = filters;
+        this._entryPointFilter = entryPointFilter;
+
+        this.setup();
+    }
+
+    private setup() {
+        for (const filter of this.filters) {
+            filter.initializeDefaultSettings();
+        }
     }
 
     addFilters(...filters: AbstractAudioFilter[]) {

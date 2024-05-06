@@ -20,30 +20,44 @@
 // The Voice Recorder class
 // Used to record a sound (voice, etc.) with the user microphone
 // Offer control with play/pause and audio feedback
-import TimerSaveTime from "./utils/TimerSaveTime";
-import EventEmitter from "./utils/EventEmitter";
-import { EventType } from "./model/EventTypeEnum";
-import AudioConstraintWrapper from "./model/AudioConstraintWrapper";
-import { RecorderSettings } from "./model/RecorderSettings";
-import { ConfigService } from "./services/interfaces/ConfigService";
-import AbstractAudioElement from "./filters/interfaces/AbstractAudioElement";
-import Constants from "./model/Constants";
-import { EventEmitterCallback } from "./model/EventEmitterCallback";
-import { AudioConstraint } from "./model/AudioConstraint";
-import Recorder from "./recorder/Recorder";
-import EventEmitterInterface from "./utils/interfaces/EventEmitterInterface";
+import { inject, injectable } from "inversify";
+import TimerSaveTime from "../utils/TimerSaveTime";
+import EventEmitter from "../utils/EventEmitter";
+import { EventType } from "../model/EventTypeEnum";
+import AudioConstraintWrapper from "../model/AudioConstraintWrapper";
+import { RecorderSettings } from "../model/RecorderSettings";
+import type { ConfigService } from "../services/interfaces/ConfigService";
+import AbstractAudioElement from "../filters/interfaces/AbstractAudioElement";
+import Constants from "../model/Constants";
+import { EventEmitterCallback } from "../model/EventEmitterCallback";
+import { AudioConstraint } from "../model/AudioConstraint";
+import Recorder from "../recorder/Recorder";
+import type EventEmitterInterface from "../utils/interfaces/EventEmitterInterface";
+import VoiceRecorderInterface from "./interfaces/VoiceRecorderInterface";
+import { TYPES } from "@/inversify.types";
+import AudioContextManagerInterface from "@/audioEditor/interfaces/AudioContextManagerInterface";
 
-export default class VoiceRecorder extends AbstractAudioElement {
+@injectable()
+export default class VoiceRecorder extends AbstractAudioElement implements VoiceRecorderInterface {
 
-    private context: AudioContext | null | undefined;
+    private contextManager: AudioContextManagerInterface | null | undefined;
+
     private input: MediaStreamAudioSourceNode | null = null;
+
     private stream: MediaStream | null = null;
+
     private recorder: Recorder | null = null;
+
     private alreadyInit = false;
+
     private timer: TimerSaveTime | null = null;
+
     private enableAudioFeedback = false;
+
     private recording = false;
+
     private deviceList: MediaDeviceInfo[] = [];
+    
     private constraints: AudioConstraintWrapper = {
         audio: {
             noiseSuppression: true,
@@ -52,22 +66,19 @@ export default class VoiceRecorder extends AbstractAudioElement {
             sampleRate: { ideal: 44100 }
         }
     };
-    private eventEmitter: EventEmitterInterface | null = null;
-    private previousSampleRate = Constants.DEFAULT_SAMPLE_RATE;
+    
     private sampleRateConfigNotSupported = false;
 
-    constructor(context?: AudioContext | null, eventEmitter?: EventEmitterInterface, configService?: ConfigService) {
+    constructor(
+        @inject(TYPES.AudioContextManager) contextManager?: AudioContextManagerInterface | null,
+        @inject(TYPES.EventEmitter) eventEmitter?: EventEmitterInterface,
+        @inject(TYPES.ConfigService) configService?: ConfigService) {
         super();
-        this.context = context;
+        this.contextManager = contextManager;
         this.eventEmitter = eventEmitter || new EventEmitter();
         this.configService = configService || null;
-
-        if (this.configService) {
-            this.previousSampleRate = this.configService.getSampleRate();
-        }
     }
 
-    /** Initialize this voice recorder */
     async init() {
         if (!this.isRecordingAvailable()) {
             return;
@@ -77,10 +88,12 @@ export default class VoiceRecorder extends AbstractAudioElement {
         // In this case we disable sample-rate config feature for this VoiceRecorder
         this.sampleRateConfigNotSupported = !navigator.mediaDevices.getSupportedConstraints().sampleRate;
 
-        if (!this.context) {
-            await this.createNewContext(this.previousSampleRate);
-        } else {
-            await this.createNewContextIfNeeded();
+        if (this.contextManager) {
+            if (this.sampleRateConfigNotSupported) {
+                this.contextManager.createNewContext(0);
+            } else {
+                this.contextManager.createNewContextIfNeeded();
+            }
         }
 
         this.eventEmitter?.emit(EventType.RECORDER_INIT);
@@ -88,8 +101,8 @@ export default class VoiceRecorder extends AbstractAudioElement {
         try {
             const stream = await navigator.mediaDevices.getUserMedia(this.constraints);
 
-            if (this.context) {
-                this.context.resume();
+            if (this.contextManager && this.contextManager.currentContext) {
+                this.contextManager.currentContext.resume();
             }
 
             await this.setup(stream, false, false);
@@ -119,7 +132,6 @@ export default class VoiceRecorder extends AbstractAudioElement {
                 // Disable sample rate configuration
                 case "NotSupportedError":
                     if (!this.sampleRateConfigNotSupported) {
-                        this.previousSampleRate = 0;
                         this.sampleRateConfigNotSupported = true;
                         this.init();
                     }
@@ -132,43 +144,6 @@ export default class VoiceRecorder extends AbstractAudioElement {
         }
 
         navigator.mediaDevices.ondevicechange = () => this.updateInputList();
-    }
-
-    /**
-     * Create new context if needed, for example if sample rate setting have changed
-     */
-    private async createNewContextIfNeeded() {
-        let currentSampleRate = Constants.DEFAULT_SAMPLE_RATE;
-
-        if (this.configService) {
-            currentSampleRate = this.configService.getSampleRate();
-        }
-
-        // If sample rate setting has changed, create a new audio context
-        if (currentSampleRate != this.previousSampleRate) {
-            await this.createNewContext(currentSampleRate);
-            this.previousSampleRate = currentSampleRate;
-        }
-    }
-
-    /** 
-     * Stop previous audio context and create a new one
-     */
-    private async createNewContext(sampleRate: number) {
-        if (this.context) {
-            await this.context.close();
-        }
-
-        const options: AudioContextOptions = {
-            latencyHint: "balanced"
-        };
-
-        if (sampleRate != 0 && !this.sampleRateConfigNotSupported) {
-            options.sampleRate = sampleRate;
-        }
-
-        this.context = new AudioContext(options);
-        this.constraints.audio.sampleRate = { ideal: this.context.sampleRate };
     }
 
     private successCallback() {
@@ -187,17 +162,13 @@ export default class VoiceRecorder extends AbstractAudioElement {
         this.eventEmitter?.emit(EventType.RECORDER_UNKNOWN_ERROR);
     }
 
-    /**
-     * Enable or disable audio feedback
-     * @param enable boolean
-     */
     audioFeedback(enable: boolean) {
-        if (this.context) {
+        if (this.contextManager && this.contextManager.currentContext) {
             if (enable) {
-                this.input && this.input.connect(this.context.destination);
+                this.input && this.input.connect(this.contextManager.currentContext.destination);
                 this.enableAudioFeedback = true;
             } else {
-                this.input && this.input.connect(this.context.destination) && this.input.disconnect(this.context.destination);
+                this.input && this.input.connect(this.contextManager.currentContext.destination) && this.input.disconnect(this.contextManager.currentContext.destination);
                 this.enableAudioFeedback = false;
             }
 
@@ -282,8 +253,8 @@ export default class VoiceRecorder extends AbstractAudioElement {
      * @param precAudioFeedback Has audio feedback?
      */
     private async setup(stream: MediaStream | null, precRecording: boolean, precAudioFeedback: boolean) {
-        if (stream && this.context) {
-            this.input = this.context.createMediaStreamSource(stream);
+        if (stream && this.contextManager && this.contextManager.currentContext) {
+            this.input = this.contextManager.currentContext.createMediaStreamSource(stream);
             this.stream = stream;
         }
 
@@ -300,10 +271,6 @@ export default class VoiceRecorder extends AbstractAudioElement {
         await this.updateInputList();
     }
 
-    /**
-     * Enable/disable noise suppression
-     * @param enable boolean
-     */
     setNoiseSuppression(enable: boolean) {
         this.resetConstraints({
             audio: {
@@ -312,10 +279,6 @@ export default class VoiceRecorder extends AbstractAudioElement {
         });
     }
 
-    /**
-     * Enable/disable auto gain
-     * @param enable boolean
-     */
     setAutoGain(enable: boolean) {
         this.resetConstraints({
             audio: {
@@ -324,10 +287,6 @@ export default class VoiceRecorder extends AbstractAudioElement {
         });
     }
 
-    /**
-     * Enable/disable echo cancellation
-     * @param enable boolean
-     */
     setEchoCancellation(enable: boolean) {
         this.resetConstraints({
             audio: {
@@ -352,11 +311,6 @@ export default class VoiceRecorder extends AbstractAudioElement {
         }
     }
 
-    /**
-     * Change audio input
-     * @param deviceId Device ID
-     * @param groupId Group ID (optional)
-     */
     changeInput(deviceId: string, groupId: string | undefined) {
         if (groupId) {
             this.constraints.audio.deviceId = deviceId;
@@ -365,9 +319,6 @@ export default class VoiceRecorder extends AbstractAudioElement {
         }
     }
 
-    /**
-     * Start audio recording
-     */
     async record() {
         if (this.alreadyInit && this.configService && this.input) {
             if (!this.recorder) {
@@ -396,9 +347,6 @@ export default class VoiceRecorder extends AbstractAudioElement {
         }
     }
 
-    /**
-     * Stop audio recording
-     */
     async stop() {
         if (this.alreadyInit && this.recorder) {
             this.recorder.stop();
@@ -406,10 +354,10 @@ export default class VoiceRecorder extends AbstractAudioElement {
             this.recording = false;
 
             this.recorder.getBuffer((buffer: Float32Array[]) => {
-                if (this.context) {
-                    this.context.resume();
+                if (this.contextManager && this.contextManager.currentContext) {
+                    this.contextManager.currentContext.resume();
 
-                    const newBuffer = this.context.createBuffer(2, buffer[0].length, this.context.sampleRate);
+                    const newBuffer = this.contextManager.currentContext.createBuffer(2, buffer[0].length, this.contextManager.currentContext.sampleRate);
                     newBuffer.getChannelData(0).set(buffer[0]);
                     newBuffer.getChannelData(1).set(buffer[1]);
 
@@ -420,9 +368,6 @@ export default class VoiceRecorder extends AbstractAudioElement {
         }
     }
 
-    /**
-     * Pause audio recording
-     */
     pause() {
         if (this.alreadyInit) {
             this.recorder && this.recorder.stop();
@@ -445,9 +390,6 @@ export default class VoiceRecorder extends AbstractAudioElement {
         }
     }
 
-    /**
-     * Reset this voice recorder
-     */
     reset() {
         this.recorder && this.recorder.kill();
         this.timer && this.timer.stop();
@@ -464,24 +406,14 @@ export default class VoiceRecorder extends AbstractAudioElement {
         this.eventEmitter?.emit(EventType.RECORDER_RESETED);
     }
 
-    /**
-     * Get current recording time in text format
-     */
     get currentTimeDisplay() {
         return this.timer?.seconds ? ("0" + Math.trunc(this.timer?.seconds / 60)).slice(-2) + ":" + ("0" + Math.trunc(this.timer?.seconds % 60)).slice(-2) : "00:00";
     }
 
-    /**
-     * Get current recording time in seconds
-     */
     get currentTime() {
         return this.timer ? this.timer.seconds : 0;
     }
 
-    /**
-     * Get the current settings for this voice recorder
-     * @returns RecorderSettings
-     */
     getSettings(): RecorderSettings {
         return {
             deviceList: this.deviceList,
@@ -490,19 +422,10 @@ export default class VoiceRecorder extends AbstractAudioElement {
         };
     }
 
-    /**
-     * Observe an event
-     * @param event The event name
-     * @param callback Callback called when an event of this type occurs
-     */
     on(event: string, callback: EventEmitterCallback) {
         this.eventEmitter?.on(event, callback);
     }
 
-    /**
-     * Check if browser is compatible with audio recording
-     * @returns boolean
-     */
     isRecordingAvailable() {
         return typeof (navigator.mediaDevices) !== "undefined" && typeof (navigator.mediaDevices.getUserMedia) !== "undefined";
     }

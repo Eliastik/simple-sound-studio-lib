@@ -14,7 +14,8 @@ const TYPES = {
     AudioBuffersToFetch: Symbol.for("AudioBuffersToFetch"),
     Renderers: Symbol.for("Renderers"),
     Filters: Symbol.for("Filters"),
-    EntryPointFilter: Symbol.for("EntryPointFilter")
+    EntryPointFilter: Symbol.for("EntryPointFilter"),
+    VoiceRecorder: Symbol.for("VoiceRecorder")
 };
 
 export { TYPES };

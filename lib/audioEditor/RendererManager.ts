@@ -1,30 +1,21 @@
-import { inject, injectable, multiInject } from "inversify";
+import { injectable, multiInject } from "inversify";
 import { TYPES } from "@/inversify.types";
 import AbstractAudioElement from "@/filters/interfaces/AbstractAudioElement";
 import AbstractAudioRenderer from "@/filters/interfaces/AbstractAudioRenderer";
 import { FilterState } from "@/model/FilterState";
 import Constants from "@/model/Constants";
 import RendererManagerInterface from "./interfaces/RendererManagerInterface";
-import GenericConfigService from "@/services/GenericConfigService";
-import type { ConfigService } from "@/services/interfaces/ConfigService";
-import type BufferFetcherServiceInterface from "@/services/interfaces/BufferFetcherServiceInterface";
-import type BufferDecoderServiceInterface from "@/services/interfaces/BufferDecoderServiceInterface";
 
 @injectable()
 export default class RendererManager extends AbstractAudioElement implements RendererManagerInterface {
 
     /** A list of renderers */
-    @multiInject(TYPES.Renderers)
     private renderers: AbstractAudioRenderer[] = [];
 
     constructor(
-        @inject(TYPES.BufferFetcherService) bufferFetcherService: BufferFetcherServiceInterface,
-        @inject(TYPES.BufferDecoderService) bufferDecoderService: BufferDecoderServiceInterface,
-        @inject(TYPES.ConfigService) configService: ConfigService) {
+        @multiInject(TYPES.Renderers) renderers: AbstractAudioRenderer[] = []) {
         super();
-        this.configService = configService || new GenericConfigService();
-        this.bufferFetcherService = bufferFetcherService;
-        this.bufferDecoderService = bufferDecoderService;
+        this.renderers = renderers;
     }
 
     addRenderers(...renderers: AbstractAudioRenderer[]) {

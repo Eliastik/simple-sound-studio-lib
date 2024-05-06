@@ -2,14 +2,13 @@ import { TYPES } from "@/inversify.types";
 import AudioEditorInterface from "@/audioEditor/interfaces/AudioEditorInterface";
 import { audioEditorContainer } from "@/inversify.config";
 import { ConfigService } from "@/services/interfaces/ConfigService";
-import VoiceRecorder from "@/VoiceRecorder";
 import EventEmitterInterface from "./interfaces/EventEmitterInterface";
 import BufferPlayerInterface from "@/bufferPlayer/interfaces/BufferPlayerInterface";
 import GenericConfigService from "@/services/GenericConfigService";
+import VoiceRecorderInterface from "@/voiceRecorder/interfaces/VoiceRecorderInterface";
 
 export default class SoundStudioFactory {
 
-    private static voiceRecorder: VoiceRecorder;
     private static ready = false;
 
     static createAudioEditor(configService?: ConfigService, buffersToFetch?: string[]): AudioEditorInterface {
@@ -28,9 +27,8 @@ export default class SoundStudioFactory {
         return audioEditorContainer.get<AudioEditorInterface>(TYPES.AudioEditor);
     }
 
-    static createVoiceRecorder(): VoiceRecorder {
-        SoundStudioFactory.voiceRecorder = new VoiceRecorder(null, audioEditorContainer.get<EventEmitterInterface>(TYPES.EventEmitter), audioEditorContainer.get<ConfigService>(TYPES.ConfigService));
-        return SoundStudioFactory.voiceRecorder;
+    static createVoiceRecorder(): VoiceRecorderInterface {
+        return audioEditorContainer.get<VoiceRecorderInterface>(TYPES.VoiceRecorder);
     }
 
     static getAudioEditorInstance(): AudioEditorInterface | null {
@@ -41,8 +39,8 @@ export default class SoundStudioFactory {
         return audioEditorContainer.get<BufferPlayerInterface>(TYPES.BufferPlayer);
     }
 
-    static getAudioRecorderInstance(): VoiceRecorder | null {
-        return SoundStudioFactory.voiceRecorder;
+    static getAudioRecorderInstance(): VoiceRecorderInterface | null {
+        return audioEditorContainer.get<VoiceRecorderInterface>(TYPES.VoiceRecorder);
     }
 
     static getEventEmitterInstance(): EventEmitterInterface | null {

@@ -48,7 +48,7 @@ export default class AudioContextManager implements AudioContextManagerInterface
         }
     }
 
-    createNewContextIfNeeded(principalBuffer: AudioBuffer | null) {
+    createNewContextIfNeeded(principalBuffer?: AudioBuffer | null) {
         const isCompatibilityModeEnabled = this.configService && this.configService.isCompatibilityModeEnabled();
 
         if (isCompatibilityModeEnabled && principalBuffer) {
@@ -83,7 +83,7 @@ export default class AudioContextManager implements AudioContextManagerInterface
      * Stop previous audio context and create a new one
      * @param sampleRate New sample rate
      */
-    private createNewContext(sampleRate: number) {
+    createNewContext(sampleRate: number) {
         if (this._currentContext) {
             this.oldAudioContext = this._currentContext;
             this.destroyOldContext();

@@ -14,8 +14,6 @@ export default class BufferManager extends AbstractAudioElement implements Buffe
 
     /** The filter manager */
     private filterManager: FilterManagerInterface | undefined;
-    /** The current event emitter */
-    private eventEmitter: EventEmitterInterface | undefined;
     /** True if we are downloading initial buffer data */
     downloadingInitialData = false;
     /** List of audio buffers to fetch */

@@ -8,7 +8,9 @@ import utilFunctions from "../../utils/Functions";
 export default abstract class AbstractAudioFilterWorklet<T> extends AbstractAudioFilter {
 
     protected currentWorkletNode: AudioWorkletNode | WorkletScriptProcessorNodeAdapter | null = null;
+
     protected fallbackToScriptProcessor = false;
+
     protected keepCurrentNodeIfPossible = false;
 
     /**
@@ -33,7 +35,7 @@ export default abstract class AbstractAudioFilterWorklet<T> extends AbstractAudi
     async initializeWorklet(audioContext: BaseAudioContext): Promise<void> {
         this.stop();
 
-        if(!utilFunctions.isAudioWorkletCompatible(audioContext)) {
+        if (!utilFunctions.isAudioWorkletCompatible(audioContext)) {
             console.error("Audio Worklets not supported on this browser. Fallback to ScriptProcessor");
             this.fallbackToScriptProcessor = true;
             return;
@@ -53,7 +55,7 @@ export default abstract class AbstractAudioFilterWorklet<T> extends AbstractAudi
      * @param audioContext 
      */
     protected isAudioWorkletEnabled() {
-        if(this.configService) {
+        if (this.configService) {
             return this.configService.isAudioWorkletEnabled();
         }
 
@@ -73,7 +75,7 @@ export default abstract class AbstractAudioFilterWorklet<T> extends AbstractAudi
             // Fallback to ScriptProcessorNode (polyfill)
             const processor = RegisterProcessorPolyfill.getProcessor(workletName);
 
-            if(processor) {
+            if (processor) {
                 this.currentWorkletNode = new WorkletScriptProcessorNodeAdapter(context, processor, this.configService!.getBufferSize());
             } else {
                 throw new Error(`No processor registered with name ${workletName} for filter ${this.id} to use the fallback/polyfill for AudioWorklet. Make sure you have created the class.`);
@@ -106,7 +108,7 @@ export default abstract class AbstractAudioFilterWorklet<T> extends AbstractAudi
 
     /** Default implementation for GetNode - AbstractAudioFilterWorklet */
     getNode(context: BaseAudioContext) {
-        if(!this.keepCurrentNodeIfPossible || !this.currentWorkletNode
+        if (!this.keepCurrentNodeIfPossible || !this.currentWorkletNode
             || this.currentWorkletNode.context != context) {
             this.stop();
             this.initializeNode(context, this.workletName);

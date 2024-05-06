@@ -43,7 +43,6 @@ export default class BufferPlayer extends AbstractAudioElement implements Buffer
     playing = false;
     loop = false;
     speedAudio = 1;
-    private eventEmitter: EventEmitterInterface | null;
     private onBeforePlayingCallback: () => void = async () => {};
 
     compatibilityMode = false;
@@ -249,7 +248,9 @@ export default class BufferPlayer extends AbstractAudioElement implements Buffer
     }
 
     on(event: string, callback: EventEmitterCallback) {
-        this.eventEmitter?.on(event, callback);
+        if (this.eventEmitter) {
+            this.eventEmitter.on(event, callback);
+        }
     }
 
     get currentTimeDisplay() {

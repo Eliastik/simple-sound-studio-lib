@@ -1,13 +1,17 @@
 import { inject, injectable } from "inversify";
-import { ConfigService } from "../../services/interfaces/ConfigService";
+import type { ConfigService } from "../../services/interfaces/ConfigService";
 import { TYPES } from "@/inversify.types";
-import BufferFetcherServiceInterface from "@/services/interfaces/BufferFetcherServiceInterface";
-import BufferDecoderServiceInterface from "@/services/interfaces/BufferDecoderServiceInterface";
+import type BufferFetcherServiceInterface from "@/services/interfaces/BufferFetcherServiceInterface";
+import type BufferDecoderServiceInterface from "@/services/interfaces/BufferDecoderServiceInterface";
+import type EventEmitterInterface from "@/utils/interfaces/EventEmitterInterface";
 
 @injectable()
 export default abstract class AbstractAudioElement {
 
+    /** Is this element enabled? */
     private enabled = false;
+
+    /** Is this element enabled by default? */
     private defaultEnabled = false;
 
     @inject(TYPES.BufferFetcherService)
@@ -15,9 +19,12 @@ export default abstract class AbstractAudioElement {
 
     @inject(TYPES.BufferDecoderService)
         bufferDecoderService: BufferDecoderServiceInterface | null = null;
-    
+
     @inject(TYPES.ConfigService)
         configService: ConfigService | null = null;
+
+    @inject(TYPES.EventEmitter)
+        eventEmitter: EventEmitterInterface | undefined;
 
     /** Returns the order in which the filter/renderer needs to be applied */
     abstract get order(): number;
