@@ -26,8 +26,8 @@ export default class AudioContextManager implements AudioContextManagerInterface
     private previousSampleRate = Constants.DEFAULT_SAMPLE_RATE;
 
     constructor(
-        @inject(TYPES.ConfigService) configService: ConfigService | null,
-        @inject(TYPES.EventEmitter) eventEmitter: EventEmitterInterface | null) {
+        @inject(TYPES.EventEmitter) eventEmitter: EventEmitterInterface | null,
+        @inject(TYPES.ConfigService) configService: ConfigService | null) {
         this.eventEmitter = eventEmitter || new EventEmitter();
         this.configService = configService;
 

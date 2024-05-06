@@ -20,20 +20,19 @@
 // Used to play the audio buffer, with time controls, pause/play, stop and loop
 import { EventType } from "../model/EventTypeEnum";
 import { EventEmitterCallback } from "../model/EventEmitterCallback";
-import EventEmitter from "../utils/EventEmitter";
 import AbstractAudioElement from "../filters/interfaces/AbstractAudioElement";
 import Constants from "../model/Constants";
 import { TYPES } from "../inversify.types";
 import { inject, injectable } from "inversify";
 import BufferPlayerInterface from "./interfaces/BufferPlayerInterface";
 import AudioContextManagerInterface from "@/audioEditor/interfaces/AudioContextManagerInterface";
-import type EventEmitterInterface from "@/utils/interfaces/EventEmitterInterface";
 
 // Also used in compatibility mode (which doesn't use audio buffer) with less functions (no time control)
 @injectable()
 export default class BufferPlayer extends AbstractAudioElement implements BufferPlayerInterface {
 
     private _contextManager: AudioContextManagerInterface | undefined | null;
+
     private buffer: AudioBuffer | null = null;
     private source: AudioBufferSourceNode | null = null;
     currentTime = 0;
@@ -43,17 +42,16 @@ export default class BufferPlayer extends AbstractAudioElement implements Buffer
     playing = false;
     loop = false;
     speedAudio = 1;
-    private onBeforePlayingCallback: () => void = async () => {};
+    private onBeforePlayingCallback: () => void = async () => { };
 
     compatibilityMode = false;
     currentNode: AudioNode | null = null;
 
     constructor(
-        @inject(TYPES.AudioContextManager) contextManager: AudioContextManagerInterface | undefined | null,
-        @inject(TYPES.EventEmitter) eventEmitter?: EventEmitterInterface) {
+        @inject(TYPES.AudioContextManager) contextManager: AudioContextManagerInterface | undefined | null) {
         super();
+
         this._contextManager = contextManager;
-        this.eventEmitter = eventEmitter || new EventEmitter();
     }
 
     init(direct?: boolean) {
@@ -116,7 +114,7 @@ export default class BufferPlayer extends AbstractAudioElement implements Buffer
         if (this.currentNode) {
             this.currentNode.disconnect();
 
-            if(this.compatibilityMode) {
+            if (this.compatibilityMode) {
                 this.currentTime = 0;
                 this.displayTime = 0;
             }
@@ -212,10 +210,10 @@ export default class BufferPlayer extends AbstractAudioElement implements Buffer
     }
 
     setTimePercent(percent: number) {
-        if(!this.compatibilityMode) {
+        if (!this.compatibilityMode) {
             this.currentTime = Math.round(this.duration * (percent / 100));
             this.displayTime = this.currentTime;
-    
+
             if (this.playing) {
                 this.pause();
                 this.start();

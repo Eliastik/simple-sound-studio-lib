@@ -22,7 +22,6 @@
 // Offer control with play/pause and audio feedback
 import { inject, injectable } from "inversify";
 import TimerSaveTime from "../utils/TimerSaveTime";
-import EventEmitter from "../utils/EventEmitter";
 import { EventType } from "../model/EventTypeEnum";
 import AudioConstraintWrapper from "../model/AudioConstraintWrapper";
 import { RecorderSettings } from "../model/RecorderSettings";
@@ -32,7 +31,6 @@ import Constants from "../model/Constants";
 import { EventEmitterCallback } from "../model/EventEmitterCallback";
 import { AudioConstraint } from "../model/AudioConstraint";
 import Recorder from "../recorder/Recorder";
-import type EventEmitterInterface from "../utils/interfaces/EventEmitterInterface";
 import VoiceRecorderInterface from "./interfaces/VoiceRecorderInterface";
 import { TYPES } from "@/inversify.types";
 import AudioContextManagerInterface from "@/audioEditor/interfaces/AudioContextManagerInterface";
@@ -57,7 +55,7 @@ export default class VoiceRecorder extends AbstractAudioElement implements Voice
     private recording = false;
 
     private deviceList: MediaDeviceInfo[] = [];
-    
+
     private constraints: AudioConstraintWrapper = {
         audio: {
             noiseSuppression: true,
@@ -66,17 +64,16 @@ export default class VoiceRecorder extends AbstractAudioElement implements Voice
             sampleRate: { ideal: 44100 }
         }
     };
-    
+
     private sampleRateConfigNotSupported = false;
 
     constructor(
-        @inject(TYPES.AudioContextManager) contextManager?: AudioContextManagerInterface | null,
-        @inject(TYPES.EventEmitter) eventEmitter?: EventEmitterInterface,
-        @inject(TYPES.ConfigService) configService?: ConfigService) {
+        @inject(TYPES.AudioContextManager) contextManager: AudioContextManagerInterface | null,
+        @inject(TYPES.ConfigService) configService: ConfigService) {
         super();
+
         this.contextManager = contextManager;
-        this.eventEmitter = eventEmitter || new EventEmitter();
-        this.configService = configService || null;
+        this.configService = configService;
     }
 
     async init() {
@@ -129,7 +126,7 @@ export default class VoiceRecorder extends AbstractAudioElement implements Voice
                 case "NotFoundError":
                     this.notFoundErrorCallback();
                     break;
-                // Disable sample rate configuration
+                    // Disable sample rate configuration
                 case "NotSupportedError":
                     if (!this.sampleRateConfigNotSupported) {
                         this.sampleRateConfigNotSupported = true;

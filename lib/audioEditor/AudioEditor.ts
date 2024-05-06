@@ -2,74 +2,70 @@ import AbstractAudioElement from "../filters/interfaces/AbstractAudioElement";
 import AbstractAudioFilter from "../filters/interfaces/AbstractAudioFilter";
 import AbstractAudioRenderer from "../filters/interfaces/AbstractAudioRenderer";
 import utils from "../utils/Functions";
-import BufferPlayer from "../bufferPlayer/BufferPlayer";
-import EventEmitter from "../utils/EventEmitter";
 import { EventType } from "../model/EventTypeEnum";
 import Constants from "../model/Constants";
 import utilFunctions from "../utils/Functions";
 import { FilterSettings } from "../model/filtersSettings/FilterSettings";
 import { EventEmitterCallback } from "../model/EventEmitterCallback";
 import { FilterState } from "../model/FilterState";
-import GenericConfigService from "../services/GenericConfigService";
 import SaveBufferOptions from "../model/SaveBufferOptions";
 import { TYPES } from "../inversify.types";
 import { inject, injectable } from "inversify";
 import AudioEditorInterface from "./interfaces/AudioEditorInterface";
-import FilterManagerInterface from "./interfaces/FilterManagerInterface";
-import RendererManagerInterface from "./interfaces/RendererManagerInterface";
-import AudioContextManagerInterface from "./interfaces/AudioContextManagerInterface";
-import SaveBufferManagerInterface from "./interfaces/SaveBufferManagerInteface";
-import AudioProcessorInterface from "./interfaces/AudioProcessorInterface";
-import BufferManagerInterface from "./interfaces/BufferManagerInterface";
+import type FilterManagerInterface from "./interfaces/FilterManagerInterface";
+import type RendererManagerInterface from "./interfaces/RendererManagerInterface";
+import type AudioContextManagerInterface from "./interfaces/AudioContextManagerInterface";
+import type SaveBufferManagerInterface from "./interfaces/SaveBufferManagerInteface";
+import type AudioProcessorInterface from "./interfaces/AudioProcessorInterface";
+import type BufferManagerInterface from "./interfaces/BufferManagerInterface";
 import type BufferPlayerInterface from "@/bufferPlayer/interfaces/BufferPlayerInterface";
-import type EventEmitterInterface from "@/utils/interfaces/EventEmitterInterface";
-import * as ConfigService from "@/services/interfaces/ConfigService";
 
 @injectable()
 export default class AudioEditor extends AbstractAudioElement implements AudioEditorInterface {
 
     /** The filter manager */
-    @inject(TYPES.FilterManager)
     private filterManager: FilterManagerInterface | undefined;
 
     /** The renderer manager */
-    @inject(TYPES.RendererManager)
     private rendererManager: RendererManagerInterface | undefined;
 
     /** The context manager */
-    @inject(TYPES.AudioContextManager)
     private contextManager: AudioContextManagerInterface | undefined;
 
     /** The save buffer manager */
-    @inject(TYPES.SaveBufferManager)
     private saveBufferManager: SaveBufferManagerInterface | undefined;
 
     /** The save buffer manager */
-    @inject(TYPES.AudioProcessor)
     private audioProcessor: AudioProcessorInterface | undefined;
 
     /** The save buffer manager */
-    @inject(TYPES.BufferManager)
     private bufferManager: BufferManagerInterface | undefined;
 
     /** The audio player */
-    @inject(TYPES.BufferPlayer)
     private bufferPlayer: BufferPlayerInterface | undefined;
 
     /** The audio buffer to be processed */
     private principalBuffer: AudioBuffer | null = null;
 
     constructor(
-        @inject(TYPES.BufferPlayer) player?: BufferPlayerInterface,
-        @inject(TYPES.EventEmitter) eventEmitter?: EventEmitterInterface,
-        @inject(TYPES.ConfigService) configService?: ConfigService.ConfigService) {
+        @inject(TYPES.FilterManager) filterManager: FilterManagerInterface,
+        @inject(TYPES.RendererManager) rendererManager: RendererManagerInterface,
+        @inject(TYPES.AudioContextManager) contextManager: AudioContextManagerInterface,
+        @inject(TYPES.SaveBufferManager) saveBufferManager: SaveBufferManagerInterface,
+        @inject(TYPES.AudioProcessor) audioProcessor: AudioProcessorInterface,
+        @inject(TYPES.BufferManager) bufferManager: BufferManagerInterface,
+        @inject(TYPES.BufferPlayer) player: BufferPlayerInterface
+    ) {
         super();
 
-        this.eventEmitter = eventEmitter || new EventEmitter();
-        this.configService = configService || new GenericConfigService();
-        this.bufferPlayer = player || new BufferPlayer(this.contextManager, this.eventEmitter);
+        this.filterManager = filterManager;
+        this.rendererManager = rendererManager;
+        this.contextManager = contextManager;
+        this.saveBufferManager = saveBufferManager;
+        this.audioProcessor = audioProcessor;
+        this.bufferManager = bufferManager;
+        this.bufferPlayer = player;
 
-        // Callback called just before starting audio player
         this.setup();
     }
 

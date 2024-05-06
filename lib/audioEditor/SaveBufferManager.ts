@@ -4,22 +4,19 @@ import { Recorder } from "../recorder/Recorder";
 import { EventType } from "@/model/EventTypeEnum";
 import AbstractAudioElement from "@/filters/interfaces/AbstractAudioElement";
 import SaveBufferOptions from "@/model/SaveBufferOptions";
-import EventEmitter from "@/utils/EventEmitter";
 import Constants from "@/model/Constants";
-import FilterManager from "./FilterManager";
 import RecorderWorkerMessage from "../model/RecorderWorkerMessage";
 import getRecorderWorker from "../recorder/getRecorderWorker";
 import SaveBufferManagerInterface from "./interfaces/SaveBufferManagerInteface";
-import { ConfigService } from "@/services/interfaces/ConfigService";
 import type BufferPlayerInterface from "@/bufferPlayer/interfaces/BufferPlayerInterface";
+import type FilterManagerInterface from "./interfaces/FilterManagerInterface";
 import AudioContextManagerInterface from "./interfaces/AudioContextManagerInterface";
-import EventEmitterInterface from "@/utils/interfaces/EventEmitterInterface";
 
 @injectable()
 export default class SaveBufferManager extends AbstractAudioElement implements SaveBufferManagerInterface {
 
     /** The filter manager */
-    private filterManager: FilterManager | undefined;
+    private filterManager: FilterManagerInterface | undefined;
 
     /** The context manager */
     private contextManager: AudioContextManagerInterface | undefined;
@@ -33,17 +30,15 @@ export default class SaveBufferManager extends AbstractAudioElement implements S
     private playingStoppedCallback: (() => void) | null = null;
 
     constructor(
+        @inject(TYPES.FilterManager) filterManager: FilterManagerInterface,
         @inject(TYPES.AudioContextManager) contextManager: AudioContextManagerInterface | undefined,
-        @inject(TYPES.ConfigService) configService: ConfigService | null,
-        @inject(TYPES.EventEmitter) eventEmitter: EventEmitterInterface | null,
         @inject(TYPES.BufferPlayer) bufferPlayer: BufferPlayerInterface
     ) {
         super();
 
         this.contextManager = contextManager;
-        this.eventEmitter = eventEmitter || new EventEmitter();
         this.bufferPlayer = bufferPlayer;
-        this.configService = configService;
+        this.filterManager = filterManager;
 
         // Callback called just before starting audio player
         this.setup();

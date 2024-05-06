@@ -15,6 +15,7 @@ export default class RendererManager extends AbstractAudioElement implements Ren
     constructor(
         @multiInject(TYPES.Renderers) renderers: AbstractAudioRenderer[] = []) {
         super();
+
         this.renderers = renderers;
     }
 

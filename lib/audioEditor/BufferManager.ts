@@ -14,14 +14,16 @@ export default class BufferManager extends AbstractAudioElement implements Buffe
 
     /** The filter manager */
     private filterManager: FilterManagerInterface | undefined;
+
     /** True if we are downloading initial buffer data */
     downloadingInitialData = false;
+
     /** List of audio buffers to fetch */
     private audioBuffersToFetch: string[] = [];
 
     constructor(
-        @inject(TYPES.BufferFetcherService) bufferFetcherService: BufferFetcherServiceInterface,
         @inject(TYPES.FilterManager) filterManager: FilterManagerInterface,
+        @inject(TYPES.BufferFetcherService) bufferFetcherService: BufferFetcherServiceInterface,
         @inject(TYPES.EventEmitter) eventEmitter: EventEmitterInterface | null,
         @inject(TYPES.AudioBuffersToFetch) audioBuffersToFetch: string[]) {
         super();

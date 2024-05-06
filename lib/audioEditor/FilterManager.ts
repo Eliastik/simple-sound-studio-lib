@@ -3,14 +3,12 @@ import AbstractAudioFilter from "@/filters/interfaces/AbstractAudioFilter";
 import AudioFilterEntrypointInterface from "@/filters/interfaces/AudioFilterEntrypointInterface";
 import { AudioFilterNodes } from "@/model/AudioNodes";
 import AbstractAudioFilterWorklet from "@/filters/interfaces/AbstractAudioFilterWorklet";
-import EventEmitter from "@/utils/EventEmitter";
 import { FilterState } from "@/model/FilterState";
 import { FilterSettings } from "@/model/filtersSettings/FilterSettings";
 import Constants from "@/model/Constants";
 import FilterManagerInterface from "./interfaces/FilterManagerInterface";
 import { inject, injectable, multiInject } from "inversify";
 import { TYPES } from "@/inversify.types";
-import EventEmitterInterface from "@/utils/interfaces/EventEmitterInterface";
 
 @injectable()
 export default class FilterManager extends AbstractAudioElement implements FilterManagerInterface {
@@ -25,12 +23,11 @@ export default class FilterManager extends AbstractAudioElement implements Filte
     private _currentNodes: AudioFilterNodes | null = null;
 
     constructor(
-        @inject(TYPES.EventEmitter) eventEmitter: EventEmitterInterface | null,
         @multiInject(TYPES.Filters) filters: AbstractAudioFilter[],
         @inject(TYPES.EntryPointFilter) entryPointFilter: (AbstractAudioFilter & AudioFilterEntrypointInterface) | null
     ) {
         super();
-        this.eventEmitter = eventEmitter || new EventEmitter();
+
         this.filters = filters;
         this._entryPointFilter = entryPointFilter;
 

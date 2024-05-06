@@ -1,14 +1,11 @@
-import EventEmitter from "@/utils/EventEmitter";
 import AbstractAudioElement from "@/filters/interfaces/AbstractAudioElement";
 import { EventType } from "@/model/EventTypeEnum";
 import utils from "../utils/Functions";
 import Constants from "@/model/Constants";
 import AudioProcessorInterface from "./interfaces/AudioProcessorInterface";
 import { inject, injectable } from "inversify";
-import { ConfigService } from "@/services/interfaces/ConfigService";
 import type BufferPlayerInterface from "@/bufferPlayer/interfaces/BufferPlayerInterface";
 import type BufferManagerInterface from "./interfaces/BufferManagerInterface";
-import EventEmitterInterface from "@/utils/interfaces/EventEmitterInterface";
 import AudioContextManagerInterface from "./interfaces/AudioContextManagerInterface";
 import type RendererManagerInterface from "./interfaces/RendererManagerInterface";
 import type FilterManagerInterface from "./interfaces/FilterManagerInterface";
@@ -28,14 +25,16 @@ export default class AudioProcessor extends AbstractAudioElement implements Audi
 
     /** The audio player */
     private bufferPlayer: BufferPlayerInterface | undefined;
-    
+
     /** The save buffer manager */
     private bufferManager: BufferManagerInterface | undefined;
 
     /** The current offline context */
     private currentOfflineContext: OfflineAudioContext | null | undefined;
+
     /** The resulting audio buffer */
     private _renderedBuffer: AudioBuffer | null = null;
+
     /** true if the user wanted to cancel audio rendering */
     private audioRenderingLastCanceled = false;
 
@@ -46,19 +45,15 @@ export default class AudioProcessor extends AbstractAudioElement implements Audi
     sumInputBuffer: number = 0;
 
     constructor(
-        @inject(TYPES.AudioContextManager) contextManager: AudioContextManagerInterface | undefined,
-        @inject(TYPES.ConfigService) configService: ConfigService | null,
-        @inject(TYPES.EventEmitter) eventEmitter: EventEmitterInterface | null,
-        @inject(TYPES.BufferPlayer) bufferPlayer: BufferPlayerInterface, 
         @inject(TYPES.FilterManager) filterManager: FilterManagerInterface,
-        @inject(TYPES.RendererManager) rendererManager:RendererManagerInterface,
+        @inject(TYPES.RendererManager) rendererManager: RendererManagerInterface,
+        @inject(TYPES.AudioContextManager) contextManager: AudioContextManagerInterface | undefined,
+        @inject(TYPES.BufferPlayer) bufferPlayer: BufferPlayerInterface,
         @inject(TYPES.BufferManager) bufferManager: BufferManagerInterface) {
         super();
 
         this.contextManager = contextManager;
-        this.eventEmitter = eventEmitter || new EventEmitter();
         this.bufferPlayer = bufferPlayer;
-        this.configService = configService;
         this.filterManager = filterManager;
         this.rendererManager = rendererManager;
         this.bufferManager = bufferManager;
