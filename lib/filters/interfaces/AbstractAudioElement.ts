@@ -15,16 +15,16 @@ export default abstract class AbstractAudioElement {
     private defaultEnabled = false;
 
     @inject(TYPES.BufferFetcherService)
-        bufferFetcherService: BufferFetcherServiceInterface | null = null;
+    protected bufferFetcherService: BufferFetcherServiceInterface | null = null;
 
     @inject(TYPES.BufferDecoderService)
-        bufferDecoderService: BufferDecoderServiceInterface | null = null;
+    protected bufferDecoderService: BufferDecoderServiceInterface | null = null;
 
     @inject(TYPES.ConfigService)
-        configService: ConfigService | null = null;
+    protected configService: ConfigService | null = null;
 
     @inject(TYPES.EventEmitter)
-        eventEmitter: EventEmitterInterface | undefined;
+    protected eventEmitter: EventEmitterInterface | null = null;
 
     /** Returns the order in which the filter/renderer needs to be applied */
     abstract get order(): number;
@@ -64,5 +64,12 @@ export default abstract class AbstractAudioElement {
     /** Toggle to enabled/disabled this filter */
     toggle() {
         this.setEnabled(!this.isEnabled());
+    }
+
+    injectDependencies(bufferFetcherService: BufferFetcherServiceInterface | null, bufferDecoderService: BufferDecoderServiceInterface | null, configService: ConfigService | null, eventEmitter: EventEmitterInterface | null) {
+        this.bufferFetcherService = bufferFetcherService;
+        this.bufferDecoderService = bufferDecoderService;
+        this.configService = configService;
+        this.eventEmitter = eventEmitter;
     }
 }

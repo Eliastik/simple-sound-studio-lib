@@ -40,11 +40,11 @@ export default class VoiceRecorder extends AbstractAudioElement implements Voice
 
     private contextManager: AudioContextManagerInterface | null | undefined;
 
+    private recorder: Recorder | null = null;
+
     private input: MediaStreamAudioSourceNode | null = null;
 
     private stream: MediaStream | null = null;
-
-    private recorder: Recorder | null = null;
 
     private alreadyInit = false;
 

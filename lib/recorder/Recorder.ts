@@ -1,12 +1,15 @@
+import { injectable } from "inversify";
 import Constants from "../model/Constants";
 import { RecorderCallback, RecorderCallbacks } from "../model/RecorderCallback";
-import RecorderConfig from "../model/RecorderConfig";
+import type RecorderConfig from "../model/RecorderConfig";
 import RecorderWorkerMessage from "../model/RecorderWorkerMessage";
 import RecorderWorkletMessage from "../model/RecorderWorkletMessage";
 import utilFunctions from "../utils/Functions";
 import getRecorderWorker from "./getRecorderWorker";
+import RecorderInterface from "./interfaces/RecorderInterface";
 
-export class Recorder {
+@injectable()
+export class Recorder implements RecorderInterface {
 
     // Inline Worker
     private worker: Worker | null = null;
@@ -229,17 +232,7 @@ export class Recorder {
                 type: mimeType
             });
         }
-    }
-
-    static forceDownload(blob: Blob, filename: string) {
-        const link = window.document.createElement("a");
-        const url = (window.URL || window.webkitURL).createObjectURL(blob);
-        window.document.body.appendChild(link);
-        link.href = url;
-        link.download = filename || "output.wav";
-        link.click();
-        window.URL.revokeObjectURL(url);
-    }
+    } 
 };
 
 export default Recorder;

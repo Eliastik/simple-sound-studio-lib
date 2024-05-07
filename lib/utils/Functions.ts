@@ -131,11 +131,20 @@ const utilFunctions = {
     /**
      * Reset audio rendering progress
      */
-    resetAudioRenderingProgress(eventEmitter: EventEmitterInterface | undefined) {
+    resetAudioRenderingProgress(eventEmitter: EventEmitterInterface | null) {
         if (eventEmitter) {
             eventEmitter.emit(EventType.UPDATE_AUDIO_TREATMENT_PERCENT, 0);
             eventEmitter.emit(EventType.UPDATE_REMAINING_TIME_ESTIMATED, -1);
         }
+    },
+    forceDownload(blob: Blob, filename: string) {
+        const link = window.document.createElement("a");
+        const url = (window.URL || window.webkitURL).createObjectURL(blob);
+        window.document.body.appendChild(link);
+        link.href = url;
+        link.download = filename || "output.wav";
+        link.click();
+        window.URL.revokeObjectURL(url);
     }
 };
 

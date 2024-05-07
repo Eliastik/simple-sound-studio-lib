@@ -43,10 +43,7 @@ export default class FilterManager extends AbstractAudioElement implements Filte
     addFilters(...filters: AbstractAudioFilter[]) {
         for (const filter of filters) {
             filter.initializeDefaultSettings();
-            filter.bufferFetcherService = this.bufferFetcherService;
-            filter.bufferDecoderService = this.bufferDecoderService;
-            filter.configService = this.configService;
-            filter.eventEmitter = this.eventEmitter;
+            filter.injectDependencies(this.bufferFetcherService, this.bufferDecoderService, this.configService, this.eventEmitter);
         }
 
         this.filters.push(...filters);

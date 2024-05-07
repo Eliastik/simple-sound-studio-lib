@@ -21,9 +21,7 @@ export default class RendererManager extends AbstractAudioElement implements Ren
 
     addRenderers(...renderers: AbstractAudioRenderer[]) {
         for (const renderer of renderers) {
-            renderer.bufferFetcherService = this.bufferFetcherService;
-            renderer.bufferDecoderService = this.bufferDecoderService;
-            renderer.configService = this.configService;
+            renderer.injectDependencies(this.bufferFetcherService, this.bufferDecoderService, this.configService, this.eventEmitter);
         }
 
         this.renderers.push(...renderers);

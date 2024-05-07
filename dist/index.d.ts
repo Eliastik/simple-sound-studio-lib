@@ -92,10 +92,10 @@ declare abstract class AbstractAudioElement {
     private enabled;
     /** Is this element enabled by default? */
     private defaultEnabled;
-    bufferFetcherService: BufferFetcherServiceInterface | null;
-    bufferDecoderService: BufferDecoderServiceInterface | null;
-    configService: ConfigService | null;
-    eventEmitter: EventEmitterInterface$1 | undefined;
+    protected bufferFetcherService: BufferFetcherServiceInterface | null;
+    protected bufferDecoderService: BufferDecoderServiceInterface | null;
+    protected configService: ConfigService | null;
+    protected eventEmitter: EventEmitterInterface$1 | null;
     /** Returns the order in which the filter/renderer needs to be applied */
     abstract get order(): number;
     /** Returns the id of this filter/renderer */
@@ -113,6 +113,7 @@ declare abstract class AbstractAudioElement {
     disable(): void;
     /** Toggle to enabled/disabled this filter */
     toggle(): void;
+    injectDependencies(bufferFetcherService: BufferFetcherServiceInterface | null, bufferDecoderService: BufferDecoderServiceInterface | null, configService: ConfigService | null, eventEmitter: EventEmitterInterface$1 | null): void;
 }
 
 interface AudioFilterNodes {
@@ -778,9 +779,9 @@ interface VoiceRecorderInterface {
 
 declare class VoiceRecorder extends AbstractAudioElement implements VoiceRecorderInterface {
     private contextManager;
+    private recorder;
     private input;
     private stream;
-    private recorder;
     private alreadyInit;
     private timer;
     private enableAudioFeedback;
@@ -1105,7 +1106,8 @@ declare const utilFunctions: {
     /**
      * Reset audio rendering progress
      */
-    resetAudioRenderingProgress(eventEmitter: EventEmitterInterface | undefined): void;
+    resetAudioRenderingProgress(eventEmitter: EventEmitterInterface | null): void;
+    forceDownload(blob: Blob, filename: string): void;
 };
 
 declare enum EventType {

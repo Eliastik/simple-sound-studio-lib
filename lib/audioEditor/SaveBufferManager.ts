@@ -11,6 +11,7 @@ import SaveBufferManagerInterface from "./interfaces/SaveBufferManagerInteface";
 import type BufferPlayerInterface from "@/bufferPlayer/interfaces/BufferPlayerInterface";
 import type FilterManagerInterface from "./interfaces/FilterManagerInterface";
 import AudioContextManagerInterface from "./interfaces/AudioContextManagerInterface";
+import utilFunctions from "@/utils/Functions";
 
 @injectable()
 export default class SaveBufferManager extends AbstractAudioElement implements SaveBufferManagerInterface {
@@ -224,7 +225,7 @@ export default class SaveBufferManager extends AbstractAudioElement implements S
      * @param options The save options - see SaveBufferOptions
      */
     private downloadAudioBlob(blob: Blob, options?: SaveBufferOptions) {
-        Recorder.forceDownload(blob, "audio-" + new Date().toISOString() + "." + (options?.format || Constants.DEFAULT_SAVE_FORMAT));
+        utilFunctions.forceDownload(blob, "audio-" + new Date().toISOString() + "." + (options?.format || Constants.DEFAULT_SAVE_FORMAT));
     }
 
     get order(): number {
