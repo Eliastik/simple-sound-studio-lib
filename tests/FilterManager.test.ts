@@ -1,6 +1,8 @@
 import { describe, expect, test } from "@jest/globals";
 import "reflect-metadata";
-import { FilterManager, LimiterFilter } from "../dist/cjs/SimpleSoundStudioLibrary";
+import FilterManager from "../lib/audioEditor/FilterManager";
+import LimiterFilter from "../lib/filters/LimiterFilter";
+import SountouchWrapperFilter from "../lib/filters/SountouchWrapperFilter";
 
 describe("FilterManager tests", () => {
     test("Initialize filter manager with 1 filter", () => {
@@ -12,12 +14,13 @@ describe("FilterManager tests", () => {
     });
 
     test("Disable one filter", () => {
-        const filterManager = new FilterManager([new LimiterFilter()], null);
+        const filterManager = new FilterManager([new SountouchWrapperFilter(), new LimiterFilter()], null);
 
         filterManager.toggleFilter("limiter");
 
         expect(filterManager.getFiltersState()).toStrictEqual({
-            "limiter": false
+            "limiter": false,
+            "soundtouch": true
         });
     });
 

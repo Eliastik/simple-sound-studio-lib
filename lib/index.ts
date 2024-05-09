@@ -22,8 +22,6 @@ import { EventEmitterCallback } from "./model/EventEmitterCallback";
 import { ConfigService } from "./services/interfaces/ConfigService";
 import SaveBufferOptions from "./model/SaveBufferOptions";
 import SoundStudioFactory from "./utils/SoundStudioFactory";
-import LimiterFilter from "./filters/LimiterFilter";
-import FilterManager from "./audioEditor/FilterManager";
 
 export {
     audioEditorContainer,
@@ -50,7 +48,5 @@ export {
     AbstractAudioRenderer,
     type AudioFilterEntrypointInterface,
     utilFunctions as UtilFunctions,
-    SoundStudioFactory,
-    FilterManager,
-    LimiterFilter
+    SoundStudioFactory
 };

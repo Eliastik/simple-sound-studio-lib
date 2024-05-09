@@ -3,9 +3,10 @@
  * https://jestjs.io/docs/configuration
  */
 
-import type { Config } from "jest";
+import type { JestConfigWithTsJest } from "ts-jest";
+import { jsWithTs as tsjPreset } from "ts-jest/presets";
 
-const config: Config = {
+const config: JestConfigWithTsJest = {
     clearMocks: true,
     collectCoverage: false,
     coverageDirectory: undefined,
@@ -17,7 +18,17 @@ const config: Config = {
     moduleNameMapper: {
         "@/(.*)": "<rootDir>/lib/$1"
     },
-    preset: "ts-jest"
+    transform: {
+        ...tsjPreset.transform
+    },
+    transformIgnorePatterns: [
+        "node_modules/?!(soundtouchjs)"
+    ],
+    globals: {
+        "ts-jest": {
+            diagnostics: false
+        }
+    }
 };
 
 export default config;
