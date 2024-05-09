@@ -139,12 +139,12 @@ const utilFunctions = {
     },
     forceDownload(blob: Blob, filename: string) {
         const link = window.document.createElement("a");
-        const url = (window.URL || window.webkitURL).createObjectURL(blob);
+        const url = URL.createObjectURL(blob);
         window.document.body.appendChild(link);
         link.href = url;
         link.download = filename || "output.wav";
         link.click();
-        window.URL.revokeObjectURL(url);
+        URL.revokeObjectURL(url);
     }
 };
 

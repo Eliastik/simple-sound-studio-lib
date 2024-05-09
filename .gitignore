@@ -31,3 +31,5 @@ dist/**/dts/**/*.d.ts
 
 # service worker
 .rollup.cache
+
+coverage
