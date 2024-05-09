@@ -4,13 +4,13 @@
  */
 
 import type { JestConfigWithTsJest } from "ts-jest";
-import { jsWithTs as tsjPreset } from "ts-jest/presets";
 
 const config: JestConfigWithTsJest = {
     clearMocks: true,
     collectCoverage: false,
     coverageDirectory: undefined,
     coverageProvider: "v8",
+    roots: ["./tests"],
     moduleDirectories: [
         "node_modules",
         "lib"
@@ -19,16 +19,16 @@ const config: JestConfigWithTsJest = {
         "@/(.*)": "<rootDir>/lib/$1"
     },
     transform: {
-        ...tsjPreset.transform
+        "^.+\\.(tsx?|js)$": [
+            "ts-jest",
+            {
+                diagnostics: false
+            },
+        ]
     },
     transformIgnorePatterns: [
         "node_modules/?!(soundtouchjs)"
-    ],
-    globals: {
-        "ts-jest": {
-            diagnostics: false
-        }
-    }
+    ]
 };
 
 export default config;

@@ -41,6 +41,7 @@
     },
     "ignorePatterns": [
         "*.js",
-        "*.d.ts"
+        "*.d.ts",
+        "tests/**/*.ts"
     ]
 }

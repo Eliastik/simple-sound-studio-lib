@@ -3,6 +3,7 @@ import "reflect-metadata";
 import FilterManager from "../lib/audioEditor/FilterManager";
 import LimiterFilter from "../lib/filters/LimiterFilter";
 import SountouchWrapperFilter from "../lib/filters/SountouchWrapperFilter";
+import { createMockAudioContext } from "./AudioContextMock";
 
 describe("FilterManager tests", () => {
     test("Initialize filter manager with 1 filter", () => {
@@ -20,6 +21,17 @@ describe("FilterManager tests", () => {
 
         expect(filterManager.getFiltersState()).toStrictEqual({
             "limiter": false,
+            "soundtouch": true
+        });
+    });
+
+    test("Disable inexistent filter", () => {
+        const filterManager = new FilterManager([new SountouchWrapperFilter(), new LimiterFilter()], null);
+
+        filterManager.toggleFilter("fake");
+
+        expect(filterManager.getFiltersState()).toStrictEqual({
+            "limiter": true,
             "soundtouch": true
         });
     });
@@ -54,5 +66,12 @@ describe("FilterManager tests", () => {
         expect(filterManager.getFiltersSettings().get("limiter")).toMatchObject({
             "attackTime": 5
         });
+    });
+
+    test("Connect nodes without entry point filter", async () => {
+        const filterManager = new FilterManager([], null);
+        const context = createMockAudioContext();
+        const buffer = context.createBuffer(1, 44100, 44100);
+        await expect(filterManager.connectNodes(context, buffer, false, false)).resolves.toBeUndefined();
     });
 });

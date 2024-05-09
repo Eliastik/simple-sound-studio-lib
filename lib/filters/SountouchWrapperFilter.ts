@@ -23,7 +23,6 @@ export default class SoundtouchWrapperFilter extends AbstractAudioFilterWorklet<
 
     constructor() {
         super();
-        this.enable();
         this.setDefaultEnabled(true);
     }
 

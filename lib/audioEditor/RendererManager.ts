@@ -30,8 +30,8 @@ export default class RendererManager extends AbstractAudioElement implements Ren
     getRenderersState(): FilterState {
         const state: FilterState = {};
 
-        this.renderers.forEach(filter => {
-            state[filter.id] = filter.isEnabled();
+        this.renderers.forEach(renderer => {
+            state[renderer.id] = renderer.isEnabled();
         });
 
         return state;

@@ -45,6 +45,12 @@ export default abstract class AbstractAudioElement {
     /** Set to true if this filter/renderer needs to be enabled by default */
     setDefaultEnabled(state: boolean) {
         this.defaultEnabled = state;
+
+        if (state) {
+            this.enable();
+        } else {
+            this.disable();
+        }
     }
 
     setEnabled(state: boolean) {

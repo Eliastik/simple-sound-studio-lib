@@ -16,7 +16,6 @@ export default class LimiterFilter extends AbstractAudioFilterWorklet<void> {
     constructor() {
         super();
         this.keepCurrentNodeIfPossible = true;
-        this.enable();
         this.setDefaultEnabled(true);
     }
     
