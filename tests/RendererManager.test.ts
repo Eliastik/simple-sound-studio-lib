@@ -2,7 +2,7 @@ import { describe, expect, test } from "@jest/globals";
 import "reflect-metadata";
 import RendererManager from "../lib/audioEditor/RendererManager";
 import AbstractAudioRenderer from "../lib/filters/interfaces/AbstractAudioRenderer";
-import ReturnAudioRenderer from "@/filters/ReturnAudioRenderer";
+import ReturnAudioRenderer from "../lib/filters/ReturnAudioRenderer";
 
 class MockAudioRenderer extends AbstractAudioRenderer {
 

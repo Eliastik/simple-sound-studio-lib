@@ -18,7 +18,6 @@ import FilterManagerInterface$1 from '@/audioEditor/interfaces/FilterManagerInte
 import AudioEditorInterface$1 from '@/audioEditor/interfaces/AudioEditorInterface';
 import { ConfigService as ConfigService$1 } from '@/services/interfaces/ConfigService';
 import VoiceRecorderInterface$1 from '@/voiceRecorder/interfaces/VoiceRecorderInterface';
-import AbstractAudioElement$1 from '@/filters/interfaces/AbstractAudioElement';
 
 declare const audioEditorContainer: Container;
 
@@ -1158,59 +1157,4 @@ declare class SoundStudioFactory {
     static getConfigServiceInstance(): ConfigService$1 | undefined;
 }
 
-interface LimiterSettings extends FilterSettings {
-    preGain: number;
-    postGain: number;
-    attackTime: number;
-    releaseTime: number;
-    threshold: number;
-    lookAheadTime: number;
-}
-
-declare class LimiterFilter extends AbstractAudioFilterWorklet<void> {
-    private preGain;
-    private postGain;
-    private attackTime;
-    private releaseTime;
-    private threshold;
-    private lookAheadTime;
-    constructor();
-    receiveEvent(message: MessageEvent<void>): void;
-    get workletPath(): string;
-    get workletName(): string;
-    get order(): number;
-    get id(): string;
-    getAddingTime(): number;
-    getSettings(): LimiterSettings;
-    setSetting(settingId: string, value: FilterSettingValue): Promise<void>;
-}
-
-declare class FilterManager extends AbstractAudioElement$1 implements FilterManagerInterface {
-    /** A list of filters */
-    private filters;
-    /** The entrypoint filter */
-    private _entryPointFilter;
-    /** The current connected nodes */
-    private _currentNodes;
-    constructor(filters: AbstractAudioFilter$1[], entryPointFilter: (AbstractAudioFilter$1 & AudioFilterEntrypointInterface$1) | null);
-    private setup;
-    addFilters(...filters: AbstractAudioFilter$1[]): void;
-    getFiltersState(): FilterState$1;
-    getFiltersSettings(): Map<string, FilterSettings$1>;
-    toggleFilter(filterId: string): void;
-    changeFilterSettings(filterId: string, settings: FilterSettings$1): Promise<void>;
-    resetFilterSettings(filterId: string): Promise<void>;
-    resetAllFiltersState(): void;
-    connectNodes(context: BaseAudioContext, buffer: AudioBuffer, keepCurrentInputOutput: boolean, isCompatibilityMode: boolean): Promise<void>;
-    disconnectOldNodes(keepCurrentOutput: boolean): void;
-    initializeWorklets(context: BaseAudioContext): Promise<void>;
-    getAddingTime(): number;
-    setupTotalSamples(durationAudio: number, currentContext: AudioContext | null): void;
-    resetFilterBuffers(): Promise<void>;
-    get entrypointFilter(): (AbstractAudioFilter$1 & AudioFilterEntrypointInterface$1) | null;
-    get currentNodes(): AudioFilterNodes$1 | null;
-    get order(): number;
-    get id(): string;
-}
-
-export { AbstractAudioElement, AbstractAudioFilter, AbstractAudioFilterWorklet, AbstractAudioRenderer, AudioEditor, type AudioFilterEntrypointInterface, type AudioFilterNodes, BufferPlayer, type ConfigService, Constants, EventEmitter, type EventEmitterCallback, EventType, FilterManager, type FilterSettingValue, type FilterSettings, type FilterState, GenericConfigService, type GenericSettingValueAdditionalData, LimiterFilter, type RecorderSettings, type SaveBufferOptions, type SelectFormValue, SoundStudioFactory, utilFunctions as UtilFunctions, VoiceRecorder, audioEditorContainer };
+export { AbstractAudioElement, AbstractAudioFilter, AbstractAudioFilterWorklet, AbstractAudioRenderer, AudioEditor, type AudioFilterEntrypointInterface, type AudioFilterNodes, BufferPlayer, type ConfigService, Constants, EventEmitter, type EventEmitterCallback, EventType, type FilterSettingValue, type FilterSettings, type FilterState, GenericConfigService, type GenericSettingValueAdditionalData, type RecorderSettings, type SaveBufferOptions, type SelectFormValue, SoundStudioFactory, utilFunctions as UtilFunctions, VoiceRecorder, audioEditorContainer };

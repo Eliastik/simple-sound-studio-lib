@@ -28,6 +28,6 @@
       "reflect-metadata"
     ]
   },
-  "include": ["lib/**/*.ts", "lib/**/*.tsx", "tests/*.ts"],
+  "include": ["lib/**/*.ts", "lib/**/*.tsx"],
   "exclude": ["node_modules"]
 }
