@@ -1,11 +1,11 @@
-class MockAudioContext {
+export class MockAudioContext {
     sampleRate: number;
     currentTime: number;
     state: "suspended" | "running" | "closed";
     destination: AudioDestinationNode;
 
-    constructor() {
-        this.sampleRate = 44100;
+    constructor(options?: AudioContextOptions) {
+        this.sampleRate = options?.sampleRate || 44100;
         this.currentTime = 0;
         this.state = "suspended";
         this.destination = {} as AudioDestinationNode;
@@ -47,6 +47,6 @@ class MockAudioContext {
     }
 }
 
-export function createMockAudioContext(): AudioContext {
-    return new MockAudioContext() as AudioContext;
+export function createMockAudioContext(options?: AudioContextOptions): AudioContext {
+    return new MockAudioContext(options) as AudioContext;
 }

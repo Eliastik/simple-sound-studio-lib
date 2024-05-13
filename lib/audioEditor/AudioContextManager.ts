@@ -55,8 +55,6 @@ export default class AudioContextManager implements AudioContextManagerInterface
             // If compatibility mode is enabled, we use the sample rate of the input audio buffer
             if (this.currentSampleRate != principalBuffer.sampleRate) {
                 this.createNewContext(principalBuffer.sampleRate);
-                this.previousSampleRate = principalBuffer.sampleRate;
-
                 return true;
             }
         } else {
@@ -70,8 +68,6 @@ export default class AudioContextManager implements AudioContextManagerInterface
             // If sample rate setting has changed, create a new audio context
             if (currentSampleRate != this.previousSampleRate) {
                 this.createNewContext(currentSampleRate);
-                this.previousSampleRate = currentSampleRate;
-
                 return true;
             }
         }
@@ -102,6 +98,8 @@ export default class AudioContextManager implements AudioContextManagerInterface
         if (this.eventEmitter) {
             this.eventEmitter.emit(EventType.SAMPLE_RATE_CHANGED, this.currentSampleRate);
         }
+
+        this.previousSampleRate = sampleRate;
     }
 
     /**

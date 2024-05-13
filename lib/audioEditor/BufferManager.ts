@@ -59,7 +59,7 @@ export default class BufferManager extends AbstractAudioElement implements Buffe
         }
 
         try {
-            await this.bufferFetcherService.fetchAllBuffers(this.audioBuffersToFetch);
+            this.bufferFetcherService.fetchAllBuffers(this.audioBuffersToFetch);
             this.downloadingInitialData = false;
 
             if (this.eventEmitter && !refetch) {
