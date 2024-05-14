@@ -45,8 +45,16 @@ export class MockAudioContext {
         // Crée un mock de AudioBufferSourceNode
         return {} as AudioBufferSourceNode;
     }
+
+    createMediaStreamSource() {
+        return {
+            connect() {
+                // Do nothing
+            }
+        } as unknown as MediaStreamAudioSourceNode;
+    }
 }
 
 export function createMockAudioContext(options?: AudioContextOptions): AudioContext {
-    return new MockAudioContext(options) as AudioContext;
+    return new MockAudioContext(options) as unknown as AudioContext;
 }

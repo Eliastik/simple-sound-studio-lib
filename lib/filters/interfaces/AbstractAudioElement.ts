@@ -73,9 +73,20 @@ export default abstract class AbstractAudioElement {
     }
 
     injectDependencies(bufferFetcherService: BufferFetcherServiceInterface | null, bufferDecoderService: BufferDecoderServiceInterface | null, configService: ConfigService | null, eventEmitter: EventEmitterInterface | null) {
-        this.bufferFetcherService = bufferFetcherService;
-        this.bufferDecoderService = bufferDecoderService;
-        this.configService = configService;
-        this.eventEmitter = eventEmitter;
+        if (bufferFetcherService) {
+            this.bufferFetcherService = bufferFetcherService;
+        }
+
+        if (bufferDecoderService) {
+            this.bufferDecoderService = bufferDecoderService;
+        }
+
+        if (configService) {
+            this.configService = configService;
+        }
+
+        if (eventEmitter) {
+            this.eventEmitter = eventEmitter;
+        }
     }
 }

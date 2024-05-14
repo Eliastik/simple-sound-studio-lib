@@ -26,7 +26,8 @@ export default class SaveBufferManager extends AbstractAudioElement implements S
     private bufferPlayer: BufferPlayerInterface | undefined;
 
     /** If we are currently processing and downloading the buffer */
-    private savingBuffer = false;
+    private _savingBuffer = false;
+
     /** Callback used when saving audio */
     private playingStoppedCallback: (() => void) | null = null;
 
@@ -49,7 +50,7 @@ export default class SaveBufferManager extends AbstractAudioElement implements S
         if (this.bufferPlayer) {
             // Callback called when playing is finished
             this.bufferPlayer.on(EventType.PLAYING_FINISHED, () => {
-                if (this.savingBuffer && this.playingStoppedCallback && this.eventEmitter) {
+                if (this._savingBuffer && this.playingStoppedCallback && this.eventEmitter) {
                     this.eventEmitter.off(EventType.PLAYING_STOPPED, this.playingStoppedCallback);
                 }
             });
@@ -57,7 +58,7 @@ export default class SaveBufferManager extends AbstractAudioElement implements S
     }
 
     async saveBuffer(renderedBuffer: AudioBuffer | null, options?: SaveBufferOptions): Promise<boolean> {
-        if (this.savingBuffer) {
+        if (this._savingBuffer) {
             throw new Error("The buffer is currently saving");
         }
 
@@ -65,7 +66,7 @@ export default class SaveBufferManager extends AbstractAudioElement implements S
             throw new Error("No buffer player was found");
         }
 
-        this.savingBuffer = true;
+        this._savingBuffer = true;
 
         let savingResult = false;
 
@@ -75,7 +76,7 @@ export default class SaveBufferManager extends AbstractAudioElement implements S
             savingResult = await this.saveBufferCompatibilityMode(options);
         }
 
-        this.savingBuffer = false;
+        this._savingBuffer = false;
 
         return savingResult;
     }
@@ -107,7 +108,7 @@ export default class SaveBufferManager extends AbstractAudioElement implements S
                     }
 
                     worker.terminate();
-                    this.savingBuffer = false;
+                    this._savingBuffer = false;
                     resolve(true);
                 };
 
@@ -169,7 +170,7 @@ export default class SaveBufferManager extends AbstractAudioElement implements S
                     this.playingStoppedCallback = () => {
                         rec.kill();
 
-                        this.savingBuffer = false;
+                        this._savingBuffer = false;
 
                         if (this.eventEmitter) {
                             this.eventEmitter.off(EventType.PLAYING_FINISHED, finishedCallback);
@@ -192,7 +193,7 @@ export default class SaveBufferManager extends AbstractAudioElement implements S
                         const downloadBlobCallback = (blob: Blob) => {
                             this.downloadAudioBlob(blob, options);
 
-                            this.savingBuffer = false;
+                            this._savingBuffer = false;
 
                             if (this.eventEmitter) {
                                 this.eventEmitter.off(EventType.PLAYING_FINISHED, finishedCallback);
@@ -226,6 +227,10 @@ export default class SaveBufferManager extends AbstractAudioElement implements S
      */
     private downloadAudioBlob(blob: Blob, options?: SaveBufferOptions) {
         utilFunctions.forceDownload(blob, "audio-" + new Date().toISOString() + "." + (options?.format || Constants.DEFAULT_SAVE_FORMAT));
+    }
+
+    get savingBuffer() {
+        return this._savingBuffer;
     }
 
     get order(): number {
