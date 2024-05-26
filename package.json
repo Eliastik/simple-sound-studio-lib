@@ -8,7 +8,8 @@
     "build:type": "tsc --emitDeclarationOnly",
     "build": "npm run build:type && npm run lint && rollup -c rollup.config.js --bundleConfigAsCjs",
     "watch": "rollup -c rollup.config.js --bundleConfigAsCjs --watch",
-    "test": "jest"
+    "test": "jest",
+    "coverage": "jest --coverage --collectCoverageFrom='lib/**/*.{ts,tsx}'"
   },
   "repository": "github:eliastik/simple-sound-studio-lib",
   "main": "dist/cjs/SimpleSoundStudioLibrary.js",
