@@ -29,7 +29,7 @@ export default class BufferManager extends AbstractAudioElement implements Buffe
         super();
 
         this.bufferFetcherService = bufferFetcherService;
-        this.eventEmitter = eventEmitter || new EventEmitter();
+        this.eventEmitter = eventEmitter;
         this.filterManager = filterManager;
         this.filterManager = filterManager;
         this.audioBuffersToFetch = audioBuffersToFetch;

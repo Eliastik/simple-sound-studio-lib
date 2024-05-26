@@ -3,6 +3,7 @@ import "reflect-metadata";
 import FilterManager from "../lib/audioEditor/FilterManager";
 import LimiterFilter from "../lib/filters/LimiterFilter";
 import SountouchWrapperFilter from "../lib/filters/SountouchWrapperFilter";
+import BassBoosterFilter from "../lib/filters/BassBoosterFilter";
 import { createMockAudioContext } from "./AudioContextMock";
 
 describe("FilterManager tests", () => {
@@ -12,6 +13,21 @@ describe("FilterManager tests", () => {
         expect(filterManager.getFiltersState()).toStrictEqual({
             "limiter": true
         });
+    });
+
+    test("Add filters should inject dependencies", async () => {
+        const filterManager = new FilterManager([], null);
+
+        const limiterFilter = new LimiterFilter();
+        const soundtouch = new SountouchWrapperFilter();
+        
+        jest.spyOn(limiterFilter, "injectDependencies");
+        jest.spyOn(soundtouch, "injectDependencies");
+
+        filterManager.addFilters(limiterFilter, soundtouch);
+
+        expect(limiterFilter.injectDependencies).toHaveBeenCalled();
+        expect(soundtouch.injectDependencies).toHaveBeenCalled();
     });
 
     test("Disable one filter", () => {
@@ -52,6 +68,22 @@ describe("FilterManager tests", () => {
         });
     });
 
+    test("Reset one filter state - not default enabled", () => {
+        const filterManager = new FilterManager([new BassBoosterFilter()], null);
+
+        filterManager.toggleFilter("bassboost");
+
+        expect(filterManager.getFiltersState()).toStrictEqual({
+            "bassboost": true
+        });
+
+        filterManager.resetAllFiltersState();
+
+        expect(filterManager.getFiltersState()).toStrictEqual({
+            "bassboost": false
+        });
+    });
+
     test("Change one filter settings", () => {
         const filterManager = new FilterManager([new LimiterFilter()], null);
 
@@ -65,6 +97,24 @@ describe("FilterManager tests", () => {
 
         expect(filterManager.getFiltersSettings().get("limiter")).toMatchObject({
             "attackTime": 5
+        });
+    });
+
+    test("Reset one filter settings", async () => {
+        const filterManager = new FilterManager([new LimiterFilter()], null);
+
+        expect(filterManager.getFiltersSettings().get("limiter")).toMatchObject({
+            "attackTime": 0
+        });
+
+        filterManager.changeFilterSettings("limiter", {
+            "attackTime": 5
+        });
+
+        await filterManager.resetFilterSettings("limiter");
+
+        expect(filterManager.getFiltersSettings().get("limiter")).toMatchObject({
+            "attackTime": 0
         });
     });
 

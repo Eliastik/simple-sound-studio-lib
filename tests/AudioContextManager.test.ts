@@ -5,6 +5,7 @@ import EventEmitter from "../lib/utils/EventEmitter";
 import { ConfigService } from "../lib/services/interfaces/ConfigService";
 import { EventType } from "../lib/model/EventTypeEnum";
 import { MockAudioContext } from "./AudioContextMock";
+import { MockAudioBuffer } from "./AudioBufferMock";
 
 (AudioContext as any) = MockAudioContext;
 
@@ -93,7 +94,6 @@ describe("AudioContextManager tests", () => {
 
     test("Create new context - Should destroy old context", () => {
         const eventEmitter = new EventEmitter();
-        const spy = jest.spyOn(eventEmitter, "emit");
         const configService = {
             isCompatibilityModeEnabled: jest.fn(() => false),
             getSampleRate: jest.fn(() => 44100),
@@ -110,5 +110,25 @@ describe("AudioContextManager tests", () => {
 
         expect(audioContextManager.currentSampleRate).toBe(48000);
         expect(spyDestroy).toHaveBeenCalled();
+    });
+
+    test("Create new context if needed - Compatibility mode - Should use the sample rate of the input buffer", () => {
+        let configSampleRate = 48000;
+        let bufferSampleRate = 8000;
+
+        const eventEmitter = new EventEmitter();
+        const configService = {
+            isCompatibilityModeEnabled: jest.fn(() => true),
+            getSampleRate: jest.fn(() => configSampleRate),
+        } as unknown as ConfigService;
+
+        const audioContextManager = new AudioContextManager(
+            eventEmitter,
+            configService
+        );
+        
+        audioContextManager.createNewContextIfNeeded(new MockAudioBuffer(2, 0, bufferSampleRate));
+
+        expect(audioContextManager.currentSampleRate).toBe(8000);
     });
 });
