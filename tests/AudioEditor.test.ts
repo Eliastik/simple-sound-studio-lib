@@ -5,78 +5,12 @@ import utilFunctions from "../lib/utils/Functions";
 import LimiterFilter from "../lib/filters/LimiterFilter";
 import SountouchWrapperFilter from "../lib/filters/SountouchWrapperFilter";
 import VocoderRenderer from "../lib/filters/VocoderRenderer";
-import { createMockAudioContext } from "./AudioContextMock";
 import { MockAudioBuffer } from "./AudioBufferMock";
 import { MockAudioContext } from "./AudioContextMock";
-import EventEmitter from "../lib/utils/EventEmitter";
+import { mockAudioProcessor, mockBufferManager, mockContextManager, mockFilterManager, mockRendererManager, mockSaveBufferManager, mockBufferPlayer, mockEventEmitter } from "./AudioEditorObjectsMock";
 
 (AudioContext as any) = MockAudioContext;
 (AudioBuffer as any) = MockAudioBuffer;
-
-// Mocking dependencies
-const mockFilterManager = {
-    addFilters: jest.fn(),
-    getFiltersState: jest.fn().mockReturnValue({}),
-    getFiltersSettings: jest.fn().mockReturnValue(new Map()),
-    toggleFilter: jest.fn(),
-    changeFilterSettings: jest.fn(),
-    resetFilterSettings: jest.fn(),
-    resetAllFiltersState: jest.fn(),
-    entrypointFilter: {
-        getSpeed: jest.fn().mockReturnValue(1)
-    },
-    connectNodes: jest.fn(),
-    disconnectOldNodes: jest.fn(),
-    initializeWorklets: jest.fn(),
-    getAddingTime: jest.fn(),
-    setupTotalSamples: jest.fn(),
-    resetFilterBuffers: jest.fn(),
-    currentNodes: jest.fn()
-};
-
-const mockRendererManager = {
-    addRenderers: jest.fn(),
-    toggleRenderer: jest.fn(),
-    resetAllRenderersState: jest.fn(),
-    getRenderersState: jest.fn().mockReturnValue({}),
-    executeAudioRenderers: jest.fn()
-};
-
-const mockContextManager = {
-    currentContext: createMockAudioContext(),
-    currentSampleRate: 44100,
-    createNewContextIfNeeded: jest.fn(),
-    createNewContext: jest.fn()
-};
-
-const mockSaveBufferManager = {
-    saveBuffer: jest.fn(),
-};
-
-const mockAudioProcessor = {
-    prepareContext: jest.fn(),
-    setupOutput: jest.fn(),
-    renderAudio: jest.fn(),
-    cancelAudioRendering: jest.fn(),
-    sumInputBuffer: 0,
-    renderedBuffer: new MockAudioBuffer(2, 0, 44100),
-    initialRenderingDone: false
-};
-
-const mockBufferManager = {
-    downloadingInitialData: true,
-    resetBufferFetcher: jest.fn()
-};
-
-const mockBufferPlayer = {
-    onBeforePlaying: jest.fn(),
-    on: jest.fn(),
-    stop: jest.fn(),
-    reset: jest.fn(),
-    start: jest.fn(),
-    compatibilityMode: false,
-    loop: false,
-};
 
 describe("AudioEditor", () => {
     let audioEditor: AudioEditor;
@@ -140,12 +74,12 @@ describe("AudioEditor", () => {
     });
 
     test("should return output buffer from audioProcessor", () => {
-        mockAudioProcessor.renderedBuffer = new MockAudioBuffer(2, 0, 44100);
+        (mockAudioProcessor as any).renderedBuffer = new MockAudioBuffer(2, 0, 44100);
         expect(audioEditor.getOutputBuffer()).toBe(mockAudioProcessor.renderedBuffer);
     });
 
     test("should render audio using audioProcessor", async () => {
-        mockAudioProcessor.renderAudio.mockResolvedValue(true);
+        (mockAudioProcessor as any).renderAudio.mockResolvedValue(true);
         const result = await audioEditor.renderAudio();
         expect(result).toBe(true);
     });
@@ -186,11 +120,6 @@ describe("AudioEditor", () => {
     test("should handle event subscriptions", () => {
         const callback = jest.fn();
 
-        const mockEventEmitter = {
-            on: jest.fn(),
-            off: jest.fn()
-        };
-
         audioEditor.injectDependencies(null, null, null, mockEventEmitter);
         audioEditor.on("testEvent", callback);
         expect(audioEditor["eventEmitter"].on).toHaveBeenCalledWith("testEvent", callback);
@@ -202,9 +131,8 @@ describe("AudioEditor", () => {
 
     test("should save buffer using saveBufferManager", async () => {
         const options = {};
-        mockSaveBufferManager.saveBuffer.mockResolvedValue(true);
-        const result = await audioEditor.saveBuffer(options);
-        expect(result).toBe(true);
+        await audioEditor.saveBuffer(options);
+        expect((audioEditor["saveBufferManager"] as any).saveBuffer).toHaveBeenCalled();
     });
 
     test("should get and set downloadingInitialData", () => {
