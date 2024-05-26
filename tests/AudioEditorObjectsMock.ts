@@ -9,7 +9,6 @@ import EventEmitterInterface from "../lib/utils/interfaces/EventEmitterInterface
 import { MockAudioBuffer } from "./AudioBufferMock";
 import { createMockAudioContext } from "./AudioContextMock";
 
-// Mocking dependencies
 const mockFilterManager = {
     addFilters: jest.fn(),
     getFiltersState: jest.fn().mockReturnValue({}),
@@ -21,6 +20,24 @@ const mockFilterManager = {
     entrypointFilter: {
         getSpeed: jest.fn().mockReturnValue(1)
     },
+    connectNodes: jest.fn(),
+    disconnectOldNodes: jest.fn(),
+    initializeWorklets: jest.fn(),
+    getAddingTime: jest.fn(),
+    setupTotalSamples: jest.fn(),
+    resetFilterBuffers: jest.fn(),
+    currentNodes: jest.fn()
+} as unknown as FilterManagerInterface;
+
+const mockFilterManagerWithoutEntrypoint = {
+    addFilters: jest.fn(),
+    getFiltersState: jest.fn().mockReturnValue({}),
+    getFiltersSettings: jest.fn().mockReturnValue(new Map()),
+    toggleFilter: jest.fn(),
+    changeFilterSettings: jest.fn(),
+    resetFilterSettings: jest.fn(),
+    resetAllFiltersState: jest.fn(),
+    entrypointFilter: undefined,
     connectNodes: jest.fn(),
     disconnectOldNodes: jest.fn(),
     initializeWorklets: jest.fn(),
@@ -79,4 +96,4 @@ const mockEventEmitter = {
     off: jest.fn()
 } as unknown as EventEmitterInterface;
 
-export { mockAudioProcessor, mockBufferManager, mockContextManager, mockFilterManager, mockRendererManager, mockSaveBufferManager, mockBufferPlayer, mockEventEmitter };
+export { mockAudioProcessor, mockBufferManager, mockContextManager, mockFilterManager, mockRendererManager, mockSaveBufferManager, mockBufferPlayer, mockEventEmitter, mockFilterManagerWithoutEntrypoint };

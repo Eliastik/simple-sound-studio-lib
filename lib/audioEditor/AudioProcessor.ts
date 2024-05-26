@@ -45,11 +45,11 @@ export default class AudioProcessor extends AbstractAudioElement implements Audi
     sumInputBuffer: number = 0;
 
     constructor(
-        @inject(TYPES.FilterManager) filterManager: FilterManagerInterface,
-        @inject(TYPES.RendererManager) rendererManager: RendererManagerInterface,
+        @inject(TYPES.FilterManager) filterManager: FilterManagerInterface | undefined,
+        @inject(TYPES.RendererManager) rendererManager: RendererManagerInterface | undefined,
         @inject(TYPES.AudioContextManager) contextManager: AudioContextManagerInterface | undefined,
-        @inject(TYPES.BufferPlayer) bufferPlayer: BufferPlayerInterface,
-        @inject(TYPES.BufferManager) bufferManager: BufferManagerInterface) {
+        @inject(TYPES.BufferPlayer) bufferPlayer: BufferPlayerInterface | undefined,
+        @inject(TYPES.BufferManager) bufferManager: BufferManagerInterface | undefined) {
         super();
 
         this.contextManager = contextManager;
