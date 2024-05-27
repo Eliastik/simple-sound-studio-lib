@@ -57,7 +57,7 @@ export default class SaveBufferManager extends AbstractAudioElement implements S
         }
     }
 
-    async saveBuffer(renderedBuffer: AudioBuffer | null, options?: SaveBufferOptions): Promise<boolean> {
+    async saveBuffer(renderedBuffer: AudioBuffer | null, options?: SaveBufferOptions, recorder?: Recorder): Promise<boolean> {
         if (this._savingBuffer) {
             throw new Error("The buffer is currently saving");
         }
@@ -73,7 +73,7 @@ export default class SaveBufferManager extends AbstractAudioElement implements S
         if (!this.bufferPlayer.compatibilityMode) {
             savingResult = await this.saveBufferDirect(renderedBuffer, options);
         } else {
-            savingResult = await this.saveBufferCompatibilityMode(options);
+            savingResult = await this.saveBufferCompatibilityMode(options, recorder);
         }
 
         this._savingBuffer = false;
@@ -139,7 +139,7 @@ export default class SaveBufferManager extends AbstractAudioElement implements S
      * @param options The save options - see SaveBufferOptions
      * @returns A promise resolved when the audio buffer is downloaded to the user
      */
-    private saveBufferCompatibilityMode(options?: SaveBufferOptions): Promise<boolean> {
+    private saveBufferCompatibilityMode(options?: SaveBufferOptions, recorder?: Recorder): Promise<boolean> {
         return new Promise((resolve, reject) => {
             if (!this.bufferPlayer) {
                 return reject("No buffer player found");
@@ -154,7 +154,11 @@ export default class SaveBufferManager extends AbstractAudioElement implements S
                     return reject("No filter manager found");
                 }
 
-                const rec = new Recorder({
+                if (!this.filterManager.currentNodes) {
+                    return reject("No current nodes found");
+                }
+
+                const rec = recorder || new Recorder({
                     bufferLen: this.configService.getBufferSize(),
                     sampleRate: this.configService.getSampleRate(),
                     numChannels: 2,
@@ -164,7 +168,7 @@ export default class SaveBufferManager extends AbstractAudioElement implements S
                     bitrate: options?.bitrate || Constants.DEFAULT_MP3_BITRATE
                 });
 
-                rec.setup(this.filterManager.currentNodes!.output).then(() => {
+                rec.setup(this.filterManager.currentNodes.output).then(() => {
                     rec.record();
 
                     this.playingStoppedCallback = () => {

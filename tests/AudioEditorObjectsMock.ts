@@ -96,4 +96,13 @@ const mockEventEmitter = {
     off: jest.fn()
 } as unknown as EventEmitterInterface;
 
-export { mockAudioProcessor, mockBufferManager, mockContextManager, mockFilterManager, mockRendererManager, mockSaveBufferManager, mockBufferPlayer, mockEventEmitter, mockFilterManagerWithoutEntrypoint };
+const mockRecorder = {
+    setup: jest.fn().mockResolvedValue(true),
+    record: jest.fn(),
+    stop: jest.fn(),
+    kill: jest.fn(),
+    exportMP3: jest.fn((callback) => callback(new Blob())),
+    exportWAV: jest.fn((callback) => callback(new Blob()))
+};
+
+export { mockAudioProcessor, mockBufferManager, mockContextManager, mockFilterManager, mockRendererManager, mockSaveBufferManager, mockBufferPlayer, mockEventEmitter, mockFilterManagerWithoutEntrypoint, mockRecorder };
