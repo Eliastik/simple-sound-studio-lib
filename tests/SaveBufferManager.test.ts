@@ -17,6 +17,7 @@ import EventEmitter from "../lib/utils/EventEmitter";
 import { EventType } from "../lib/model/EventTypeEnum";
 import { Recorder } from "../lib/recorder/Recorder";
 import { mockRecorder } from "./AudioEditorObjectsMock";
+import Constants from "../lib/model/Constants";
 
 (AudioContext as any) = MockAudioContext;
 (AudioBuffer as any) = MockAudioBuffer;
@@ -113,6 +114,9 @@ describe("SaveBufferManager tests", () => {
         jest.spyOn(mockRecorder, "stop");
         jest.spyOn(mockRecorder, "record");
 
+        jest.spyOn(eventEmitter, "off");
+        jest.spyOn(eventEmitter, "on");
+
         const savePromise = saveBufferManager.saveBuffer(mockRenderedBuffer, saveBufferOptions, mockRecorder as any);
 
         setTimeout(() => {
@@ -124,6 +128,8 @@ describe("SaveBufferManager tests", () => {
         expect(mockRecorder.stop).toHaveBeenCalled();
         expect(mockRecorder.exportWAV).toHaveBeenCalled();
         expect(mockRecorder.exportMP3).not.toHaveBeenCalled();
+        expect(eventEmitter.off).toHaveBeenCalledWith(EventType.PLAYING_FINISHED, expect.any(Function));
+        expect(eventEmitter.off).toHaveBeenCalledWith(EventType.PLAYING_STOPPED, expect.any(Function));
     });
 
     test("Save buffer direct - compatibility mode - success (MP3)", async () => {
@@ -133,6 +139,9 @@ describe("SaveBufferManager tests", () => {
             format: "mp3",
             bitrate: 128
         };
+
+        jest.spyOn(eventEmitter, "off");
+        jest.spyOn(eventEmitter, "on");
 
         mockFilterManagerInstance.connectNodes(createMockAudioContext(), new AudioBuffer({ length: 44100, numberOfChannels: 2, sampleRate: 44100 }), false, true);
         mockBufferPlayerInstance.compatibilityMode = true;
@@ -149,6 +158,8 @@ describe("SaveBufferManager tests", () => {
         expect(await savePromise).toBe(true);
         expect(mockRecorder.exportMP3).toHaveBeenCalled();
         expect(mockRecorder.exportWAV).not.toHaveBeenCalled();
+        expect(eventEmitter.off).toHaveBeenCalledWith(EventType.PLAYING_FINISHED, expect.any(Function));
+        expect(eventEmitter.off).toHaveBeenCalledWith(EventType.PLAYING_STOPPED, expect.any(Function));
     });
 
     test("Save buffer direct - compatibility mode - cancel", async () => {
@@ -159,6 +170,9 @@ describe("SaveBufferManager tests", () => {
             format: "mp3",
             bitrate: 128
         };
+
+        jest.spyOn(eventEmitter, "off");
+        jest.spyOn(eventEmitter, "on");
 
         mockFilterManagerInstance.connectNodes(createMockAudioContext(), new AudioBuffer({ length: 44100, numberOfChannels: 2, sampleRate: 44100 }), false, true);
 
@@ -180,6 +194,8 @@ describe("SaveBufferManager tests", () => {
         expect(mockRecorder.exportMP3).not.toHaveBeenCalled();
         expect(mockRecorder.exportWAV).not.toHaveBeenCalled();
         expect(mockRecorder.stop).not.toHaveBeenCalled();
+        expect(eventEmitter.off).toHaveBeenCalledWith(EventType.PLAYING_FINISHED, expect.any(Function));
+        expect(eventEmitter.off).toHaveBeenCalledWith(EventType.PLAYING_STOPPED, expect.any(Function));
     });
 
     test("Save buffer direct - failure (cannot save if we are already saving)", async () => {
@@ -199,5 +215,11 @@ describe("SaveBufferManager tests", () => {
         saveBufferManager.saveBuffer(mockRenderedBuffer, saveBufferOptions, mockRecorder as any);
 
         await expect(saveBufferManager.saveBuffer(mockRenderedBuffer, saveBufferOptions)).rejects.toThrowError("The buffer is currently saving");
+    });
+
+    test("should return order and id correctly", () => {
+        const saveBufferManager = new SaveBufferManager(mockFilterManagerInstance, mockAudioContextManagerInstance, mockBufferPlayerInstance);
+        expect(saveBufferManager.order).toBe(-1);
+        expect(saveBufferManager.id).toBe(Constants.SAVE_BUFFER_MANAGER);
     });
 });

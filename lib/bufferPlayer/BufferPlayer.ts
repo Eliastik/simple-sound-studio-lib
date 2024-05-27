@@ -172,7 +172,10 @@ export default class BufferPlayer extends AbstractAudioElement implements Buffer
                 this.currentTime += (nextTime / 1000) * this.speedAudio;
                 this.displayTime = this.currentTime;
 
+                console.log(this.currentTime);
+
                 if (this.currentTime > this.duration) {
+                    console.log("ok", this.loop);
                     if (this.loop) {
                         if (!this.compatibilityMode) {
                             this.reset(direct);
