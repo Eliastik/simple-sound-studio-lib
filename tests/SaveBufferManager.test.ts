@@ -15,7 +15,6 @@ import GenericConfigService from "../lib/services/GenericConfigService";
 import { MockEntrypointFilter } from "./MockAudioFilter";
 import EventEmitter from "../lib/utils/EventEmitter";
 import { EventType } from "../lib/model/EventTypeEnum";
-import { Recorder } from "../lib/recorder/Recorder";
 import { mockRecorder } from "./AudioEditorObjectsMock";
 import Constants from "../lib/model/Constants";
 

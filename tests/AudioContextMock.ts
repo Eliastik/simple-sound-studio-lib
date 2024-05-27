@@ -1,3 +1,5 @@
+import { MockAudioBuffer } from "./AudioBufferMock";
+
 export class MockAudioContext {
     sampleRate: number;
     currentTime: number;
@@ -52,6 +54,10 @@ export class MockAudioContext {
                 // Do nothing
             }
         } as unknown as MediaStreamAudioSourceNode;
+    }
+
+    startRendering() {
+        return Promise.resolve(new MockAudioBuffer(2, 1000, 44100));
     }
 }
 
