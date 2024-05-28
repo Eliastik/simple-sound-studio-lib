@@ -1,7 +1,6 @@
 import AbstractAudioElement from "@/filters/interfaces/AbstractAudioElement";
 import Constants from "@/model/Constants";
 import { EventType } from "@/model/EventTypeEnum";
-import EventEmitter from "@/utils/EventEmitter";
 import BufferManagerInterface from "./interfaces/BufferManagerInterface";
 import { inject, injectable } from "inversify";
 import { TYPES } from "@/inversify.types";

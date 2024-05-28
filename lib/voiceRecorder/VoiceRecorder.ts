@@ -432,6 +432,6 @@ export default class VoiceRecorder extends AbstractAudioElement implements Voice
     }
 
     get id(): string {
-        throw Constants.VOICE_RECORDER;
+        return Constants.VOICE_RECORDER;
     }
 }

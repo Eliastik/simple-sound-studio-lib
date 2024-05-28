@@ -119,7 +119,8 @@ const mockRecorder = {
     stop: jest.fn(),
     kill: jest.fn(),
     exportMP3: jest.fn((callback) => callback(new Blob())),
-    exportWAV: jest.fn((callback) => callback(new Blob()))
+    exportWAV: jest.fn((callback) => callback(new Blob())),
+    getBuffer: jest.fn((callback) => callback([[], []]))
 };
 
 export { mockAudioProcessor, mockBufferManager, mockContextManager, mockFilterManager, mockRendererManager, mockSaveBufferManager, mockBufferPlayer, mockEventEmitter, mockFilterManagerWithoutEntrypoint, mockRecorder, mockRendererManagerWithFakeRenderedBuffer as mockRendererManagerWithFakeRenderedBuffer };
