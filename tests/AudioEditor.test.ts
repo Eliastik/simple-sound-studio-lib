@@ -8,6 +8,8 @@ import VocoderRenderer from "../lib/filters/VocoderRenderer";
 import { MockAudioBuffer } from "./AudioBufferMock";
 import { MockAudioContext } from "./AudioContextMock";
 import { mockAudioProcessor, mockBufferManager, mockContextManager, mockFilterManager, mockRendererManager, mockSaveBufferManager, mockBufferPlayer, mockEventEmitter } from "./AudioEditorObjectsMock";
+import EventEmitter from "../lib/utils/EventEmitter";
+import { EventType } from "../lib/model/EventTypeEnum";
 
 (AudioContext as any) = MockAudioContext;
 (AudioBuffer as any) = MockAudioBuffer;
@@ -140,6 +142,80 @@ describe("AudioEditor", () => {
         expect(mockBufferManager.downloadingInitialData).toBe(true);
         mockBufferManager.downloadingInitialData = false;
         expect(audioEditor.downloadingInitialData).toBe(false);
+    });
+
+    test("should change settings using filterManager", async () => {
+        const filters = [new SountouchWrapperFilter(), new LimiterFilter()];
+
+        jest.spyOn(audioEditor, "reconnectNodesIfNeeded");
+
+        audioEditor.addFilters(...filters);
+        await audioEditor.changeFilterSettings("limiter", {
+            lookAheadTime: "0.35"
+        });
+
+        expect(mockFilterManager.changeFilterSettings).toHaveBeenCalled();
+        expect(audioEditor.reconnectNodesIfNeeded).toHaveBeenCalled();
+    });
+
+    test("should reset settings using filterManager", async () => {
+        const filters = [new SountouchWrapperFilter(), new LimiterFilter()];
+
+        jest.spyOn(audioEditor, "reconnectNodesIfNeeded");
+
+        audioEditor.addFilters(...filters);
+        await audioEditor.resetFilterSettings("limiter");
+
+        expect(mockFilterManager.resetFilterSettings).toHaveBeenCalledWith("limiter");
+        expect(audioEditor.reconnectNodesIfNeeded).toHaveBeenCalled();
+    });
+
+    test("reconnect nodes if needed", async () => {
+        const filters = [new SountouchWrapperFilter(), new LimiterFilter()];
+
+        audioEditor.addFilters(...filters);
+        await audioEditor.loadBuffer(new MockAudioBuffer(2, 1000, 44100));
+
+        mockBufferPlayer.compatibilityMode = true;
+
+        await audioEditor.reconnectNodesIfNeeded();
+
+        expect(mockFilterManager.connectNodes).toHaveBeenCalled();
+    });
+
+    test("reconnect nodes if needed - not in compatibility mode", async () => {
+        const filters = [new SountouchWrapperFilter(), new LimiterFilter()];
+
+        audioEditor.addFilters(...filters);
+        await audioEditor.loadBuffer(new MockAudioBuffer(2, 1000, 44100));
+
+        mockBufferPlayer.compatibilityMode = false;
+
+        await audioEditor.reconnectNodesIfNeeded();
+
+        expect(mockFilterManager.connectNodes).not.toHaveBeenCalled();
+    });
+
+    test("loop buffer player", async () => {
+        const eventEmitter = (mockBufferPlayer as any).eventEmitter;
+
+        mockBufferPlayer.compatibilityMode = false;
+        mockBufferPlayer.loop = true;
+
+        eventEmitter.emit(EventType.PLAYING_FINISHED);
+
+        expect(mockBufferPlayer.start).toHaveBeenCalled();
+    });
+
+    test("on before playing buffer player", async () => {
+        const eventEmitter = (mockBufferPlayer as any).eventEmitter;
+
+        mockBufferPlayer.compatibilityMode = true;
+        mockBufferPlayer.loop = false;
+
+        eventEmitter.emit("onBeforePlaying");
+
+        expect(mockAudioProcessor.setupOutput).toHaveBeenCalled();
     });
 
     test("should return order and id correctly", () => {

@@ -6,7 +6,6 @@ import { MockAudioBuffer } from "./AudioBufferMock";
 import Constants from "../lib/model/Constants";
 import GenericConfigService from "../lib/services/GenericConfigService";
 import EventEmitter from "../lib/utils/EventEmitter";
-import { EventType } from "../lib/model/EventTypeEnum";
 
 (OfflineAudioContext as any) = MockAudioContext;
 

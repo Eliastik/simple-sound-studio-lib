@@ -1,3 +1,4 @@
+import EventEmitter from "../lib/utils/EventEmitter";
 import AudioContextManagerInterface from "../lib/audioEditor/interfaces/AudioContextManagerInterface";
 import AudioProcessorInterface from "../lib/audioEditor/interfaces/AudioProcessorInterface";
 import BufferManagerInterface from "../lib/audioEditor/interfaces/BufferManagerInterface";
@@ -95,15 +96,16 @@ const mockBufferManager = {
 } as unknown as BufferManagerInterface;
 
 const mockBufferPlayer = {
-    onBeforePlaying: jest.fn(),
-    on: jest.fn(),
+    eventEmitter: new EventEmitter(),
+    onBeforePlaying: jest.fn((callback) => (mockBufferPlayer as any).eventEmitter.on("onBeforePlaying", callback)),
+    on: jest.fn((event, callback) => (mockBufferPlayer as any).eventEmitter.on(event, callback)),
     stop: jest.fn(),
     reset: jest.fn(),
     start: jest.fn(),
     compatibilityMode: false,
     loop: false,
     loadBuffer: jest.fn(),
-    setCompatibilityMode: jest.fn()
+    setCompatibilityMode: jest.fn(),
 } as unknown as BufferPlayerInterface;
 
 const mockEventEmitter = {
