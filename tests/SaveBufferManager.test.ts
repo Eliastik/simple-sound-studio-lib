@@ -216,6 +216,35 @@ describe("SaveBufferManager tests", () => {
         await expect(saveBufferManager.saveBuffer(mockRenderedBuffer, saveBufferOptions)).rejects.toThrowError("The buffer is currently saving");
     });
 
+    test("Stopping player should disable event", async () => {
+        const mockRenderedBuffer = new AudioBuffer({ length: 44100, numberOfChannels: 2, sampleRate: 44100 });
+        const mockBufferPlayerInstanceOther = new BufferPlayer(mockAudioContextManagerInstance);
+        const eventEmitter = new EventEmitter();
+        const saveBufferOptions: SaveBufferOptions = {
+            format: "mp3",
+            bitrate: 128
+        };
+
+        mockFilterManagerInstance.connectNodes(createMockAudioContext(), new AudioBuffer({ length: 44100, numberOfChannels: 2, sampleRate: 44100 }), false, true);
+
+        mockBufferPlayerInstanceOther.compatibilityMode = true;
+        mockBufferPlayerInstanceOther.injectDependencies(null, null, null, eventEmitter);
+
+        const saveBufferManager = new SaveBufferManager(mockFilterManagerInstance, mockAudioContextManagerInstance, mockBufferPlayerInstanceOther);
+        (saveBufferManager as any).injectDependencies(null, null, mockConfigService, eventEmitter);
+
+        const savePromise = saveBufferManager.saveBuffer(mockRenderedBuffer, saveBufferOptions, mockRecorder as any);
+
+        jest.spyOn(eventEmitter, "off");
+
+        setTimeout(() => {
+            eventEmitter.emit(EventType.PLAYING_FINISHED);
+        }, 500);
+
+        expect(await savePromise).toBe(true);
+        expect(eventEmitter.off).toHaveBeenCalledWith(EventType.PLAYING_FINISHED, expect.any(Function));
+    });
+
     test("should return order and id correctly", () => {
         const saveBufferManager = new SaveBufferManager(mockFilterManagerInstance, mockAudioContextManagerInstance, mockBufferPlayerInstance);
         expect(saveBufferManager.order).toBe(-1);

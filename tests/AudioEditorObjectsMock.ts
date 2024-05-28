@@ -61,7 +61,7 @@ const mockRendererManager = {
     executeAudioRenderers: jest.fn()
 } as unknown as RendererManagerInterface;
 
-const mockRendererManagerWithFakeRendererBuffer = {
+const mockRendererManagerWithFakeRenderedBuffer = {
         addRenderers: jest.fn(),
         toggleRenderer: jest.fn(),
         resetAllRenderersState: jest.fn(),
@@ -122,4 +122,4 @@ const mockRecorder = {
     exportWAV: jest.fn((callback) => callback(new Blob()))
 };
 
-export { mockAudioProcessor, mockBufferManager, mockContextManager, mockFilterManager, mockRendererManager, mockSaveBufferManager, mockBufferPlayer, mockEventEmitter, mockFilterManagerWithoutEntrypoint, mockRecorder, mockRendererManagerWithFakeRendererBuffer };
+export { mockAudioProcessor, mockBufferManager, mockContextManager, mockFilterManager, mockRendererManager, mockSaveBufferManager, mockBufferPlayer, mockEventEmitter, mockFilterManagerWithoutEntrypoint, mockRecorder, mockRendererManagerWithFakeRenderedBuffer as mockRendererManagerWithFakeRenderedBuffer };

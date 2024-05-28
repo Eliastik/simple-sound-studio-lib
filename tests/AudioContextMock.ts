@@ -5,12 +5,14 @@ export class MockAudioContext {
     currentTime: number;
     state: "suspended" | "running" | "closed";
     destination: AudioDestinationNode;
+    emptyData = false;
 
-    constructor(options?: AudioContextOptions) {
+    constructor(options?: AudioContextOptions, emptyData?: boolean) {
         this.sampleRate = options?.sampleRate || 44100;
         this.currentTime = 0;
         this.state = "suspended";
         this.destination = {} as AudioDestinationNode;
+        this.emptyData = emptyData || false;
     }
 
     resume() {
@@ -57,7 +59,24 @@ export class MockAudioContext {
     }
 
     startRendering() {
-        return Promise.resolve(new MockAudioBuffer(2, 1000, 44100));
+        return Promise.resolve(new MockAudioBuffer(2, 1000, 44100, this.emptyData));
+    }
+}
+
+
+export class MockAudioContextWithEmptyData extends MockAudioContext {
+    constructor(options?: AudioContextOptions) {
+        super(options, true);
+    }
+}
+
+export class MockAudioContextWithLongRunningRendering extends MockAudioContext {
+    startRendering() {
+        return new Promise<MockAudioBuffer>(resolve => {
+            setTimeout(() => {
+                resolve(new MockAudioBuffer(2, 1000, 44100, this.emptyData));
+            }, 3000);
+        });
     }
 }
 

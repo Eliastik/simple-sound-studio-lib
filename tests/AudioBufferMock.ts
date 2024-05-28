@@ -5,12 +5,17 @@ export class MockAudioBuffer implements AudioBuffer {
     readonly sampleRate: number;
     private channelData: Float32Array[];
 
-    constructor(numberOfChannels: number, length: number, sampleRate: number) {
+    constructor(numberOfChannels: number, length: number, sampleRate: number, emptyData?: boolean) {
         this.numberOfChannels = numberOfChannels;
         this.length = length;
         this.sampleRate = sampleRate;
         this.duration = length / sampleRate;
-        this.channelData = Array.from({ length: numberOfChannels }, () => new Float32Array(length));
+
+        if (emptyData) {
+            this.channelData = Array.from({ length: numberOfChannels }, () => new Float32Array(0)); 
+        } else {
+            this.channelData = Array.from({ length: numberOfChannels }, () => new Float32Array(length));
+        }
     }
 
     getChannelData(channel: number): Float32Array {
