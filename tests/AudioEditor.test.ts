@@ -7,17 +7,21 @@ import SountouchWrapperFilter from "../lib/filters/SountouchWrapperFilter";
 import VocoderRenderer from "../lib/filters/VocoderRenderer";
 import { MockAudioBuffer } from "./AudioBufferMock";
 import { MockAudioContext } from "./AudioContextMock";
-import { mockAudioProcessor, mockBufferManager, mockContextManager, mockFilterManager, mockRendererManager, mockSaveBufferManager, mockBufferPlayer, mockEventEmitter } from "./AudioEditorObjectsMock";
-import EventEmitter from "../lib/utils/EventEmitter";
+import { mockAudioProcessor, mockBufferManager, mockContextManager, mockFilterManager, mockRendererManager, mockSaveBufferManager, mockBufferPlayer, mockEventEmitter, mockRendererManagerWithFakeRenderedBuffer } from "./AudioEditorObjectsMock";
 import { EventType } from "../lib/model/EventTypeEnum";
-
-(AudioContext as any) = MockAudioContext;
-(AudioBuffer as any) = MockAudioBuffer;
+import EventEmitter from "../lib/utils/EventEmitter";
+import BufferPlayer from "../lib/bufferPlayer/BufferPlayer";
+import AudioProcessor from "../lib/audioEditor/AudioProcessor";
+import GenericConfigService from "../lib/services/GenericConfigService";
 
 describe("AudioEditor", () => {
     let audioEditor: AudioEditor;
 
     beforeEach(() => {
+        (AudioContext as any) = MockAudioContext;
+        (AudioBuffer as any) = MockAudioBuffer;
+        (OfflineAudioContext as any) = MockAudioContext;
+
         audioEditor = new AudioEditor(
             mockFilterManager,
             mockRendererManager,
@@ -216,6 +220,56 @@ describe("AudioEditor", () => {
         eventEmitter.emit("onBeforePlaying");
 
         expect(mockAudioProcessor.setupOutput).toHaveBeenCalled();
+    });
+
+    test("render audio should enable compatibility mode even when initial rendering is disabled", async () => {
+        const eventEmitter = new EventEmitter();
+
+        const bufferPlayer = new BufferPlayer(mockContextManager);
+
+        const audioProcessor = new AudioProcessor(
+            mockFilterManager,
+            mockRendererManagerWithFakeRenderedBuffer,
+            mockContextManager,
+            bufferPlayer,
+            mockBufferManager
+        );
+
+        const audioEditor2 = new AudioEditor(
+            mockFilterManager,
+            mockRendererManager,
+            mockContextManager,
+            mockSaveBufferManager,
+            audioProcessor,
+            mockBufferManager,
+            bufferPlayer
+        );
+
+        const genericConfigService = new GenericConfigService();
+
+        (audioProcessor as any).injectDependencies(null, null, genericConfigService, eventEmitter);
+        (audioEditor2 as any).injectDependencies(null, null, genericConfigService, eventEmitter);
+
+        genericConfigService.setConfig(Constants.PREFERENCES_KEYS.DISABLE_INITIAL_RENDERING, "true");
+        genericConfigService.setConfig(Constants.PREFERENCES_KEYS.COMPATIBILITY_MODE_ENABLED, "true");
+
+        jest.spyOn(bufferPlayer, "setCompatibilityMode");
+
+        audioEditor2.loadBuffer(new MockAudioBuffer(2, 10000, 44100));
+        expect(audioProcessor.initialRenderingDone).toBe(false);
+
+        await audioEditor2.renderAudio();
+    
+        expect(bufferPlayer.compatibilityMode).toBe(true);
+
+        audioEditor2.exit();
+
+        audioEditor2.loadBuffer(new MockAudioBuffer(2, 10000, 44100));
+        expect(audioProcessor.initialRenderingDone).toBe(false);
+        
+        await audioEditor2.renderAudio();
+
+        expect(bufferPlayer.compatibilityMode).toBe(true);
     });
 
     test("should return order and id correctly", () => {

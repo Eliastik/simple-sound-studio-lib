@@ -329,7 +329,7 @@ interface FilterManagerInterface {
      * @param keepCurrentInputOutput Keep current first input/output nodes?
      * @param isCompatibilityMode Is compatibility mode enabled?
      */
-    connectNodes(context: BaseAudioContext, buffer: AudioBuffer, keepCurrentInputOutput: boolean, isCompatibilityMode: boolean): void;
+    connectNodes(context: BaseAudioContext, buffer: AudioBuffer, keepCurrentInputOutput: boolean, isCompatibilityMode: boolean): Promise<void>;
     /**
      * Disconnect old audio nodes
      * @param keepCurrentOutput Keeps current output nodes?

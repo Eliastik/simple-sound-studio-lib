@@ -105,7 +105,7 @@ export default class FilterManager extends AbstractAudioElement implements Filte
         });
     }
 
-    async connectNodes(context: BaseAudioContext, buffer: AudioBuffer, keepCurrentInputOutput: boolean, isCompatibilityMode: boolean) {
+    async connectNodes(context: BaseAudioContext, buffer: AudioBuffer, keepCurrentInputOutput: boolean, isCompatibilityMode: boolean): Promise<void> {
         if (!this._entryPointFilter) {
             return;
         }

@@ -105,7 +105,7 @@ const mockBufferPlayer = {
     compatibilityMode: false,
     loop: false,
     loadBuffer: jest.fn(),
-    setCompatibilityMode: jest.fn(),
+    setCompatibilityMode: jest.fn(() => (mockBufferPlayer as any).compatibilityMode = true),
 } as unknown as BufferPlayerInterface;
 
 const mockEventEmitter = {
