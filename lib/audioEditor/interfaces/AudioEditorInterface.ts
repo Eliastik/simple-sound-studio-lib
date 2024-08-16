@@ -28,8 +28,14 @@ export default interface AudioEditorInterface {
      */
     get defaultDeviceSampleRate(): number;
 
+    /** Load a list of file and load the first file into an audio buffer */
+    loadFileList(fileList: FileList): Promise<void>;
+
     /** Decode and load an audio buffer from an audio file */
     loadBufferFromFile(file: File): Promise<void>;
+
+    /** Load the audio buffer from the nth file from the file list loaded with the loadFileList method */
+    loadBufferFromFileListIndex(index: number): Promise<void>;
 
     /** Change the principal audio buffer of this editor */
     loadBuffer(audioBuffer: AudioBuffer): void;
@@ -127,4 +133,10 @@ export default interface AudioEditorInterface {
     set downloadingInitialData(state: boolean);
 
     get downloadingInitialData(): boolean;
+
+    /** Get the index of the current loaded audio file from the file list */
+    get currentIndexFileList(): number;
+
+    /** Get the total number of audio files loaded */
+    get totalFilesList(): number;
 }

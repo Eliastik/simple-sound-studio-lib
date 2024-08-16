@@ -47,6 +47,12 @@ export default class AudioEditor extends AbstractAudioElement implements AudioEd
     /** The audio buffer to be processed */
     private principalBuffer: AudioBuffer | null = null;
 
+    /** The list of file selected by user */
+    private fileList: FileList | null = null;
+
+    /** The current index of the loaded file from file list */
+    private fileListCurrIndex = 0;
+
     constructor(
         @inject(TYPES.FilterManager) filterManager: FilterManagerInterface,
         @inject(TYPES.RendererManager) rendererManager: RendererManagerInterface,
@@ -141,6 +147,36 @@ export default class AudioEditor extends AbstractAudioElement implements AudioEd
         } else {
             throw new Error("Audio Context is not ready!");
         }
+    }
+
+    async loadFileList(fileList: FileList) {
+        this.fileList = fileList;
+
+        await this.loadBufferFromFileListIndex(0);
+    }
+
+    async loadBufferFromFileListIndex(index: number) {
+        if (this.fileList) {
+            this.fileListCurrIndex = index;
+
+            const firstFile = this.fileList.item(this.fileListCurrIndex);
+
+            if (firstFile) {
+                await this.loadBufferFromFile(firstFile);
+            }
+        }
+    }
+
+    get currentIndexFileList() {
+        return this.fileListCurrIndex;
+    }
+
+    get totalFilesList() {
+        if (this.fileList) {
+            return this.fileList.length;
+        }
+
+        return 0;
     }
 
     loadBuffer(audioBuffer: AudioBuffer) {
@@ -255,6 +291,8 @@ export default class AudioEditor extends AbstractAudioElement implements AudioEd
 
         this.cancelAudioRendering();
         this.principalBuffer = null;
+        this.fileList = null;
+        this.fileListCurrIndex = 0;
     }
 
     cancelAudioRendering() {

@@ -203,8 +203,12 @@ interface AudioEditorInterface {
      * Get the default device sample rate
      */
     get defaultDeviceSampleRate(): number;
+    /** Load a list of file and load the first file into an audio buffer */
+    loadFileList(fileList: FileList): Promise<void>;
     /** Decode and load an audio buffer from an audio file */
     loadBufferFromFile(file: File): Promise<void>;
+    /** Load the audio buffer from the nth file from the file list loaded with the loadFileList method */
+    loadBufferFromFileListIndex(index: number): Promise<void>;
     /** Change the principal audio buffer of this editor */
     loadBuffer(audioBuffer: AudioBuffer): void;
     /**
@@ -284,6 +288,10 @@ interface AudioEditorInterface {
     saveBuffer(options?: SaveBufferOptions$1): Promise<boolean>;
     set downloadingInitialData(state: boolean);
     get downloadingInitialData(): boolean;
+    /** Get the index of the current loaded audio file from the file list */
+    get currentIndexFileList(): number;
+    /** Get the total number of audio files loaded */
+    get totalFilesList(): number;
 }
 
 interface FilterManagerInterface {
@@ -497,6 +505,10 @@ declare class AudioEditor extends AbstractAudioElement implements AudioEditorInt
     private bufferPlayer;
     /** The audio buffer to be processed */
     private principalBuffer;
+    /** The list of file selected by user */
+    private fileList;
+    /** The current index of the loaded file from file list */
+    private fileListCurrIndex;
     constructor(filterManager: FilterManagerInterface, rendererManager: RendererManagerInterface, contextManager: AudioContextManagerInterface, saveBufferManager: SaveBufferManagerInterface, audioProcessor: AudioProcessorInterface, bufferManager: BufferManagerInterface, player: BufferPlayerInterface$1);
     private setup;
     addFilters(...filters: AbstractAudioFilter[]): void;
@@ -504,6 +516,10 @@ declare class AudioEditor extends AbstractAudioElement implements AudioEditorInt
     get currentSampleRate(): number;
     get defaultDeviceSampleRate(): number;
     loadBufferFromFile(file: File): Promise<void>;
+    loadFileList(fileList: FileList): Promise<void>;
+    loadBufferFromFileListIndex(index: number): Promise<void>;
+    get currentIndexFileList(): number;
+    get totalFilesList(): number;
     loadBuffer(audioBuffer: AudioBuffer): void;
     getOutputBuffer(): AudioBuffer | null;
     renderAudio(): Promise<boolean>;
