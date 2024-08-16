@@ -72,6 +72,11 @@ export default interface BufferPlayerInterface {
    toggleLoop(): void;
 
    /**
+    * Enable/disable looping all audio
+    */
+   toggleLoopAll(): void;
+
+   /**
      * Observe an event
      * @param event The event name
      * @param callback Callback called when an event of this type occurs
@@ -117,6 +122,11 @@ export default interface BufferPlayerInterface {
      * Is audio playing in loop?
      */
     get loop(): boolean;
+
+    /**
+     * Is playing all audio list in loop?
+     */
+    get loopAll(): boolean;
 
     /**
      * Set the audio speed

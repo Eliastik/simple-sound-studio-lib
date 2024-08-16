@@ -40,6 +40,12 @@ export default interface AudioEditorInterface {
     /** Change the principal audio buffer of this editor */
     loadBuffer(audioBuffer: AudioBuffer): void;
 
+    /** Load the previous audio from list */
+    loadPreviousAudio(): Promise<void>;
+
+    /** Load the next audio from list */
+    loadNextAudio(): Promise<void>;
+
     /**
      * Get the rendered audio buffer
      * @returns The AudioBuffer

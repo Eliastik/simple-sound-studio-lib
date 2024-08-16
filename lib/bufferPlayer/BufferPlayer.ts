@@ -41,6 +41,7 @@ export default class BufferPlayer extends AbstractAudioElement implements Buffer
     private intervals: number[] = [];
     playing = false;
     loop = false;
+    loopAll = false;
     speedAudio = 1;
     private onBeforePlayingCallback: () => void = async () => { };
 
@@ -183,6 +184,10 @@ export default class BufferPlayer extends AbstractAudioElement implements Buffer
                     } else {
                         this.eventEmitter?.emit(EventType.PLAYING_FINISHED);
                         this.reset(direct);
+
+                        if (this.loopAll) {
+                            this.eventEmitter?.emit(EventType.PLAYING_FINISHED_LOOP_ALL);
+                        }
                     }
                 } else {
                     this.updateInfos();
@@ -242,7 +247,13 @@ export default class BufferPlayer extends AbstractAudioElement implements Buffer
     }
 
     toggleLoop() {
+        this.loopAll = false;
         this.loop = !this.loop;
+    }
+
+    toggleLoopAll() {
+        this.loop = false;
+        this.loopAll = !this.loopAll;
     }
 
     on(event: string, callback: EventEmitterCallback) {

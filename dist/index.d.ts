@@ -211,6 +211,10 @@ interface AudioEditorInterface {
     loadBufferFromFileListIndex(index: number): Promise<void>;
     /** Change the principal audio buffer of this editor */
     loadBuffer(audioBuffer: AudioBuffer): void;
+    /** Load the previous audio from list */
+    loadPreviousAudio(): Promise<void>;
+    /** Load the next audio from list */
+    loadNextAudio(): Promise<void>;
     /**
      * Get the rendered audio buffer
      * @returns The AudioBuffer
@@ -518,6 +522,8 @@ declare class AudioEditor extends AbstractAudioElement implements AudioEditorInt
     loadBufferFromFile(file: File): Promise<void>;
     loadFileList(fileList: FileList): Promise<void>;
     loadBufferFromFileListIndex(index: number): Promise<void>;
+    loadPreviousAudio(): Promise<void>;
+    loadNextAudio(): Promise<void>;
     get currentIndexFileList(): number;
     get totalFilesList(): number;
     loadBuffer(audioBuffer: AudioBuffer): void;
@@ -603,6 +609,10 @@ interface BufferPlayerInterface {
       */
     toggleLoop(): void;
     /**
+     * Enable/disable looping all audio
+     */
+    toggleLoopAll(): void;
+    /**
       * Observe an event
       * @param event The event name
       * @param callback Callback called when an event of this type occurs
@@ -641,6 +651,10 @@ interface BufferPlayerInterface {
      */
     get loop(): boolean;
     /**
+     * Is playing all audio list in loop?
+     */
+    get loopAll(): boolean;
+    /**
      * Set the audio speed
      */
     set speedAudio(speedAudio: number);
@@ -668,6 +682,7 @@ declare class BufferPlayer extends AbstractAudioElement implements BufferPlayerI
     private intervals;
     playing: boolean;
     loop: boolean;
+    loopAll: boolean;
     speedAudio: number;
     private onBeforePlayingCallback;
     compatibilityMode: boolean;
@@ -691,6 +706,7 @@ declare class BufferPlayer extends AbstractAudioElement implements BufferPlayerI
     setTime(time: number): void;
     onBeforePlaying(callback: () => void): void;
     toggleLoop(): void;
+    toggleLoopAll(): void;
     on(event: string, callback: EventEmitterCallback): void;
     get currentTimeDisplay(): string;
     get maxTimeDisplay(): string;
@@ -1159,7 +1175,8 @@ declare enum EventType {
     UPDATE_AUDIO_TREATMENT_PERCENT = "updateAudioTreatmentPercent",
     UPDATE_REMAINING_TIME_ESTIMATED = "updateRemainingTimeEstimated",
     CANCELLED_AND_LOADED_INITIAL_AUDIO = "cancelledAndLoadedInitialAudio",
-    CANCELLING_AUDIO_PROCESSING = "cancellingAudioProcessing"
+    CANCELLING_AUDIO_PROCESSING = "cancellingAudioProcessing",
+    PLAYING_FINISHED_LOOP_ALL = "playingFinishedLoopAll"
 }
 
 declare class SoundStudioFactory {

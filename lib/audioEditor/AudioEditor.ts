@@ -91,6 +91,14 @@ export default class AudioEditor extends AbstractAudioElement implements AudioEd
                     this.bufferPlayer.start();
                 }
             });
+
+            // Callback called when playing is finished and looping all audio
+            this.bufferPlayer.on(EventType.PLAYING_FINISHED_LOOP_ALL, async () => {
+                if (this.bufferPlayer && this.bufferPlayer.loopAll) {
+                    await this.loadNextAudio();
+                    this.bufferPlayer.start();
+                }
+            });
         }
     }
 
@@ -144,6 +152,11 @@ export default class AudioEditor extends AbstractAudioElement implements AudioEd
             }
 
             utilFunctions.resetAudioRenderingProgress(this.eventEmitter);
+
+            // If switching between a list of audio to one audio, reset the loop audio playing
+            if (this.bufferPlayer && this.bufferPlayer.loopAll && this.totalFilesList <= 1) {
+                this.bufferPlayer.toggleLoop();
+            }
         } else {
             throw new Error("Audio Context is not ready!");
         }
@@ -164,6 +177,38 @@ export default class AudioEditor extends AbstractAudioElement implements AudioEd
             if (firstFile) {
                 await this.loadBufferFromFile(firstFile);
             }
+        }
+    }
+
+    async loadPreviousAudio() {
+        const currentIndex = this.currentIndexFileList;
+        const maxIndex = this.totalFilesList;
+        const newIndex = currentIndex - 1;
+
+        if (newIndex != currentIndex) {
+            if (newIndex < 0) {
+                await this.loadBufferFromFileListIndex(maxIndex - 1);
+            } else {
+                await this.loadBufferFromFileListIndex(newIndex);
+            }
+
+            await this.renderAudio();
+        }
+    }
+
+    async loadNextAudio() {
+        const currentIndex = this.currentIndexFileList;
+        const maxIndex = this.totalFilesList;
+        const newIndex = currentIndex + 1;
+
+        if (newIndex != currentIndex) {
+            if (newIndex >= maxIndex) {
+                await this.loadBufferFromFileListIndex(0);
+            } else {
+                await this.loadBufferFromFileListIndex(newIndex);
+            }
+
+            await this.renderAudio();
         }
     }
 
