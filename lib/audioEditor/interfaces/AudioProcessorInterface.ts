@@ -8,11 +8,13 @@ export default interface AudioProcessorInterface {
 
     /**
      * Render the audio to a buffer
+     * @param inputBuffer The input audio buffer
+     * @param forceInitialRendering Force initial audio rendering, ignoring user setting
      * @returns A promise resolved when the audio processing is finished.
      * The promise return false if the audio processing was cancelled or if an error occurred.
      * The resulting audio buffer can then be obtained by using the "get renderedBuffer" method.
      */
-    renderAudio(inputBuffer: AudioBuffer | null): Promise<boolean>;
+    renderAudio(inputBuffer: AudioBuffer | null, forceInitialRendering?: boolean): Promise<boolean>;
 
     /**
      * Setup output buffers/nodes, then process the audio

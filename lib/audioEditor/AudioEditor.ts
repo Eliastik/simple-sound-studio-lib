@@ -192,7 +192,7 @@ export default class AudioEditor extends AbstractAudioElement implements AudioEd
                 await this.loadBufferFromFileListIndex(newIndex);
             }
 
-            await this.renderAudio();
+            await this.renderAudio(true);
         }
     }
 
@@ -208,7 +208,7 @@ export default class AudioEditor extends AbstractAudioElement implements AudioEd
                 await this.loadBufferFromFileListIndex(newIndex);
             }
 
-            await this.renderAudio();
+            await this.renderAudio(true);
         }
     }
 
@@ -241,9 +241,26 @@ export default class AudioEditor extends AbstractAudioElement implements AudioEd
         return null;
     }
 
-    async renderAudio(): Promise<boolean> {
+    async renderAudio(forceInitialRendering?: boolean): Promise<boolean> {
         if (this.audioProcessor) {
-            return await this.audioProcessor.renderAudio(this.principalBuffer);
+            try {
+                if (this.eventEmitter) {
+                    this.eventEmitter.emit(EventType.STARTED_RENDERING_AUDIO);
+                }
+
+                const result = await this.audioProcessor.renderAudio(this.principalBuffer, forceInitialRendering);
+
+                if (this.eventEmitter) {
+                    this.eventEmitter.emit(EventType.AUDIO_RENDERING_FINISHED);
+                }
+
+                return result;
+            } catch(e) {
+                if (this.eventEmitter) {
+                    this.eventEmitter.emit(EventType.AUDIO_RENDERING_FINISHED);
+                    this.eventEmitter.emit(EventType.AUDIO_RENDERING_EXCEPTION_THROWN, e as Error);
+                }
+            }
         }
 
         return false;

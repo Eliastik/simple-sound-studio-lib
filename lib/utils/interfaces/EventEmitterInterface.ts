@@ -5,7 +5,7 @@ export default interface EventEmitterInterface {
     
     on(event: string, callback: EventEmitterCallback): void;
 
-    emit(event: string, data?: string | number | AudioBuffer): void;
+    emit(event: string, data?: string | number | AudioBuffer | Error): void;
 
     off(event: string, callback: EventEmitterCallback): void;
 

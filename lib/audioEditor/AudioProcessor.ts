@@ -73,7 +73,7 @@ export default class AudioProcessor extends AbstractAudioElement implements Audi
         }
     }
 
-    async renderAudio(inputBuffer: AudioBuffer | null): Promise<boolean> {
+    async renderAudio(inputBuffer: AudioBuffer | null, forceInitialRendering?: boolean): Promise<boolean> {
         await this.prepareContext(inputBuffer);
 
         if (!this.contextManager || !this.contextManager.currentContext) {
@@ -97,7 +97,7 @@ export default class AudioProcessor extends AbstractAudioElement implements Audi
         }
 
         // If initial rendering is disabled and compatibility mode is disabled, we stop here
-        if (!this.initialRenderingDone && this.configService && this.configService.isInitialRenderingDisabled() && !this.configService.isCompatibilityModeEnabled()) {
+        if (!this.initialRenderingDone && this.configService && this.configService.isInitialRenderingDisabled() && !this.configService.isCompatibilityModeEnabled() && !forceInitialRendering) {
             this.loadInitialBuffer(inputBuffer);
             this.initialRenderingDone = true;
             return true;
@@ -161,8 +161,10 @@ export default class AudioProcessor extends AbstractAudioElement implements Audi
                     this.initialRenderingDone = true;
                 }
             }
-
-            this.eventEmitter.emit(EventType.AUDIO_RENDERING_FINISHED);
+        
+            if (this.eventEmitter) {
+                this.eventEmitter.emit(EventType.AUDIO_RENDERING_FINISHED);
+            }
 
             return true;
         }

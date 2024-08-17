@@ -443,11 +443,13 @@ interface AudioProcessorInterface {
     prepareContext(inputBuffer: AudioBuffer | null): Promise<void>;
     /**
      * Render the audio to a buffer
+     * @param inputBuffer The input audio buffer
+     * @param forceInitialRendering Force initial audio rendering, ignoring user setting
      * @returns A promise resolved when the audio processing is finished.
      * The promise return false if the audio processing was cancelled or if an error occurred.
      * The resulting audio buffer can then be obtained by using the "get renderedBuffer" method.
      */
-    renderAudio(inputBuffer: AudioBuffer | null): Promise<boolean>;
+    renderAudio(inputBuffer: AudioBuffer | null, forceInitialRendering?: boolean): Promise<boolean>;
     /**
      * Setup output buffers/nodes, then process the audio
      * @param inputBuffer The input audio buffer
@@ -528,7 +530,7 @@ declare class AudioEditor extends AbstractAudioElement implements AudioEditorInt
     get totalFilesList(): number;
     loadBuffer(audioBuffer: AudioBuffer): void;
     getOutputBuffer(): AudioBuffer | null;
-    renderAudio(): Promise<boolean>;
+    renderAudio(forceInitialRendering?: boolean): Promise<boolean>;
     isAudioWorkletAvailable(): boolean;
     /** Filters settings */
     getFiltersState(): FilterState;
@@ -1073,7 +1075,7 @@ interface AudioEditorEvents {
 
 interface EventEmitterInterface {
     on(event: string, callback: EventEmitterCallback$1): void;
-    emit(event: string, data?: string | number | AudioBuffer): void;
+    emit(event: string, data?: string | number | AudioBuffer | Error): void;
     off(event: string, callback: EventEmitterCallback$1): void;
     get listeners(): AudioEditorEvents$1;
     set listeners(listeners: AudioEditorEvents$1);
@@ -1150,8 +1152,10 @@ declare enum EventType {
     FINISHED_FETCHING_BUFFERS = "finishedFetchingBuffers",
     LOADED_BUFFERS = "loadedBuffers",
     COMPATIBILITY_MODE_AUTO_ENABLED = "compatibilityModeAutoEnabled",
+    STARTED_RENDERING_AUDIO = "renderingAudio",
     RENDERING_AUDIO_PROBLEM_DETECTED = "renderingAudioProblemDetected",
     AUDIO_RENDERING_FINISHED = "audioRenderingFinished",
+    AUDIO_RENDERING_EXCEPTION_THROWN = "audioRenderingExceptionThrown",
     OFFLINE_AUDIO_RENDERING_FINISHED = "offlineAudioRenderingFinished",
     PLAYING_STOPPED = "playingStopped",
     PLAYING_STARTED = "playingStarted",
