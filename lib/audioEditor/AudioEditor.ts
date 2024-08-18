@@ -95,7 +95,7 @@ export default class AudioEditor extends AbstractAudioElement implements AudioEd
             // Callback called when playing is finished and looping all audio
             this.bufferPlayer.on(EventType.PLAYING_FINISHED_LOOP_ALL, async () => {
                 if (this.bufferPlayer && this.bufferPlayer.loopAll) {
-                    await this.loadNextAudio();
+                    await this.loadNextAudio(true);
                     this.bufferPlayer.start();
                 }
             });
@@ -154,7 +154,7 @@ export default class AudioEditor extends AbstractAudioElement implements AudioEd
             utilFunctions.resetAudioRenderingProgress(this.eventEmitter);
 
             // If switching between a list of audio to one audio, reset the loop audio playing
-            if (this.bufferPlayer && this.bufferPlayer.loopAll && this.totalFilesList <= 1) {
+            if (this.bufferPlayer && this.bufferPlayer.loopAll && this.totalFileList <= 1) {
                 this.bufferPlayer.toggleLoop();
             }
         } else {
@@ -172,17 +172,21 @@ export default class AudioEditor extends AbstractAudioElement implements AudioEd
         if (this.fileList) {
             this.fileListCurrIndex = index;
 
-            const firstFile = this.fileList.item(this.fileListCurrIndex);
+            const file = this.fileList.item(this.fileListCurrIndex);
 
-            if (firstFile) {
-                await this.loadBufferFromFile(firstFile);
+            if (this.eventEmitter) {
+                this.eventEmitter.emit(EventType.LOADED_AUDIO_FILE_FROM_LIST, index);
+            }
+
+            if (file) {
+                await this.loadBufferFromFile(file);
             }
         }
     }
 
-    async loadPreviousAudio() {
+    async loadPreviousAudio(forceInitialRendering?: boolean) {
         const currentIndex = this.currentIndexFileList;
-        const maxIndex = this.totalFilesList;
+        const maxIndex = this.totalFileList;
         const newIndex = currentIndex - 1;
 
         if (newIndex != currentIndex) {
@@ -192,13 +196,13 @@ export default class AudioEditor extends AbstractAudioElement implements AudioEd
                 await this.loadBufferFromFileListIndex(newIndex);
             }
 
-            await this.renderAudio(true);
+            await this.renderAudio(forceInitialRendering);
         }
     }
 
-    async loadNextAudio() {
+    async loadNextAudio(forceInitialRendering?: boolean) {
         const currentIndex = this.currentIndexFileList;
-        const maxIndex = this.totalFilesList;
+        const maxIndex = this.totalFileList;
         const newIndex = currentIndex + 1;
 
         if (newIndex != currentIndex) {
@@ -208,15 +212,33 @@ export default class AudioEditor extends AbstractAudioElement implements AudioEd
                 await this.loadBufferFromFileListIndex(newIndex);
             }
 
-            await this.renderAudio(true);
+            await this.renderAudio(forceInitialRendering);
         }
+    }
+
+    getCurrentFileList(): Map<string, boolean> {
+        if (this.fileList) {
+            const mapFiles = new Map();
+
+            for (let i = 0; i < this.fileList.length; i++) {
+                const file = this.fileList.item(i);
+
+                if (file) {
+                    mapFiles.set(file.name, this.currentIndexFileList === i);
+                }
+            }
+
+            return mapFiles;
+        }
+
+        return new Map();
     }
 
     get currentIndexFileList() {
         return this.fileListCurrIndex;
     }
 
-    get totalFilesList() {
+    get totalFileList() {
         if (this.fileList) {
             return this.fileList.length;
         }

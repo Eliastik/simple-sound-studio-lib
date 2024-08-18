@@ -40,11 +40,21 @@ export default interface AudioEditorInterface {
     /** Change the principal audio buffer of this editor */
     loadBuffer(audioBuffer: AudioBuffer): void;
 
-    /** Load the previous audio from list */
-    loadPreviousAudio(): Promise<void>;
+    /** Load the previous audio from list
+     * @param forceInitialRendering true to force initial rendering of audio, ignoring user setting
+    */
+    loadPreviousAudio(forceInitialRendering?: boolean): Promise<void>;
 
-    /** Load the next audio from list */
-    loadNextAudio(): Promise<void>;
+    /**
+     * Load the next audio from list
+     * @param forceInitialRendering true to force initial rendering of audio, ignoring user setting
+     * */
+    loadNextAudio(forceInitialRendering?: boolean): Promise<void>;
+
+    /**
+     * @returns Return a map with key = filename and value = true if the audio file is currently loaded, false otherwise
+     */
+    getCurrentFileList(): Map<string, boolean>;
 
     /**
      * Get the rendered audio buffer
@@ -54,11 +64,12 @@ export default interface AudioEditorInterface {
 
     /**
      * Render the audio to a buffer
+     * @param forceInitialRendering true to force initial rendering of audio, ignoring user setting
      * @returns A promise resolved when the audio processing is finished.
      * The promise return false if the audio processing was cancelled or if an error occurred.
      * The resulting audio buffer can then be obtained by using the "getOutputBuffer" method.
      */
-    renderAudio(): Promise<boolean>;
+    renderAudio(forceInitialRendering?: boolean): Promise<boolean>;
 
     /**
      * Check if AudioWorklet are available
@@ -144,5 +155,5 @@ export default interface AudioEditorInterface {
     get currentIndexFileList(): number;
 
     /** Get the total number of audio files loaded */
-    get totalFilesList(): number;
+    get totalFileList(): number;
 }

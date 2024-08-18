@@ -211,10 +211,19 @@ interface AudioEditorInterface {
     loadBufferFromFileListIndex(index: number): Promise<void>;
     /** Change the principal audio buffer of this editor */
     loadBuffer(audioBuffer: AudioBuffer): void;
-    /** Load the previous audio from list */
-    loadPreviousAudio(): Promise<void>;
-    /** Load the next audio from list */
-    loadNextAudio(): Promise<void>;
+    /** Load the previous audio from list
+     * @param forceInitialRendering true to force initial rendering of audio, ignoring user setting
+    */
+    loadPreviousAudio(forceInitialRendering?: boolean): Promise<void>;
+    /**
+     * Load the next audio from list
+     * @param forceInitialRendering true to force initial rendering of audio, ignoring user setting
+     * */
+    loadNextAudio(forceInitialRendering?: boolean): Promise<void>;
+    /**
+     * @returns Return a map with key = filename and value = true if the audio file is currently loaded, false otherwise
+     */
+    getCurrentFileList(): Map<string, boolean>;
     /**
      * Get the rendered audio buffer
      * @returns The AudioBuffer
@@ -222,11 +231,12 @@ interface AudioEditorInterface {
     getOutputBuffer(): AudioBuffer | null;
     /**
      * Render the audio to a buffer
+     * @param forceInitialRendering true to force initial rendering of audio, ignoring user setting
      * @returns A promise resolved when the audio processing is finished.
      * The promise return false if the audio processing was cancelled or if an error occurred.
      * The resulting audio buffer can then be obtained by using the "getOutputBuffer" method.
      */
-    renderAudio(): Promise<boolean>;
+    renderAudio(forceInitialRendering?: boolean): Promise<boolean>;
     /**
      * Check if AudioWorklet are available
      * @returns boolean
@@ -295,7 +305,7 @@ interface AudioEditorInterface {
     /** Get the index of the current loaded audio file from the file list */
     get currentIndexFileList(): number;
     /** Get the total number of audio files loaded */
-    get totalFilesList(): number;
+    get totalFileList(): number;
 }
 
 interface FilterManagerInterface {
@@ -524,10 +534,11 @@ declare class AudioEditor extends AbstractAudioElement implements AudioEditorInt
     loadBufferFromFile(file: File): Promise<void>;
     loadFileList(fileList: FileList): Promise<void>;
     loadBufferFromFileListIndex(index: number): Promise<void>;
-    loadPreviousAudio(): Promise<void>;
-    loadNextAudio(): Promise<void>;
+    loadPreviousAudio(forceInitialRendering?: boolean): Promise<void>;
+    loadNextAudio(forceInitialRendering?: boolean): Promise<void>;
+    getCurrentFileList(): Map<string, boolean>;
     get currentIndexFileList(): number;
-    get totalFilesList(): number;
+    get totalFileList(): number;
     loadBuffer(audioBuffer: AudioBuffer): void;
     getOutputBuffer(): AudioBuffer | null;
     renderAudio(forceInitialRendering?: boolean): Promise<boolean>;
@@ -1180,7 +1191,8 @@ declare enum EventType {
     UPDATE_REMAINING_TIME_ESTIMATED = "updateRemainingTimeEstimated",
     CANCELLED_AND_LOADED_INITIAL_AUDIO = "cancelledAndLoadedInitialAudio",
     CANCELLING_AUDIO_PROCESSING = "cancellingAudioProcessing",
-    PLAYING_FINISHED_LOOP_ALL = "playingFinishedLoopAll"
+    PLAYING_FINISHED_LOOP_ALL = "playingFinishedLoopAll",
+    LOADED_AUDIO_FILE_FROM_LIST = "loadedAudioFileFromList"
 }
 
 declare class SoundStudioFactory {
