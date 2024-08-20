@@ -53,6 +53,10 @@ export default class AudioEditor extends AbstractAudioElement implements AudioEd
     /** The current index of the loaded file from file list */
     private fileListCurrIndex = 0;
 
+    private loadingAudio = false;
+
+    private renderingAudio = false;
+
     constructor(
         @inject(TYPES.FilterManager) filterManager: FilterManagerInterface,
         @inject(TYPES.RendererManager) rendererManager: RendererManagerInterface,
@@ -94,7 +98,7 @@ export default class AudioEditor extends AbstractAudioElement implements AudioEd
 
             // Callback called when playing is finished and looping all audio
             this.bufferPlayer.on(EventType.PLAYING_FINISHED_LOOP_ALL, async () => {
-                if (this.bufferPlayer && this.bufferPlayer.loopAll) {
+                if (this.bufferPlayer && this.bufferPlayer.loopAll && !this.renderingAudio && !this.loadingAudio) {
                     await this.loadNextAudio(true);
                     this.bufferPlayer.start();
                 }
@@ -136,6 +140,7 @@ export default class AudioEditor extends AbstractAudioElement implements AudioEd
 
     async loadBufferFromFile(file: File) {
         this.principalBuffer = null;
+        this.loadingAudio = true;
 
         if (this.audioProcessor) {
             await this.audioProcessor.prepareContext(this.principalBuffer);
@@ -148,6 +153,7 @@ export default class AudioEditor extends AbstractAudioElement implements AudioEd
             if (this.principalBuffer) {
                 this.audioProcessor.sumInputBuffer = utils.sumAudioBuffer(this.principalBuffer);
             } else {
+                this.loadingAudio = false;
                 throw new Error("Error decoding audio file");
             }
 
@@ -157,7 +163,10 @@ export default class AudioEditor extends AbstractAudioElement implements AudioEd
             if (this.bufferPlayer && this.bufferPlayer.loopAll && this.totalFileList <= 1) {
                 this.bufferPlayer.toggleLoop();
             }
+
+            this.loadingAudio = false;
         } else {
+            this.loadingAudio = false;
             throw new Error("Audio Context is not ready!");
         }
     }
@@ -266,6 +275,8 @@ export default class AudioEditor extends AbstractAudioElement implements AudioEd
     async renderAudio(forceInitialRendering?: boolean): Promise<boolean> {
         if (this.audioProcessor) {
             try {
+                this.renderingAudio = true;
+
                 if (this.eventEmitter) {
                     this.eventEmitter.emit(EventType.STARTED_RENDERING_AUDIO);
                 }
@@ -276,12 +287,16 @@ export default class AudioEditor extends AbstractAudioElement implements AudioEd
                     this.eventEmitter.emit(EventType.AUDIO_RENDERING_FINISHED);
                 }
 
+                this.renderingAudio = false;
+
                 return result;
-            } catch(e) {
+            } catch (e) {
                 if (this.eventEmitter) {
                     this.eventEmitter.emit(EventType.AUDIO_RENDERING_FINISHED);
                     this.eventEmitter.emit(EventType.AUDIO_RENDERING_EXCEPTION_THROWN, e as Error);
                 }
+
+                this.renderingAudio = false;
             }
         }
 

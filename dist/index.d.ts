@@ -525,6 +525,8 @@ declare class AudioEditor extends AbstractAudioElement implements AudioEditorInt
     private fileList;
     /** The current index of the loaded file from file list */
     private fileListCurrIndex;
+    private loadingAudio;
+    private renderingAudio;
     constructor(filterManager: FilterManagerInterface, rendererManager: RendererManagerInterface, contextManager: AudioContextManagerInterface, saveBufferManager: SaveBufferManagerInterface, audioProcessor: AudioProcessorInterface, bufferManager: BufferManagerInterface, player: BufferPlayerInterface$1);
     private setup;
     addFilters(...filters: AbstractAudioFilter[]): void;
