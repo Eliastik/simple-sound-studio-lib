@@ -175,7 +175,7 @@ export default class AudioProcessor extends AbstractAudioElement implements Audi
     /**
      * Load rendered audio buffer into audio player
      * @param renderedBuffer Rendered audio buffer - AudioBuffer
-     * @returns false if the rendred audio buffer is invalid, true otherwise
+     * @returns false if the rendered audio buffer is invalid, true otherwise
      */
     private loadRenderedAudio(inputBuffer: AudioBuffer | null, renderedBuffer: AudioBuffer): boolean {
         if (this.eventEmitter && this.bufferPlayer) {
