@@ -1,6 +1,6 @@
 ﻿# Simple Sound Studio - Library
 
-* Version: 2.2.0 (3/31/2024)
+* Version: 2.2.1 (9/10/2024)
 * License: GNU GPL 3
 
 ## English
