@@ -10,7 +10,7 @@ SoundStudioFactory.getConfigServiceInstance().setWorkletBasePath("/dist/worklets
 SoundStudioFactory.getConfigServiceInstance().setWorkerBasePath("/dist/workers/");
 
 // Enable a built-in filter (Bass Boost filter in this case)
-audioEditor.toggleFilter(FilterNames.BASS_BOOST);
+audioEditor.enableFilter(FilterNames.BASS_BOOST);
 
 // By default, the limiter filter is enabled
 console.log("Filter states (enabled/disabled):", audioEditor.getFiltersState());
@@ -37,7 +37,7 @@ async function processAudioThenDownload(file) {
         return;
     }
 
-    // Render the processed audio
+    // Process and render the audio
     try {
         await audioEditor.renderAudio();
     } catch(e) {
@@ -59,9 +59,9 @@ document.getElementById("validate-button").addEventListener("click", async () =>
 
     if(fileInput && fileInput.files[0]) {
         await processAudioThenDownload(fileInput.files[0]);
-
-        // Re-enable the button after processing is complete
-        document.getElementById("validate-button").removeAttribute("disabled");
-        document.getElementById("validate-button").style.cursor = "";
     }
+
+    // Re-enable the button after processing is complete
+    document.getElementById("validate-button").removeAttribute("disabled");
+    document.getElementById("validate-button").style.cursor = "";
 });

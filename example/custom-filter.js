@@ -1,6 +1,48 @@
-import { SoundStudioFactory, FilterNames } from "../dist/esm/SimpleSoundStudioLibrary.js";
+import { SoundStudioFactory, AbstractAudioFilter, UtilFunctions } from "../dist/esm/SimpleSoundStudioLibrary.js";
 
-// Minimal example of using the library
+// Example of using the library and creating a custom filter
+
+// The custom filter
+class CustomGainFilter extends AbstractAudioFilter {
+    gainIncrease = 20; // db
+
+    getNode(context) {
+        const gainNodeFilter = context.createGain();
+        gainNodeFilter.gain = this.gainIncrease;
+
+        return {
+            input: gainNodeFilter,
+            output: gainNodeFilter
+        };
+    }
+    
+    get order() {
+        // This is the order in which the filter will be executed (priority)
+        return 1;
+    }
+
+    get id() {
+        return "gainBoost";
+    }
+
+    getSettings() {
+        return {
+            gainIncrease: this.gainIncrease
+        };
+    }
+
+    async setSetting(settingId, value) {
+        if(!UtilFunctions.isSettingValueValid(value)) {
+            return;
+        }
+
+        switch(settingId) {
+        case "gainIncrease":
+            this.gainIncrease = parseInt(value);
+            break;
+        }
+    }
+}
 
 // Create the audio editor (the main component for audio processing and editing)
 const audioEditor = SoundStudioFactory.createAudioEditor();
@@ -9,24 +51,23 @@ const audioEditor = SoundStudioFactory.createAudioEditor();
 SoundStudioFactory.getConfigServiceInstance().setWorkletBasePath("/dist/worklets/");
 SoundStudioFactory.getConfigServiceInstance().setWorkerBasePath("/dist/workers/");
 
-// Enable a built-in filter (Bass Boost filter in this case)
-audioEditor.enableFilter(FilterNames.BASS_BOOST);
+// Add the custom filter and enable it
+audioEditor.addFilters(new CustomGainFilter());
+audioEditor.enableFilter("gainBoost");
 
 // By default, the limiter filter is enabled
 console.log("Filter states (enabled/disabled):", audioEditor.getFiltersState());
 
-// Change the settings of the bass-boost filter
-// The settings object corresponds to the BassBoosterSettings interface in lib/model/filterSettings
-await audioEditor.changeFilterSettings(FilterNames.BASS_BOOST, {
-    dbBooster: "20",  // Set the amount of boost in decibels
-    dbReduce: "0"     // Set the reduction in decibels
+// Change the settings of the gain booster filter
+await audioEditor.changeFilterSettings("gainBoost", {
+    gainIncrease: "25",  // Set the amount of boost in decibels
 });
 
-console.log("Bass booster settings:", audioEditor.getFiltersSettings().get(FilterNames.BASS_BOOST));
+console.log("Gain booster settings:", audioEditor.getFiltersSettings().get("gainBoost"));
 
 // The audio editor is now ready for audio processing
 
-// When the user selects an audio file and clicks "validate", process and download the rendered audio as a WAV file
+// When the user selects an audio file and clicks "validate", process and download the rendered audio as a MP3 file
 async function processAudioThenDownload(file) {
     // Load the selected audio file into the audio editor
     try {
@@ -37,7 +78,7 @@ async function processAudioThenDownload(file) {
         return;
     }
 
-    // process and render the audio
+    // Process and render the audio
     try {
         await audioEditor.renderAudio();
     } catch(e) {
@@ -46,9 +87,8 @@ async function processAudioThenDownload(file) {
         return;
     }
 
-    // Save the rendered audio to a file (default format is WAV, but can be changed to MP3)
-    await audioEditor.saveBuffer();
-    // await audioEditor.saveBuffer({ format: "mp3" }); // Uncomment to save as MP3 file
+    // Save the rendered audio to a file
+    await audioEditor.saveBuffer({ format: "mp3" });
 }
 
 document.getElementById("validate-button").addEventListener("click", async () => {

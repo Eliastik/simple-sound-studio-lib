@@ -6,7 +6,7 @@
 
 # Class: BufferPlayer
 
-Defined in: [bufferPlayer/BufferPlayer.ts:32](https://github.com/Eliastik/simple-sound-studio-lib/blob/957b1af2e32d036a450fbbc2c20ba27a4d1d9854/lib/bufferPlayer/BufferPlayer.ts#L32)
+Defined in: [bufferPlayer/BufferPlayer.ts:32](https://github.com/Eliastik/simple-sound-studio-lib/blob/4c259d6f225306533b6d6acc4801cf91fccfe063/lib/bufferPlayer/BufferPlayer.ts#L32)
 
 ## Extends
 
@@ -22,7 +22,7 @@ Defined in: [bufferPlayer/BufferPlayer.ts:32](https://github.com/Eliastik/simple
 
 > **new BufferPlayer**(`contextManager`): [`BufferPlayer`](BufferPlayer.md)
 
-Defined in: [bufferPlayer/BufferPlayer.ts:51](https://github.com/Eliastik/simple-sound-studio-lib/blob/957b1af2e32d036a450fbbc2c20ba27a4d1d9854/lib/bufferPlayer/BufferPlayer.ts#L51)
+Defined in: [bufferPlayer/BufferPlayer.ts:51](https://github.com/Eliastik/simple-sound-studio-lib/blob/4c259d6f225306533b6d6acc4801cf91fccfe063/lib/bufferPlayer/BufferPlayer.ts#L51)
 
 #### Parameters
 
@@ -44,7 +44,7 @@ Defined in: [bufferPlayer/BufferPlayer.ts:51](https://github.com/Eliastik/simple
 
 > `protected` **bufferDecoderService**: `null` \| `BufferDecoderServiceInterface` = `null`
 
-Defined in: [filters/interfaces/AbstractAudioElement.ts:21](https://github.com/Eliastik/simple-sound-studio-lib/blob/957b1af2e32d036a450fbbc2c20ba27a4d1d9854/lib/filters/interfaces/AbstractAudioElement.ts#L21)
+Defined in: [filters/interfaces/AbstractAudioElement.ts:21](https://github.com/Eliastik/simple-sound-studio-lib/blob/4c259d6f225306533b6d6acc4801cf91fccfe063/lib/filters/interfaces/AbstractAudioElement.ts#L21)
 
 #### Inherited from
 
@@ -56,7 +56,7 @@ Defined in: [filters/interfaces/AbstractAudioElement.ts:21](https://github.com/E
 
 > `protected` **bufferFetcherService**: `null` \| `BufferFetcherServiceInterface` = `null`
 
-Defined in: [filters/interfaces/AbstractAudioElement.ts:18](https://github.com/Eliastik/simple-sound-studio-lib/blob/957b1af2e32d036a450fbbc2c20ba27a4d1d9854/lib/filters/interfaces/AbstractAudioElement.ts#L18)
+Defined in: [filters/interfaces/AbstractAudioElement.ts:18](https://github.com/Eliastik/simple-sound-studio-lib/blob/4c259d6f225306533b6d6acc4801cf91fccfe063/lib/filters/interfaces/AbstractAudioElement.ts#L18)
 
 #### Inherited from
 
@@ -68,7 +68,7 @@ Defined in: [filters/interfaces/AbstractAudioElement.ts:18](https://github.com/E
 
 > **compatibilityMode**: `boolean` = `false`
 
-Defined in: [bufferPlayer/BufferPlayer.ts:48](https://github.com/Eliastik/simple-sound-studio-lib/blob/957b1af2e32d036a450fbbc2c20ba27a4d1d9854/lib/bufferPlayer/BufferPlayer.ts#L48)
+Defined in: [bufferPlayer/BufferPlayer.ts:48](https://github.com/Eliastik/simple-sound-studio-lib/blob/4c259d6f225306533b6d6acc4801cf91fccfe063/lib/bufferPlayer/BufferPlayer.ts#L48)
 
 Enable or disable compatibility mode (AudioContext vs OfflineAudioContext)
 
@@ -82,7 +82,7 @@ Enable or disable compatibility mode (AudioContext vs OfflineAudioContext)
 
 > `protected` **configService**: `null` \| [`ConfigService`](../interfaces/ConfigService.md) = `null`
 
-Defined in: [filters/interfaces/AbstractAudioElement.ts:24](https://github.com/Eliastik/simple-sound-studio-lib/blob/957b1af2e32d036a450fbbc2c20ba27a4d1d9854/lib/filters/interfaces/AbstractAudioElement.ts#L24)
+Defined in: [filters/interfaces/AbstractAudioElement.ts:24](https://github.com/Eliastik/simple-sound-studio-lib/blob/4c259d6f225306533b6d6acc4801cf91fccfe063/lib/filters/interfaces/AbstractAudioElement.ts#L24)
 
 #### Inherited from
 
@@ -94,7 +94,7 @@ Defined in: [filters/interfaces/AbstractAudioElement.ts:24](https://github.com/E
 
 > **currentNode**: `null` \| `AudioNode` = `null`
 
-Defined in: [bufferPlayer/BufferPlayer.ts:49](https://github.com/Eliastik/simple-sound-studio-lib/blob/957b1af2e32d036a450fbbc2c20ba27a4d1d9854/lib/bufferPlayer/BufferPlayer.ts#L49)
+Defined in: [bufferPlayer/BufferPlayer.ts:49](https://github.com/Eliastik/simple-sound-studio-lib/blob/4c259d6f225306533b6d6acc4801cf91fccfe063/lib/bufferPlayer/BufferPlayer.ts#L49)
 
 ***
 
@@ -102,7 +102,7 @@ Defined in: [bufferPlayer/BufferPlayer.ts:49](https://github.com/Eliastik/simple
 
 > **currentTime**: `number` = `0`
 
-Defined in: [bufferPlayer/BufferPlayer.ts:38](https://github.com/Eliastik/simple-sound-studio-lib/blob/957b1af2e32d036a450fbbc2c20ba27a4d1d9854/lib/bufferPlayer/BufferPlayer.ts#L38)
+Defined in: [bufferPlayer/BufferPlayer.ts:38](https://github.com/Eliastik/simple-sound-studio-lib/blob/4c259d6f225306533b6d6acc4801cf91fccfe063/lib/bufferPlayer/BufferPlayer.ts#L38)
 
 ***
 
@@ -110,7 +110,7 @@ Defined in: [bufferPlayer/BufferPlayer.ts:38](https://github.com/Eliastik/simple
 
 > **displayTime**: `number` = `0`
 
-Defined in: [bufferPlayer/BufferPlayer.ts:39](https://github.com/Eliastik/simple-sound-studio-lib/blob/957b1af2e32d036a450fbbc2c20ba27a4d1d9854/lib/bufferPlayer/BufferPlayer.ts#L39)
+Defined in: [bufferPlayer/BufferPlayer.ts:39](https://github.com/Eliastik/simple-sound-studio-lib/blob/4c259d6f225306533b6d6acc4801cf91fccfe063/lib/bufferPlayer/BufferPlayer.ts#L39)
 
 ***
 
@@ -118,7 +118,7 @@ Defined in: [bufferPlayer/BufferPlayer.ts:39](https://github.com/Eliastik/simple
 
 > **duration**: `number` = `0`
 
-Defined in: [bufferPlayer/BufferPlayer.ts:40](https://github.com/Eliastik/simple-sound-studio-lib/blob/957b1af2e32d036a450fbbc2c20ba27a4d1d9854/lib/bufferPlayer/BufferPlayer.ts#L40)
+Defined in: [bufferPlayer/BufferPlayer.ts:40](https://github.com/Eliastik/simple-sound-studio-lib/blob/4c259d6f225306533b6d6acc4801cf91fccfe063/lib/bufferPlayer/BufferPlayer.ts#L40)
 
 Set the audio duration
 
@@ -132,7 +132,7 @@ Set the audio duration
 
 > `protected` **eventEmitter**: `null` \| `EventEmitterInterface` = `null`
 
-Defined in: [filters/interfaces/AbstractAudioElement.ts:27](https://github.com/Eliastik/simple-sound-studio-lib/blob/957b1af2e32d036a450fbbc2c20ba27a4d1d9854/lib/filters/interfaces/AbstractAudioElement.ts#L27)
+Defined in: [filters/interfaces/AbstractAudioElement.ts:27](https://github.com/Eliastik/simple-sound-studio-lib/blob/4c259d6f225306533b6d6acc4801cf91fccfe063/lib/filters/interfaces/AbstractAudioElement.ts#L27)
 
 #### Inherited from
 
@@ -144,7 +144,7 @@ Defined in: [filters/interfaces/AbstractAudioElement.ts:27](https://github.com/E
 
 > **loop**: `boolean` = `false`
 
-Defined in: [bufferPlayer/BufferPlayer.ts:43](https://github.com/Eliastik/simple-sound-studio-lib/blob/957b1af2e32d036a450fbbc2c20ba27a4d1d9854/lib/bufferPlayer/BufferPlayer.ts#L43)
+Defined in: [bufferPlayer/BufferPlayer.ts:43](https://github.com/Eliastik/simple-sound-studio-lib/blob/4c259d6f225306533b6d6acc4801cf91fccfe063/lib/bufferPlayer/BufferPlayer.ts#L43)
 
 Set to true to play audio in loop
 
@@ -158,7 +158,7 @@ Set to true to play audio in loop
 
 > **loopAll**: `boolean` = `false`
 
-Defined in: [bufferPlayer/BufferPlayer.ts:44](https://github.com/Eliastik/simple-sound-studio-lib/blob/957b1af2e32d036a450fbbc2c20ba27a4d1d9854/lib/bufferPlayer/BufferPlayer.ts#L44)
+Defined in: [bufferPlayer/BufferPlayer.ts:44](https://github.com/Eliastik/simple-sound-studio-lib/blob/4c259d6f225306533b6d6acc4801cf91fccfe063/lib/bufferPlayer/BufferPlayer.ts#L44)
 
 Is playing all audio list in loop?
 
@@ -172,7 +172,7 @@ Is playing all audio list in loop?
 
 > **playing**: `boolean` = `false`
 
-Defined in: [bufferPlayer/BufferPlayer.ts:42](https://github.com/Eliastik/simple-sound-studio-lib/blob/957b1af2e32d036a450fbbc2c20ba27a4d1d9854/lib/bufferPlayer/BufferPlayer.ts#L42)
+Defined in: [bufferPlayer/BufferPlayer.ts:42](https://github.com/Eliastik/simple-sound-studio-lib/blob/4c259d6f225306533b6d6acc4801cf91fccfe063/lib/bufferPlayer/BufferPlayer.ts#L42)
 
 ***
 
@@ -180,7 +180,7 @@ Defined in: [bufferPlayer/BufferPlayer.ts:42](https://github.com/Eliastik/simple
 
 > **speedAudio**: `number` = `1`
 
-Defined in: [bufferPlayer/BufferPlayer.ts:45](https://github.com/Eliastik/simple-sound-studio-lib/blob/957b1af2e32d036a450fbbc2c20ba27a4d1d9854/lib/bufferPlayer/BufferPlayer.ts#L45)
+Defined in: [bufferPlayer/BufferPlayer.ts:45](https://github.com/Eliastik/simple-sound-studio-lib/blob/4c259d6f225306533b6d6acc4801cf91fccfe063/lib/bufferPlayer/BufferPlayer.ts#L45)
 
 Set the audio speed
 
@@ -196,7 +196,7 @@ Set the audio speed
 
 > **get** **currentTimeDisplay**(): `string`
 
-Defined in: [bufferPlayer/BufferPlayer.ts:265](https://github.com/Eliastik/simple-sound-studio-lib/blob/957b1af2e32d036a450fbbc2c20ba27a4d1d9854/lib/bufferPlayer/BufferPlayer.ts#L265)
+Defined in: [bufferPlayer/BufferPlayer.ts:265](https://github.com/Eliastik/simple-sound-studio-lib/blob/4c259d6f225306533b6d6acc4801cf91fccfe063/lib/bufferPlayer/BufferPlayer.ts#L265)
 
 Get the time in text format
 
@@ -216,7 +216,7 @@ Get the time in text format
 
 > **get** **id**(): `string`
 
-Defined in: [bufferPlayer/BufferPlayer.ts:285](https://github.com/Eliastik/simple-sound-studio-lib/blob/957b1af2e32d036a450fbbc2c20ba27a4d1d9854/lib/bufferPlayer/BufferPlayer.ts#L285)
+Defined in: [bufferPlayer/BufferPlayer.ts:285](https://github.com/Eliastik/simple-sound-studio-lib/blob/4c259d6f225306533b6d6acc4801cf91fccfe063/lib/bufferPlayer/BufferPlayer.ts#L285)
 
 Returns the id of this filter/renderer
 
@@ -236,7 +236,7 @@ Returns the id of this filter/renderer
 
 > **get** **maxTimeDisplay**(): `string`
 
-Defined in: [bufferPlayer/BufferPlayer.ts:269](https://github.com/Eliastik/simple-sound-studio-lib/blob/957b1af2e32d036a450fbbc2c20ba27a4d1d9854/lib/bufferPlayer/BufferPlayer.ts#L269)
+Defined in: [bufferPlayer/BufferPlayer.ts:269](https://github.com/Eliastik/simple-sound-studio-lib/blob/4c259d6f225306533b6d6acc4801cf91fccfe063/lib/bufferPlayer/BufferPlayer.ts#L269)
 
 Get the audio duration in text format
 
@@ -256,7 +256,7 @@ Get the audio duration in text format
 
 > **get** **order**(): `number`
 
-Defined in: [bufferPlayer/BufferPlayer.ts:281](https://github.com/Eliastik/simple-sound-studio-lib/blob/957b1af2e32d036a450fbbc2c20ba27a4d1d9854/lib/bufferPlayer/BufferPlayer.ts#L281)
+Defined in: [bufferPlayer/BufferPlayer.ts:281](https://github.com/Eliastik/simple-sound-studio-lib/blob/4c259d6f225306533b6d6acc4801cf91fccfe063/lib/bufferPlayer/BufferPlayer.ts#L281)
 
 Returns the order in which the filter/renderer needs to be applied
 
@@ -276,7 +276,7 @@ Returns the order in which the filter/renderer needs to be applied
 
 > **get** **percent**(): `number`
 
-Defined in: [bufferPlayer/BufferPlayer.ts:273](https://github.com/Eliastik/simple-sound-studio-lib/blob/957b1af2e32d036a450fbbc2c20ba27a4d1d9854/lib/bufferPlayer/BufferPlayer.ts#L273)
+Defined in: [bufferPlayer/BufferPlayer.ts:273](https://github.com/Eliastik/simple-sound-studio-lib/blob/4c259d6f225306533b6d6acc4801cf91fccfe063/lib/bufferPlayer/BufferPlayer.ts#L273)
 
 Get the percent played
 
@@ -296,7 +296,7 @@ Get the percent played
 
 > **get** **remainingTimeDisplay**(): `string`
 
-Defined in: [bufferPlayer/BufferPlayer.ts:277](https://github.com/Eliastik/simple-sound-studio-lib/blob/957b1af2e32d036a450fbbc2c20ba27a4d1d9854/lib/bufferPlayer/BufferPlayer.ts#L277)
+Defined in: [bufferPlayer/BufferPlayer.ts:277](https://github.com/Eliastik/simple-sound-studio-lib/blob/4c259d6f225306533b6d6acc4801cf91fccfe063/lib/bufferPlayer/BufferPlayer.ts#L277)
 
 Get the remaining time in text format
 
@@ -314,7 +314,7 @@ Get the remaining time in text format
 
 > **disable**(): `void`
 
-Defined in: [filters/interfaces/AbstractAudioElement.ts:66](https://github.com/Eliastik/simple-sound-studio-lib/blob/957b1af2e32d036a450fbbc2c20ba27a4d1d9854/lib/filters/interfaces/AbstractAudioElement.ts#L66)
+Defined in: [filters/interfaces/AbstractAudioElement.ts:66](https://github.com/Eliastik/simple-sound-studio-lib/blob/4c259d6f225306533b6d6acc4801cf91fccfe063/lib/filters/interfaces/AbstractAudioElement.ts#L66)
 
 Disable this filter/renderer
 
@@ -332,7 +332,7 @@ Disable this filter/renderer
 
 > **enable**(): `void`
 
-Defined in: [filters/interfaces/AbstractAudioElement.ts:61](https://github.com/Eliastik/simple-sound-studio-lib/blob/957b1af2e32d036a450fbbc2c20ba27a4d1d9854/lib/filters/interfaces/AbstractAudioElement.ts#L61)
+Defined in: [filters/interfaces/AbstractAudioElement.ts:61](https://github.com/Eliastik/simple-sound-studio-lib/blob/4c259d6f225306533b6d6acc4801cf91fccfe063/lib/filters/interfaces/AbstractAudioElement.ts#L61)
 
 Enable this filter/renderer
 
@@ -350,7 +350,7 @@ Enable this filter/renderer
 
 > **init**(`direct`?): `void`
 
-Defined in: [bufferPlayer/BufferPlayer.ts:58](https://github.com/Eliastik/simple-sound-studio-lib/blob/957b1af2e32d036a450fbbc2c20ba27a4d1d9854/lib/bufferPlayer/BufferPlayer.ts#L58)
+Defined in: [bufferPlayer/BufferPlayer.ts:58](https://github.com/Eliastik/simple-sound-studio-lib/blob/4c259d6f225306533b6d6acc4801cf91fccfe063/lib/bufferPlayer/BufferPlayer.ts#L58)
 
 Init this buffer player
 
@@ -376,7 +376,7 @@ Play audio buffer directly without stopping previous play?
 
 > **injectDependencies**(`bufferFetcherService`, `bufferDecoderService`, `configService`, `eventEmitter`): `void`
 
-Defined in: [filters/interfaces/AbstractAudioElement.ts:75](https://github.com/Eliastik/simple-sound-studio-lib/blob/957b1af2e32d036a450fbbc2c20ba27a4d1d9854/lib/filters/interfaces/AbstractAudioElement.ts#L75)
+Defined in: [filters/interfaces/AbstractAudioElement.ts:75](https://github.com/Eliastik/simple-sound-studio-lib/blob/4c259d6f225306533b6d6acc4801cf91fccfe063/lib/filters/interfaces/AbstractAudioElement.ts#L75)
 
 #### Parameters
 
@@ -410,7 +410,7 @@ Defined in: [filters/interfaces/AbstractAudioElement.ts:75](https://github.com/E
 
 > **isDefaultEnabled**(): `boolean`
 
-Defined in: [filters/interfaces/AbstractAudioElement.ts:41](https://github.com/Eliastik/simple-sound-studio-lib/blob/957b1af2e32d036a450fbbc2c20ba27a4d1d9854/lib/filters/interfaces/AbstractAudioElement.ts#L41)
+Defined in: [filters/interfaces/AbstractAudioElement.ts:41](https://github.com/Eliastik/simple-sound-studio-lib/blob/4c259d6f225306533b6d6acc4801cf91fccfe063/lib/filters/interfaces/AbstractAudioElement.ts#L41)
 
 Is this filter/renderer enabled by default?
 
@@ -428,7 +428,7 @@ Is this filter/renderer enabled by default?
 
 > **isEnabled**(): `boolean`
 
-Defined in: [filters/interfaces/AbstractAudioElement.ts:36](https://github.com/Eliastik/simple-sound-studio-lib/blob/957b1af2e32d036a450fbbc2c20ba27a4d1d9854/lib/filters/interfaces/AbstractAudioElement.ts#L36)
+Defined in: [filters/interfaces/AbstractAudioElement.ts:36](https://github.com/Eliastik/simple-sound-studio-lib/blob/4c259d6f225306533b6d6acc4801cf91fccfe063/lib/filters/interfaces/AbstractAudioElement.ts#L36)
 
 Is this filter/renderer enabled?
 
@@ -446,7 +446,7 @@ Is this filter/renderer enabled?
 
 > **loadBuffer**(`buffer`): `void`
 
-Defined in: [bufferPlayer/BufferPlayer.ts:76](https://github.com/Eliastik/simple-sound-studio-lib/blob/957b1af2e32d036a450fbbc2c20ba27a4d1d9854/lib/bufferPlayer/BufferPlayer.ts#L76)
+Defined in: [bufferPlayer/BufferPlayer.ts:76](https://github.com/Eliastik/simple-sound-studio-lib/blob/4c259d6f225306533b6d6acc4801cf91fccfe063/lib/bufferPlayer/BufferPlayer.ts#L76)
 
 Load an audio buffer
 
@@ -472,7 +472,7 @@ The buffer
 
 > **on**(`event`, `callback`): `void`
 
-Defined in: [bufferPlayer/BufferPlayer.ts:259](https://github.com/Eliastik/simple-sound-studio-lib/blob/957b1af2e32d036a450fbbc2c20ba27a4d1d9854/lib/bufferPlayer/BufferPlayer.ts#L259)
+Defined in: [bufferPlayer/BufferPlayer.ts:259](https://github.com/Eliastik/simple-sound-studio-lib/blob/4c259d6f225306533b6d6acc4801cf91fccfe063/lib/bufferPlayer/BufferPlayer.ts#L259)
 
 Observe an event
 
@@ -504,7 +504,7 @@ Callback called when an event of this type occurs
 
 > **onBeforePlaying**(`callback`): `void`
 
-Defined in: [bufferPlayer/BufferPlayer.ts:245](https://github.com/Eliastik/simple-sound-studio-lib/blob/957b1af2e32d036a450fbbc2c20ba27a4d1d9854/lib/bufferPlayer/BufferPlayer.ts#L245)
+Defined in: [bufferPlayer/BufferPlayer.ts:245](https://github.com/Eliastik/simple-sound-studio-lib/blob/4c259d6f225306533b6d6acc4801cf91fccfe063/lib/bufferPlayer/BufferPlayer.ts#L245)
 
 Callback called just before starting playing the audio
 
@@ -530,7 +530,7 @@ The callback
 
 > **pause**(): `void`
 
-Defined in: [bufferPlayer/BufferPlayer.ts:208](https://github.com/Eliastik/simple-sound-studio-lib/blob/957b1af2e32d036a450fbbc2c20ba27a4d1d9854/lib/bufferPlayer/BufferPlayer.ts#L208)
+Defined in: [bufferPlayer/BufferPlayer.ts:208](https://github.com/Eliastik/simple-sound-studio-lib/blob/4c259d6f225306533b6d6acc4801cf91fccfe063/lib/bufferPlayer/BufferPlayer.ts#L208)
 
 Pause the audio
 
@@ -548,7 +548,7 @@ Pause the audio
 
 > **playDirect**(): `Promise`\<`void`\>
 
-Defined in: [bufferPlayer/BufferPlayer.ts:199](https://github.com/Eliastik/simple-sound-studio-lib/blob/957b1af2e32d036a450fbbc2c20ba27a4d1d9854/lib/bufferPlayer/BufferPlayer.ts#L199)
+Defined in: [bufferPlayer/BufferPlayer.ts:199](https://github.com/Eliastik/simple-sound-studio-lib/blob/4c259d6f225306533b6d6acc4801cf91fccfe063/lib/bufferPlayer/BufferPlayer.ts#L199)
 
 Play audio directly, without stopping previous audio play
 
@@ -566,7 +566,7 @@ Play audio directly, without stopping previous audio play
 
 > **reset**(`direct`?): `void`
 
-Defined in: [bufferPlayer/BufferPlayer.ts:96](https://github.com/Eliastik/simple-sound-studio-lib/blob/957b1af2e32d036a450fbbc2c20ba27a4d1d9854/lib/bufferPlayer/BufferPlayer.ts#L96)
+Defined in: [bufferPlayer/BufferPlayer.ts:96](https://github.com/Eliastik/simple-sound-studio-lib/blob/4c259d6f225306533b6d6acc4801cf91fccfe063/lib/bufferPlayer/BufferPlayer.ts#L96)
 
 Reset this player
 
@@ -592,7 +592,7 @@ Play audio buffer directly without stopping previous play?
 
 > **setCompatibilityMode**(`currentNode`, `duration`?): `void`
 
-Defined in: [bufferPlayer/BufferPlayer.ts:83](https://github.com/Eliastik/simple-sound-studio-lib/blob/957b1af2e32d036a450fbbc2c20ba27a4d1d9854/lib/bufferPlayer/BufferPlayer.ts#L83)
+Defined in: [bufferPlayer/BufferPlayer.ts:83](https://github.com/Eliastik/simple-sound-studio-lib/blob/4c259d6f225306533b6d6acc4801cf91fccfe063/lib/bufferPlayer/BufferPlayer.ts#L83)
 
 Enable compatibility mode
 
@@ -624,7 +624,7 @@ The audio duration
 
 > **setDefaultEnabled**(`state`): `void`
 
-Defined in: [filters/interfaces/AbstractAudioElement.ts:46](https://github.com/Eliastik/simple-sound-studio-lib/blob/957b1af2e32d036a450fbbc2c20ba27a4d1d9854/lib/filters/interfaces/AbstractAudioElement.ts#L46)
+Defined in: [filters/interfaces/AbstractAudioElement.ts:46](https://github.com/Eliastik/simple-sound-studio-lib/blob/4c259d6f225306533b6d6acc4801cf91fccfe063/lib/filters/interfaces/AbstractAudioElement.ts#L46)
 
 Set to true if this filter/renderer needs to be enabled by default
 
@@ -648,7 +648,7 @@ Set to true if this filter/renderer needs to be enabled by default
 
 > **setEnabled**(`state`): `void`
 
-Defined in: [filters/interfaces/AbstractAudioElement.ts:56](https://github.com/Eliastik/simple-sound-studio-lib/blob/957b1af2e32d036a450fbbc2c20ba27a4d1d9854/lib/filters/interfaces/AbstractAudioElement.ts#L56)
+Defined in: [filters/interfaces/AbstractAudioElement.ts:56](https://github.com/Eliastik/simple-sound-studio-lib/blob/4c259d6f225306533b6d6acc4801cf91fccfe063/lib/filters/interfaces/AbstractAudioElement.ts#L56)
 
 #### Parameters
 
@@ -670,7 +670,7 @@ Defined in: [filters/interfaces/AbstractAudioElement.ts:56](https://github.com/E
 
 > **setTime**(`time`): `void`
 
-Defined in: [bufferPlayer/BufferPlayer.ts:231](https://github.com/Eliastik/simple-sound-studio-lib/blob/957b1af2e32d036a450fbbc2c20ba27a4d1d9854/lib/bufferPlayer/BufferPlayer.ts#L231)
+Defined in: [bufferPlayer/BufferPlayer.ts:231](https://github.com/Eliastik/simple-sound-studio-lib/blob/4c259d6f225306533b6d6acc4801cf91fccfe063/lib/bufferPlayer/BufferPlayer.ts#L231)
 
 Set the current starting time of this player
 
@@ -696,7 +696,7 @@ Where to start playing, in milliseconds
 
 > **setTimePercent**(`percent`): `void`
 
-Defined in: [bufferPlayer/BufferPlayer.ts:217](https://github.com/Eliastik/simple-sound-studio-lib/blob/957b1af2e32d036a450fbbc2c20ba27a4d1d9854/lib/bufferPlayer/BufferPlayer.ts#L217)
+Defined in: [bufferPlayer/BufferPlayer.ts:217](https://github.com/Eliastik/simple-sound-studio-lib/blob/4c259d6f225306533b6d6acc4801cf91fccfe063/lib/bufferPlayer/BufferPlayer.ts#L217)
 
 Set the current starting time of this player
 
@@ -722,7 +722,7 @@ Where to start playing, in percent
 
 > **start**(`direct`?): `Promise`\<`void`\>
 
-Defined in: [bufferPlayer/BufferPlayer.ts:139](https://github.com/Eliastik/simple-sound-studio-lib/blob/957b1af2e32d036a450fbbc2c20ba27a4d1d9854/lib/bufferPlayer/BufferPlayer.ts#L139)
+Defined in: [bufferPlayer/BufferPlayer.ts:139](https://github.com/Eliastik/simple-sound-studio-lib/blob/4c259d6f225306533b6d6acc4801cf91fccfe063/lib/bufferPlayer/BufferPlayer.ts#L139)
 
 Start playing the audio
 
@@ -748,7 +748,7 @@ Play audio buffer directly without stopping previous play?
 
 > **stop**(): `void`
 
-Defined in: [bufferPlayer/BufferPlayer.ts:107](https://github.com/Eliastik/simple-sound-studio-lib/blob/957b1af2e32d036a450fbbc2c20ba27a4d1d9854/lib/bufferPlayer/BufferPlayer.ts#L107)
+Defined in: [bufferPlayer/BufferPlayer.ts:107](https://github.com/Eliastik/simple-sound-studio-lib/blob/4c259d6f225306533b6d6acc4801cf91fccfe063/lib/bufferPlayer/BufferPlayer.ts#L107)
 
 Stop playing the audio
 
@@ -766,7 +766,7 @@ Stop playing the audio
 
 > **toggle**(): `void`
 
-Defined in: [filters/interfaces/AbstractAudioElement.ts:71](https://github.com/Eliastik/simple-sound-studio-lib/blob/957b1af2e32d036a450fbbc2c20ba27a4d1d9854/lib/filters/interfaces/AbstractAudioElement.ts#L71)
+Defined in: [filters/interfaces/AbstractAudioElement.ts:71](https://github.com/Eliastik/simple-sound-studio-lib/blob/4c259d6f225306533b6d6acc4801cf91fccfe063/lib/filters/interfaces/AbstractAudioElement.ts#L71)
 
 Toggle to enabled/disabled this filter
 
@@ -784,7 +784,7 @@ Toggle to enabled/disabled this filter
 
 > **toggleLoop**(): `void`
 
-Defined in: [bufferPlayer/BufferPlayer.ts:249](https://github.com/Eliastik/simple-sound-studio-lib/blob/957b1af2e32d036a450fbbc2c20ba27a4d1d9854/lib/bufferPlayer/BufferPlayer.ts#L249)
+Defined in: [bufferPlayer/BufferPlayer.ts:249](https://github.com/Eliastik/simple-sound-studio-lib/blob/4c259d6f225306533b6d6acc4801cf91fccfe063/lib/bufferPlayer/BufferPlayer.ts#L249)
 
 Enable/disable loop playing
 
@@ -802,7 +802,7 @@ Enable/disable loop playing
 
 > **toggleLoopAll**(): `void`
 
-Defined in: [bufferPlayer/BufferPlayer.ts:254](https://github.com/Eliastik/simple-sound-studio-lib/blob/957b1af2e32d036a450fbbc2c20ba27a4d1d9854/lib/bufferPlayer/BufferPlayer.ts#L254)
+Defined in: [bufferPlayer/BufferPlayer.ts:254](https://github.com/Eliastik/simple-sound-studio-lib/blob/4c259d6f225306533b6d6acc4801cf91fccfe063/lib/bufferPlayer/BufferPlayer.ts#L254)
 
 Enable/disable looping all audio
 

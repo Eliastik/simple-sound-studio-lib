@@ -37,6 +37,22 @@ export default class RendererManager extends AbstractAudioElement implements Ren
         return state;
     }
 
+    enableRenderer(rendererId: string) {
+        const renderer = this.renderers.find(f => f.id === rendererId);
+
+        if (renderer) {
+            renderer.enable();
+        }
+    }
+
+    disableRenderer(rendererId: string) {
+        const renderer = this.renderers.find(f => f.id === rendererId);
+
+        if (renderer) {
+            renderer.disable();
+        }
+    }
+
     toggleRenderer(rendererId: string) {
         const renderer = this.renderers.find(f => f.id === rendererId);
 

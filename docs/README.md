@@ -72,6 +72,10 @@ php -S localhost:3000
 
 Once the server is running, open example/index.html in your browser to see the minimal example in action.
 
+Please note that there are other more advanced examples :
+
+- [example/custom-filters.js]: explain how to create a custom filter
+
 ### Compile the project
 
 If you made a change to the library, you will need to compile it to use your change.
@@ -152,6 +156,10 @@ php -S localhost:3000
 ```
 
 Une fois le serveur lancé, ouvrez example/index.html dans votre navigateur pour voir l'exemple minimal en action.
+
+Il y a également d'autres  exemples avancés :
+
+- [example/custom-filters.js]: montre comment créer un filtre audio personnalisé
 
 #### Compiler le projet
 

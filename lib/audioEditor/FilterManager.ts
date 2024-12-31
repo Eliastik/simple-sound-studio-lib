@@ -69,6 +69,22 @@ export default class FilterManager extends AbstractAudioElement implements Filte
         return settings;
     }
 
+    enableFilter(filterId: string) {
+        const filter = this.filters.find(f => f.id === filterId);
+
+        if (filter) {
+            filter.enable();
+        }
+    }
+
+    disableFilter(filterId: string) {
+        const filter = this.filters.find(f => f.id === filterId);
+
+        if (filter) {
+            filter.disable();
+        }
+    }
+
     toggleFilter(filterId: string) {
         const filter = this.filters.find(f => f.id === filterId);
 

@@ -344,6 +344,28 @@ export default class AudioEditor extends AbstractAudioElement implements AudioEd
         }
     }
 
+    enableFilter(filterId: string) {
+        if (this.rendererManager) {
+            this.rendererManager.enableRenderer(filterId);
+        }
+
+        if (this.filterManager) {
+            this.filterManager.enableFilter(filterId);
+            this.reconnectNodesIfNeeded();
+        }
+    }
+
+    disableFilter(filterId: string) {
+        if (this.rendererManager) {
+            this.rendererManager.disableRenderer(filterId);
+        }
+
+        if (this.filterManager) {
+            this.filterManager.disableFilter(filterId);
+            this.reconnectNodesIfNeeded();
+        }
+    }
+
     toggleFilter(filterId: string) {
         if (this.rendererManager) {
             this.rendererManager.toggleRenderer(filterId);

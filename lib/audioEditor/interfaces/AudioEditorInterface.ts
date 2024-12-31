@@ -93,6 +93,18 @@ export default interface AudioEditorInterface {
     reconnectNodesIfNeeded(): Promise<void>;
 
     /**
+     * Enable a filter/renderer
+     * @param filterId The filter/renderer ID
+     */
+    enableFilter(filterId: string): void;
+    
+    /**
+     * Disable a filter/renderer
+     * @param filterId The filter/renderer ID
+     */
+    disableFilter(filterId: string): void;
+
+    /**
      * Toggle enabled/disabled state for a filter/renderer
      * @param filterId The filter/renderer ID
      */

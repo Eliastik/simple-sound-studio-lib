@@ -25,6 +25,18 @@ export default interface FilterManagerInterface {
     getFiltersSettings(): Map<string, FilterSettings>;
 
     /**
+     * Enable a filter
+     * @param filterId The filter ID
+     */
+    enableFilter(filterId: string): void;
+    
+    /**
+     * Disable a filter
+     * @param filterId The filter ID
+     */
+    disableFilter(filterId: string): void;
+
+    /**
      * Toggle enabled/disabled state for a filter
      * @param filterId The filter ID
      */

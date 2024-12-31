@@ -16,6 +16,18 @@ export default interface RendererManagerInterface {
     getRenderersState(): FilterState;
 
     /**
+     * Enable a renderer
+     * @param filterId The filter ID
+     */
+    enableRenderer(rendererId: string): void;
+    
+    /**
+     * Disable a renderer
+     * @param filterId The filter ID
+     */
+    disableRenderer(rendererId: string): void;
+
+    /**
      * Toggle enabled/disabled state for a renderer
      * @param filterId The renderer ID
      */

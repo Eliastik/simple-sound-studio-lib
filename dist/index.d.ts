@@ -273,6 +273,16 @@ interface AudioEditorInterface {
     /** Reconnect the nodes if the compatibility/direct mode is enabled */
     reconnectNodesIfNeeded(): Promise<void>;
     /**
+     * Enable a filter/renderer
+     * @param filterId The filter/renderer ID
+     */
+    enableFilter(filterId: string): void;
+    /**
+     * Disable a filter/renderer
+     * @param filterId The filter/renderer ID
+     */
+    disableFilter(filterId: string): void;
+    /**
      * Toggle enabled/disabled state for a filter/renderer
      * @param filterId The filter/renderer ID
      */
@@ -342,6 +352,16 @@ interface FilterManagerInterface {
      * @returns
      */
     getFiltersSettings(): Map<string, FilterSettings$1>;
+    /**
+     * Enable a filter
+     * @param filterId The filter ID
+     */
+    enableFilter(filterId: string): void;
+    /**
+     * Disable a filter
+     * @param filterId The filter ID
+     */
+    disableFilter(filterId: string): void;
     /**
      * Toggle enabled/disabled state for a filter
      * @param filterId The filter ID
@@ -413,6 +433,16 @@ interface RendererManagerInterface {
      * @returns The renderers state (enabled/disabled)
      */
     getRenderersState(): FilterState$1;
+    /**
+     * Enable a renderer
+     * @param filterId The filter ID
+     */
+    enableRenderer(rendererId: string): void;
+    /**
+     * Disable a renderer
+     * @param filterId The filter ID
+     */
+    disableRenderer(rendererId: string): void;
     /**
      * Toggle enabled/disabled state for a renderer
      * @param filterId The renderer ID
@@ -567,6 +597,8 @@ declare class AudioEditor extends AbstractAudioElement implements AudioEditorInt
     getFiltersState(): FilterState;
     getFiltersSettings(): Map<string, FilterSettings>;
     reconnectNodesIfNeeded(): Promise<void>;
+    enableFilter(filterId: string): void;
+    disableFilter(filterId: string): void;
     toggleFilter(filterId: string): void;
     changeFilterSettings(filterId: string, settings: FilterSettings): Promise<void>;
     resetFilterSettings(filterId: string): Promise<void>;
