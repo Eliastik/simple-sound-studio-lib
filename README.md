@@ -115,6 +115,16 @@ Ou vous pouvez installer le package npm en utilisant la commande suivante :
 
 Les types TypeScript sont fournis directement par le package.
 
+Vous devez également exposer les fichiers worklet et worker fournis par la bibliothèque à la racine de votre application web :
+
+- [Fichiers Workers](https://github.com/Eliastik/simple-sound-studio-lib/tree/master/dist/workers)
+- [Fichiers Worklets](https://github.com/Eliastik/simple-sound-studio-lib/tree/master/dist/worklets)
+
+Si vous n'exposez pas les fichiers, la bibliothèque essaiera de fonctionner au mieux, mais certaines fonctionnalités échoueront :
+
+- Si les fichiers worker ne sont pas correctement exposés : la fonction d'export d'audio ne fonctionnera pas.
+- Si les fichiers des worklets ne sont pas correctement exposés : la bibliothèque se rabattra sur ScriptProcessorNode pour certains filtres. Cette implémentation offre des performances et une qualité moindres, mais reste acceptable en tant que solution de repli.
+
 ### Documentation
 
 La documentation des méthodes et des classes se trouve ici : [docs/](docs/).
