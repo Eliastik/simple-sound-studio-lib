@@ -1130,8 +1130,8 @@ declare const utilFunctions: {
     loadAudioBuffer: (context: AudioContext, file: File) => Promise<AudioBuffer>;
     readAsArrayBufferPromisified: (file: File) => Promise<ArrayBuffer>;
     decodeBuffer: (context: AudioContext, buffer: AudioBuffer) => AudioBuffer;
-    convertAudioBufferToFloat32Array: (buffer: AudioBuffer) => Float32Array[];
-    convertAudioParamToFloat32Array: (param: AudioParam, length: number) => Float32Array;
+    convertAudioBufferToFloat32Array: (buffer: AudioBuffer) => Float32Array<ArrayBufferLike>[];
+    convertAudioParamToFloat32Array: (param: AudioParam, length: number) => Float32Array<ArrayBuffer>;
     sumAudioBufferChannel(buffer: AudioBuffer, channel: number): number;
     sumAudioBuffer(buffer: AudioBuffer): number;
     /**

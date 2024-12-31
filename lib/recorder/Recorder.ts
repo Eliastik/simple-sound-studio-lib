@@ -105,6 +105,7 @@ export class Recorder implements RecorderInterface {
                 try {
                     await this.createRecorderWorklet();
                 } catch(e) {
+                    console.error(e);
                     this.createRecorderScriptProcessorNode();
                 }
             } else {

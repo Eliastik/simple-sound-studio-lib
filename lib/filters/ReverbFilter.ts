@@ -122,7 +122,9 @@ export default class ReverbFilter extends AbstractAudioFilter {
                             link: ""
                         };
                     }
-                } catch (e) { /* empty */ }
+                } catch (e) {
+                    console.error(e);
+                }
             }
         } else if (settingId == "reverbCustomEnvironmentAddTime") {
             if (utilFunctions.isSettingValueValid(value)) {

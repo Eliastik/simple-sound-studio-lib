@@ -162,10 +162,17 @@ export default class VoiceRecorder extends AbstractAudioElement implements Voice
     audioFeedback(enable: boolean) {
         if (this.contextManager && this.contextManager.currentContext) {
             if (enable) {
-                this.input && this.input.connect(this.contextManager.currentContext.destination);
+                if (this.input) {
+                    this.input.connect(this.contextManager.currentContext.destination);
+                }
+
                 this.enableAudioFeedback = true;
             } else {
-                this.input && this.input.connect(this.contextManager.currentContext.destination) && this.input.disconnect(this.contextManager.currentContext.destination);
+                if (this.input) {
+                    this.input.connect(this.contextManager.currentContext.destination);
+                    this.input.disconnect(this.contextManager.currentContext.destination);
+                }
+
                 this.enableAudioFeedback = false;
             }
 
@@ -237,6 +244,7 @@ export default class VoiceRecorder extends AbstractAudioElement implements Voice
                         await this.setup(null, precRecording, precAudioFeedback);
                     }
                 } catch (e) {
+                    console.error(e);
                     this.errorCallback();
                 }
             }
@@ -335,7 +343,10 @@ export default class VoiceRecorder extends AbstractAudioElement implements Voice
                 this.recorder.record();
             }
 
-            this.timer && this.timer.start();
+            if (this.timer) {
+                this.timer.start();
+            }
+
             this.recording = true;
 
             if (this.eventEmitter) {
@@ -347,7 +358,11 @@ export default class VoiceRecorder extends AbstractAudioElement implements Voice
     async stop() {
         if (this.alreadyInit && this.recorder) {
             this.recorder.stop();
-            this.timer && this.timer.stop();
+
+            if (this.timer) {
+                this.timer.stop();
+            }
+
             this.recording = false;
 
             this.recorder.getBuffer((buffer: Float32Array[]) => {
@@ -367,8 +382,14 @@ export default class VoiceRecorder extends AbstractAudioElement implements Voice
 
     pause() {
         if (this.alreadyInit) {
-            this.recorder && this.recorder.stop();
-            this.timer && this.timer.stop();
+            if (this.recorder) {
+                this.recorder.stop();
+            }
+
+            if (this.timer) {
+                this.timer.stop();
+            }
+
             this.recording = false;
             this.eventEmitter?.emit(EventType.RECORDER_PAUSED);
         }
@@ -388,8 +409,14 @@ export default class VoiceRecorder extends AbstractAudioElement implements Voice
     }
 
     reset() {
-        this.recorder && this.recorder.kill();
-        this.timer && this.timer.stop();
+        if (this.recorder) {
+            this.recorder.kill();
+        }
+
+        if (this.timer) {
+            this.timer.stop();
+        }
+
         this.audioFeedback(false);
 
         this.stopStream();

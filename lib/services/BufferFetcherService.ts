@@ -53,6 +53,8 @@ export default class BufferFetcherService implements BufferFetcherServiceInterfa
     
             this.eventEmitter?.emit(EventType.FINISHED_FETCHING_BUFFERS, realBufferURI);
         } catch(e) {
+            console.error(e);
+
             this.bufferErrors.push(realBufferURI);
             this.eventEmitter?.emit(EventType.FETCHING_BUFFERS_ERROR, realBufferURI);
             throw EventType.FETCHING_BUFFERS_ERROR;

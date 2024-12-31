@@ -65,6 +65,8 @@ export default class BufferManager extends AbstractAudioElement implements Buffe
                 this.eventEmitter.emit(EventType.LOADED_BUFFERS);
             }
         } catch (e) {
+            console.error(e);
+
             if (this.eventEmitter && !refetch) {
                 this.eventEmitter.emit(EventType.LOADING_BUFFERS_ERROR);
             }

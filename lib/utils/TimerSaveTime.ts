@@ -27,7 +27,6 @@ export default class TimerSaveTime {
     constructor(seconds: number, incr: number) {
         this.seconds = seconds;
         this.initialSeconds = seconds;
-        this.interval;
         this.incr = incr;
     }
 
