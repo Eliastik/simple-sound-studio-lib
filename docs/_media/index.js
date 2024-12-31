@@ -37,7 +37,7 @@ async function processAudioThenDownload(file) {
         return;
     }
 
-    // process and render the audio
+    // Process and render the audio
     try {
         await audioEditor.renderAudio();
     } catch(e) {

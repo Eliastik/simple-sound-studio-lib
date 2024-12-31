@@ -6,7 +6,7 @@
 
 # Class: SoundStudioFactory
 
-Defined in: [utils/SoundStudioFactory.ts:10](https://github.com/Eliastik/simple-sound-studio-lib/blob/4c259d6f225306533b6d6acc4801cf91fccfe063/lib/utils/SoundStudioFactory.ts#L10)
+Defined in: [utils/SoundStudioFactory.ts:10](https://github.com/Eliastik/simple-sound-studio-lib/blob/8690802f01b749e56e5136b5a5dc05dee7f77984/lib/utils/SoundStudioFactory.ts#L10)
 
 ## Constructors
 
@@ -24,7 +24,7 @@ Defined in: [utils/SoundStudioFactory.ts:10](https://github.com/Eliastik/simple-
 
 > `static` **createAudioEditor**(`configService`?, `buffersToFetch`?): `AudioEditorInterface`
 
-Defined in: [utils/SoundStudioFactory.ts:14](https://github.com/Eliastik/simple-sound-studio-lib/blob/4c259d6f225306533b6d6acc4801cf91fccfe063/lib/utils/SoundStudioFactory.ts#L14)
+Defined in: [utils/SoundStudioFactory.ts:14](https://github.com/Eliastik/simple-sound-studio-lib/blob/8690802f01b749e56e5136b5a5dc05dee7f77984/lib/utils/SoundStudioFactory.ts#L14)
 
 #### Parameters
 
@@ -46,7 +46,7 @@ Defined in: [utils/SoundStudioFactory.ts:14](https://github.com/Eliastik/simple-
 
 > `static` **createVoiceRecorder**(): `VoiceRecorderInterface`
 
-Defined in: [utils/SoundStudioFactory.ts:30](https://github.com/Eliastik/simple-sound-studio-lib/blob/4c259d6f225306533b6d6acc4801cf91fccfe063/lib/utils/SoundStudioFactory.ts#L30)
+Defined in: [utils/SoundStudioFactory.ts:30](https://github.com/Eliastik/simple-sound-studio-lib/blob/8690802f01b749e56e5136b5a5dc05dee7f77984/lib/utils/SoundStudioFactory.ts#L30)
 
 #### Returns
 
@@ -58,7 +58,7 @@ Defined in: [utils/SoundStudioFactory.ts:30](https://github.com/Eliastik/simple-
 
 > `static` **getAudioEditorInstance**(): `null` \| `AudioEditorInterface`
 
-Defined in: [utils/SoundStudioFactory.ts:34](https://github.com/Eliastik/simple-sound-studio-lib/blob/4c259d6f225306533b6d6acc4801cf91fccfe063/lib/utils/SoundStudioFactory.ts#L34)
+Defined in: [utils/SoundStudioFactory.ts:34](https://github.com/Eliastik/simple-sound-studio-lib/blob/8690802f01b749e56e5136b5a5dc05dee7f77984/lib/utils/SoundStudioFactory.ts#L34)
 
 #### Returns
 
@@ -70,7 +70,7 @@ Defined in: [utils/SoundStudioFactory.ts:34](https://github.com/Eliastik/simple-
 
 > `static` **getAudioPlayerInstance**(): `null` \| `BufferPlayerInterface`
 
-Defined in: [utils/SoundStudioFactory.ts:38](https://github.com/Eliastik/simple-sound-studio-lib/blob/4c259d6f225306533b6d6acc4801cf91fccfe063/lib/utils/SoundStudioFactory.ts#L38)
+Defined in: [utils/SoundStudioFactory.ts:38](https://github.com/Eliastik/simple-sound-studio-lib/blob/8690802f01b749e56e5136b5a5dc05dee7f77984/lib/utils/SoundStudioFactory.ts#L38)
 
 #### Returns
 
@@ -82,7 +82,7 @@ Defined in: [utils/SoundStudioFactory.ts:38](https://github.com/Eliastik/simple-
 
 > `static` **getAudioRecorderInstance**(): `null` \| `VoiceRecorderInterface`
 
-Defined in: [utils/SoundStudioFactory.ts:42](https://github.com/Eliastik/simple-sound-studio-lib/blob/4c259d6f225306533b6d6acc4801cf91fccfe063/lib/utils/SoundStudioFactory.ts#L42)
+Defined in: [utils/SoundStudioFactory.ts:42](https://github.com/Eliastik/simple-sound-studio-lib/blob/8690802f01b749e56e5136b5a5dc05dee7f77984/lib/utils/SoundStudioFactory.ts#L42)
 
 #### Returns
 
@@ -94,7 +94,7 @@ Defined in: [utils/SoundStudioFactory.ts:42](https://github.com/Eliastik/simple-
 
 > `static` **getConfigServiceInstance**(): `undefined` \| [`ConfigService`](../interfaces/ConfigService.md)
 
-Defined in: [utils/SoundStudioFactory.ts:50](https://github.com/Eliastik/simple-sound-studio-lib/blob/4c259d6f225306533b6d6acc4801cf91fccfe063/lib/utils/SoundStudioFactory.ts#L50)
+Defined in: [utils/SoundStudioFactory.ts:50](https://github.com/Eliastik/simple-sound-studio-lib/blob/8690802f01b749e56e5136b5a5dc05dee7f77984/lib/utils/SoundStudioFactory.ts#L50)
 
 #### Returns
 
@@ -106,7 +106,7 @@ Defined in: [utils/SoundStudioFactory.ts:50](https://github.com/Eliastik/simple-
 
 > `static` **getEventEmitterInstance**(): `null` \| `EventEmitterInterface`
 
-Defined in: [utils/SoundStudioFactory.ts:46](https://github.com/Eliastik/simple-sound-studio-lib/blob/4c259d6f225306533b6d6acc4801cf91fccfe063/lib/utils/SoundStudioFactory.ts#L46)
+Defined in: [utils/SoundStudioFactory.ts:46](https://github.com/Eliastik/simple-sound-studio-lib/blob/8690802f01b749e56e5136b5a5dc05dee7f77984/lib/utils/SoundStudioFactory.ts#L46)
 
 #### Returns
 

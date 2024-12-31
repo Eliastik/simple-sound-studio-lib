@@ -23,6 +23,16 @@ Or you can install the npm package using this command:
 
 The TypeScript types are directly provided by the package.
 
+You also need to expose the worklet and worker files provided by the library at the root of your web application:
+
+- [Workers files here](https://github.com/Eliastik/simple-sound-studio-lib/tree/master/dist/workers)
+- [Worklets files here](https://github.com/Eliastik/simple-sound-studio-lib/tree/master/dist/worklets)
+
+If you do not expose the files, the library will try to function as best as it can, but some features will fail:
+
+- If worker files are not correctly exposed: the export-to-audio-file feature will not work
+- If worklet files are not correctly exposed: the library will fallback to ScriptProcessorNode for certain filters. This implementation offers lower performance and quality but remains acceptable as a fallback
+
 ### Documentation
 
 The documentation of the methods and class can be found here: [docs/](docs/).
@@ -72,9 +82,9 @@ php -S localhost:3000
 
 Once the server is running, open example/index.html in your browser to see the minimal example in action.
 
-Please note that there are other more advanced examples :
+Please note that there are other more advanced examples:
 
-- [example/custom-filters.js]: explain how to create a custom filter
+- [example/custom-filters.js]: explain how to create a custom audio filter
 
 ### Compile the project
 
@@ -107,6 +117,16 @@ Ou vous pouvez installer le package npm en utilisant la commande suivante :
 `npm install @eliastik/simple-sound-studio-lib --save`
 
 Les types TypeScript sont fournis directement par le package.
+
+Vous devez également exposer les fichiers worklet et worker fournis par la bibliothèque à la racine de votre application web :
+
+- [Fichiers Workers](https://github.com/Eliastik/simple-sound-studio-lib/tree/master/dist/workers)
+- [Fichiers Worklets](https://github.com/Eliastik/simple-sound-studio-lib/tree/master/dist/worklets)
+
+Si vous n'exposez pas les fichiers, la bibliothèque essaiera de fonctionner au mieux, mais certaines fonctionnalités échoueront :
+
+- Si les fichiers worker ne sont pas correctement exposés : la fonction d'export d'audio ne fonctionnera pas.
+- Si les fichiers des worklets ne sont pas correctement exposés : la bibliothèque se rabattra sur ScriptProcessorNode pour certains filtres. Cette implémentation offre des performances et une qualité moindres, mais reste acceptable en tant que solution de repli.
 
 ### Documentation
 
