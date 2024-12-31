@@ -8,7 +8,7 @@ class CustomGainFilter extends AbstractAudioFilter {
 
     getNode(context) {
         const gainNodeFilter = context.createGain();
-        gainNodeFilter.gain = this.gainIncrease;
+        gainNodeFilter.gain.value = this.gainIncrease;
 
         return {
             input: gainNodeFilter,
