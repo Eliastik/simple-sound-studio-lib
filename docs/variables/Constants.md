@@ -2,13 +2,13 @@
 
 ***
 
-[@eliastik/simple-sound-studio-lib](../globals.md) / Constants
+[@eliastik/simple-sound-studio-lib](../README.md) / Constants
 
 # Variable: Constants
 
 > `const` **Constants**: `object`
 
-Defined in: [model/Constants.ts:3](https://github.com/Eliastik/simple-sound-studio-lib/blob/e2381543acd624d47bf0e56bee059ac07e0632f6/lib/model/Constants.ts#L3)
+Defined in: [model/Constants.ts:3](https://github.com/Eliastik/simple-sound-studio-lib/blob/7f79ee0a2f9fd7bdc8c4ad29a0780b48aa0c4137/lib/model/Constants.ts#L3)
 
 ## Type declaration
 

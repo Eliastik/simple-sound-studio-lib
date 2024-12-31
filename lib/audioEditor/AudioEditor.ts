@@ -20,6 +20,12 @@ import type AudioProcessorInterface from "./interfaces/AudioProcessorInterface";
 import type BufferManagerInterface from "./interfaces/BufferManagerInterface";
 import type BufferPlayerInterface from "@/bufferPlayer/interfaces/BufferPlayerInterface";
 
+
+/**
+ * Principal class used to manage audio processing: load an audio file or buffer,
+ * manage filters/renderers (enable/disable, settings), add new filters/renderers,
+ * download rendered audio, get rendered audio buffer
+ */
 @injectable()
 export default class AudioEditor extends AbstractAudioElement implements AudioEditorInterface {
 
@@ -311,7 +317,7 @@ export default class AudioEditor extends AbstractAudioElement implements AudioEd
         return false;
     }
 
-    /** Filters settings */
+    // Filters settings
 
     getFiltersState(): FilterState {
         if (this.filterManager && this.rendererManager) {
@@ -402,7 +408,7 @@ export default class AudioEditor extends AbstractAudioElement implements AudioEd
         }
     }
 
-    /** Events and exit */
+    // Events and exit
 
     exit() {
         if (this.bufferPlayer) {

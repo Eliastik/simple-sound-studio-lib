@@ -1,8 +1,10 @@
 {
     "entryPoints": ["lib/index.ts"],
     "out": "docs",
+    "exclude": ["**/*.js"],
     "plugin": ["typedoc-plugin-markdown"],
     "excludePrivate": true,
-    "excludeProtected": false,
-    "excludeExternals": true
+    "excludeProtected": true,
+    "excludeExternals": true,
+    "readme": "none"
 }

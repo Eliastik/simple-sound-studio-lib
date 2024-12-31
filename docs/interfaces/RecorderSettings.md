@@ -2,11 +2,11 @@
 
 ***
 
-[@eliastik/simple-sound-studio-lib](../globals.md) / RecorderSettings
+[@eliastik/simple-sound-studio-lib](../README.md) / RecorderSettings
 
 # Interface: RecorderSettings
 
-Defined in: [model/RecorderSettings.ts:3](https://github.com/Eliastik/simple-sound-studio-lib/blob/e2381543acd624d47bf0e56bee059ac07e0632f6/lib/model/RecorderSettings.ts#L3)
+Defined in: [model/RecorderSettings.ts:3](https://github.com/Eliastik/simple-sound-studio-lib/blob/7f79ee0a2f9fd7bdc8c4ad29a0780b48aa0c4137/lib/model/RecorderSettings.ts#L3)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: [model/RecorderSettings.ts:3](https://github.com/Eliastik/simple-sou
 
 > **audioFeedback**: `boolean`
 
-Defined in: [model/RecorderSettings.ts:6](https://github.com/Eliastik/simple-sound-studio-lib/blob/e2381543acd624d47bf0e56bee059ac07e0632f6/lib/model/RecorderSettings.ts#L6)
+Defined in: [model/RecorderSettings.ts:6](https://github.com/Eliastik/simple-sound-studio-lib/blob/7f79ee0a2f9fd7bdc8c4ad29a0780b48aa0c4137/lib/model/RecorderSettings.ts#L6)
 
 ***
 
@@ -22,7 +22,7 @@ Defined in: [model/RecorderSettings.ts:6](https://github.com/Eliastik/simple-sou
 
 > **constraints**: `AudioConstraint`
 
-Defined in: [model/RecorderSettings.ts:5](https://github.com/Eliastik/simple-sound-studio-lib/blob/e2381543acd624d47bf0e56bee059ac07e0632f6/lib/model/RecorderSettings.ts#L5)
+Defined in: [model/RecorderSettings.ts:5](https://github.com/Eliastik/simple-sound-studio-lib/blob/7f79ee0a2f9fd7bdc8c4ad29a0780b48aa0c4137/lib/model/RecorderSettings.ts#L5)
 
 ***
 
@@ -30,4 +30,4 @@ Defined in: [model/RecorderSettings.ts:5](https://github.com/Eliastik/simple-sou
 
 > **deviceList**: `MediaDeviceInfo`[]
 
-Defined in: [model/RecorderSettings.ts:4](https://github.com/Eliastik/simple-sound-studio-lib/blob/e2381543acd624d47bf0e56bee059ac07e0632f6/lib/model/RecorderSettings.ts#L4)
+Defined in: [model/RecorderSettings.ts:4](https://github.com/Eliastik/simple-sound-studio-lib/blob/7f79ee0a2f9fd7bdc8c4ad29a0780b48aa0c4137/lib/model/RecorderSettings.ts#L4)

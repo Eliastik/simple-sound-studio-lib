@@ -2,11 +2,11 @@
 
 ***
 
-[@eliastik/simple-sound-studio-lib](../globals.md) / AbstractAudioFilterWorklet
+[@eliastik/simple-sound-studio-lib](../README.md) / AbstractAudioFilterWorklet
 
 # Class: `abstract` AbstractAudioFilterWorklet\<T\>
 
-Defined in: [filters/interfaces/AbstractAudioFilterWorklet.ts:8](https://github.com/Eliastik/simple-sound-studio-lib/blob/e2381543acd624d47bf0e56bee059ac07e0632f6/lib/filters/interfaces/AbstractAudioFilterWorklet.ts#L8)
+Defined in: [filters/interfaces/AbstractAudioFilterWorklet.ts:8](https://github.com/Eliastik/simple-sound-studio-lib/blob/7f79ee0a2f9fd7bdc8c4ad29a0780b48aa0c4137/lib/filters/interfaces/AbstractAudioFilterWorklet.ts#L8)
 
 ## Extends
 
@@ -30,92 +30,6 @@ Defined in: [filters/interfaces/AbstractAudioFilterWorklet.ts:8](https://github.
 
 [`AbstractAudioFilter`](AbstractAudioFilter.md).[`constructor`](AbstractAudioFilter.md#constructors)
 
-## Properties
-
-### \_totalSamples
-
-> `protected` **\_totalSamples**: `number` = `0`
-
-Defined in: [filters/interfaces/AbstractAudioFilter.ts:11](https://github.com/Eliastik/simple-sound-studio-lib/blob/e2381543acd624d47bf0e56bee059ac07e0632f6/lib/filters/interfaces/AbstractAudioFilter.ts#L11)
-
-Total sample of the input audio buffer
-
-#### Inherited from
-
-[`AbstractAudioFilter`](AbstractAudioFilter.md).[`_totalSamples`](AbstractAudioFilter.md#_totalsamples)
-
-***
-
-### bufferDecoderService
-
-> `protected` **bufferDecoderService**: `null` \| `BufferDecoderServiceInterface` = `null`
-
-Defined in: [filters/interfaces/AbstractAudioElement.ts:21](https://github.com/Eliastik/simple-sound-studio-lib/blob/e2381543acd624d47bf0e56bee059ac07e0632f6/lib/filters/interfaces/AbstractAudioElement.ts#L21)
-
-#### Inherited from
-
-[`AbstractAudioFilter`](AbstractAudioFilter.md).[`bufferDecoderService`](AbstractAudioFilter.md#bufferdecoderservice)
-
-***
-
-### bufferFetcherService
-
-> `protected` **bufferFetcherService**: `null` \| `BufferFetcherServiceInterface` = `null`
-
-Defined in: [filters/interfaces/AbstractAudioElement.ts:18](https://github.com/Eliastik/simple-sound-studio-lib/blob/e2381543acd624d47bf0e56bee059ac07e0632f6/lib/filters/interfaces/AbstractAudioElement.ts#L18)
-
-#### Inherited from
-
-[`AbstractAudioFilter`](AbstractAudioFilter.md).[`bufferFetcherService`](AbstractAudioFilter.md#bufferfetcherservice)
-
-***
-
-### configService
-
-> `protected` **configService**: `null` \| [`ConfigService`](../interfaces/ConfigService.md) = `null`
-
-Defined in: [filters/interfaces/AbstractAudioElement.ts:24](https://github.com/Eliastik/simple-sound-studio-lib/blob/e2381543acd624d47bf0e56bee059ac07e0632f6/lib/filters/interfaces/AbstractAudioElement.ts#L24)
-
-#### Inherited from
-
-[`AbstractAudioFilter`](AbstractAudioFilter.md).[`configService`](AbstractAudioFilter.md#configservice)
-
-***
-
-### currentWorkletNode
-
-> `protected` **currentWorkletNode**: `null` \| `WorkletScriptProcessorNodeAdapter` \| `AudioWorkletNode` = `null`
-
-Defined in: [filters/interfaces/AbstractAudioFilterWorklet.ts:10](https://github.com/Eliastik/simple-sound-studio-lib/blob/e2381543acd624d47bf0e56bee059ac07e0632f6/lib/filters/interfaces/AbstractAudioFilterWorklet.ts#L10)
-
-***
-
-### eventEmitter
-
-> `protected` **eventEmitter**: `null` \| `EventEmitterInterface` = `null`
-
-Defined in: [filters/interfaces/AbstractAudioElement.ts:27](https://github.com/Eliastik/simple-sound-studio-lib/blob/e2381543acd624d47bf0e56bee059ac07e0632f6/lib/filters/interfaces/AbstractAudioElement.ts#L27)
-
-#### Inherited from
-
-[`AbstractAudioFilter`](AbstractAudioFilter.md).[`eventEmitter`](AbstractAudioFilter.md#eventemitter)
-
-***
-
-### fallbackToScriptProcessor
-
-> `protected` **fallbackToScriptProcessor**: `boolean` = `false`
-
-Defined in: [filters/interfaces/AbstractAudioFilterWorklet.ts:12](https://github.com/Eliastik/simple-sound-studio-lib/blob/e2381543acd624d47bf0e56bee059ac07e0632f6/lib/filters/interfaces/AbstractAudioFilterWorklet.ts#L12)
-
-***
-
-### keepCurrentNodeIfPossible
-
-> `protected` **keepCurrentNodeIfPossible**: `boolean` = `false`
-
-Defined in: [filters/interfaces/AbstractAudioFilterWorklet.ts:14](https://github.com/Eliastik/simple-sound-studio-lib/blob/e2381543acd624d47bf0e56bee059ac07e0632f6/lib/filters/interfaces/AbstractAudioFilterWorklet.ts#L14)
-
 ## Accessors
 
 ### id
@@ -124,7 +38,7 @@ Defined in: [filters/interfaces/AbstractAudioFilterWorklet.ts:14](https://github
 
 > **get** `abstract` **id**(): `string`
 
-Defined in: [filters/interfaces/AbstractAudioElement.ts:33](https://github.com/Eliastik/simple-sound-studio-lib/blob/e2381543acd624d47bf0e56bee059ac07e0632f6/lib/filters/interfaces/AbstractAudioElement.ts#L33)
+Defined in: [filters/interfaces/AbstractAudioElement.ts:33](https://github.com/Eliastik/simple-sound-studio-lib/blob/7f79ee0a2f9fd7bdc8c4ad29a0780b48aa0c4137/lib/filters/interfaces/AbstractAudioElement.ts#L33)
 
 Returns the id of this filter/renderer
 
@@ -144,7 +58,7 @@ Returns the id of this filter/renderer
 
 > **get** `abstract` **order**(): `number`
 
-Defined in: [filters/interfaces/AbstractAudioElement.ts:30](https://github.com/Eliastik/simple-sound-studio-lib/blob/e2381543acd624d47bf0e56bee059ac07e0632f6/lib/filters/interfaces/AbstractAudioElement.ts#L30)
+Defined in: [filters/interfaces/AbstractAudioElement.ts:30](https://github.com/Eliastik/simple-sound-studio-lib/blob/7f79ee0a2f9fd7bdc8c4ad29a0780b48aa0c4137/lib/filters/interfaces/AbstractAudioElement.ts#L30)
 
 Returns the order in which the filter/renderer needs to be applied
 
@@ -164,7 +78,7 @@ Returns the order in which the filter/renderer needs to be applied
 
 > **set** **totalSamples**(`value`): `void`
 
-Defined in: [filters/interfaces/AbstractAudioFilter.ts:61](https://github.com/Eliastik/simple-sound-studio-lib/blob/e2381543acd624d47bf0e56bee059ac07e0632f6/lib/filters/interfaces/AbstractAudioFilter.ts#L61)
+Defined in: [filters/interfaces/AbstractAudioFilter.ts:61](https://github.com/Eliastik/simple-sound-studio-lib/blob/7f79ee0a2f9fd7bdc8c4ad29a0780b48aa0c4137/lib/filters/interfaces/AbstractAudioFilter.ts#L61)
 
 ##### Parameters
 
@@ -188,7 +102,7 @@ Defined in: [filters/interfaces/AbstractAudioFilter.ts:61](https://github.com/El
 
 > **get** `abstract` **workletName**(): `string`
 
-Defined in: [filters/interfaces/AbstractAudioFilterWorklet.ts:19](https://github.com/Eliastik/simple-sound-studio-lib/blob/e2381543acd624d47bf0e56bee059ac07e0632f6/lib/filters/interfaces/AbstractAudioFilterWorklet.ts#L19)
+Defined in: [filters/interfaces/AbstractAudioFilterWorklet.ts:19](https://github.com/Eliastik/simple-sound-studio-lib/blob/7f79ee0a2f9fd7bdc8c4ad29a0780b48aa0c4137/lib/filters/interfaces/AbstractAudioFilterWorklet.ts#L19)
 
 Return the worklet name (as registered with method registerProcessor)
 
@@ -204,7 +118,7 @@ Return the worklet name (as registered with method registerProcessor)
 
 > **get** `abstract` **workletPath**(): `string`
 
-Defined in: [filters/interfaces/AbstractAudioFilterWorklet.ts:24](https://github.com/Eliastik/simple-sound-studio-lib/blob/e2381543acd624d47bf0e56bee059ac07e0632f6/lib/filters/interfaces/AbstractAudioFilterWorklet.ts#L24)
+Defined in: [filters/interfaces/AbstractAudioFilterWorklet.ts:24](https://github.com/Eliastik/simple-sound-studio-lib/blob/7f79ee0a2f9fd7bdc8c4ad29a0780b48aa0c4137/lib/filters/interfaces/AbstractAudioFilterWorklet.ts#L24)
 
 Return the path to worklet file
 
@@ -214,26 +128,11 @@ Return the path to worklet file
 
 ## Methods
 
-### applyCurrentSettingsToWorklet()
-
-> `protected` **applyCurrentSettingsToWorklet**(): `void`
-
-Defined in: [filters/interfaces/AbstractAudioFilterWorklet.ts:94](https://github.com/Eliastik/simple-sound-studio-lib/blob/e2381543acd624d47bf0e56bee059ac07e0632f6/lib/filters/interfaces/AbstractAudioFilterWorklet.ts#L94)
-
-Apply current settings to the audio worklet node.
-Uses the getSettings method to extract the settings.
-
-#### Returns
-
-`void`
-
-***
-
 ### bufferFetcherReseted()
 
 > **bufferFetcherReseted**(): `Promise`\<`boolean`\>
 
-Defined in: [filters/interfaces/AbstractAudioFilter.ts:57](https://github.com/Eliastik/simple-sound-studio-lib/blob/e2381543acd624d47bf0e56bee059ac07e0632f6/lib/filters/interfaces/AbstractAudioFilter.ts#L57)
+Defined in: [filters/interfaces/AbstractAudioFilter.ts:57](https://github.com/Eliastik/simple-sound-studio-lib/blob/7f79ee0a2f9fd7bdc8c4ad29a0780b48aa0c4137/lib/filters/interfaces/AbstractAudioFilter.ts#L57)
 
 Called when the buffer fetcher was reseted
 
@@ -253,7 +152,7 @@ boolean
 
 > **disable**(): `void`
 
-Defined in: [filters/interfaces/AbstractAudioElement.ts:66](https://github.com/Eliastik/simple-sound-studio-lib/blob/e2381543acd624d47bf0e56bee059ac07e0632f6/lib/filters/interfaces/AbstractAudioElement.ts#L66)
+Defined in: [filters/interfaces/AbstractAudioElement.ts:70](https://github.com/Eliastik/simple-sound-studio-lib/blob/7f79ee0a2f9fd7bdc8c4ad29a0780b48aa0c4137/lib/filters/interfaces/AbstractAudioElement.ts#L70)
 
 Disable this filter/renderer
 
@@ -271,7 +170,7 @@ Disable this filter/renderer
 
 > **enable**(): `void`
 
-Defined in: [filters/interfaces/AbstractAudioElement.ts:61](https://github.com/Eliastik/simple-sound-studio-lib/blob/e2381543acd624d47bf0e56bee059ac07e0632f6/lib/filters/interfaces/AbstractAudioElement.ts#L61)
+Defined in: [filters/interfaces/AbstractAudioElement.ts:65](https://github.com/Eliastik/simple-sound-studio-lib/blob/7f79ee0a2f9fd7bdc8c4ad29a0780b48aa0c4137/lib/filters/interfaces/AbstractAudioElement.ts#L65)
 
 Enable this filter/renderer
 
@@ -289,7 +188,7 @@ Enable this filter/renderer
 
 > **getAddingTime**(): `number`
 
-Defined in: [filters/interfaces/AbstractAudioFilter.ts:23](https://github.com/Eliastik/simple-sound-studio-lib/blob/e2381543acd624d47bf0e56bee059ac07e0632f6/lib/filters/interfaces/AbstractAudioFilter.ts#L23)
+Defined in: [filters/interfaces/AbstractAudioFilter.ts:23](https://github.com/Eliastik/simple-sound-studio-lib/blob/7f79ee0a2f9fd7bdc8c4ad29a0780b48aa0c4137/lib/filters/interfaces/AbstractAudioFilter.ts#L23)
 
 Get the amount of time this filter add to the audio
 
@@ -307,7 +206,7 @@ Get the amount of time this filter add to the audio
 
 > **getDefaultSettings**(): `null` \| [`FilterSettings`](../interfaces/FilterSettings.md)
 
-Defined in: [filters/interfaces/AbstractAudioFilter.ts:33](https://github.com/Eliastik/simple-sound-studio-lib/blob/e2381543acd624d47bf0e56bee059ac07e0632f6/lib/filters/interfaces/AbstractAudioFilter.ts#L33)
+Defined in: [filters/interfaces/AbstractAudioFilter.ts:33](https://github.com/Eliastik/simple-sound-studio-lib/blob/7f79ee0a2f9fd7bdc8c4ad29a0780b48aa0c4137/lib/filters/interfaces/AbstractAudioFilter.ts#L33)
 
 Returns the default settings of this filter
 
@@ -325,7 +224,7 @@ Returns the default settings of this filter
 
 > **getNode**(`context`): \{ `input`: `ScriptProcessorNode`; `output`: `ScriptProcessorNode`; \} \| \{ `input`: `AudioWorkletNode`; `output`: `AudioWorkletNode`; \}
 
-Defined in: [filters/interfaces/AbstractAudioFilterWorklet.ts:110](https://github.com/Eliastik/simple-sound-studio-lib/blob/e2381543acd624d47bf0e56bee059ac07e0632f6/lib/filters/interfaces/AbstractAudioFilterWorklet.ts#L110)
+Defined in: [filters/interfaces/AbstractAudioFilterWorklet.ts:110](https://github.com/Eliastik/simple-sound-studio-lib/blob/7f79ee0a2f9fd7bdc8c4ad29a0780b48aa0c4137/lib/filters/interfaces/AbstractAudioFilterWorklet.ts#L110)
 
 Default implementation for GetNode - AbstractAudioFilterWorklet
 
@@ -349,7 +248,7 @@ Default implementation for GetNode - AbstractAudioFilterWorklet
 
 > `abstract` **getSettings**(): [`FilterSettings`](../interfaces/FilterSettings.md)
 
-Defined in: [filters/interfaces/AbstractAudioFilter.ts:17](https://github.com/Eliastik/simple-sound-studio-lib/blob/e2381543acd624d47bf0e56bee059ac07e0632f6/lib/filters/interfaces/AbstractAudioFilter.ts#L17)
+Defined in: [filters/interfaces/AbstractAudioFilter.ts:17](https://github.com/Eliastik/simple-sound-studio-lib/blob/7f79ee0a2f9fd7bdc8c4ad29a0780b48aa0c4137/lib/filters/interfaces/AbstractAudioFilter.ts#L17)
 
 Return an object with current settings of this filter
 
@@ -367,7 +266,7 @@ Return an object with current settings of this filter
 
 > **initializeDefaultSettings**(): `void`
 
-Defined in: [filters/interfaces/AbstractAudioFilter.ts:28](https://github.com/Eliastik/simple-sound-studio-lib/blob/e2381543acd624d47bf0e56bee059ac07e0632f6/lib/filters/interfaces/AbstractAudioFilter.ts#L28)
+Defined in: [filters/interfaces/AbstractAudioFilter.ts:28](https://github.com/Eliastik/simple-sound-studio-lib/blob/7f79ee0a2f9fd7bdc8c4ad29a0780b48aa0c4137/lib/filters/interfaces/AbstractAudioFilter.ts#L28)
 
 Store the default settings
 
@@ -385,7 +284,7 @@ Store the default settings
 
 > **initializeWorklet**(`audioContext`): `Promise`\<`void`\>
 
-Defined in: [filters/interfaces/AbstractAudioFilterWorklet.ts:35](https://github.com/Eliastik/simple-sound-studio-lib/blob/e2381543acd624d47bf0e56bee059ac07e0632f6/lib/filters/interfaces/AbstractAudioFilterWorklet.ts#L35)
+Defined in: [filters/interfaces/AbstractAudioFilterWorklet.ts:35](https://github.com/Eliastik/simple-sound-studio-lib/blob/7f79ee0a2f9fd7bdc8c4ad29a0780b48aa0c4137/lib/filters/interfaces/AbstractAudioFilterWorklet.ts#L35)
 
 Initialize the audio worklet by loading the module
 
@@ -407,7 +306,7 @@ The audio context
 
 > **injectDependencies**(`bufferFetcherService`, `bufferDecoderService`, `configService`, `eventEmitter`): `void`
 
-Defined in: [filters/interfaces/AbstractAudioElement.ts:75](https://github.com/Eliastik/simple-sound-studio-lib/blob/e2381543acd624d47bf0e56bee059ac07e0632f6/lib/filters/interfaces/AbstractAudioElement.ts#L75)
+Defined in: [filters/interfaces/AbstractAudioElement.ts:79](https://github.com/Eliastik/simple-sound-studio-lib/blob/7f79ee0a2f9fd7bdc8c4ad29a0780b48aa0c4137/lib/filters/interfaces/AbstractAudioElement.ts#L79)
 
 #### Parameters
 
@@ -437,25 +336,11 @@ Defined in: [filters/interfaces/AbstractAudioElement.ts:75](https://github.com/E
 
 ***
 
-### isAudioWorkletEnabled()
-
-> `protected` **isAudioWorkletEnabled**(): `boolean`
-
-Defined in: [filters/interfaces/AbstractAudioFilterWorklet.ts:57](https://github.com/Eliastik/simple-sound-studio-lib/blob/e2381543acd624d47bf0e56bee059ac07e0632f6/lib/filters/interfaces/AbstractAudioFilterWorklet.ts#L57)
-
-This method checks if audio worklet are enabled
-
-#### Returns
-
-`boolean`
-
-***
-
 ### isDefaultEnabled()
 
 > **isDefaultEnabled**(): `boolean`
 
-Defined in: [filters/interfaces/AbstractAudioElement.ts:41](https://github.com/Eliastik/simple-sound-studio-lib/blob/e2381543acd624d47bf0e56bee059ac07e0632f6/lib/filters/interfaces/AbstractAudioElement.ts#L41)
+Defined in: [filters/interfaces/AbstractAudioElement.ts:41](https://github.com/Eliastik/simple-sound-studio-lib/blob/7f79ee0a2f9fd7bdc8c4ad29a0780b48aa0c4137/lib/filters/interfaces/AbstractAudioElement.ts#L41)
 
 Is this filter/renderer enabled by default?
 
@@ -473,7 +358,7 @@ Is this filter/renderer enabled by default?
 
 > **isEnabled**(): `boolean`
 
-Defined in: [filters/interfaces/AbstractAudioElement.ts:36](https://github.com/Eliastik/simple-sound-studio-lib/blob/e2381543acd624d47bf0e56bee059ac07e0632f6/lib/filters/interfaces/AbstractAudioElement.ts#L36)
+Defined in: [filters/interfaces/AbstractAudioElement.ts:36](https://github.com/Eliastik/simple-sound-studio-lib/blob/7f79ee0a2f9fd7bdc8c4ad29a0780b48aa0c4137/lib/filters/interfaces/AbstractAudioElement.ts#L36)
 
 Is this filter/renderer enabled?
 
@@ -491,7 +376,7 @@ Is this filter/renderer enabled?
 
 > **isWorklet**(): `boolean`
 
-Defined in: [filters/interfaces/AbstractAudioFilterWorklet.ts:162](https://github.com/Eliastik/simple-sound-studio-lib/blob/e2381543acd624d47bf0e56bee059ac07e0632f6/lib/filters/interfaces/AbstractAudioFilterWorklet.ts#L162)
+Defined in: [filters/interfaces/AbstractAudioFilterWorklet.ts:162](https://github.com/Eliastik/simple-sound-studio-lib/blob/7f79ee0a2f9fd7bdc8c4ad29a0780b48aa0c4137/lib/filters/interfaces/AbstractAudioFilterWorklet.ts#L162)
 
 Return if the current filter use an audio worklet
 
@@ -509,7 +394,7 @@ Return if the current filter use an audio worklet
 
 > `abstract` **receiveEvent**(`message`): `void`
 
-Defined in: [filters/interfaces/AbstractAudioFilterWorklet.ts:29](https://github.com/Eliastik/simple-sound-studio-lib/blob/e2381543acd624d47bf0e56bee059ac07e0632f6/lib/filters/interfaces/AbstractAudioFilterWorklet.ts#L29)
+Defined in: [filters/interfaces/AbstractAudioFilterWorklet.ts:29](https://github.com/Eliastik/simple-sound-studio-lib/blob/7f79ee0a2f9fd7bdc8c4ad29a0780b48aa0c4137/lib/filters/interfaces/AbstractAudioFilterWorklet.ts#L29)
 
 Receive event from the worklet
 
@@ -529,7 +414,7 @@ Receive event from the worklet
 
 > **resetSettings**(): `Promise`\<`void`\>
 
-Defined in: [filters/interfaces/AbstractAudioFilter.ts:38](https://github.com/Eliastik/simple-sound-studio-lib/blob/e2381543acd624d47bf0e56bee059ac07e0632f6/lib/filters/interfaces/AbstractAudioFilter.ts#L38)
+Defined in: [filters/interfaces/AbstractAudioFilter.ts:38](https://github.com/Eliastik/simple-sound-studio-lib/blob/7f79ee0a2f9fd7bdc8c4ad29a0780b48aa0c4137/lib/filters/interfaces/AbstractAudioFilter.ts#L38)
 
 Reset the default settings of this filter
 
@@ -547,7 +432,7 @@ Reset the default settings of this filter
 
 > **setDefaultEnabled**(`state`): `void`
 
-Defined in: [filters/interfaces/AbstractAudioElement.ts:46](https://github.com/Eliastik/simple-sound-studio-lib/blob/e2381543acd624d47bf0e56bee059ac07e0632f6/lib/filters/interfaces/AbstractAudioElement.ts#L46)
+Defined in: [filters/interfaces/AbstractAudioElement.ts:46](https://github.com/Eliastik/simple-sound-studio-lib/blob/7f79ee0a2f9fd7bdc8c4ad29a0780b48aa0c4137/lib/filters/interfaces/AbstractAudioElement.ts#L46)
 
 Set to true if this filter/renderer needs to be enabled by default
 
@@ -571,7 +456,7 @@ Set to true if this filter/renderer needs to be enabled by default
 
 > **setEnabled**(`state`): `void`
 
-Defined in: [filters/interfaces/AbstractAudioFilterWorklet.ts:154](https://github.com/Eliastik/simple-sound-studio-lib/blob/e2381543acd624d47bf0e56bee059ac07e0632f6/lib/filters/interfaces/AbstractAudioFilterWorklet.ts#L154)
+Defined in: [filters/interfaces/AbstractAudioFilterWorklet.ts:154](https://github.com/Eliastik/simple-sound-studio-lib/blob/7f79ee0a2f9fd7bdc8c4ad29a0780b48aa0c4137/lib/filters/interfaces/AbstractAudioFilterWorklet.ts#L154)
 
 Pass the current disabled/enabled state to the worklet.
 The worklet need to respond to "enable"/"disable" events.
@@ -598,7 +483,7 @@ The current disabled/enabled state
 
 > `abstract` **setSetting**(`settingId`, `value`): `Promise`\<`void`\>
 
-Defined in: [filters/interfaces/AbstractAudioFilter.ts:20](https://github.com/Eliastik/simple-sound-studio-lib/blob/e2381543acd624d47bf0e56bee059ac07e0632f6/lib/filters/interfaces/AbstractAudioFilter.ts#L20)
+Defined in: [filters/interfaces/AbstractAudioFilter.ts:20](https://github.com/Eliastik/simple-sound-studio-lib/blob/7f79ee0a2f9fd7bdc8c4ad29a0780b48aa0c4137/lib/filters/interfaces/AbstractAudioFilter.ts#L20)
 
 Set a filter setting
 
@@ -626,7 +511,7 @@ Set a filter setting
 
 > **stop**(): `void`
 
-Defined in: [filters/interfaces/AbstractAudioFilterWorklet.ts:140](https://github.com/Eliastik/simple-sound-studio-lib/blob/e2381543acd624d47bf0e56bee059ac07e0632f6/lib/filters/interfaces/AbstractAudioFilterWorklet.ts#L140)
+Defined in: [filters/interfaces/AbstractAudioFilterWorklet.ts:140](https://github.com/Eliastik/simple-sound-studio-lib/blob/7f79ee0a2f9fd7bdc8c4ad29a0780b48aa0c4137/lib/filters/interfaces/AbstractAudioFilterWorklet.ts#L140)
 
 Stop the current worklet node. The worklet need to respond to "stop" events.
 
@@ -640,7 +525,7 @@ Stop the current worklet node. The worklet need to respond to "stop" events.
 
 > **toggle**(): `void`
 
-Defined in: [filters/interfaces/AbstractAudioElement.ts:71](https://github.com/Eliastik/simple-sound-studio-lib/blob/e2381543acd624d47bf0e56bee059ac07e0632f6/lib/filters/interfaces/AbstractAudioElement.ts#L71)
+Defined in: [filters/interfaces/AbstractAudioElement.ts:75](https://github.com/Eliastik/simple-sound-studio-lib/blob/7f79ee0a2f9fd7bdc8c4ad29a0780b48aa0c4137/lib/filters/interfaces/AbstractAudioElement.ts#L75)
 
 Toggle to enabled/disabled this filter
 

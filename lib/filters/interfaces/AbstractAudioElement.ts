@@ -53,6 +53,10 @@ export default abstract class AbstractAudioElement {
         }
     }
 
+    /**
+     * Set the enabled/disabled state
+     * @param state true to enable, false to disable
+     */
     setEnabled(state: boolean) {
         this.enabled = state;
     }

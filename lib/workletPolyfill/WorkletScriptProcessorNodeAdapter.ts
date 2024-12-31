@@ -18,7 +18,7 @@ export default class WorkletScriptProcessorNodeAdapter {
         this.workletProcessor = node;
         this.currentContext = context;
 
-        // Create a ScriptProcessorNode with the same number of input and output channels
+        // Create a ScriptProcessorNode with two channels
         this._scriptProcessorNode = context.createScriptProcessor(
             bufferSize,
             2,

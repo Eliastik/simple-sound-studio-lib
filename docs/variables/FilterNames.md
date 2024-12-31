@@ -2,13 +2,13 @@
 
 ***
 
-[@eliastik/simple-sound-studio-lib](../globals.md) / FilterNames
+[@eliastik/simple-sound-studio-lib](../README.md) / FilterNames
 
 # Variable: FilterNames
 
 > `const` **FilterNames**: `object`
 
-Defined in: [model/FilterNames.ts:1](https://github.com/Eliastik/simple-sound-studio-lib/blob/e2381543acd624d47bf0e56bee059ac07e0632f6/lib/model/FilterNames.ts#L1)
+Defined in: [model/FilterNames.ts:1](https://github.com/Eliastik/simple-sound-studio-lib/blob/7f79ee0a2f9fd7bdc8c4ad29a0780b48aa0c4137/lib/model/FilterNames.ts#L1)
 
 ## Type declaration
 

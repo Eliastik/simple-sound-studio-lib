@@ -124,6 +124,10 @@ declare abstract class AbstractAudioElement {
     isDefaultEnabled(): boolean;
     /** Set to true if this filter/renderer needs to be enabled by default */
     setDefaultEnabled(state: boolean): void;
+    /**
+     * Set the enabled/disabled state
+     * @param state true to enable, false to disable
+     */
     setEnabled(state: boolean): void;
     /** Enable this filter/renderer */
     enable(): void;
@@ -552,6 +556,11 @@ interface BufferManagerInterface {
     get downloadingInitialData(): boolean;
 }
 
+/**
+ * Principal class used to manage audio processing: load an audio file or buffer,
+ * manage filters/renderers (enable/disable, settings), add new filters/renderers,
+ * download rendered audio, get rendered audio buffer
+ */
 declare class AudioEditor extends AbstractAudioElement implements AudioEditorInterface {
     /** The filter manager */
     private filterManager;
@@ -593,7 +602,6 @@ declare class AudioEditor extends AbstractAudioElement implements AudioEditorInt
     getOutputBuffer(): AudioBuffer | null;
     renderAudio(forceInitialRendering?: boolean): Promise<boolean>;
     isAudioWorkletAvailable(): boolean;
-    /** Filters settings */
     getFiltersState(): FilterState;
     getFiltersSettings(): Map<string, FilterSettings>;
     reconnectNodesIfNeeded(): Promise<void>;
@@ -603,7 +611,6 @@ declare class AudioEditor extends AbstractAudioElement implements AudioEditorInt
     changeFilterSettings(filterId: string, settings: FilterSettings): Promise<void>;
     resetFilterSettings(filterId: string): Promise<void>;
     resetAllFiltersState(): void;
-    /** Events and exit */
     exit(): void;
     cancelAudioRendering(): void;
     on(event: string, callback: EventEmitterCallback): void;
