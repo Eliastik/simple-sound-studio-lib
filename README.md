@@ -176,7 +176,7 @@ Une fois le serveur lancé, ouvrez example/index.html dans votre navigateur pour
 
 Il y a également d'autres  exemples avancés :
 
-- [example/custom-filters.js]: montre comment créer un filtre audio personnalisé
+- [example/custom-filters.js](example/custom-filters.js): montre comment créer un filtre audio personnalisé
 
 #### Compiler le projet
 
