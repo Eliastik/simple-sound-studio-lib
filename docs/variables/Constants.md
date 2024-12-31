@@ -8,7 +8,7 @@
 
 > `const` **Constants**: `object`
 
-Defined in: [model/Constants.ts:1](https://github.com/Eliastik/simple-sound-studio-lib/blob/b65a8fd23e374795fe23a2588430ae96578f8619/lib/model/Constants.ts#L1)
+Defined in: [model/Constants.ts:3](https://github.com/Eliastik/simple-sound-studio-lib/blob/957b1af2e32d036a450fbbc2c20ba27a4d1d9854/lib/model/Constants.ts#L3)
 
 ## Type declaration
 
@@ -82,7 +82,7 @@ Defined in: [model/Constants.ts:1](https://github.com/Eliastik/simple-sound-stud
 
 ### DISABLE\_INITIAL\_RENDERING
 
-> **DISABLE\_INITIAL\_RENDERING**: `boolean` = `true`
+> **DISABLE\_INITIAL\_RENDERING**: `boolean` = `false`
 
 ### ENABLE\_AUDIO\_WORKLET
 
@@ -110,7 +110,7 @@ Defined in: [model/Constants.ts:1](https://github.com/Eliastik/simple-sound-stud
 
 ### FILTERS\_NAMES
 
-> **FILTERS\_NAMES**: `object`
+> **FILTERS\_NAMES**: `object` = `FilterNames`
 
 #### FILTERS\_NAMES.BASS\_BOOST
 

@@ -8,4 +8,4 @@
 
 > `const` **audioEditorContainer**: `Container`
 
-Defined in: [inversify.config.ts:44](https://github.com/Eliastik/simple-sound-studio-lib/blob/b65a8fd23e374795fe23a2588430ae96578f8619/lib/inversify.config.ts#L44)
+Defined in: [inversify.config.ts:44](https://github.com/Eliastik/simple-sound-studio-lib/blob/957b1af2e32d036a450fbbc2c20ba27a4d1d9854/lib/inversify.config.ts#L44)
