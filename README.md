@@ -129,9 +129,9 @@ Si vous n'exposez pas les fichiers, la bibliothèque essaiera de fonctionner au 
 
 La documentation des méthodes et des classes se trouve ici : [docs/](docs/).
 
-La partie la plus importante est la classe [AudioEditor class](docs/classes/AudioEditor.md).
+La partie la plus importante est la classe [AudioEditor](docs/classes/AudioEditor.md).
 
-Vous serez également intéressé par la classe [VoiceRecorder class](docs/classes/VoiceRecorder.md).
+Vous serez également intéressé par la classe [VoiceRecorder](docs/classes/VoiceRecorder.md).
 
 Pour construire l'objet nécessaire à l'utilisation des fonctionnalités (classe AudioEditor/classe VoiceRecorder), vous devrez utiliser la [SoundStudioFactory](docs/classes/SoundStudioFactory.md).
 
