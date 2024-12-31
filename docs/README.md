@@ -84,7 +84,7 @@ Once the server is running, open example/index.html in your browser to see the m
 
 Please note that there are other more advanced examples:
 
-- [example/custom-filters.js]: explain how to create a custom audio filter
+- [example/custom-filter.js](_media/custom-filter.js): explain how to create a custom audio filter
 
 ### Compile the project
 
@@ -179,7 +179,7 @@ Une fois le serveur lancé, ouvrez example/index.html dans votre navigateur pour
 
 Il y a également d'autres  exemples avancés :
 
-- [example/custom-filters.js]: montre comment créer un filtre audio personnalisé
+- [example/custom-filter.js](_media/custom-filter.js): montre comment créer un filtre audio personnalisé
 
 #### Compiler le projet
 
