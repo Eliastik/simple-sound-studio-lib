@@ -29,6 +29,16 @@ You will also be interested by the [VoiceRecorder class](docs/classes/VoiceRecor
 
 To construct the object needed to use the features (AudioEditor class/VoiceRecorder class) you will need to use the [SoundStudioFactory](docs/classes/SoundStudioFactory.md).
 
+You also need to expose the worklet and worker files provided by the library at the root of your web application:
+
+- [https://github.com/Eliastik/simple-sound-studio-lib/tree/master/dist/workers](Workers files here)
+- [https://github.com/Eliastik/simple-sound-studio-lib/tree/master/dist/worklets](Worklets files here)
+
+If you do not expose the files, the library will try to function as best as it can, but some features will fail:
+
+- If worker files are not correctly exposed: the export-to-audio-file feature will not work
+- If worklet files are not correctly exposed: the library will fallback to ScriptProcessorNode for certain filters. This implementation offers lower performance and quality but remains acceptable as a fallback
+
 ### Project Structure
 
 The project has the following directory structure:
