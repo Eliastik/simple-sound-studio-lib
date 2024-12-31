@@ -73,6 +73,27 @@ export interface ConfigService {
     getSoundBasePath(): string;
 
     /**
+     * Set the base path for worklet files
+     * 
+     * @param workletBasePath The base path
+     */
+    setWorkletBasePath(workletBasePath: string): void;
+
+     /**
+     * Set the base path for worker files
+     * 
+     * @param workerBasePath The base path 
+     */
+    setWorkerBasePath(workerBasePath: string): void;
+
+     /**
+     * Set the base path for audio files (reverb environments for example)
+     * 
+     * @param soundBasePath The base path
+     */
+    setSoundBasePath(soundBasePath: string): void;
+
+    /**
      * Check if initial audio rendering (when opening a file or buffer) is disabled
      */
     isInitialRenderingDisabled(): boolean;

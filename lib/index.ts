@@ -22,6 +22,7 @@ import { EventEmitterCallback } from "./model/EventEmitterCallback";
 import { ConfigService } from "./services/interfaces/ConfigService";
 import SaveBufferOptions from "./model/SaveBufferOptions";
 import SoundStudioFactory from "./utils/SoundStudioFactory";
+import FilterNames from "./model/FilterNames";
 
 export {
     audioEditorContainer,
@@ -30,6 +31,7 @@ export {
     VoiceRecorder,
     EventEmitter,
     Constants,
+    FilterNames,
     EventType,
     type ConfigService,
     GenericConfigService,

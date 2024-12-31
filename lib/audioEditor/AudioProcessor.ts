@@ -117,7 +117,6 @@ export default class AudioProcessor extends AbstractAudioElement implements Audi
         this.currentOfflineContext = null;
         this.audioRenderingLastCanceled = false;
 
-
         utils.resetAudioRenderingProgress(this.eventEmitter);
         this.filterManager.setupTotalSamples(durationAudio, this.contextManager.currentContext);
 

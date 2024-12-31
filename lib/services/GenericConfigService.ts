@@ -11,6 +11,10 @@ export default class GenericConfigService implements ConfigService {
 
     private mapConfig = new Map<string, string>();
 
+    private workerBasePath = "";
+    private workletBasePath = "";
+    private soundBasePath = "";
+
     getConfig(key: string): string | undefined | null {
         return this.mapConfig.get(key);
     }
@@ -86,15 +90,27 @@ export default class GenericConfigService implements ConfigService {
     }
 
     getWorkletBasePath(): string {
-        return "";
+        return this.workletBasePath;
     }
 
     getWorkerBasePath(): string {
-        return "";
+        return this.workerBasePath;
     }
 
     getSoundBasePath(): string {
-        return "";
+        return this.soundBasePath;
+    }
+
+    setWorkletBasePath(workletBasePath: string) {
+        this.workletBasePath = workletBasePath;
+    }
+
+    setWorkerBasePath(workerBasePath: string) {
+        this.workerBasePath = workerBasePath;
+    }
+
+    setSoundBasePath(soundBasePath: string) {
+        this.soundBasePath = soundBasePath;
     }
 
     isInitialRenderingDisabled(): boolean {

@@ -1,3 +1,5 @@
+import FilterNames from "./FilterNames";
+
 const Constants = {
     AUDIO_EDITOR: "audioEditor",
     VOICE_RECORDER: "voiceRecorder",
@@ -14,20 +16,7 @@ const Constants = {
     AUDIO_MP3: "audio/mp3",
     RECORD_COMMAND: "record",
     INIT_COMMAND: "init",
-    FILTERS_NAMES: {
-        REVERB: "reverb",
-        ECHO: "echo",
-        BASS_BOOST: "bassboost",
-        BITCRUSHER: "bitcrusher",
-        HIGH_PASS: "highpass",
-        LIMITER: "limiter",
-        LOW_PASS: "lowpass",
-        PASSTHROUGH: "passthroughfilter",
-        RETURN_AUDIO: "returnAudio",
-        SOUNDTOUCH: "soundtouch",
-        TELEPHONIZER: "telephonizer",
-        VOCODER: "vocoder"
-    },
+    FILTERS_NAMES: FilterNames,
     WORKLET_PATHS: {
         BITCRUSHER: "BitCrusher.worklet.js",
         LIMITER: "Limiter.worklet.js",
@@ -76,7 +65,7 @@ const Constants = {
     // Smoothing factor for the time couting estimation (between 0 and 1)
     TREATMENT_TIME_COUNTING_SMOOTHING_FACTOR: 0.9,
     // Disable initial rendering (when opening audio file or buffer)
-    DISABLE_INITIAL_RENDERING: true,
+    DISABLE_INITIAL_RENDERING: false,
     // Default save format
     DEFAULT_SAVE_FORMAT: "wav",
     // Default bitrate for the MP3 encoder

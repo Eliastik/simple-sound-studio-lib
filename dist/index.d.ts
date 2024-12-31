@@ -82,6 +82,24 @@ interface ConfigService {
      */
     getSoundBasePath(): string;
     /**
+     * Set the base path for worklet files
+     *
+     * @param workletBasePath The base path
+     */
+    setWorkletBasePath(workletBasePath: string): void;
+    /**
+    * Set the base path for worker files
+    *
+    * @param workerBasePath The base path
+    */
+    setWorkerBasePath(workerBasePath: string): void;
+    /**
+    * Set the base path for audio files (reverb environments for example)
+    *
+    * @param soundBasePath The base path
+    */
+    setSoundBasePath(soundBasePath: string): void;
+    /**
      * Check if initial audio rendering (when opening a file or buffer) is disabled
      */
     isInitialRenderingDisabled(): boolean;
@@ -1108,6 +1126,9 @@ declare class EventEmitter implements EventEmitterInterface {
  */
 declare class GenericConfigService implements ConfigService {
     private mapConfig;
+    private workerBasePath;
+    private workletBasePath;
+    private soundBasePath;
     getConfig(key: string): string | undefined | null;
     setConfig(key: string, value: string): void;
     isCompatibilityModeEnabled(): boolean;
@@ -1122,6 +1143,9 @@ declare class GenericConfigService implements ConfigService {
     getWorkletBasePath(): string;
     getWorkerBasePath(): string;
     getSoundBasePath(): string;
+    setWorkletBasePath(workletBasePath: string): void;
+    setWorkerBasePath(workerBasePath: string): void;
+    setSoundBasePath(soundBasePath: string): void;
     isInitialRenderingDisabled(): boolean;
 }
 
@@ -1208,4 +1232,19 @@ declare class SoundStudioFactory {
     static getConfigServiceInstance(): ConfigService$1 | undefined;
 }
 
-export { AbstractAudioElement, AbstractAudioFilter, AbstractAudioFilterWorklet, AbstractAudioRenderer, AudioEditor, type AudioFilterEntrypointInterface, type AudioFilterNodes, BufferPlayer, type ConfigService, Constants, EventEmitter, type EventEmitterCallback, EventType, type FilterSettingValue, type FilterSettings, type FilterState, GenericConfigService, type GenericSettingValueAdditionalData, type RecorderSettings, type SaveBufferOptions, type SelectFormValue, SoundStudioFactory, utilFunctions as UtilFunctions, VoiceRecorder, audioEditorContainer };
+declare const FilterNames: {
+    REVERB: string;
+    ECHO: string;
+    BASS_BOOST: string;
+    BITCRUSHER: string;
+    HIGH_PASS: string;
+    LIMITER: string;
+    LOW_PASS: string;
+    PASSTHROUGH: string;
+    RETURN_AUDIO: string;
+    SOUNDTOUCH: string;
+    TELEPHONIZER: string;
+    VOCODER: string;
+};
+
+export { AbstractAudioElement, AbstractAudioFilter, AbstractAudioFilterWorklet, AbstractAudioRenderer, AudioEditor, type AudioFilterEntrypointInterface, type AudioFilterNodes, BufferPlayer, type ConfigService, Constants, EventEmitter, type EventEmitterCallback, EventType, FilterNames, type FilterSettingValue, type FilterSettings, type FilterState, GenericConfigService, type GenericSettingValueAdditionalData, type RecorderSettings, type SaveBufferOptions, type SelectFormValue, SoundStudioFactory, utilFunctions as UtilFunctions, VoiceRecorder, audioEditorContainer };
