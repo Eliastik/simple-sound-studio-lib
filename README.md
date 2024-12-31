@@ -19,16 +19,6 @@ Or you can install the npm package using this command:
 
 The TypeScript types are directly provided by the package.
 
-### Documentation
-
-The documentation of the methods and class can be found here: [docs/](docs/).
-
-The most important part is the [AudioEditor class](docs/classes/AudioEditor.md).
-
-You will also be interested by the [VoiceRecorder class](docs/classes/VoiceRecorder.md).
-
-To construct the object needed to use the features (AudioEditor class/VoiceRecorder class) you will need to use the [SoundStudioFactory](docs/classes/SoundStudioFactory.md).
-
 You also need to expose the worklet and worker files provided by the library at the root of your web application:
 
 - [https://github.com/Eliastik/simple-sound-studio-lib/tree/master/dist/workers](Workers files here)
@@ -38,6 +28,16 @@ If you do not expose the files, the library will try to function as best as it c
 
 - If worker files are not correctly exposed: the export-to-audio-file feature will not work
 - If worklet files are not correctly exposed: the library will fallback to ScriptProcessorNode for certain filters. This implementation offers lower performance and quality but remains acceptable as a fallback
+
+### Documentation
+
+The documentation of the methods and class can be found here: [docs/](docs/).
+
+The most important part is the [AudioEditor class](docs/classes/AudioEditor.md).
+
+You will also be interested by the [VoiceRecorder class](docs/classes/VoiceRecorder.md).
+
+To construct the object needed to use the features (AudioEditor class/VoiceRecorder class) you will need to use the [SoundStudioFactory](docs/classes/SoundStudioFactory.md).
 
 ### Project Structure
 
