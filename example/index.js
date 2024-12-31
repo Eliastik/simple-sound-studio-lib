@@ -41,7 +41,7 @@ async function processAudioThenDownload(file) {
     try {
         await audioEditor.renderAudio();
     } catch(e) {
-        // If an error occurs during audio decoding
+        // If an error occurs during audio rendering
         console.error("Error when rendering audio:", e);
         return;
     }
