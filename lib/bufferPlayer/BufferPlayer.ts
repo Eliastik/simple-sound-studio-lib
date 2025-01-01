@@ -21,7 +21,6 @@
 import { EventType } from "../model/EventTypeEnum";
 import { EventEmitterCallback } from "../model/EventEmitterCallback";
 import AbstractAudioElement from "../interfaces/AbstractAudioElement";
-import Constants from "../model/Constants";
 import { TYPES } from "../inversify.types";
 import { inject, injectable } from "inversify";
 import BufferPlayerInterface from "./interfaces/BufferPlayerInterface";
@@ -276,13 +275,5 @@ export default class BufferPlayer extends AbstractAudioElement implements Buffer
 
     get remainingTimeDisplay() {
         return ("0" + Math.trunc((this.duration - this.displayTime) / 60)).slice(-2) + ":" + ("0" + Math.trunc((this.duration - this.displayTime) % 60)).slice(-2);
-    }
-
-    get order(): number {
-        return -1;
-    }
-
-    get id(): string {
-        return Constants.BUFFER_PLAYER;
     }
 }

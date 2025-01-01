@@ -271,9 +271,4 @@ describe("AudioEditor", () => {
 
         expect(bufferPlayer.compatibilityMode).toBe(true);
     });
-
-    test("should return order and id correctly", () => {
-        expect(audioEditor.order).toBe(-1);
-        expect(audioEditor.id).toBe(Constants.AUDIO_EDITOR);
-    });
 });

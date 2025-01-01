@@ -5,7 +5,6 @@ import MockAudioRenderer from "./MockAudioRenderer";
 import ReturnAudioRenderer from "../lib/filters/ReturnAudioRenderer";
 import { MockAudioBuffer } from "./AudioBufferMock";
 import { createMockAudioContext } from "./AudioContextMock";
-import Constants from "../lib/model/Constants";
 
 describe("RendererManager tests", () => {
     test("Initialize renderer manager with 1 renderer", () => {
@@ -87,11 +86,5 @@ describe("RendererManager tests", () => {
         expect(spyMock1).toBeCalled();
         expect(spyMock2).toBeCalled();
         expect(spyMock3).toBeCalledTimes(0);
-    });
-
-    test("should return order and id correctly", () => {
-        const rendererManager = new RendererManager([]);
-        expect(rendererManager.order).toBe(-1);
-        expect(rendererManager.id).toBe(Constants.RENDERER_MANAGER);
     });
 });

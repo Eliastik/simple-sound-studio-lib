@@ -4,7 +4,6 @@ import BufferManager from "../lib/audioEditor/BufferManager";
 import EventEmitter from "../lib/utils/EventEmitter";
 import { EventType } from "../lib/model/EventTypeEnum";
 import FilterManager from "../lib/audioEditor/FilterManager";
-import Constants from "../lib/model/Constants";
 
 // Mock des dépendances
 const mockBufferFetcherService = {
@@ -61,11 +60,5 @@ describe("BufferManager tests", () => {
         await bufferManager.resetBufferFetcher();
 
         expect(mockEventEmitterEmit).toHaveBeenCalledWith(EventType.LOADING_BUFFERS_ERROR);
-    });
-
-    test("should return order and id correctly", () => {
-        const bufferManager = new BufferManager(new FilterManager([], null), mockBufferFetcherService, mockEventEmitter, mockAudioBuffersToFetch);
-        expect(bufferManager.order).toBe(-1);
-        expect(bufferManager.id).toBe(Constants.BUFFER_MANAGER);
     });
 });

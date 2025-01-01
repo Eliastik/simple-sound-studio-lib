@@ -8,4 +8,4 @@
 
 > **FilterSettingValue**: `string` \| `boolean` \| `number` \| `File` \| [`SelectFormValue`](../interfaces/SelectFormValue.md) \| `string`[] \| `undefined`
 
-Defined in: [model/filtersSettings/FilterSettings.ts:3](https://github.com/Eliastik/simple-sound-studio-lib/blob/dab295def48d73ea9d369ba0bfae89dbd7e343e1/lib/model/filtersSettings/FilterSettings.ts#L3)
+Defined in: [model/filtersSettings/FilterSettings.ts:3](https://github.com/Eliastik/simple-sound-studio-lib/blob/663925a270924e57c5730bbb254aa7f5b3523775/lib/model/filtersSettings/FilterSettings.ts#L3)

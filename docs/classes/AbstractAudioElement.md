@@ -6,7 +6,7 @@
 
 # Class: `abstract` AbstractAudioElement
 
-Defined in: [interfaces/AbstractAudioElement.ts:9](https://github.com/Eliastik/simple-sound-studio-lib/blob/dab295def48d73ea9d369ba0bfae89dbd7e343e1/lib/interfaces/AbstractAudioElement.ts#L9)
+Defined in: [interfaces/AbstractAudioElement.ts:9](https://github.com/Eliastik/simple-sound-studio-lib/blob/663925a270924e57c5730bbb254aa7f5b3523775/lib/interfaces/AbstractAudioElement.ts#L9)
 
 ## Extended by
 
@@ -31,7 +31,7 @@ Defined in: [interfaces/AbstractAudioElement.ts:9](https://github.com/Eliastik/s
 
 > **injectDependencies**(`bufferFetcherService`, `bufferDecoderService`, `configService`, `eventEmitter`): `void`
 
-Defined in: [interfaces/AbstractAudioElement.ts:23](https://github.com/Eliastik/simple-sound-studio-lib/blob/dab295def48d73ea9d369ba0bfae89dbd7e343e1/lib/interfaces/AbstractAudioElement.ts#L23)
+Defined in: [interfaces/AbstractAudioElement.ts:23](https://github.com/Eliastik/simple-sound-studio-lib/blob/663925a270924e57c5730bbb254aa7f5b3523775/lib/interfaces/AbstractAudioElement.ts#L23)
 
 #### Parameters
 

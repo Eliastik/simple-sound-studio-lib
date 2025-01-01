@@ -5,7 +5,6 @@ import { AudioFilterNodes } from "@/model/AudioNodes";
 import AbstractAudioFilterWorklet from "@/filters/interfaces/AbstractAudioFilterWorklet";
 import { FilterState } from "@/model/FilterState";
 import { FilterSettings } from "@/model/filtersSettings/FilterSettings";
-import Constants from "@/model/Constants";
 import FilterManagerInterface from "./interfaces/FilterManagerInterface";
 import { inject, injectable, multiInject } from "inversify";
 import { TYPES } from "@/inversify.types";
@@ -228,13 +227,5 @@ export default class FilterManager extends AbstractAudioElement implements Filte
 
     get currentNodes() {
         return this._currentNodes;
-    }
-
-    get order(): number {
-        return -1;
-    }
-
-    get id(): string {
-        return Constants.FILTER_MANAGER;
     }
 }

@@ -1,5 +1,4 @@
 import AbstractAudioElement from "@/interfaces/AbstractAudioElement";
-import Constants from "@/model/Constants";
 import { EventType } from "@/model/EventTypeEnum";
 import BufferManagerInterface from "./interfaces/BufferManagerInterface";
 import { inject, injectable } from "inversify";
@@ -83,13 +82,5 @@ export default class BufferManager extends AbstractAudioElement implements Buffe
                 await this.filterManager.resetFilterBuffers();
             }
         }
-    }
-
-    get order(): number {
-        return -1;
-    }
-
-    get id(): string {
-        return Constants.BUFFER_MANAGER;
     }
 }

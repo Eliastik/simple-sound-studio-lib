@@ -16,7 +16,6 @@ import { MockEntrypointFilter } from "./MockAudioFilter";
 import EventEmitter from "../lib/utils/EventEmitter";
 import { EventType } from "../lib/model/EventTypeEnum";
 import { mockRecorder } from "./AudioEditorObjectsMock";
-import Constants from "../lib/model/Constants";
 
 (AudioContext as any) = MockAudioContext;
 (AudioBuffer as any) = MockAudioBuffer;
@@ -243,11 +242,5 @@ describe("SaveBufferManager tests", () => {
 
         expect(await savePromise).toBe(true);
         expect(eventEmitter.off).toHaveBeenCalledWith(EventType.PLAYING_FINISHED, expect.any(Function));
-    });
-
-    test("should return order and id correctly", () => {
-        const saveBufferManager = new SaveBufferManager(mockFilterManagerInstance, mockAudioContextManagerInstance, mockBufferPlayerInstance);
-        expect(saveBufferManager.order).toBe(-1);
-        expect(saveBufferManager.id).toBe(Constants.SAVE_BUFFER_MANAGER);
     });
 });

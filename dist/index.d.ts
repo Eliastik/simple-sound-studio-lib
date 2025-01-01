@@ -621,8 +621,6 @@ declare class AudioEditor extends AbstractAudioElement implements AudioEditorInt
     saveBuffer(options?: SaveBufferOptions): Promise<boolean>;
     set downloadingInitialData(state: boolean);
     get downloadingInitialData(): boolean;
-    get order(): number;
-    get id(): string;
 }
 
 interface BufferPlayerInterface {
@@ -787,8 +785,6 @@ declare class BufferPlayer extends AbstractAudioElement implements BufferPlayerI
     get maxTimeDisplay(): string;
     get percent(): number;
     get remainingTimeDisplay(): string;
-    get order(): number;
-    get id(): string;
 }
 
 interface ConstraintULong {
@@ -945,8 +941,6 @@ declare class VoiceRecorder extends AbstractAudioElement implements VoiceRecorde
     getSettings(): RecorderSettings;
     on(event: string, callback: EventEmitterCallback): void;
     isRecordingAvailable(): boolean;
-    get order(): number;
-    get id(): string;
 }
 
 /**

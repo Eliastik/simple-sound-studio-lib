@@ -3,7 +3,6 @@ import AbstractAudioFilter from "../filters/interfaces/AbstractAudioFilter";
 import AbstractAudioRenderer from "../filters/interfaces/AbstractAudioRenderer";
 import utils from "../utils/Functions";
 import { EventType } from "../model/EventTypeEnum";
-import Constants from "../model/Constants";
 import utilFunctions from "../utils/Functions";
 import { FilterSettings } from "../model/filtersSettings/FilterSettings";
 import { EventEmitterCallback } from "../model/EventEmitterCallback";
@@ -460,13 +459,5 @@ export default class AudioEditor extends AbstractAudioElement implements AudioEd
         }
 
         return false;
-    }
-
-    get order(): number {
-        return -1;
-    }
-
-    get id(): string {
-        return Constants.AUDIO_EDITOR;
     }
 }

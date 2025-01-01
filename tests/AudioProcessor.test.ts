@@ -320,9 +320,4 @@ describe("AudioProcessor", () => {
         const result = await audioProcessor.setupOutput(null, createMockAudioContext());
         expect(result).toBe(false);
     });
-
-    test("should return order and id correctly", () => {
-        expect(audioProcessor.order).toBe(-1);
-        expect(audioProcessor.id).toBe(Constants.AUDIO_PROCESSOR);
-    });
 });

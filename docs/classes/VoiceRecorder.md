@@ -6,7 +6,7 @@
 
 # Class: VoiceRecorder
 
-Defined in: [voiceRecorder/VoiceRecorder.ts:39](https://github.com/Eliastik/simple-sound-studio-lib/blob/dab295def48d73ea9d369ba0bfae89dbd7e343e1/lib/voiceRecorder/VoiceRecorder.ts#L39)
+Defined in: [voiceRecorder/VoiceRecorder.ts:38](https://github.com/Eliastik/simple-sound-studio-lib/blob/663925a270924e57c5730bbb254aa7f5b3523775/lib/voiceRecorder/VoiceRecorder.ts#L38)
 
 ## Extends
 
@@ -22,7 +22,7 @@ Defined in: [voiceRecorder/VoiceRecorder.ts:39](https://github.com/Eliastik/simp
 
 > **new VoiceRecorder**(`contextManager`, `configService`): [`VoiceRecorder`](VoiceRecorder.md)
 
-Defined in: [voiceRecorder/VoiceRecorder.ts:70](https://github.com/Eliastik/simple-sound-studio-lib/blob/dab295def48d73ea9d369ba0bfae89dbd7e343e1/lib/voiceRecorder/VoiceRecorder.ts#L70)
+Defined in: [voiceRecorder/VoiceRecorder.ts:69](https://github.com/Eliastik/simple-sound-studio-lib/blob/663925a270924e57c5730bbb254aa7f5b3523775/lib/voiceRecorder/VoiceRecorder.ts#L69)
 
 #### Parameters
 
@@ -50,7 +50,7 @@ Defined in: [voiceRecorder/VoiceRecorder.ts:70](https://github.com/Eliastik/simp
 
 > **get** **currentTime**(): `number`
 
-Defined in: [voiceRecorder/VoiceRecorder.ts:437](https://github.com/Eliastik/simple-sound-studio-lib/blob/dab295def48d73ea9d369ba0bfae89dbd7e343e1/lib/voiceRecorder/VoiceRecorder.ts#L437)
+Defined in: [voiceRecorder/VoiceRecorder.ts:436](https://github.com/Eliastik/simple-sound-studio-lib/blob/663925a270924e57c5730bbb254aa7f5b3523775/lib/voiceRecorder/VoiceRecorder.ts#L436)
 
 Get current recording time in seconds
 
@@ -70,7 +70,7 @@ Get current recording time in seconds
 
 > **get** **currentTimeDisplay**(): `string`
 
-Defined in: [voiceRecorder/VoiceRecorder.ts:433](https://github.com/Eliastik/simple-sound-studio-lib/blob/dab295def48d73ea9d369ba0bfae89dbd7e343e1/lib/voiceRecorder/VoiceRecorder.ts#L433)
+Defined in: [voiceRecorder/VoiceRecorder.ts:432](https://github.com/Eliastik/simple-sound-studio-lib/blob/663925a270924e57c5730bbb254aa7f5b3523775/lib/voiceRecorder/VoiceRecorder.ts#L432)
 
 Get current recording time in text format
 
@@ -82,41 +82,13 @@ Get current recording time in text format
 
 `VoiceRecorderInterface.currentTimeDisplay`
 
-***
-
-### id
-
-#### Get Signature
-
-> **get** **id**(): `string`
-
-Defined in: [voiceRecorder/VoiceRecorder.ts:461](https://github.com/Eliastik/simple-sound-studio-lib/blob/dab295def48d73ea9d369ba0bfae89dbd7e343e1/lib/voiceRecorder/VoiceRecorder.ts#L461)
-
-##### Returns
-
-`string`
-
-***
-
-### order
-
-#### Get Signature
-
-> **get** **order**(): `number`
-
-Defined in: [voiceRecorder/VoiceRecorder.ts:457](https://github.com/Eliastik/simple-sound-studio-lib/blob/dab295def48d73ea9d369ba0bfae89dbd7e343e1/lib/voiceRecorder/VoiceRecorder.ts#L457)
-
-##### Returns
-
-`number`
-
 ## Methods
 
 ### audioFeedback()
 
 > **audioFeedback**(`enable`): `void`
 
-Defined in: [voiceRecorder/VoiceRecorder.ts:162](https://github.com/Eliastik/simple-sound-studio-lib/blob/dab295def48d73ea9d369ba0bfae89dbd7e343e1/lib/voiceRecorder/VoiceRecorder.ts#L162)
+Defined in: [voiceRecorder/VoiceRecorder.ts:161](https://github.com/Eliastik/simple-sound-studio-lib/blob/663925a270924e57c5730bbb254aa7f5b3523775/lib/voiceRecorder/VoiceRecorder.ts#L161)
 
 Enable or disable audio feedback
 
@@ -142,7 +114,7 @@ boolean
 
 > **changeInput**(`deviceId`, `groupId`): `void`
 
-Defined in: [voiceRecorder/VoiceRecorder.ts:319](https://github.com/Eliastik/simple-sound-studio-lib/blob/dab295def48d73ea9d369ba0bfae89dbd7e343e1/lib/voiceRecorder/VoiceRecorder.ts#L319)
+Defined in: [voiceRecorder/VoiceRecorder.ts:318](https://github.com/Eliastik/simple-sound-studio-lib/blob/663925a270924e57c5730bbb254aa7f5b3523775/lib/voiceRecorder/VoiceRecorder.ts#L318)
 
 Change audio input
 
@@ -174,7 +146,7 @@ Group ID (optional)
 
 > **getSettings**(): [`RecorderSettings`](../interfaces/RecorderSettings.md)
 
-Defined in: [voiceRecorder/VoiceRecorder.ts:441](https://github.com/Eliastik/simple-sound-studio-lib/blob/dab295def48d73ea9d369ba0bfae89dbd7e343e1/lib/voiceRecorder/VoiceRecorder.ts#L441)
+Defined in: [voiceRecorder/VoiceRecorder.ts:440](https://github.com/Eliastik/simple-sound-studio-lib/blob/663925a270924e57c5730bbb254aa7f5b3523775/lib/voiceRecorder/VoiceRecorder.ts#L440)
 
 Get the current settings for this voice recorder
 
@@ -194,7 +166,7 @@ RecorderSettings
 
 > **init**(): `Promise`\<`void`\>
 
-Defined in: [voiceRecorder/VoiceRecorder.ts:79](https://github.com/Eliastik/simple-sound-studio-lib/blob/dab295def48d73ea9d369ba0bfae89dbd7e343e1/lib/voiceRecorder/VoiceRecorder.ts#L79)
+Defined in: [voiceRecorder/VoiceRecorder.ts:78](https://github.com/Eliastik/simple-sound-studio-lib/blob/663925a270924e57c5730bbb254aa7f5b3523775/lib/voiceRecorder/VoiceRecorder.ts#L78)
 
 Initialize this voice recorder
 
@@ -212,7 +184,7 @@ Initialize this voice recorder
 
 > **injectDependencies**(`bufferFetcherService`, `bufferDecoderService`, `configService`, `eventEmitter`): `void`
 
-Defined in: [interfaces/AbstractAudioElement.ts:23](https://github.com/Eliastik/simple-sound-studio-lib/blob/dab295def48d73ea9d369ba0bfae89dbd7e343e1/lib/interfaces/AbstractAudioElement.ts#L23)
+Defined in: [interfaces/AbstractAudioElement.ts:23](https://github.com/Eliastik/simple-sound-studio-lib/blob/663925a270924e57c5730bbb254aa7f5b3523775/lib/interfaces/AbstractAudioElement.ts#L23)
 
 #### Parameters
 
@@ -246,7 +218,7 @@ Defined in: [interfaces/AbstractAudioElement.ts:23](https://github.com/Eliastik/
 
 > **isRecordingAvailable**(): `boolean`
 
-Defined in: [voiceRecorder/VoiceRecorder.ts:453](https://github.com/Eliastik/simple-sound-studio-lib/blob/dab295def48d73ea9d369ba0bfae89dbd7e343e1/lib/voiceRecorder/VoiceRecorder.ts#L453)
+Defined in: [voiceRecorder/VoiceRecorder.ts:452](https://github.com/Eliastik/simple-sound-studio-lib/blob/663925a270924e57c5730bbb254aa7f5b3523775/lib/voiceRecorder/VoiceRecorder.ts#L452)
 
 Check if browser is compatible with audio recording
 
@@ -266,7 +238,7 @@ boolean
 
 > **on**(`event`, `callback`): `void`
 
-Defined in: [voiceRecorder/VoiceRecorder.ts:449](https://github.com/Eliastik/simple-sound-studio-lib/blob/dab295def48d73ea9d369ba0bfae89dbd7e343e1/lib/voiceRecorder/VoiceRecorder.ts#L449)
+Defined in: [voiceRecorder/VoiceRecorder.ts:448](https://github.com/Eliastik/simple-sound-studio-lib/blob/663925a270924e57c5730bbb254aa7f5b3523775/lib/voiceRecorder/VoiceRecorder.ts#L448)
 
 Observe an event
 
@@ -298,7 +270,7 @@ Callback called when an event of this type occurs
 
 > **pause**(): `void`
 
-Defined in: [voiceRecorder/VoiceRecorder.ts:383](https://github.com/Eliastik/simple-sound-studio-lib/blob/dab295def48d73ea9d369ba0bfae89dbd7e343e1/lib/voiceRecorder/VoiceRecorder.ts#L383)
+Defined in: [voiceRecorder/VoiceRecorder.ts:382](https://github.com/Eliastik/simple-sound-studio-lib/blob/663925a270924e57c5730bbb254aa7f5b3523775/lib/voiceRecorder/VoiceRecorder.ts#L382)
 
 Pause audio recording
 
@@ -316,7 +288,7 @@ Pause audio recording
 
 > **record**(): `Promise`\<`void`\>
 
-Defined in: [voiceRecorder/VoiceRecorder.ts:327](https://github.com/Eliastik/simple-sound-studio-lib/blob/dab295def48d73ea9d369ba0bfae89dbd7e343e1/lib/voiceRecorder/VoiceRecorder.ts#L327)
+Defined in: [voiceRecorder/VoiceRecorder.ts:326](https://github.com/Eliastik/simple-sound-studio-lib/blob/663925a270924e57c5730bbb254aa7f5b3523775/lib/voiceRecorder/VoiceRecorder.ts#L326)
 
 Start audio recording
 
@@ -334,7 +306,7 @@ Start audio recording
 
 > **reset**(): `void`
 
-Defined in: [voiceRecorder/VoiceRecorder.ts:411](https://github.com/Eliastik/simple-sound-studio-lib/blob/dab295def48d73ea9d369ba0bfae89dbd7e343e1/lib/voiceRecorder/VoiceRecorder.ts#L411)
+Defined in: [voiceRecorder/VoiceRecorder.ts:410](https://github.com/Eliastik/simple-sound-studio-lib/blob/663925a270924e57c5730bbb254aa7f5b3523775/lib/voiceRecorder/VoiceRecorder.ts#L410)
 
 Reset this voice recorder
 
@@ -352,7 +324,7 @@ Reset this voice recorder
 
 > **setAutoGain**(`enable`): `void`
 
-Defined in: [voiceRecorder/VoiceRecorder.ts:287](https://github.com/Eliastik/simple-sound-studio-lib/blob/dab295def48d73ea9d369ba0bfae89dbd7e343e1/lib/voiceRecorder/VoiceRecorder.ts#L287)
+Defined in: [voiceRecorder/VoiceRecorder.ts:286](https://github.com/Eliastik/simple-sound-studio-lib/blob/663925a270924e57c5730bbb254aa7f5b3523775/lib/voiceRecorder/VoiceRecorder.ts#L286)
 
 Enable/disable auto gain
 
@@ -378,7 +350,7 @@ boolean
 
 > **setEchoCancellation**(`enable`): `void`
 
-Defined in: [voiceRecorder/VoiceRecorder.ts:295](https://github.com/Eliastik/simple-sound-studio-lib/blob/dab295def48d73ea9d369ba0bfae89dbd7e343e1/lib/voiceRecorder/VoiceRecorder.ts#L295)
+Defined in: [voiceRecorder/VoiceRecorder.ts:294](https://github.com/Eliastik/simple-sound-studio-lib/blob/663925a270924e57c5730bbb254aa7f5b3523775/lib/voiceRecorder/VoiceRecorder.ts#L294)
 
 Enable/disable echo cancellation
 
@@ -404,7 +376,7 @@ boolean
 
 > **setNoiseSuppression**(`enable`): `void`
 
-Defined in: [voiceRecorder/VoiceRecorder.ts:279](https://github.com/Eliastik/simple-sound-studio-lib/blob/dab295def48d73ea9d369ba0bfae89dbd7e343e1/lib/voiceRecorder/VoiceRecorder.ts#L279)
+Defined in: [voiceRecorder/VoiceRecorder.ts:278](https://github.com/Eliastik/simple-sound-studio-lib/blob/663925a270924e57c5730bbb254aa7f5b3523775/lib/voiceRecorder/VoiceRecorder.ts#L278)
 
 Enable/disable noise suppression
 
@@ -430,7 +402,7 @@ boolean
 
 > **stop**(): `Promise`\<`void`\>
 
-Defined in: [voiceRecorder/VoiceRecorder.ts:358](https://github.com/Eliastik/simple-sound-studio-lib/blob/dab295def48d73ea9d369ba0bfae89dbd7e343e1/lib/voiceRecorder/VoiceRecorder.ts#L358)
+Defined in: [voiceRecorder/VoiceRecorder.ts:357](https://github.com/Eliastik/simple-sound-studio-lib/blob/663925a270924e57c5730bbb254aa7f5b3523775/lib/voiceRecorder/VoiceRecorder.ts#L357)
 
 Stop audio recording
 

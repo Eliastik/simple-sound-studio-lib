@@ -27,7 +27,6 @@ import AudioConstraintWrapper from "../model/AudioConstraintWrapper";
 import { RecorderSettings } from "../model/RecorderSettings";
 import type { ConfigService } from "../services/interfaces/ConfigService";
 import AbstractAudioElement from "../interfaces/AbstractAudioElement";
-import Constants from "../model/Constants";
 import { EventEmitterCallback } from "../model/EventEmitterCallback";
 import { AudioConstraint } from "../model/AudioConstraint";
 import Recorder from "../recorder/Recorder";
@@ -452,13 +451,5 @@ export default class VoiceRecorder extends AbstractAudioElement implements Voice
 
     isRecordingAvailable() {
         return typeof (navigator.mediaDevices) !== "undefined" && typeof (navigator.mediaDevices.getUserMedia) !== "undefined";
-    }
-
-    get order(): number {
-        return -1;
-    }
-
-    get id(): string {
-        return Constants.VOICE_RECORDER;
     }
 }

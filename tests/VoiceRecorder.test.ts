@@ -7,7 +7,6 @@ import AudioContextManager from "../lib/audioEditor/AudioContextManager";
 import VoiceRecorder from "../lib/voiceRecorder/VoiceRecorder";
 import GenericConfigService from "../lib/services/GenericConfigService";
 import { MockAudioContext } from "./AudioContextMock";
-import Constants from "../lib/model/Constants";
 import EventEmitter from "../lib/utils/EventEmitter";
 import { EventType } from "../lib/model/EventTypeEnum";
 import { mockRecorder } from "./AudioEditorObjectsMock";
@@ -302,10 +301,5 @@ describe("VoiceRecorder", () => {
         voiceRecorder.stop();
 
         expect(voiceRecorder.recording).toBe(false);
-    });
-
-    test("should return order and id correctly", () => {
-        expect(voiceRecorder.order).toBe(-1);
-        expect(voiceRecorder.id).toBe(Constants.VOICE_RECORDER);
     });
 });

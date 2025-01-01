@@ -236,12 +236,4 @@ export default class SaveBufferManager extends AbstractAudioElement implements S
     get savingBuffer() {
         return this._savingBuffer;
     }
-
-    get order(): number {
-        return -1;
-    }
-
-    get id(): string {
-        return Constants.SAVE_BUFFER_MANAGER;
-    }
 }

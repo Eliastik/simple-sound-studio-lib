@@ -3,7 +3,6 @@ import { TYPES } from "@/inversify.types";
 import AbstractAudioElement from "@/interfaces/AbstractAudioElement";
 import AbstractAudioRenderer from "@/filters/interfaces/AbstractAudioRenderer";
 import { FilterState } from "@/model/FilterState";
-import Constants from "@/model/Constants";
 import RendererManagerInterface from "./interfaces/RendererManagerInterface";
 
 @injectable()
@@ -81,13 +80,5 @@ export default class RendererManager extends AbstractAudioElement implements Ren
         }
 
         return currentBuffer;
-    }
-
-    get order(): number {
-        return -1;
-    }
-
-    get id(): string {
-        return Constants.RENDERER_MANAGER;
     }
 }

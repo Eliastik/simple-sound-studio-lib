@@ -5,7 +5,6 @@ import { describe, expect, test } from "@jest/globals";
 import "reflect-metadata";
 import EventEmitter from "../lib/utils/EventEmitter";
 import BufferPlayer from "../lib/bufferPlayer/BufferPlayer";
-import Constants from "../lib/model/Constants";
 import MockAudioNode from "./MockAudioNode";
 import { EventType } from "../lib/model/EventTypeEnum";
 
@@ -298,10 +297,5 @@ describe("BufferPlayer tests", () => {
         expect(bufferPlayer.start).toHaveBeenCalledTimes(2);
         expect(bufferPlayer.reset).toHaveBeenCalledTimes(2);
         expect(mockEventEmitter.emit).not.toHaveBeenCalledWith(EventType.PLAYING_FINISHED);
-    });
-
-    test("Should return order and id correctly", () => {
-        expect(bufferPlayer.order).toBe(-1);
-        expect(bufferPlayer.id).toBe(Constants.BUFFER_PLAYER);
     });
 });

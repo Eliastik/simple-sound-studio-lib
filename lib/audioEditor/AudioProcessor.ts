@@ -240,12 +240,4 @@ export default class AudioProcessor extends AbstractAudioElement implements Audi
     get renderedBuffer() {
         return this._renderedBuffer;
     }
-
-    get order(): number {
-        return -1;
-    }
-
-    get id(): string {
-        return Constants.AUDIO_PROCESSOR;
-    }
 }

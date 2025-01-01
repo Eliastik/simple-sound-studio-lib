@@ -7,7 +7,6 @@ import BassBoosterFilter from "../lib/filters/BassBoosterFilter";
 import { MockAudioContext, createMockAudioContext } from "./AudioContextMock";
 import { MockAudioFilter, MockEntrypointFilter, MockAudioFilterWorklet } from "./MockAudioFilter";
 import { MockAudioBuffer } from "./AudioBufferMock";
-import Constants from "../lib/model/Constants";
 import { AudioFilterNodes } from "../lib/model/AudioNodes";
 
 describe("FilterManager tests", () => {
@@ -272,11 +271,5 @@ describe("FilterManager tests", () => {
         } catch(e) {}
 
         expect(filter4.initializeWorklet).toHaveBeenCalledWith(context);
-    });
-
-    test("should return order and id correctly", () => {
-        const filterManager = new FilterManager([], null);
-        expect(filterManager.order).toBe(-1);
-        expect(filterManager.id).toBe(Constants.FILTER_MANAGER);
     });
 });
