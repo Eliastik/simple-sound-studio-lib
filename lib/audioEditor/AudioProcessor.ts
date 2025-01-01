@@ -187,6 +187,8 @@ export default class AudioProcessor extends AbstractAudioElement implements Audi
                         this.configService.enableCompatibilityMode();
                         this.eventEmitter.emit(EventType.COMPATIBILITY_MODE_AUTO_ENABLED);
 
+                        console.warn("Compatibility mode has been automatically enabled because a problem has been detected with the web browser.");
+
                         return false;
                     }
 
