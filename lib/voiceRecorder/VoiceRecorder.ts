@@ -26,7 +26,7 @@ import { EventType } from "../model/EventTypeEnum";
 import AudioConstraintWrapper from "../model/AudioConstraintWrapper";
 import { RecorderSettings } from "../model/RecorderSettings";
 import type { ConfigService } from "../services/interfaces/ConfigService";
-import AbstractAudioElement from "../filters/interfaces/AbstractAudioElement";
+import AbstractAudioElement from "../interfaces/AbstractAudioElement";
 import Constants from "../model/Constants";
 import { EventEmitterCallback } from "../model/EventEmitterCallback";
 import { AudioConstraint } from "../model/AudioConstraint";

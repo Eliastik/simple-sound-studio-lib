@@ -2,7 +2,7 @@ import { inject, injectable } from "inversify";
 import { TYPES } from "../inversify.types";
 import { Recorder } from "../recorder/Recorder";
 import { EventType } from "@/model/EventTypeEnum";
-import AbstractAudioElement from "@/filters/interfaces/AbstractAudioElement";
+import AbstractAudioElement from "@/interfaces/AbstractAudioElement";
 import SaveBufferOptions from "@/model/SaveBufferOptions";
 import Constants from "@/model/Constants";
 import RecorderWorkerMessage from "../model/RecorderWorkerMessage";

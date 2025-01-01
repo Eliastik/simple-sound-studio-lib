@@ -1,6 +1,6 @@
 import { injectable, multiInject } from "inversify";
 import { TYPES } from "@/inversify.types";
-import AbstractAudioElement from "@/filters/interfaces/AbstractAudioElement";
+import AbstractAudioElement from "@/interfaces/AbstractAudioElement";
 import AbstractAudioRenderer from "@/filters/interfaces/AbstractAudioRenderer";
 import { FilterState } from "@/model/FilterState";
 import Constants from "@/model/Constants";

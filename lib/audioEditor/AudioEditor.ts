@@ -1,4 +1,4 @@
-import AbstractAudioElement from "../filters/interfaces/AbstractAudioElement";
+import AbstractAudioElement from "../interfaces/AbstractAudioElement";
 import AbstractAudioFilter from "../filters/interfaces/AbstractAudioFilter";
 import AbstractAudioRenderer from "../filters/interfaces/AbstractAudioRenderer";
 import utils from "../utils/Functions";

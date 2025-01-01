@@ -1,4 +1,4 @@
-import AbstractAudioElement from "@/filters/interfaces/AbstractAudioElement";
+import AbstractAudioElement from "@/interfaces/AbstractAudioElement";
 import Constants from "@/model/Constants";
 import { EventType } from "@/model/EventTypeEnum";
 import BufferManagerInterface from "./interfaces/BufferManagerInterface";

@@ -1,8 +1,8 @@
-import AbstractAudioElement from "./AbstractAudioElement";
 import { AudioFilterNodes } from "../../model/AudioNodes";
 import { FilterSettingValue, FilterSettings } from "../../model/filtersSettings/FilterSettings";
+import AbstractAudioNode from "./AbstractAudioNode";
 
-export default abstract class AbstractAudioFilter extends AbstractAudioElement {
+export default abstract class AbstractAudioFilter extends AbstractAudioNode {
 
     /** The default settings */
     private defaultSettings: FilterSettings | null = null;

@@ -1,8 +1,8 @@
-import { audioEditorContainer } from "./inversify.config";
 import AudioEditor from "./audioEditor/AudioEditor";
 import BufferPlayer from "./bufferPlayer/BufferPlayer";
 import VoiceRecorder from "./voiceRecorder/VoiceRecorder";
-import AbstractAudioElement from "./filters/interfaces/AbstractAudioElement";
+import AbstractAudioElement from "./interfaces/AbstractAudioElement";
+import AbstractAudioNode from "./filters/interfaces/AbstractAudioNode";
 import AbstractAudioFilter from "./filters/interfaces/AbstractAudioFilter";
 import AbstractAudioFilterWorklet from "./filters/interfaces/AbstractAudioFilterWorklet";
 import AbstractAudioRenderer from "./filters/interfaces/AbstractAudioRenderer";
@@ -23,9 +23,10 @@ import { ConfigService } from "./services/interfaces/ConfigService";
 import SaveBufferOptions from "./model/SaveBufferOptions";
 import SoundStudioFactory from "./utils/SoundStudioFactory";
 import FilterNames from "./model/FilterNames";
+import SoundStudioFactoryNewInstanceOptions from "./model/SoundStudioFactoryNewInstanceOptions";
+import SoundStudioFactoryInstance from "./model/SoundStudioFactoryInstance";
 
 export {
-    audioEditorContainer,
     AudioEditor,
     BufferPlayer,
     VoiceRecorder,
@@ -45,10 +46,13 @@ export {
     type EventEmitterCallback,
     type SaveBufferOptions,
     AbstractAudioElement,
+    AbstractAudioNode,
     AbstractAudioFilter,
     AbstractAudioFilterWorklet,
     AbstractAudioRenderer,
     type AudioFilterEntrypointInterface,
     utilFunctions as UtilFunctions,
-    SoundStudioFactory
+    SoundStudioFactory,
+    type SoundStudioFactoryNewInstanceOptions,
+    type SoundStudioFactoryInstance
 };

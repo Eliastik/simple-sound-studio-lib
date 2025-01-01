@@ -20,7 +20,7 @@
 // Used to play the audio buffer, with time controls, pause/play, stop and loop
 import { EventType } from "../model/EventTypeEnum";
 import { EventEmitterCallback } from "../model/EventEmitterCallback";
-import AbstractAudioElement from "../filters/interfaces/AbstractAudioElement";
+import AbstractAudioElement from "../interfaces/AbstractAudioElement";
 import Constants from "../model/Constants";
 import { TYPES } from "../inversify.types";
 import { inject, injectable } from "inversify";

@@ -44,12 +44,12 @@ class CustomGainFilter extends AbstractAudioFilter {
     }
 }
 
-// Create the audio editor (the main component for audio processing and editing)
-const audioEditor = SoundStudioFactory.createAudioEditor();
+// Create a new instance of SoundStudio components (audioEditor for audio processing and editing, configService, etc.)
+const { audioEditor, configService } = SoundStudioFactory.createNewInstance();
 
 // Set base paths for worklet and worker files, as the default base path is incorrect (defaults to an empty string).
-SoundStudioFactory.getConfigServiceInstance().setWorkletBasePath("/dist/worklets/");
-SoundStudioFactory.getConfigServiceInstance().setWorkerBasePath("/dist/workers/");
+configService.setWorkletBasePath("/dist/worklets/");
+configService.setWorkerBasePath("/dist/workers/");
 
 // Add the custom filter and enable it
 audioEditor.addFilters(new CustomGainFilter());

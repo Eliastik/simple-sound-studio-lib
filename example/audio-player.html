@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Example</title>
+</head>
+<body>
+  <h1>Example</h1>
+  <form id="file-form">
+    <p>This example takes an audio file as input. When you click on validate, it will bass boost the audio, then you will be able to play the edited audio.</p>
+    <input type="file" id="file-input" />
+    <button type="button" id="validate-button">Validate</button>
+  </form>
+  <p>
+    <button type="button" id="play-button">Play</button>
+    <button type="button" id="pause-button">Pause</button>
+    <button type="button" id="stop-button">Stop</button>
+  </p>
+  <script type="module" src="/example/audio-player.js"></script>
+</body>
+</html>

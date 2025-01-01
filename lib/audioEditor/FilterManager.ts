@@ -1,4 +1,4 @@
-import AbstractAudioElement from "@/filters/interfaces/AbstractAudioElement";
+import AbstractAudioElement from "@/interfaces/AbstractAudioElement";
 import AbstractAudioFilter from "@/filters/interfaces/AbstractAudioFilter";
 import AudioFilterEntrypointInterface from "@/filters/interfaces/AudioFilterEntrypointInterface";
 import { AudioFilterNodes } from "@/model/AudioNodes";

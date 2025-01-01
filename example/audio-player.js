@@ -3,7 +3,7 @@ import { SoundStudioFactory, FilterNames } from "../dist/esm/SimpleSoundStudioLi
 // Minimal example of using the library
 
 // Create a new instance of SoundStudio components (audioEditor for audio processing and editing, configService, etc.)
-const { audioEditor, configService } = SoundStudioFactory.createNewInstance();
+const { audioEditor, audioPlayer, configService } = SoundStudioFactory.createNewInstance();
 
 // Set base paths for worklet and worker files, as the default base path is incorrect (defaults to an empty string).
 configService.setWorkletBasePath("/dist/worklets/");
@@ -45,10 +45,6 @@ async function processAudioThenDownload(file) {
         console.error("Error when rendering audio:", e);
         return;
     }
-
-    // Save the rendered audio to a file (default format is WAV, but can be changed to MP3)
-    await audioEditor.saveBuffer();
-    // await audioEditor.saveBuffer({ format: "mp3" }); // Uncomment to save as MP3 file
 }
 
 document.getElementById("validate-button").addEventListener("click", async () => {
@@ -64,4 +60,20 @@ document.getElementById("validate-button").addEventListener("click", async () =>
     // Re-enable the button after processing is complete
     document.getElementById("validate-button").removeAttribute("disabled");
     document.getElementById("validate-button").style.cursor = "";
+});
+
+
+document.getElementById("play-button").addEventListener("click", async () => {
+    audioPlayer.start();
+});
+
+
+document.getElementById("pause-button").addEventListener("click", async () => {
+    audioPlayer.pause();
+});
+
+
+document.getElementById("stop-button").addEventListener("click", async () => {
+    audioPlayer.reset();
+    audioPlayer.stop();
 });

@@ -13,6 +13,7 @@
 - [AbstractAudioElement](classes/AbstractAudioElement.md)
 - [AbstractAudioFilter](classes/AbstractAudioFilter.md)
 - [AbstractAudioFilterWorklet](classes/AbstractAudioFilterWorklet.md)
+- [AbstractAudioNode](classes/AbstractAudioNode.md)
 - [AbstractAudioRenderer](classes/AbstractAudioRenderer.md)
 - [AudioEditor](classes/AudioEditor.md)
 - [BufferPlayer](classes/BufferPlayer.md)
@@ -32,6 +33,8 @@
 - [RecorderSettings](interfaces/RecorderSettings.md)
 - [SaveBufferOptions](interfaces/SaveBufferOptions.md)
 - [SelectFormValue](interfaces/SelectFormValue.md)
+- [SoundStudioFactoryInstance](interfaces/SoundStudioFactoryInstance.md)
+- [SoundStudioFactoryNewInstanceOptions](interfaces/SoundStudioFactoryNewInstanceOptions.md)
 
 ## Type Aliases
 
@@ -40,7 +43,6 @@
 
 ## Variables
 
-- [audioEditorContainer](variables/audioEditorContainer.md)
 - [Constants](variables/Constants.md)
 - [FilterNames](variables/FilterNames.md)
 - [UtilFunctions](variables/UtilFunctions.md)

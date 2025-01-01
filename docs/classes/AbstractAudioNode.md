@@ -2,29 +2,34 @@
 
 ***
 
-[@eliastik/simple-sound-studio-lib](../README.md) / AbstractAudioRenderer
+[@eliastik/simple-sound-studio-lib](../README.md) / AbstractAudioNode
 
-# Class: `abstract` AbstractAudioRenderer
+# Class: `abstract` AbstractAudioNode
 
-Defined in: [filters/interfaces/AbstractAudioRenderer.ts:4](https://github.com/Eliastik/simple-sound-studio-lib/blob/dab295def48d73ea9d369ba0bfae89dbd7e343e1/lib/filters/interfaces/AbstractAudioRenderer.ts#L4)
+Defined in: [filters/interfaces/AbstractAudioNode.ts:5](https://github.com/Eliastik/simple-sound-studio-lib/blob/dab295def48d73ea9d369ba0bfae89dbd7e343e1/lib/filters/interfaces/AbstractAudioNode.ts#L5)
 
 ## Extends
 
-- [`AbstractAudioNode`](AbstractAudioNode.md)
+- [`AbstractAudioElement`](AbstractAudioElement.md)
+
+## Extended by
+
+- [`AbstractAudioFilter`](AbstractAudioFilter.md)
+- [`AbstractAudioRenderer`](AbstractAudioRenderer.md)
 
 ## Constructors
 
-### new AbstractAudioRenderer()
+### new AbstractAudioNode()
 
-> **new AbstractAudioRenderer**(): [`AbstractAudioRenderer`](AbstractAudioRenderer.md)
+> **new AbstractAudioNode**(): [`AbstractAudioNode`](AbstractAudioNode.md)
 
 #### Returns
 
-[`AbstractAudioRenderer`](AbstractAudioRenderer.md)
+[`AbstractAudioNode`](AbstractAudioNode.md)
 
 #### Inherited from
 
-[`AbstractAudioNode`](AbstractAudioNode.md).[`constructor`](AbstractAudioNode.md#constructors)
+[`AbstractAudioElement`](AbstractAudioElement.md).[`constructor`](AbstractAudioElement.md#constructors)
 
 ## Accessors
 
@@ -42,10 +47,6 @@ Returns the id of this filter/renderer
 
 `string`
 
-#### Inherited from
-
-[`AbstractAudioNode`](AbstractAudioNode.md).[`id`](AbstractAudioNode.md#id)
-
 ***
 
 ### order
@@ -62,10 +63,6 @@ Returns the order in which the filter/renderer needs to be applied
 
 `number`
 
-#### Inherited from
-
-[`AbstractAudioNode`](AbstractAudioNode.md).[`order`](AbstractAudioNode.md#order)
-
 ## Methods
 
 ### disable()
@@ -80,10 +77,6 @@ Disable this filter/renderer
 
 `void`
 
-#### Inherited from
-
-[`AbstractAudioNode`](AbstractAudioNode.md).[`disable`](AbstractAudioNode.md#disable)
-
 ***
 
 ### enable()
@@ -97,10 +90,6 @@ Enable this filter/renderer
 #### Returns
 
 `void`
-
-#### Inherited from
-
-[`AbstractAudioNode`](AbstractAudioNode.md).[`enable`](AbstractAudioNode.md#enable)
 
 ***
 
@@ -134,7 +123,7 @@ Defined in: [interfaces/AbstractAudioElement.ts:23](https://github.com/Eliastik/
 
 #### Inherited from
 
-[`AbstractAudioNode`](AbstractAudioNode.md).[`injectDependencies`](AbstractAudioNode.md#injectdependencies)
+[`AbstractAudioElement`](AbstractAudioElement.md).[`injectDependencies`](AbstractAudioElement.md#injectdependencies)
 
 ***
 
@@ -150,10 +139,6 @@ Is this filter/renderer enabled by default?
 
 `boolean`
 
-#### Inherited from
-
-[`AbstractAudioNode`](AbstractAudioNode.md).[`isDefaultEnabled`](AbstractAudioNode.md#isdefaultenabled)
-
 ***
 
 ### isEnabled()
@@ -167,34 +152,6 @@ Is this filter/renderer enabled?
 #### Returns
 
 `boolean`
-
-#### Inherited from
-
-[`AbstractAudioNode`](AbstractAudioNode.md).[`isEnabled`](AbstractAudioNode.md#isenabled)
-
-***
-
-### renderAudio()
-
-> `abstract` **renderAudio**(`context`, `buffer`): `Promise`\<`AudioBuffer`\>
-
-Defined in: [filters/interfaces/AbstractAudioRenderer.ts:7](https://github.com/Eliastik/simple-sound-studio-lib/blob/dab295def48d73ea9d369ba0bfae89dbd7e343e1/lib/filters/interfaces/AbstractAudioRenderer.ts#L7)
-
-Render an AudioBuffer based on another input AudioBuffer
-
-#### Parameters
-
-##### context
-
-`BaseAudioContext`
-
-##### buffer
-
-`AudioBuffer`
-
-#### Returns
-
-`Promise`\<`AudioBuffer`\>
 
 ***
 
@@ -215,10 +172,6 @@ Set to true if this filter/renderer needs to be enabled by default
 #### Returns
 
 `void`
-
-#### Inherited from
-
-[`AbstractAudioNode`](AbstractAudioNode.md).[`setDefaultEnabled`](AbstractAudioNode.md#setdefaultenabled)
 
 ***
 
@@ -242,10 +195,6 @@ true to enable, false to disable
 
 `void`
 
-#### Inherited from
-
-[`AbstractAudioNode`](AbstractAudioNode.md).[`setEnabled`](AbstractAudioNode.md#setenabled)
-
 ***
 
 ### toggle()
@@ -259,7 +208,3 @@ Toggle to enabled/disabled this filter
 #### Returns
 
 `void`
-
-#### Inherited from
-
-[`AbstractAudioNode`](AbstractAudioNode.md).[`toggle`](AbstractAudioNode.md#toggle)

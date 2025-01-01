@@ -1,7 +1,7 @@
 {
   "name": "@eliastik/simple-sound-studio-lib",
   "description": "A Web Audio API library used in my Simple Voice Changer (soon to be renamed to Simple Sound Studio) project",
-  "version": "2.2.1",
+  "version": "2.2.2",
   "private": false,
   "scripts": {
     "lint": "eslint .",
@@ -33,7 +33,7 @@
     "@types/audioworklet": "^0.0.65",
     "@types/jest": "^29.5.14",
     "@types/lodash": "^4.17.13",
-    "@types/node": "^22.10.2",
+    "@types/node": "^22.10.3",
     "@types/semver": "^7.5.8",
     "@typescript-eslint/eslint-plugin": "^8.19.0",
     "@typescript-eslint/parser": "^8.19.0",
@@ -53,6 +53,6 @@
     "typescript": "^5.7.2"
   },
   "peerDependencies": {
-    "@types/audioworklet": "^0.0.60"
+    "@types/audioworklet": "^0.0.65"
   }
 }

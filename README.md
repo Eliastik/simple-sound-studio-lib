@@ -1,6 +1,6 @@
 ﻿# Simple Sound Studio - Library
 
-* Version: 2.2.1 (9/10/2024)
+* Version: 2.2.2 (1/1/2025)
 * License: GNU GPL 3
 
 ## English
@@ -81,6 +81,7 @@ Once the server is running, open example/index.html in your browser to see the m
 
 Please note that there are other more advanced examples:
 
+- [example/audio-player.js](example/audio-player.js): explain how to use the audio player
 - [example/custom-filter.js](example/custom-filter.js): explain how to create a custom audio filter
 
 ### Compile the project
@@ -176,7 +177,8 @@ Une fois le serveur lancé, ouvrez example/index.html dans votre navigateur pour
 
 Il y a également d'autres  exemples avancés :
 
-- [example/custom-filter.js](example/custom-filter.js): montre comment créer un filtre audio personnalisé
+- [example/audio-player.js](example/audio-player.js) : montre comment utiliser le lecteur audio
+- [example/custom-filter.js](example/custom-filter.js) : montre comment créer un filtre audio personnalisé
 
 #### Compiler le projet
 

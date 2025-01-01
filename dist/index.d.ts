@@ -1,7 +1,7 @@
-import { Container } from 'inversify';
 import BufferFetcherServiceInterface from '@/services/interfaces/BufferFetcherServiceInterface';
 import BufferDecoderServiceInterface from '@/services/interfaces/BufferDecoderServiceInterface';
 import EventEmitterInterface$1 from '@/utils/interfaces/EventEmitterInterface';
+import AbstractAudioElement$1 from '@/interfaces/AbstractAudioElement';
 import AbstractAudioFilter$1 from '@/filters/interfaces/AbstractAudioFilter';
 import AbstractAudioRenderer$1 from '@/filters/interfaces/AbstractAudioRenderer';
 import { EventEmitterCallback as EventEmitterCallback$1 } from '@/model/EventEmitterCallback';
@@ -18,8 +18,8 @@ import FilterManagerInterface$1 from '@/audioEditor/interfaces/FilterManagerInte
 import AudioEditorInterface$1 from '@/audioEditor/interfaces/AudioEditorInterface';
 import { ConfigService as ConfigService$1 } from '@/services/interfaces/ConfigService';
 import VoiceRecorderInterface$1 from '@/voiceRecorder/interfaces/VoiceRecorderInterface';
-
-declare const audioEditorContainer: Container;
+import SoundStudioFactoryNewInstanceOptions$1 from '@/model/SoundStudioFactoryNewInstanceOptions';
+import SoundStudioFactoryInstance$1 from '@/model/SoundStudioFactoryInstance';
 
 interface ConfigService {
     /**
@@ -106,35 +106,10 @@ interface ConfigService {
 }
 
 declare abstract class AbstractAudioElement {
-    /** Is this element enabled? */
-    private enabled;
-    /** Is this element enabled by default? */
-    private defaultEnabled;
     protected bufferFetcherService: BufferFetcherServiceInterface | null;
     protected bufferDecoderService: BufferDecoderServiceInterface | null;
     protected configService: ConfigService | null;
     protected eventEmitter: EventEmitterInterface$1 | null;
-    /** Returns the order in which the filter/renderer needs to be applied */
-    abstract get order(): number;
-    /** Returns the id of this filter/renderer */
-    abstract get id(): string;
-    /** Is this filter/renderer enabled? */
-    isEnabled(): boolean;
-    /** Is this filter/renderer enabled by default? */
-    isDefaultEnabled(): boolean;
-    /** Set to true if this filter/renderer needs to be enabled by default */
-    setDefaultEnabled(state: boolean): void;
-    /**
-     * Set the enabled/disabled state
-     * @param state true to enable, false to disable
-     */
-    setEnabled(state: boolean): void;
-    /** Enable this filter/renderer */
-    enable(): void;
-    /** Disable this filter/renderer */
-    disable(): void;
-    /** Toggle to enabled/disabled this filter */
-    toggle(): void;
     injectDependencies(bufferFetcherService: BufferFetcherServiceInterface | null, bufferDecoderService: BufferDecoderServiceInterface | null, configService: ConfigService | null, eventEmitter: EventEmitterInterface$1 | null): void;
 }
 
@@ -161,7 +136,35 @@ interface FilterSettings {
     downloadedBuffers?: string[];
 }
 
-declare abstract class AbstractAudioFilter extends AbstractAudioElement {
+declare abstract class AbstractAudioNode extends AbstractAudioElement$1 {
+    /** Is this element enabled? */
+    private enabled;
+    /** Is this element enabled by default? */
+    private defaultEnabled;
+    /** Returns the order in which the filter/renderer needs to be applied */
+    abstract get order(): number;
+    /** Returns the id of this filter/renderer */
+    abstract get id(): string;
+    /** Is this filter/renderer enabled? */
+    isEnabled(): boolean;
+    /** Is this filter/renderer enabled by default? */
+    isDefaultEnabled(): boolean;
+    /** Set to true if this filter/renderer needs to be enabled by default */
+    setDefaultEnabled(state: boolean): void;
+    /**
+     * Set the enabled/disabled state
+     * @param state true to enable, false to disable
+     */
+    setEnabled(state: boolean): void;
+    /** Enable this filter/renderer */
+    enable(): void;
+    /** Disable this filter/renderer */
+    disable(): void;
+    /** Toggle to enabled/disabled this filter */
+    toggle(): void;
+}
+
+declare abstract class AbstractAudioFilter extends AbstractAudioNode {
     /** The default settings */
     private defaultSettings;
     /** Total sample of the input audio buffer */
@@ -190,7 +193,7 @@ declare abstract class AbstractAudioFilter extends AbstractAudioElement {
     set totalSamples(value: number);
 }
 
-declare abstract class AbstractAudioRenderer extends AbstractAudioElement {
+declare abstract class AbstractAudioRenderer extends AbstractAudioNode {
     /** Render an AudioBuffer based on another input AudioBuffer */
     abstract renderAudio(context: BaseAudioContext, buffer: AudioBuffer): Promise<AudioBuffer>;
 }
@@ -1260,14 +1263,77 @@ declare enum EventType {
     LOADED_AUDIO_FILE_FROM_LIST = "loadedAudioFileFromList"
 }
 
+/**
+ * Factory class to create instances of sound studio components.
+ *
+ * This factory supports both singleton-based methods (deprecated) and a new
+ * instance-based creation model. The singleton methods will be removed in a
+ * future release.
+ */
 declare class SoundStudioFactory {
     private static ready;
+    private static audioEditor;
+    private static audioPlayer;
+    private static configService;
+    private static eventEmitter;
+    private static voiceRecorder;
+    /**
+     * Create a new instance of sound studio components.
+     *
+     * @param options Optional configuration for the new instance. See SoundStudioFactoryNewInstanceOptions
+     * @returns A new instance of the sound studio components. See SoundStudioFactoryInstance
+     */
+    static createNewInstance(options?: SoundStudioFactoryNewInstanceOptions$1): SoundStudioFactoryInstance$1;
+    /**
+     * Create a singleton AudioEditor instance.
+     *
+     * @param configService Optional configuration service.
+     * @param buffersToFetch Optional list of audio buffers to pre-fetch.
+     * @returns The singleton AudioEditor instance.
+     * @deprecated This method is deprecated. Use createNewInstance instead.
+     */
     static createAudioEditor(configService?: ConfigService$1, buffersToFetch?: string[]): AudioEditorInterface$1;
+    /**
+     * Create a singleton VoiceRecorder instance.
+     *
+     * @returns The singleton VoiceRecorder instance.
+     * @deprecated This method is deprecated. Use createNewInstance instead.
+     */
     static createVoiceRecorder(): VoiceRecorderInterface$1;
+    /**
+     * Get the singleton AudioEditor instance.
+     *
+     * @returns The singleton AudioEditor instance, or null if not initialized.
+     * @deprecated This method is deprecated. Use createNewInstance instead.
+     */
     static getAudioEditorInstance(): AudioEditorInterface$1 | null;
+    /**
+     * Get the singleton BufferPlayer instance.
+     *
+     * @returns The singleton BufferPlayer instance, or null if not initialized.
+     * @deprecated This method is deprecated. Use createNewInstance instead.
+     */
     static getAudioPlayerInstance(): BufferPlayerInterface$1 | null;
+    /**
+     * Get the singleton VoiceRecorder instance.
+     *
+     * @returns The singleton VoiceRecorder instance, or null if not initialized.
+     * @deprecated This method is deprecated. Use createNewInstance instead.
+     */
     static getAudioRecorderInstance(): VoiceRecorderInterface$1 | null;
+    /**
+     * Get the singleton EventEmitter instance.
+     *
+     * @returns The singleton EventEmitter instance, or null if not initialized.
+     * @deprecated This method is deprecated. Use createNewInstance instead.
+     */
     static getEventEmitterInstance(): EventEmitterInterface | null;
+    /**
+     * Get the singleton ConfigService instance.
+     *
+     * @returns The singleton ConfigService instance, or undefined if not initialized.
+     * @deprecated This method is deprecated. Use createNewInstance instead.
+     */
     static getConfigServiceInstance(): ConfigService$1 | undefined;
 }
 
@@ -1286,4 +1352,17 @@ declare const FilterNames: {
     VOCODER: string;
 };
 
-export { AbstractAudioElement, AbstractAudioFilter, AbstractAudioFilterWorklet, AbstractAudioRenderer, AudioEditor, type AudioFilterEntrypointInterface, type AudioFilterNodes, BufferPlayer, type ConfigService, Constants, EventEmitter, type EventEmitterCallback, EventType, FilterNames, type FilterSettingValue, type FilterSettings, type FilterState, GenericConfigService, type GenericSettingValueAdditionalData, type RecorderSettings, type SaveBufferOptions, type SelectFormValue, SoundStudioFactory, utilFunctions as UtilFunctions, VoiceRecorder, audioEditorContainer };
+interface SoundStudioFactoryNewInstanceOptions {
+    configService?: ConfigService$1;
+    buffersToFetch?: string[];
+}
+
+interface SoundStudioFactoryInstance {
+    audioEditor: AudioEditorInterface$1;
+    voiceRecorder: VoiceRecorderInterface$1;
+    audioPlayer: BufferPlayerInterface$1;
+    eventEmitter: EventEmitterInterface$1;
+    configService: ConfigService$1;
+}
+
+export { AbstractAudioElement, AbstractAudioFilter, AbstractAudioFilterWorklet, AbstractAudioNode, AbstractAudioRenderer, AudioEditor, type AudioFilterEntrypointInterface, type AudioFilterNodes, BufferPlayer, type ConfigService, Constants, EventEmitter, type EventEmitterCallback, EventType, FilterNames, type FilterSettingValue, type FilterSettings, type FilterState, GenericConfigService, type GenericSettingValueAdditionalData, type RecorderSettings, type SaveBufferOptions, type SelectFormValue, SoundStudioFactory, type SoundStudioFactoryInstance, type SoundStudioFactoryNewInstanceOptions, utilFunctions as UtilFunctions, VoiceRecorder };
