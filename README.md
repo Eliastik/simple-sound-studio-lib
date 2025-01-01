@@ -26,7 +26,7 @@ You also need to expose the worklet and worker files provided by the library at 
 
 If you do not expose the files, the library will try to function as best as it can, but some features will fail:
 
-- If worker files are not correctly exposed: the export-to-audio-file feature will not work
+- If worker files are not correctly exposed: the export-to-audio-file feature will not work, the VoiceRecorder feature won't work either
 - If worklet files are not correctly exposed: the library will fallback to ScriptProcessorNode for certain filters. This implementation offers lower performance and quality but remains acceptable as a fallback
 
 ### Documentation
@@ -123,7 +123,7 @@ Vous devez également exposer les fichiers worklet et worker fournis par la bibl
 
 Si vous n'exposez pas les fichiers, la bibliothèque essaiera de fonctionner au mieux, mais certaines fonctionnalités échoueront :
 
-- Si les fichiers worker ne sont pas correctement exposés : la fonction d'export d'audio ne fonctionnera pas.
+- Si les fichiers worker ne sont pas correctement exposés : la fonction d'export d'audio ne fonctionnera pas, la fonctionnalité d'enregistrement audio (VoiceRecorder) ne fonctionnera pas non plus.
 - Si les fichiers des worklets ne sont pas correctement exposés : la bibliothèque se rabattra sur ScriptProcessorNode pour certains filtres. Cette implémentation offre des performances et une qualité moindres, mais reste acceptable en tant que solution de repli.
 
 ### Documentation
