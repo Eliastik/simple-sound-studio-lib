@@ -33,6 +33,8 @@ If you do not expose the files, the library will try to function as best as it c
 
 The documentation of the methods and class can be found here: [docs/](docs/).
 
+Documentation on the audio filters offered by the library can be found here: [FILTERS.md](FILTERS.md).
+
 The most important part is the [AudioEditor class](docs/classes/AudioEditor.md).
 
 You will also be interested by the [VoiceRecorder class](docs/classes/VoiceRecorder.md).
@@ -129,6 +131,8 @@ Si vous n'exposez pas les fichiers, la bibliothèque essaiera de fonctionner au 
 ### Documentation
 
 La documentation des méthodes et des classes se trouve ici : [docs/](docs/).
+
+La documentation des filtres audio proposés par la librairie est ici : [FILTERS.md](FILTERS.md).
 
 La partie la plus importante est la classe [AudioEditor](docs/classes/AudioEditor.md).
 

@@ -1,8 +1,8 @@
 export default interface BufferFetcherServiceInterface {
 
-    fetchBuffer(bufferURI: string, force?: boolean): void;
+    fetchBuffer(bufferURI: string, force?: boolean): Promise<void>;
 
-    fetchAllBuffers(bufferURIs: string[]): void;
+    fetchAllBuffers(bufferURIs: string[]): Promise<void>;
 
     getAudioBuffer(filename: string): AudioBuffer | undefined;
 

@@ -2,7 +2,7 @@ import AbstractAudioFilter from "./interfaces/AbstractAudioFilter";
 import Constants from "../model/Constants";
 import { FilterSettingValue } from "../model/filtersSettings/FilterSettings";
 
-export default class BitCrusherFilter extends AbstractAudioFilter {
+export default class TelephonizerFilter extends AbstractAudioFilter {
 
     getNode(context: BaseAudioContext) {
         const lpf1 = context.createBiquadFilter();
