@@ -145,6 +145,7 @@ const utilFunctions = {
         link.download = filename || "output.wav";
         link.click();
         URL.revokeObjectURL(url);
+        window.document.body.removeChild(link);
     }
 };
 
