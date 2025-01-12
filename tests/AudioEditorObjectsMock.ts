@@ -25,6 +25,7 @@ const mockFilterManager = {
     connectNodes: jest.fn(),
     disconnectOldNodes: jest.fn(),
     initializeWorklets: jest.fn(),
+    clearWorklets: jest.fn(),
     getAddingTime: jest.fn(),
     setupTotalSamples: jest.fn(),
     resetFilterBuffers: jest.fn(),
@@ -85,6 +86,7 @@ const mockAudioProcessor = {
     setupOutput: jest.fn(),
     renderAudio: jest.fn(),
     cancelAudioRendering: jest.fn(),
+    clearRenderedBuffer: jest.fn(),
     sumInputBuffer: 0,
     renderedBuffer: new MockAudioBuffer(2, 0, 44100),
     initialRenderingDone: false
