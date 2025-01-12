@@ -6,7 +6,7 @@
 
 # Interface: ConfigService
 
-Defined in: [services/interfaces/ConfigService.ts:1](https://github.com/Eliastik/simple-sound-studio-lib/blob/9845dbc69e805d01349b7ad64337ff031854285d/lib/services/interfaces/ConfigService.ts#L1)
+Defined in: [services/interfaces/ConfigService.ts:1](https://github.com/Eliastik/simple-sound-studio-lib/blob/c50b1c7d352bb72884b0aee9c3c7e31339070b21/lib/services/interfaces/ConfigService.ts#L1)
 
 ## Methods
 
@@ -14,7 +14,7 @@ Defined in: [services/interfaces/ConfigService.ts:1](https://github.com/Eliastik
 
 > **disableCompatibilityMode**(): `void`
 
-Defined in: [services/interfaces/ConfigService.ts:58](https://github.com/Eliastik/simple-sound-studio-lib/blob/9845dbc69e805d01349b7ad64337ff031854285d/lib/services/interfaces/ConfigService.ts#L58)
+Defined in: [services/interfaces/ConfigService.ts:58](https://github.com/Eliastik/simple-sound-studio-lib/blob/c50b1c7d352bb72884b0aee9c3c7e31339070b21/lib/services/interfaces/ConfigService.ts#L58)
 
 Disable the compatibility/direct audio rendering mode
 
@@ -28,7 +28,7 @@ Disable the compatibility/direct audio rendering mode
 
 > **enableCompatibilityMode**(): `void`
 
-Defined in: [services/interfaces/ConfigService.ts:53](https://github.com/Eliastik/simple-sound-studio-lib/blob/9845dbc69e805d01349b7ad64337ff031854285d/lib/services/interfaces/ConfigService.ts#L53)
+Defined in: [services/interfaces/ConfigService.ts:53](https://github.com/Eliastik/simple-sound-studio-lib/blob/c50b1c7d352bb72884b0aee9c3c7e31339070b21/lib/services/interfaces/ConfigService.ts#L53)
 
 Enable the compatibility/direct audio rendering mode
 
@@ -42,7 +42,7 @@ Enable the compatibility/direct audio rendering mode
 
 > **getBitrateMP3**(): `number`
 
-Defined in: [services/interfaces/ConfigService.ts:48](https://github.com/Eliastik/simple-sound-studio-lib/blob/9845dbc69e805d01349b7ad64337ff031854285d/lib/services/interfaces/ConfigService.ts#L48)
+Defined in: [services/interfaces/ConfigService.ts:48](https://github.com/Eliastik/simple-sound-studio-lib/blob/c50b1c7d352bb72884b0aee9c3c7e31339070b21/lib/services/interfaces/ConfigService.ts#L48)
 
 Get MP3 bitrate
 
@@ -56,7 +56,7 @@ Get MP3 bitrate
 
 > **getBufferSize**(): `number`
 
-Defined in: [services/interfaces/ConfigService.ts:38](https://github.com/Eliastik/simple-sound-studio-lib/blob/9845dbc69e805d01349b7ad64337ff031854285d/lib/services/interfaces/ConfigService.ts#L38)
+Defined in: [services/interfaces/ConfigService.ts:38](https://github.com/Eliastik/simple-sound-studio-lib/blob/c50b1c7d352bb72884b0aee9c3c7e31339070b21/lib/services/interfaces/ConfigService.ts#L38)
 
 Get buffer size setting
 
@@ -70,7 +70,7 @@ Get buffer size setting
 
 > **getConfig**(`key`): `undefined` \| `null` \| `string`
 
-Defined in: [services/interfaces/ConfigService.ts:6](https://github.com/Eliastik/simple-sound-studio-lib/blob/9845dbc69e805d01349b7ad64337ff031854285d/lib/services/interfaces/ConfigService.ts#L6)
+Defined in: [services/interfaces/ConfigService.ts:6](https://github.com/Eliastik/simple-sound-studio-lib/blob/c50b1c7d352bb72884b0aee9c3c7e31339070b21/lib/services/interfaces/ConfigService.ts#L6)
 
 Get config with a key
 
@@ -92,7 +92,7 @@ The key
 
 > **getSampleRate**(): `number`
 
-Defined in: [services/interfaces/ConfigService.ts:43](https://github.com/Eliastik/simple-sound-studio-lib/blob/9845dbc69e805d01349b7ad64337ff031854285d/lib/services/interfaces/ConfigService.ts#L43)
+Defined in: [services/interfaces/ConfigService.ts:43](https://github.com/Eliastik/simple-sound-studio-lib/blob/c50b1c7d352bb72884b0aee9c3c7e31339070b21/lib/services/interfaces/ConfigService.ts#L43)
 
 Get sample rate, or 0 for auto
 
@@ -106,7 +106,7 @@ Get sample rate, or 0 for auto
 
 > **getSoundBasePath**(): `string`
 
-Defined in: [services/interfaces/ConfigService.ts:73](https://github.com/Eliastik/simple-sound-studio-lib/blob/9845dbc69e805d01349b7ad64337ff031854285d/lib/services/interfaces/ConfigService.ts#L73)
+Defined in: [services/interfaces/ConfigService.ts:73](https://github.com/Eliastik/simple-sound-studio-lib/blob/c50b1c7d352bb72884b0aee9c3c7e31339070b21/lib/services/interfaces/ConfigService.ts#L73)
 
 Return the base path for audio files (reverb environments for example)
 
@@ -120,7 +120,7 @@ Return the base path for audio files (reverb environments for example)
 
 > **getWorkerBasePath**(): `string`
 
-Defined in: [services/interfaces/ConfigService.ts:68](https://github.com/Eliastik/simple-sound-studio-lib/blob/9845dbc69e805d01349b7ad64337ff031854285d/lib/services/interfaces/ConfigService.ts#L68)
+Defined in: [services/interfaces/ConfigService.ts:68](https://github.com/Eliastik/simple-sound-studio-lib/blob/c50b1c7d352bb72884b0aee9c3c7e31339070b21/lib/services/interfaces/ConfigService.ts#L68)
 
 Return the base path for worker files
 
@@ -134,7 +134,7 @@ Return the base path for worker files
 
 > **getWorkletBasePath**(): `string`
 
-Defined in: [services/interfaces/ConfigService.ts:63](https://github.com/Eliastik/simple-sound-studio-lib/blob/9845dbc69e805d01349b7ad64337ff031854285d/lib/services/interfaces/ConfigService.ts#L63)
+Defined in: [services/interfaces/ConfigService.ts:63](https://github.com/Eliastik/simple-sound-studio-lib/blob/c50b1c7d352bb72884b0aee9c3c7e31339070b21/lib/services/interfaces/ConfigService.ts#L63)
 
 Return the base path for worklet files
 
@@ -148,7 +148,7 @@ Return the base path for worklet files
 
 > **isAudioWorkletEnabled**(): `boolean`
 
-Defined in: [services/interfaces/ConfigService.ts:28](https://github.com/Eliastik/simple-sound-studio-lib/blob/9845dbc69e805d01349b7ad64337ff031854285d/lib/services/interfaces/ConfigService.ts#L28)
+Defined in: [services/interfaces/ConfigService.ts:28](https://github.com/Eliastik/simple-sound-studio-lib/blob/c50b1c7d352bb72884b0aee9c3c7e31339070b21/lib/services/interfaces/ConfigService.ts#L28)
 
 Check if AudioWorklet is enabled for the filters
 
@@ -162,7 +162,7 @@ Check if AudioWorklet is enabled for the filters
 
 > **isCompatibilityModeChecked**(): `boolean`
 
-Defined in: [services/interfaces/ConfigService.ts:23](https://github.com/Eliastik/simple-sound-studio-lib/blob/9845dbc69e805d01349b7ad64337ff031854285d/lib/services/interfaces/ConfigService.ts#L23)
+Defined in: [services/interfaces/ConfigService.ts:23](https://github.com/Eliastik/simple-sound-studio-lib/blob/c50b1c7d352bb72884b0aee9c3c7e31339070b21/lib/services/interfaces/ConfigService.ts#L23)
 
 Was compatibility/direct audio rendering mode already checked for auto enabling? (if an error occurs rendering in offline context)
 
@@ -176,7 +176,7 @@ Was compatibility/direct audio rendering mode already checked for auto enabling?
 
 > **isCompatibilityModeEnabled**(): `boolean`
 
-Defined in: [services/interfaces/ConfigService.ts:18](https://github.com/Eliastik/simple-sound-studio-lib/blob/9845dbc69e805d01349b7ad64337ff031854285d/lib/services/interfaces/ConfigService.ts#L18)
+Defined in: [services/interfaces/ConfigService.ts:18](https://github.com/Eliastik/simple-sound-studio-lib/blob/c50b1c7d352bb72884b0aee9c3c7e31339070b21/lib/services/interfaces/ConfigService.ts#L18)
 
 Check if the compatibility/direct audio rendering mode is enabled
 
@@ -190,7 +190,7 @@ Check if the compatibility/direct audio rendering mode is enabled
 
 > **isInitialRenderingDisabled**(): `boolean`
 
-Defined in: [services/interfaces/ConfigService.ts:99](https://github.com/Eliastik/simple-sound-studio-lib/blob/9845dbc69e805d01349b7ad64337ff031854285d/lib/services/interfaces/ConfigService.ts#L99)
+Defined in: [services/interfaces/ConfigService.ts:99](https://github.com/Eliastik/simple-sound-studio-lib/blob/c50b1c7d352bb72884b0aee9c3c7e31339070b21/lib/services/interfaces/ConfigService.ts#L99)
 
 Check if initial audio rendering (when opening a file or buffer) is disabled
 
@@ -204,7 +204,7 @@ Check if initial audio rendering (when opening a file or buffer) is disabled
 
 > **isSoundtouchAudioWorkletEnabled**(): `boolean`
 
-Defined in: [services/interfaces/ConfigService.ts:33](https://github.com/Eliastik/simple-sound-studio-lib/blob/9845dbc69e805d01349b7ad64337ff031854285d/lib/services/interfaces/ConfigService.ts#L33)
+Defined in: [services/interfaces/ConfigService.ts:33](https://github.com/Eliastik/simple-sound-studio-lib/blob/c50b1c7d352bb72884b0aee9c3c7e31339070b21/lib/services/interfaces/ConfigService.ts#L33)
 
 Check if AudioWorklet mode is enabled for Soundtouch
 
@@ -218,7 +218,7 @@ Check if AudioWorklet mode is enabled for Soundtouch
 
 > **setConfig**(`key`, `value`): `void`
 
-Defined in: [services/interfaces/ConfigService.ts:13](https://github.com/Eliastik/simple-sound-studio-lib/blob/9845dbc69e805d01349b7ad64337ff031854285d/lib/services/interfaces/ConfigService.ts#L13)
+Defined in: [services/interfaces/ConfigService.ts:13](https://github.com/Eliastik/simple-sound-studio-lib/blob/c50b1c7d352bb72884b0aee9c3c7e31339070b21/lib/services/interfaces/ConfigService.ts#L13)
 
 Set config
 
@@ -246,7 +246,7 @@ The config value
 
 > **setSoundBasePath**(`soundBasePath`): `void`
 
-Defined in: [services/interfaces/ConfigService.ts:94](https://github.com/Eliastik/simple-sound-studio-lib/blob/9845dbc69e805d01349b7ad64337ff031854285d/lib/services/interfaces/ConfigService.ts#L94)
+Defined in: [services/interfaces/ConfigService.ts:94](https://github.com/Eliastik/simple-sound-studio-lib/blob/c50b1c7d352bb72884b0aee9c3c7e31339070b21/lib/services/interfaces/ConfigService.ts#L94)
 
 Set the base path for audio files (reverb environments for example)
 
@@ -268,7 +268,7 @@ The base path
 
 > **setWorkerBasePath**(`workerBasePath`): `void`
 
-Defined in: [services/interfaces/ConfigService.ts:87](https://github.com/Eliastik/simple-sound-studio-lib/blob/9845dbc69e805d01349b7ad64337ff031854285d/lib/services/interfaces/ConfigService.ts#L87)
+Defined in: [services/interfaces/ConfigService.ts:87](https://github.com/Eliastik/simple-sound-studio-lib/blob/c50b1c7d352bb72884b0aee9c3c7e31339070b21/lib/services/interfaces/ConfigService.ts#L87)
 
 Set the base path for worker files
 
@@ -290,7 +290,7 @@ The base path
 
 > **setWorkletBasePath**(`workletBasePath`): `void`
 
-Defined in: [services/interfaces/ConfigService.ts:80](https://github.com/Eliastik/simple-sound-studio-lib/blob/9845dbc69e805d01349b7ad64337ff031854285d/lib/services/interfaces/ConfigService.ts#L80)
+Defined in: [services/interfaces/ConfigService.ts:80](https://github.com/Eliastik/simple-sound-studio-lib/blob/c50b1c7d352bb72884b0aee9c3c7e31339070b21/lib/services/interfaces/ConfigService.ts#L80)
 
 Set the base path for worklet files
 

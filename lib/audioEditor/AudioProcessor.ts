@@ -145,6 +145,8 @@ export default class AudioProcessor extends AbstractAudioElement implements Audi
 
                 const renderedBuffer = await offlineContext.startRendering();
 
+                this.filterManager.clearWorklets();
+
                 if (this.contextManager && !this.loadRenderedAudio(inputBuffer, renderedBuffer)) {
                     return await this.setupOutput(inputBuffer, this.contextManager.currentContext!, durationAudio);
                 }
@@ -227,6 +229,11 @@ export default class AudioProcessor extends AbstractAudioElement implements Audi
                 this.eventEmitter.emit(EventType.CANCELLING_AUDIO_PROCESSING);
             }
         }
+    }
+
+    clearRenderedBuffer() {
+        utils.clearAudioBuffer(this._renderedBuffer);
+        this._renderedBuffer = null;
     }
 
     /**

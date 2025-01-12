@@ -407,6 +407,10 @@ interface FilterManagerInterface {
      */
     initializeWorklets(context: BaseAudioContext): Promise<void>;
     /**
+     * Clear old worklets
+     */
+    clearWorklets(): void;
+    /**
      * Get the total time the filters add to the audio duration
      */
     getAddingTime(): number;
@@ -529,6 +533,10 @@ interface AudioProcessorInterface {
      */
     cancelAudioRendering(): void;
     /**
+     * Clear and remove rendered buffer to free memory
+     */
+    clearRenderedBuffer(): void;
+    /**
      * Get the rendered audio buffer
      */
     get renderedBuffer(): AudioBuffer | null;
@@ -615,6 +623,7 @@ declare class AudioEditor extends AbstractAudioElement implements AudioEditorInt
     resetFilterSettings(filterId: string): Promise<void>;
     resetAllFiltersState(): void;
     exit(): void;
+    private clearBuffers;
     cancelAudioRendering(): void;
     on(event: string, callback: EventEmitterCallback): void;
     off(event: string, callback: EventEmitterCallback): void;
@@ -1215,6 +1224,7 @@ declare const utilFunctions: {
      */
     resetAudioRenderingProgress(eventEmitter: EventEmitterInterface | null): void;
     forceDownload(blob: Blob, filename: string): void;
+    clearAudioBuffer(buffer: AudioBuffer | null): void;
 };
 
 declare enum EventType {

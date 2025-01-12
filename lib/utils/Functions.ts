@@ -146,6 +146,17 @@ const utilFunctions = {
         link.click();
         URL.revokeObjectURL(url);
         window.document.body.removeChild(link);
+    },
+    clearAudioBuffer(buffer: AudioBuffer | null) {
+        if(buffer) {
+            for(let channel = 0; channel < buffer.numberOfChannels; channel++) {
+                const channelData = buffer.getChannelData(channel);
+
+                for(let i = 0; i < channelData.length; i++) {
+                    channelData[i] = 0;
+                }
+            }
+        }
     }
 };
 

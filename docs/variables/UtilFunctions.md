@@ -8,7 +8,7 @@
 
 > `const` **UtilFunctions**: `object`
 
-Defined in: [utils/Functions.ts:6](https://github.com/Eliastik/simple-sound-studio-lib/blob/9845dbc69e805d01349b7ad64337ff031854285d/lib/utils/Functions.ts#L6)
+Defined in: [utils/Functions.ts:6](https://github.com/Eliastik/simple-sound-studio-lib/blob/c50b1c7d352bb72884b0aee9c3c7e31339070b21/lib/utils/Functions.ts#L6)
 
 ## Type declaration
 
@@ -137,6 +137,18 @@ Current audio speed
 `number`
 
 The audio duration
+
+### clearAudioBuffer()
+
+#### Parameters
+
+##### buffer
+
+`null` | `AudioBuffer`
+
+#### Returns
+
+`void`
 
 ### forceDownload()
 

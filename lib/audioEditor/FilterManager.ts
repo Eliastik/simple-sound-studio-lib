@@ -188,7 +188,16 @@ export default class FilterManager extends AbstractAudioElement implements Filte
     async initializeWorklets(context: BaseAudioContext) {
         for (const filter of this.filters) {
             if (filter.isWorklet()) {
+                this.clearWorklets();
                 await (filter as AbstractAudioFilterWorklet<object>).initializeWorklet(context);
+            }
+        }
+    }
+
+    clearWorklets() {
+        for (const filter of this.filters) {
+            if (filter.isWorklet()) {
+                (filter as AbstractAudioFilterWorklet<object>).stop();
             }
         }
     }

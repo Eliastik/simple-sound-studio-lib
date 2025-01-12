@@ -19,9 +19,6 @@ export default class AudioContextManager implements AudioContextManagerInterface
     /** The current audio context */
     private _currentContext: AudioContext | null | undefined;
 
-    /** The old audio context */
-    private oldAudioContext: AudioContext | null | undefined;
-
     /** The previous sample rate setting */
     private previousSampleRate = Constants.DEFAULT_SAMPLE_RATE;
 
@@ -81,8 +78,7 @@ export default class AudioContextManager implements AudioContextManagerInterface
      */
     createNewContext(sampleRate: number) {
         if (this._currentContext) {
-            this.oldAudioContext = this._currentContext;
-            this.destroyOldContext();
+            this.destroyOldContext(this._currentContext);
         }
 
         const options: AudioContextOptions = {
@@ -105,10 +101,9 @@ export default class AudioContextManager implements AudioContextManagerInterface
     /**
      * Destroy previous AudioContext
      */
-    private destroyOldContext() {
-        if (this.oldAudioContext) {
-            this.oldAudioContext.close();
-            this.oldAudioContext = null;
+    private destroyOldContext(oldAudioContext: AudioContext) {
+        if(oldAudioContext) {
+            oldAudioContext.close();
         }
     }
 

@@ -6,7 +6,7 @@
 
 # Interface: AudioFilterNodes
 
-Defined in: [model/AudioNodes.ts:1](https://github.com/Eliastik/simple-sound-studio-lib/blob/9845dbc69e805d01349b7ad64337ff031854285d/lib/model/AudioNodes.ts#L1)
+Defined in: [model/AudioNodes.ts:1](https://github.com/Eliastik/simple-sound-studio-lib/blob/c50b1c7d352bb72884b0aee9c3c7e31339070b21/lib/model/AudioNodes.ts#L1)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: [model/AudioNodes.ts:1](https://github.com/Eliastik/simple-sound-stu
 
 > **input**: `AudioNode`
 
-Defined in: [model/AudioNodes.ts:2](https://github.com/Eliastik/simple-sound-studio-lib/blob/9845dbc69e805d01349b7ad64337ff031854285d/lib/model/AudioNodes.ts#L2)
+Defined in: [model/AudioNodes.ts:2](https://github.com/Eliastik/simple-sound-studio-lib/blob/c50b1c7d352bb72884b0aee9c3c7e31339070b21/lib/model/AudioNodes.ts#L2)
 
 ***
 
@@ -22,7 +22,7 @@ Defined in: [model/AudioNodes.ts:2](https://github.com/Eliastik/simple-sound-stu
 
 > `optional` **intermediateNodes**: [`AudioFilterNodes`](AudioFilterNodes.md)[]
 
-Defined in: [model/AudioNodes.ts:4](https://github.com/Eliastik/simple-sound-studio-lib/blob/9845dbc69e805d01349b7ad64337ff031854285d/lib/model/AudioNodes.ts#L4)
+Defined in: [model/AudioNodes.ts:4](https://github.com/Eliastik/simple-sound-studio-lib/blob/c50b1c7d352bb72884b0aee9c3c7e31339070b21/lib/model/AudioNodes.ts#L4)
 
 ***
 
@@ -30,4 +30,4 @@ Defined in: [model/AudioNodes.ts:4](https://github.com/Eliastik/simple-sound-stu
 
 > **output**: `AudioNode`
 
-Defined in: [model/AudioNodes.ts:3](https://github.com/Eliastik/simple-sound-studio-lib/blob/9845dbc69e805d01349b7ad64337ff031854285d/lib/model/AudioNodes.ts#L3)
+Defined in: [model/AudioNodes.ts:3](https://github.com/Eliastik/simple-sound-studio-lib/blob/c50b1c7d352bb72884b0aee9c3c7e31339070b21/lib/model/AudioNodes.ts#L3)

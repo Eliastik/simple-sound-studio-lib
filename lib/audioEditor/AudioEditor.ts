@@ -3,7 +3,6 @@ import AbstractAudioFilter from "../filters/interfaces/AbstractAudioFilter";
 import AbstractAudioRenderer from "../filters/interfaces/AbstractAudioRenderer";
 import utils from "../utils/Functions";
 import { EventType } from "../model/EventTypeEnum";
-import utilFunctions from "../utils/Functions";
 import { FilterSettings } from "../model/filtersSettings/FilterSettings";
 import { EventEmitterCallback } from "../model/EventEmitterCallback";
 import { FilterState } from "../model/FilterState";
@@ -144,7 +143,7 @@ export default class AudioEditor extends AbstractAudioElement implements AudioEd
     }
 
     async loadBufferFromFile(file: File) {
-        this.principalBuffer = null;
+        this.clearBuffers();
         this.loadingAudio = true;
 
         if (this.audioProcessor) {
@@ -162,7 +161,7 @@ export default class AudioEditor extends AbstractAudioElement implements AudioEd
                 throw new Error("Error decoding audio file");
             }
 
-            utilFunctions.resetAudioRenderingProgress(this.eventEmitter);
+            utils.resetAudioRenderingProgress(this.eventEmitter);
 
             // If switching between a list of audio to one audio, reset the loop audio playing
             if (this.bufferPlayer && this.bufferPlayer.loopAll && this.totalFileList <= 1) {
@@ -310,7 +309,7 @@ export default class AudioEditor extends AbstractAudioElement implements AudioEd
 
     isAudioWorkletAvailable(): boolean {
         if (this.contextManager && this.contextManager.currentContext) {
-            return utilFunctions.isAudioWorkletCompatible(this.contextManager.currentContext);
+            return utils.isAudioWorkletCompatible(this.contextManager.currentContext);
         }
 
         return false;
@@ -345,7 +344,7 @@ export default class AudioEditor extends AbstractAudioElement implements AudioEd
 
             const speedAudio = this.filterManager.entrypointFilter.getSpeed();
             this.bufferPlayer.speedAudio = speedAudio;
-            this.bufferPlayer.duration = utilFunctions.calculateAudioDuration(this.principalBuffer, this.filterManager, speedAudio) * speedAudio;
+            this.bufferPlayer.duration = utils.calculateAudioDuration(this.principalBuffer, this.filterManager, speedAudio) * speedAudio;
         }
     }
 
@@ -416,9 +415,19 @@ export default class AudioEditor extends AbstractAudioElement implements AudioEd
         }
 
         this.cancelAudioRendering();
-        this.principalBuffer = null;
+        this.clearBuffers();
+
         this.fileList = null;
         this.fileListCurrIndex = 0;
+    }
+
+    private clearBuffers() {
+        utils.clearAudioBuffer(this.principalBuffer);
+        this.principalBuffer = null;
+
+        if(this.audioProcessor) {
+            this.audioProcessor.clearRenderedBuffer();
+        }
     }
 
     cancelAudioRendering() {

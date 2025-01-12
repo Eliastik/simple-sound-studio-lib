@@ -32,6 +32,11 @@ export default interface AudioProcessorInterface {
     cancelAudioRendering(): void;
 
     /**
+     * Clear and remove rendered buffer to free memory
+     */
+    clearRenderedBuffer(): void;
+
+    /**
      * Get the rendered audio buffer
      */
     get renderedBuffer(): AudioBuffer | null;

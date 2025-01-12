@@ -81,6 +81,11 @@ export default interface FilterManagerInterface {
     initializeWorklets(context: BaseAudioContext): Promise<void>;
 
     /**
+     * Clear old worklets
+     */
+    clearWorklets(): void;
+
+    /**
      * Get the total time the filters add to the audio duration
      */
     getAddingTime(): number;

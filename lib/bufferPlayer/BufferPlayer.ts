@@ -61,7 +61,11 @@ export default class BufferPlayer extends AbstractAudioElement implements Buffer
             this._contextManager.currentContext.resume();
 
             if (!this.compatibilityMode && this.buffer) {
-                if (this.source != null && !direct) this.source.disconnect();
+                if (this.source != null && !direct) {
+                    this.source.buffer = null;
+                    this.source.disconnect();
+                }
+
                 this.source = this._contextManager.currentContext.createBufferSource();
                 this.source.buffer = this.buffer;
                 this.duration = this.buffer.duration * this.speedAudio;
