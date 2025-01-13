@@ -34,15 +34,18 @@ export default class BufferPlayer extends AbstractAudioElement implements Buffer
 
     private buffer: AudioBuffer | null = null;
     private source: AudioBufferSourceNode | null = null;
+    private gainNode: GainNode | null = null;
+    private intervals: number[] = [];
+    private onBeforePlayingCallback: () => void = async () => { };
+    private _volume = 1;
+    
     currentTime = 0;
     displayTime = 0;
     duration = 0;
-    private intervals: number[] = [];
     playing = false;
     loop = false;
     loopAll = false;
     speedAudio = 1;
-    private onBeforePlayingCallback: () => void = async () => { };
 
     compatibilityMode = false;
     currentNode: AudioNode | null = null;
@@ -68,8 +71,14 @@ export default class BufferPlayer extends AbstractAudioElement implements Buffer
 
                 this.source = this._contextManager.currentContext.createBufferSource();
                 this.source.buffer = this.buffer;
+
+                this.gainNode = this._contextManager.currentContext.createGain();
+                this.setGainNodeValue();
+
                 this.duration = this.buffer.duration * this.speedAudio;
-                this.source.connect(this._contextManager.currentContext.destination);
+
+                this.source.connect(this.gainNode);
+                this.gainNode.connect(this._contextManager.currentContext.destination);
             }
         }
 
@@ -243,6 +252,21 @@ export default class BufferPlayer extends AbstractAudioElement implements Buffer
                 this.updateInfos();
             }
         }
+    }
+
+    set volume(volume: number) {
+        this._volume = volume;
+        this.setGainNodeValue();
+    }
+
+    private setGainNodeValue() {
+        if(this.gainNode) {
+            this.gainNode.gain.value = Math.pow(this._volume, 2);
+        }
+    }
+
+    get volume() {
+        return this._volume;
     }
 
     onBeforePlaying(callback: () => void) {

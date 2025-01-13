@@ -147,4 +147,14 @@ export default interface BufferPlayerInterface {
      * Get the audio duration
      */
     get duration(): number;
+
+    /**
+     * Set the volume of the audio
+     */
+    set volume(volume: number);
+
+    /**
+     * Get the volume of the audio
+     */
+    get volume();
 }

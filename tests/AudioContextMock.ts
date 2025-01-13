@@ -1,4 +1,3 @@
-import { disconnect } from "process";
 import { MockAudioBuffer } from "./AudioBufferMock";
 
 export class MockAudioContext {
@@ -47,8 +46,11 @@ export class MockAudioContext {
     }
 
     createBufferSource() {
-        // Crée un mock de AudioBufferSourceNode
         return {} as AudioBufferSourceNode;
+    }
+
+    createGain() {
+        return {} as GainNode;
     }
 
     createMediaStreamSource() {

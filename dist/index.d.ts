@@ -752,21 +752,31 @@ interface BufferPlayerInterface {
      * Get the audio duration
      */
     get duration(): number;
+    /**
+     * Set the volume of the audio
+     */
+    set volume(volume: number);
+    /**
+     * Get the volume of the audio
+     */
+    get volume(): number;
 }
 
 declare class BufferPlayer extends AbstractAudioElement implements BufferPlayerInterface {
     private _contextManager;
     private buffer;
     private source;
+    private gainNode;
+    private intervals;
+    private onBeforePlayingCallback;
+    private _volume;
     currentTime: number;
     displayTime: number;
     duration: number;
-    private intervals;
     playing: boolean;
     loop: boolean;
     loopAll: boolean;
     speedAudio: number;
-    private onBeforePlayingCallback;
     compatibilityMode: boolean;
     currentNode: AudioNode | null;
     constructor(contextManager: AudioContextManagerInterface$1 | undefined | null);
@@ -786,6 +796,9 @@ declare class BufferPlayer extends AbstractAudioElement implements BufferPlayerI
     private updateInfos;
     setTimePercent(percent: number): void;
     setTime(time: number): void;
+    set volume(volume: number);
+    private setGainNodeValue;
+    get volume(): number;
     onBeforePlaying(callback: () => void): void;
     toggleLoop(): void;
     toggleLoopAll(): void;
@@ -982,7 +995,7 @@ declare class SimpleAudioWorkletProcessor implements AudioWorkletProcessorInterf
 
 /**
  * This class convert an audio worklet processor node to a script processor node
- * automagically. Highly experimental, and might not work with some WorkletProcessor
+ * automagically. Might not work with some WorkletProcessor
  */
 declare class WorkletScriptProcessorNodeAdapter {
     private workletProcessor;

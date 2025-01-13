@@ -31,6 +31,12 @@ describe("BufferPlayer tests", () => {
                     stop: jest.fn(),
                     disconnect: jest.fn()
                 })),
+                createGain: jest.fn(() => ({
+                    connect: jest.fn(),
+                    gain: {
+                        value: 1
+                    }
+                })),
                 destination: {} // Mock destination
             }
         };

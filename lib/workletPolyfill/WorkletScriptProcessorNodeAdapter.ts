@@ -4,7 +4,7 @@ import Functions from "../utils/Functions";
 
 /**
  * This class convert an audio worklet processor node to a script processor node
- * automagically. Highly experimental, and might not work with some WorkletProcessor
+ * automagically. Might not work with some WorkletProcessor
  */
 export default class WorkletScriptProcessorNodeAdapter {
 

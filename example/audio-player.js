@@ -26,6 +26,8 @@ console.log("Bass booster settings:", audioEditor.getFiltersSettings().get(Filte
 
 // The audio editor is now ready for audio processing
 
+document.getElementById("volume").value = audioPlayer.volume;
+
 // When the user selects an audio file and clicks "validate", process and download the rendered audio as a WAV file
 async function processAudioThenDownload(file) {
     // Load the selected audio file into the audio editor
@@ -62,18 +64,19 @@ document.getElementById("validate-button").addEventListener("click", async () =>
     document.getElementById("validate-button").style.cursor = "";
 });
 
-
 document.getElementById("play-button").addEventListener("click", async () => {
     audioPlayer.start();
 });
-
 
 document.getElementById("pause-button").addEventListener("click", async () => {
     audioPlayer.pause();
 });
 
-
 document.getElementById("stop-button").addEventListener("click", async () => {
     audioPlayer.reset();
     audioPlayer.stop();
+});
+
+document.getElementById("volume").addEventListener("input", async () => {
+    audioPlayer.volume = parseFloat(document.getElementById("volume").value);
 });
