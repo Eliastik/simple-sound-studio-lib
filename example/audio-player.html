@@ -12,6 +12,12 @@
     <input type="file" id="file-input" />
     <button type="button" id="validate-button">Validate</button>
   </form>
+  <p id="processing-audio" style="display: none;">
+    <label for="volume">Processing audio:</label>
+    <progress id="processing-progress" max="100" value="0"></progress>
+    <button type="button" id="cancel-button">Cancel</button><br />
+    <span id="processing-progress-remaining"></span>
+  </p>
   <p>
     <button type="button" id="play-button">Play</button>
     <button type="button" id="pause-button">Pause</button>

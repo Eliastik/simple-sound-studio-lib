@@ -1,9 +1,9 @@
-import { SoundStudioFactory, FilterNames } from "../dist/esm/SimpleSoundStudioLibrary.js";
+import { SoundStudioFactory, FilterNames, EventType } from "../dist/esm/SimpleSoundStudioLibrary.js";
 
 // Minimal example of using the library
 
 // Create a new instance of SoundStudio components (audioEditor for audio processing and editing, configService, etc.)
-const { audioEditor, audioPlayer, configService } = SoundStudioFactory.createNewInstance();
+const { audioEditor, audioPlayer, configService, eventEmitter } = SoundStudioFactory.createNewInstance();
 
 // Set base paths for worklet and worker files, as the default base path is incorrect (defaults to an empty string).
 configService.setWorkletBasePath("/dist/worklets/");
@@ -23,6 +23,12 @@ await audioEditor.changeFilterSettings(FilterNames.BASS_BOOST, {
 });
 
 console.log("Bass booster settings:", audioEditor.getFiltersSettings().get(FilterNames.BASS_BOOST));
+
+// Listen to events from event emitter to get audio rendering state (progress)
+eventEmitter.on(EventType.STARTED_RENDERING_AUDIO, () => document.getElementById("processing-audio").style.display = "block");
+eventEmitter.on(EventType.UPDATE_AUDIO_TREATMENT_PERCENT, percent => document.getElementById("processing-progress").value = percent);
+eventEmitter.on(EventType.AUDIO_RENDERING_FINISHED, () => document.getElementById("processing-audio").style.display = "none");
+eventEmitter.on(EventType.UPDATE_REMAINING_TIME_ESTIMATED, estimatedTime => displayRemainingTime(estimatedTime));
 
 // The audio editor is now ready for audio processing
 
@@ -64,6 +70,30 @@ document.getElementById("validate-button").addEventListener("click", async () =>
     document.getElementById("validate-button").style.cursor = "";
 });
 
+function displayRemainingTime(estimatedTime) {
+    let estimatedText = "";
+
+    if(estimatedTime === -1) {
+        estimatedText = "Calculating processing time remaining...";
+    } else if (estimatedTime < 5) {
+        estimatedText = "A few seconds remaining";
+    } else {
+        const roundedTime = Math.round(estimatedTime / 5) * 5;
+        const minutes = Math.floor(roundedTime / 60);
+        const seconds = roundedTime % 60;
+
+        if(minutes > 0 && seconds > 0) {
+            estimatedText = `About ${minutes} minute${minutes > 1 ? "s" : ""} and ${seconds} second${seconds > 1 ? "s" : ""} remaining`;
+        } else if(minutes > 0) {
+            estimatedText = `About ${minutes} minute${minutes > 1 ? "s" : ""} remaining`;
+        } else {
+            estimatedText = `About ${seconds} second${seconds > 1 ? "s" : ""} remaining`;
+        }
+    }
+
+    document.getElementById("processing-progress-remaining").innerText = estimatedText;
+}
+
 document.getElementById("play-button").addEventListener("click", async () => {
     audioPlayer.start();
 });
@@ -79,4 +109,8 @@ document.getElementById("stop-button").addEventListener("click", async () => {
 
 document.getElementById("volume").addEventListener("input", async () => {
     audioPlayer.volume = parseFloat(document.getElementById("volume").value);
+});
+
+document.getElementById("cancel-button").addEventListener("click", async () => {
+    audioEditor.cancelAudioRendering();
 });
