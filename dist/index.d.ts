@@ -1382,4 +1382,5 @@ interface SoundStudioFactoryInstance {
     configService: ConfigService$1;
 }
 
-export { AbstractAudioElement, AbstractAudioFilter, AbstractAudioFilterWorklet, AbstractAudioNode, AbstractAudioRenderer, AudioEditor, type AudioFilterEntrypointInterface, type AudioFilterNodes, BufferPlayer, type ConfigService, Constants, EventEmitter, type EventEmitterCallback, EventType, FilterNames, type FilterSettingValue, type FilterSettings, type FilterState, GenericConfigService, type GenericSettingValueAdditionalData, type RecorderSettings, type SaveBufferOptions, type SelectFormValue, SoundStudioFactory, type SoundStudioFactoryInstance, type SoundStudioFactoryNewInstanceOptions, utilFunctions as UtilFunctions, VoiceRecorder };
+export { AbstractAudioElement, AbstractAudioFilter, AbstractAudioFilterWorklet, AbstractAudioNode, AbstractAudioRenderer, AudioEditor, BufferPlayer, Constants, EventEmitter, EventType, FilterNames, GenericConfigService, SoundStudioFactory, utilFunctions as UtilFunctions, VoiceRecorder };
+export type { AudioFilterEntrypointInterface, AudioFilterNodes, ConfigService, EventEmitterCallback, FilterSettingValue, FilterSettings, FilterState, GenericSettingValueAdditionalData, RecorderSettings, SaveBufferOptions, SelectFormValue, SoundStudioFactoryInstance, SoundStudioFactoryNewInstanceOptions };
