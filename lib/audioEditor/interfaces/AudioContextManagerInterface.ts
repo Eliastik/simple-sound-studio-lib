@@ -16,6 +16,7 @@ export default interface AudioContextManagerInterface {
      * Get the current sample rate used
      */
     get currentSampleRate(): number;
+
     /**
      * Return the current audio context
      */

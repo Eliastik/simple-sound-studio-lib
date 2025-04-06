@@ -69,20 +69,29 @@ export default class BufferPlayer extends AbstractAudioElement implements Buffer
                     this.source.disconnect();
                 }
 
-                this.source = this._contextManager.currentContext.createBufferSource();
-                this.source.buffer = this.buffer;
-
-                this.gainNode = this._contextManager.currentContext.createGain();
-                this.setGainNodeValue();
+                this.createGainNode();
 
                 this.duration = this.buffer.duration * this.speedAudio;
 
-                this.source.connect(this.gainNode);
-                this.gainNode.connect(this._contextManager.currentContext.destination);
+                if (this.source && this.gainNode) {
+                    this.source.connect(this.gainNode);
+                    this.gainNode.connect(this._contextManager.currentContext.destination);
+                }
             }
         }
 
         this.updateInfos();
+    }
+
+    private createGainNode() {
+        if (this._contextManager && this._contextManager.currentContext) {
+            this.source = this._contextManager.currentContext.createBufferSource();
+            this.source.buffer = this.buffer;
+
+            this.gainNode = this._contextManager.currentContext.createGain();
+
+            this.setGainNodeValue();
+        }
     }
 
     loadBuffer(buffer: AudioBuffer) {
@@ -169,7 +178,14 @@ export default class BufferPlayer extends AbstractAudioElement implements Buffer
                 }
             } else {
                 if (this.currentNode && this._contextManager && this._contextManager.currentContext) {
-                    this.currentNode.connect(this._contextManager.currentContext.destination);
+                    this.createGainNode();
+
+                    if(this.gainNode) {
+                        this.currentNode.connect(this.gainNode);
+                        this.gainNode.connect(this._contextManager.currentContext.destination);
+                    } else {
+                        this.currentNode.connect(this._contextManager.currentContext.destination);
+                    }
                 } else {
                     return;
                 }

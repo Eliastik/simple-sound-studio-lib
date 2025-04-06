@@ -120,7 +120,7 @@ export default class AudioProcessor extends AbstractAudioElement implements Audi
         utils.resetAudioRenderingProgress(this.eventEmitter);
         this.filterManager.setupTotalSamples(durationAudio, this.contextManager.currentContext);
 
-        return await this.setupOutput(inputBuffer, outputContext, durationAudio, offlineContext);
+        return this.setupOutput(inputBuffer, outputContext, durationAudio, offlineContext);
     }
 
     private setupPlayerSpeed(bufferPlayer: BufferPlayerInterface) {
@@ -148,7 +148,7 @@ export default class AudioProcessor extends AbstractAudioElement implements Audi
                 this.filterManager.clearWorklets();
 
                 if (this.contextManager && !this.loadRenderedAudio(inputBuffer, renderedBuffer)) {
-                    return await this.setupOutput(inputBuffer, this.contextManager.currentContext!, durationAudio);
+                    return this.setupOutput(inputBuffer, this.contextManager.currentContext!, durationAudio);
                 }
 
                 if (this.audioRenderingLastCanceled) {

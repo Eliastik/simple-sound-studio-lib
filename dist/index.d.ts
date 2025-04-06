@@ -781,6 +781,7 @@ declare class BufferPlayer extends AbstractAudioElement implements BufferPlayerI
     currentNode: AudioNode | null;
     constructor(contextManager: AudioContextManagerInterface$1 | undefined | null);
     init(direct?: boolean): void;
+    private createGainNode;
     loadBuffer(buffer: AudioBuffer): void;
     setCompatibilityMode(currentNode: AudioNode, duration?: number): void;
     reset(direct?: boolean): void;
