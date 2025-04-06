@@ -1040,6 +1040,11 @@ declare abstract class AbstractAudioFilterWorklet<T> extends AbstractAudioFilter
      */
     protected isAudioWorkletEnabled(): boolean;
     /**
+     * Check if the Worklet is available and can be used
+     * @returns true if this is the case, false otherwise
+     */
+    protected isAudioWorkletAvailable(): boolean;
+    /**
      * Initialize the AudioWorkletNode or fallback to ScriptProcessorNode
      * @param context The audio context
      * @param workletName The worklet name

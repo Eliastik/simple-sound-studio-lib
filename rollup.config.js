@@ -9,8 +9,7 @@ import dts from "rollup-plugin-dts";
 
 const workletFiles = [
     ...glob.sync(path.join(__dirname, "lib/filters/worklets/*.worklet.ts")),
-    "lib/recorder/worklet/RecorderWorklet.ts",
-    "node_modules/@soundtouchjs/audio-worklet/dist/soundtouch-worklet.js"
+    "lib/recorder/worklet/RecorderWorklet.ts"
 ];
 
 const workerFiles = [

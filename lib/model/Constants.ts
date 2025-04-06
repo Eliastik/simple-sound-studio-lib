@@ -20,7 +20,7 @@ const Constants = {
     WORKLET_PATHS: {
         BITCRUSHER: "BitCrusher.worklet.js",
         LIMITER: "Limiter.worklet.js",
-        SOUNDTOUCH: "soundtouch-worklet.js",
+        SOUNDTOUCH: "Soundtouch.worklet.js",
         RECORDER_WORKLET: "RecorderWorklet.js",
         PASSTHROUGH: "Passthrough.worklet.js"
     },

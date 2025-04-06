@@ -9,9 +9,9 @@ export default class LimiterFilter extends AbstractAudioFilterWorklet<void> {
     private preGain = 0; // dB
     private postGain = 0; // dB
     private attackTime = 0; // s
-    private releaseTime = 6; // s
+    private releaseTime = 5; // s
     private threshold = 0; // dB
-    private lookAheadTime = 0.3; // s
+    private lookAheadTime = 0.35; // s
 
     constructor() {
         super();

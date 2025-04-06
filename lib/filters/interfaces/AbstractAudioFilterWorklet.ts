@@ -64,12 +64,20 @@ export default abstract class AbstractAudioFilterWorklet<T> extends AbstractAudi
     }
 
     /**
+     * Check if the Worklet is available and can be used
+     * @returns true if this is the case, false otherwise
+     */
+    protected isAudioWorkletAvailable() {
+        return this.isAudioWorkletEnabled() && !this.fallbackToScriptProcessor;
+    }
+
+    /**
      * Initialize the AudioWorkletNode or fallback to ScriptProcessorNode
      * @param context The audio context
      * @param workletName The worklet name
      */
     private initializeNode(context: BaseAudioContext, workletName: string) {
-        if (this.isAudioWorkletEnabled() && !this.fallbackToScriptProcessor) {
+        if (this.isAudioWorkletAvailable()) {
             // Standard Audio Worklet
             this.currentWorkletNode = new AudioWorkletNode(context, workletName);
         } else {
