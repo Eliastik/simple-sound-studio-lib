@@ -4,6 +4,7 @@ import Constants from "../../model/Constants";
 import "../../workletPolyfill/AudioWorkletProcessorPolyfill";
 import RegisterProcessorPolyfill from "../../workletPolyfill/RegisterProcessorPolyfill";
 import utilFunctions from "../../utils/Functions";
+import { FilterSettingValue } from "@/model/filtersSettings/FilterSettings";
 
 export default abstract class AbstractAudioFilterWorklet<T> extends AbstractAudioFilter {
 
@@ -92,16 +93,25 @@ export default abstract class AbstractAudioFilterWorklet<T> extends AbstractAudi
      * Uses the getSettings method to extract the settings.
      */
     protected applyCurrentSettingsToWorklet() {
-        if (this.currentWorkletNode && this.currentWorkletNode.parameters) {
-            const currentSettings = this.getSettings();
+        const currentSettings = this.getSettings();
 
-            for (const settingKey of Object.keys(currentSettings)) {
-                const settingFromWorklet = this.currentWorkletNode.parameters.get(settingKey);
+        for (const settingKey of Object.keys(currentSettings)) {
+            this.setWorkletSetting(settingKey, currentSettings[settingKey]);
+        }
+    }
 
-                if (settingFromWorklet) {
-                    settingFromWorklet.value = currentSettings[settingKey] as number;
-                    settingFromWorklet.setValueAtTime(currentSettings[settingKey] as number, 0);
-                }
+    /**
+     * Set a setting of the Worklet
+     * @param settingKey The setting name
+     * @param currentSettings The setting value
+     */
+    protected setWorkletSetting(settingKey: string, settingValue: FilterSettingValue) {
+        if(this.currentWorkletNode && this.currentWorkletNode.parameters) {
+            const settingFromWorklet = this.currentWorkletNode.parameters.get(settingKey);
+    
+            if (settingFromWorklet) {
+                settingFromWorklet.value = settingValue as number;
+                settingFromWorklet.setValueAtTime(settingValue as number, 0);
             }
         }
     }

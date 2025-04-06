@@ -7,7 +7,7 @@ import AbstractAudioRenderer$1 from '@/filters/interfaces/AbstractAudioRenderer'
 import { EventEmitterCallback as EventEmitterCallback$1 } from '@/model/EventEmitterCallback';
 import { FilterState as FilterState$1 } from '@/model/FilterState';
 import SaveBufferOptions$1 from '@/model/SaveBufferOptions';
-import { FilterSettings as FilterSettings$1 } from '@/model/filtersSettings/FilterSettings';
+import { FilterSettings as FilterSettings$1, FilterSettingValue as FilterSettingValue$1 } from '@/model/filtersSettings/FilterSettings';
 import AudioFilterEntrypointInterface$1 from '@/filters/interfaces/AudioFilterEntrypointInterface';
 import { AudioFilterNodes as AudioFilterNodes$1 } from '@/model/AudioNodes';
 import BufferPlayerInterface$1 from '@/bufferPlayer/interfaces/BufferPlayerInterface';
@@ -1050,6 +1050,12 @@ declare abstract class AbstractAudioFilterWorklet<T> extends AbstractAudioFilter
      * Uses the getSettings method to extract the settings.
      */
     protected applyCurrentSettingsToWorklet(): void;
+    /**
+     * Set a setting of the Worklet
+     * @param settingKey The setting name
+     * @param currentSettings The setting value
+     */
+    protected setWorkletSetting(settingKey: string, settingValue: FilterSettingValue$1): void;
     /** Default implementation for GetNode - AbstractAudioFilterWorklet */
     getNode(context: BaseAudioContext): {
         input: ScriptProcessorNode;
