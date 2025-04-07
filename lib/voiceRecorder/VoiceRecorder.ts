@@ -354,7 +354,7 @@ export default class VoiceRecorder extends AbstractAudioElement implements Voice
         }
     }
 
-    async stop() {
+    stop() {
         if (this.alreadyInit && this.recorder) {
             this.recorder.stop();
 

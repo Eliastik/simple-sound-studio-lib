@@ -53,7 +53,7 @@ export default abstract class AbstractAudioFilterWorklet<T> extends AbstractAudi
 
     /**
      * This method checks if audio worklet are enabled
-     * @param audioContext 
+     * @param audioContext
      */
     protected isAudioWorkletEnabled() {
         if (this.configService) {
@@ -116,7 +116,7 @@ export default abstract class AbstractAudioFilterWorklet<T> extends AbstractAudi
     protected setWorkletSetting(settingKey: string, settingValue: FilterSettingValue) {
         if(this.currentWorkletNode && this.currentWorkletNode.parameters) {
             const settingFromWorklet = this.currentWorkletNode.parameters.get(settingKey);
-    
+
             if (settingFromWorklet) {
                 settingFromWorklet.value = settingValue as number;
                 settingFromWorklet.setValueAtTime(settingValue as number, 0);
@@ -141,12 +141,12 @@ export default abstract class AbstractAudioFilterWorklet<T> extends AbstractAudi
                     input: this.currentWorkletNode.node!,
                     output: this.currentWorkletNode.node!,
                 };
-            } else {
-                return {
-                    input: this.currentWorkletNode,
-                    output: this.currentWorkletNode,
-                };
             }
+
+            return {
+                input: this.currentWorkletNode,
+                output: this.currentWorkletNode,
+            };
         }
 
         throw new Error("Worklet node has not yet been created");

@@ -50,7 +50,7 @@ export default class BufferFetcherService implements BufferFetcherServiceInterfa
                     this.buffers.set(this.getKeyFromLocation(realBufferURI), utilFunctions.decodeBuffer(this.contextManager.currentContext, buffer));
                 }
             }
-    
+
             this.eventEmitter?.emit(EventType.FINISHED_FETCHING_BUFFERS, realBufferURI);
         } catch(e) {
             console.error(e);

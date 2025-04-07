@@ -30,7 +30,7 @@ class LimiterProcessor extends AudioWorkletProcessor {
 
     constructor() {
         super();
-        this.port.onmessage = (event) => {
+        this.port.onmessage = event => {
             if (event.data == "reset") {
                 this.reset();
             } else if (event.data == "stop") {
@@ -100,7 +100,9 @@ class LimiterProcessor extends AudioWorkletProcessor {
     }
 
     process(inputs: Float32Array[][], outputs: Float32Array[][], parameters: Record<string, Float32Array>): boolean {
-        if (this.stopped) return false;
+        if (this.stopped) {
+            return false;
+        }
 
         const inputBuffer = inputs[0];
         const outputBuffer = outputs[0];

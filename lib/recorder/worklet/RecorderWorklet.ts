@@ -5,7 +5,7 @@ class RecorderWorklet extends AudioWorkletProcessor {
 
     constructor() {
         super();
-        this.port.onmessage = (event) => {
+        this.port.onmessage = event => {
             if (event.data == "stop") {
                 this.recording = false;
             } else if(event.data == "record") {
@@ -21,7 +21,9 @@ class RecorderWorklet extends AudioWorkletProcessor {
     }
 
     process(inputs: Float32Array[][], outputs: Float32Array[][], parameters: Record<string, Float32Array>): boolean {
-        if (!this.recording) return true;
+        if (!this.recording) {
+            return true;
+        }
 
         const input = inputs[0];
         const buffer: Float32Array[] = [];
@@ -37,7 +39,7 @@ class RecorderWorklet extends AudioWorkletProcessor {
 
             this.port.postMessage({
                 command: "record",
-                buffer: buffer
+                buffer
             });
         }
 

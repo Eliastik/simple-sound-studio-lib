@@ -6,7 +6,7 @@ import utilFunctions from "../utils/Functions";
 
 export default class LowPassFilter extends AbstractAudioFilter {
     private lowFrequency = 3500;
-    
+
     getNode(context: BaseAudioContext) {
         const lowPassFilter = context.createBiquadFilter();
         lowPassFilter.type = "lowpass";
@@ -17,7 +17,7 @@ export default class LowPassFilter extends AbstractAudioFilter {
             output: lowPassFilter
         };
     }
-    
+
     get order(): number {
         return 5;
     }
@@ -32,15 +32,17 @@ export default class LowPassFilter extends AbstractAudioFilter {
         };
     }
 
-    async setSetting(settingId: string, value: FilterSettingValue) {
+    setSetting(settingId: string, value: FilterSettingValue): Promise<void> {
         if(!utilFunctions.isSettingValueValid(value)) {
-            return;
+            return Promise.resolve();
         }
-        
+
         switch (settingId) {
         case "lowFrequency":
-            this.lowFrequency = parseInt(value as string);
+            this.lowFrequency = parseInt(value as string, 10);
             break;
         }
+
+        return Promise.resolve();
     }
 }

@@ -1,3 +1,4 @@
+/* eslint-disable prefer-destructuring */
 import RecorderConfig from "@/model/RecorderConfig";
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 //@ts-ignore
@@ -27,100 +28,19 @@ let recLength = 0,
     numChannels: number,
     bitRate: number;
 
-self.onmessage = function (e) {
-    switch (e.data.command) {
-    case "init":
-        init(e.data.config);
-        break;
-    case "record":
-        record(e.data.buffer);
-        break;
-    case "exportWAV":
-        exportWAV(e.data.type);
-        break;
-    case "exportMP3":
-        exportMP3(e.data.type);
-        break;
-    case "getBuffer":
-        getBuffer();
-        break;
-    case "clear":
-        clear();
-        break;
-    }
-};
-
-const init = (config: RecorderConfig) => {
-    sampleRate = config.sampleRate;
-    numChannels = config.numChannels;
-    bitRate = config.bitrate || 128;
-    initBuffers();
-};
-
-const record = (inputBuffer: Float32Array[]) => {
-    for (let channel = 0; channel < numChannels; channel++) {
-        recBuffers[channel].push(inputBuffer[channel]);
-    }
-    recLength += inputBuffer[0].length;
-};
-
-const exportWAV = (type: string) => {
-    const buffers = [];
-    for (let channel = 0; channel < numChannels; channel++) {
-        buffers.push(mergeBuffers(recBuffers[channel], recLength));
-    }
-    let interleaved;
-    if (numChannels === 2) {
-        interleaved = interleave(buffers[0], buffers[1]);
-    } else {
-        interleaved = buffers[0];
-    }
-    const dataview = encodeWAV(interleaved);
-    const audioBlob = new Blob([dataview], { type });
-
-    self.postMessage({ command: "exportWAV", data: audioBlob });
-};
-
-const exportMP3 = (type: string) => {
-    const buffers = [];
-            
-    for (let channel = 0; channel < numChannels; channel++) {
-        buffers.push(mergeBuffers(recBuffers[channel], recLength));
-    }
-
-    const mp3Data = encodeMP3(buffers);
-    const audioBlob = new Blob(mp3Data, { type });
-
-    self.postMessage({ command: "exportMP3", data: audioBlob });
-};
-
-const getBuffer = () => {
-    const buffers = [];
-    for (let channel = 0; channel < numChannels; channel++) {
-        buffers.push(mergeBuffers(recBuffers[channel], recLength));
-    }
-    self.postMessage({ command: "getBuffer", data: buffers });
-};
-
-const clear = () => {
-    recLength = 0;
-    recBuffers = [];
-    initBuffers();
-};
-
 const initBuffers = () => {
     for (let channel = 0; channel < numChannels; channel++) {
         recBuffers[channel] = [];
     }
 };
 
-const mergeBuffers = (recBuffers: Float32Array[], recLength: number) => {
-    const result = new Float32Array(recLength);
+const mergeBuffers = (buffers: Float32Array[], length: number) => {
+    const result = new Float32Array(length);
     let offset = 0;
-    for (let i = 0; i < recBuffers.length; i++) {
-        if (recBuffers[i]) {
-            result.set(recBuffers[i], offset);
-            offset += recBuffers[i].length;
+    for (let i = 0; i < buffers.length; i++) {
+        if (buffers[i]) {
+            result.set(buffers[i], offset);
+            offset += buffers[i].length;
         } else {
             console.warn("RecorderWorker: undefined buffer has been detected");
         }
@@ -193,6 +113,32 @@ const encodeWAV = (samples: Float32Array) => {
 };
 
 /**
+ * Convert a Float32Array to an Int16Array
+ * @param floatbuffer The buffer to convert
+ * @returns Int16Array buffer
+ */
+const convertFloatArray2Int16 = (floatbuffer: Float32Array) => {
+    const int16Buffer = new Int16Array(floatbuffer.length);
+
+    for (let i = 0, len = floatbuffer.length; i < len; i++) {
+        let floatValue = floatbuffer[i];
+
+        // Todo can be done with Math.min/Math.max
+        if (floatValue > 1.0) {
+            floatValue = 1.0;
+        }
+
+        if (floatValue < -1.0) {
+            floatValue = -1.0;
+        }
+
+        int16Buffer[i] = Math.floor(floatValue * 32767);
+    }
+
+    return int16Buffer;
+};
+
+/**
  * Encode a buffer to MP3
  * @param buffers Array of Float32Array (one for each channel)
  * @param numChannels The number of channels for the audio (max 2)
@@ -228,22 +174,84 @@ const encodeMP3 = (buffers: Float32Array[]): Int16Array[] => {
 
     return mp3Data;
 };
-/**
- * Convert a Float32Array to an Int16Array
- * @param floatbuffer The buffer to convert
- * @returns Int16Array buffer
- */
-const convertFloatArray2Int16 = (floatbuffer: Float32Array) => {
-    const int16Buffer = new Int16Array(floatbuffer.length);
 
-    for (let i = 0, len = floatbuffer.length; i < len; i++) {
-        let floatValue = floatbuffer[i];
+const init = (config: RecorderConfig) => {
+    sampleRate = config.sampleRate;
+    numChannels = config.numChannels;
+    bitRate = config.bitrate || 128;
+    initBuffers();
+};
 
-        if (floatValue > 1.0) floatValue = 1.0;
-        if (floatValue < -1.0) floatValue = -1.0;
+const record = (inputBuffer: Float32Array[]) => {
+    for (let channel = 0; channel < numChannels; channel++) {
+        recBuffers[channel].push(inputBuffer[channel]);
+    }
+    recLength += inputBuffer[0].length;
+};
 
-        int16Buffer[i] = Math.floor(floatValue * 32767);
+const exportWAV = (type: string) => {
+    const buffers = [];
+    for (let channel = 0; channel < numChannels; channel++) {
+        buffers.push(mergeBuffers(recBuffers[channel], recLength));
+    }
+    let interleaved;
+    if (numChannels === 2) {
+        interleaved = interleave(buffers[0], buffers[1]);
+    } else {
+        interleaved = buffers[0];
+    }
+    const dataview = encodeWAV(interleaved);
+    const audioBlob = new Blob([dataview], { type });
+
+    self.postMessage({ command: "exportWAV", data: audioBlob });
+};
+
+const exportMP3 = (type: string) => {
+    const buffers = [];
+
+    for (let channel = 0; channel < numChannels; channel++) {
+        buffers.push(mergeBuffers(recBuffers[channel], recLength));
     }
 
-    return int16Buffer;
+    const mp3Data = encodeMP3(buffers);
+    const audioBlob = new Blob(mp3Data, { type });
+
+    self.postMessage({ command: "exportMP3", data: audioBlob });
+};
+
+const getBuffer = () => {
+    const buffers = [];
+    for (let channel = 0; channel < numChannels; channel++) {
+        buffers.push(mergeBuffers(recBuffers[channel], recLength));
+    }
+    self.postMessage({ command: "getBuffer", data: buffers });
+};
+
+const clear = () => {
+    recLength = 0;
+    recBuffers = [];
+    initBuffers();
+};
+
+self.onmessage = function (e) {
+    switch (e.data.command) {
+    case "init":
+        init(e.data.config);
+        break;
+    case "record":
+        record(e.data.buffer);
+        break;
+    case "exportWAV":
+        exportWAV(e.data.type);
+        break;
+    case "exportMP3":
+        exportMP3(e.data.type);
+        break;
+    case "getBuffer":
+        getBuffer();
+        break;
+    case "clear":
+        clear();
+        break;
+    }
 };

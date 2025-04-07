@@ -36,14 +36,12 @@ export default class ReverbFilter extends AbstractAudioFilter {
         if (this.reverbEnvironment.url == "custom" && this.customEnvironment) {
             if (this.customEnvironment.sampleRate === context.sampleRate) {
                 return this.customEnvironment;
-            } else {
-                this.reverbEnvironment = Constants.DEFAULT_REVERB_ENVIRONMENT;
             }
+
+            this.reverbEnvironment = Constants.DEFAULT_REVERB_ENVIRONMENT;
         } else if (this.bufferFetcherService) {
             return this.bufferFetcherService.getAudioBuffer(this.reverbEnvironment.url);
         }
-
-        return;
     }
 
     get order(): number {
@@ -88,7 +86,7 @@ export default class ReverbFilter extends AbstractAudioFilter {
                 }
             },
             downloadedBuffers: this.bufferFetcherService?.getDownloadedBuffersList(),
-            hasCustomEnvironment: this.customEnvironment ? true : false,
+            hasCustomEnvironment: Boolean(this.customEnvironment),
             reverbCustomEnvironmentAddTime: this.reverbCustomEnvironmentAddTime
         };
     }
@@ -128,7 +126,7 @@ export default class ReverbFilter extends AbstractAudioFilter {
             }
         } else if (settingId == "reverbCustomEnvironmentAddTime") {
             if (utilFunctions.isSettingValueValid(value)) {
-                this.reverbCustomEnvironmentAddTime = parseInt(value as string);
+                this.reverbCustomEnvironmentAddTime = parseInt(value as string, 10);
             }
         } else if (settingId == "reverbCustomEnvironmentFile") {
             if (this.bufferDecoderService && value) {
@@ -141,13 +139,13 @@ export default class ReverbFilter extends AbstractAudioFilter {
             }
         }
     }
-    
+
     async bufferFetcherReseted() {
         const reverbSettings = this.getSettings();
-    
+
         if (reverbSettings) {
             const reverbUrl = (reverbSettings as ReverbSettings).reverbEnvironment?.value;
-    
+
             if (reverbUrl && reverbUrl !== "custom" && this.bufferFetcherService) {
                 await this.bufferFetcherService.fetchBuffer(reverbUrl);
                 return true;

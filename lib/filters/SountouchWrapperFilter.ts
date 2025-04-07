@@ -5,7 +5,6 @@ import Constants from "../model/Constants";
 import AbstractAudioFilterWorklet from "./interfaces/AbstractAudioFilterWorklet";
 import AudioFilterEntrypointInterface from "./interfaces/AudioFilterEntrypointInterface";
 import { AudioFilterNodes } from "../model/AudioNodes";
-import utils from "../utils/Functions";
 import SoundtouchSettings from "../model/filtersSettings/SoundtouchSettings";
 import { FilterSettingValue } from "../model/filtersSettings/FilterSettings";
 import utilFunctions from "../utils/Functions";
@@ -37,40 +36,41 @@ export default class SoundtouchWrapperFilter extends AbstractAudioFilterWorklet<
         return Constants.WORKLET_NAMES.SOUNDTOUCH;
     }
 
-    async getEntrypointNode(context: BaseAudioContext, buffer: AudioBuffer, offline: boolean): Promise<AudioFilterNodes> {
+    getEntrypointNode(context: BaseAudioContext, buffer: AudioBuffer, offline: boolean): Promise<AudioFilterNodes> {
         this.isOfflineMode = offline;
 
         this.cleanUpOldNodes();
 
         // In offline (compatibility) mode
         const { isWorklet, renderWithSoundtouch } = this.getCurrentRenderingMode();
-        
+
         if(renderWithSoundtouch) { // Rendering with soundtouch enabled
-            if (isWorklet && utils.isAudioWorkletCompatible(context)) {
+            if (isWorklet && utilFunctions.isAudioWorkletCompatible(context)) {
                 return this.renderWithWorklet(buffer, context);
-            } else {
-                if(offline) {
-                    return this.renderWithScriptProcessorNode(buffer, context);
-                } else {
-                    // Not in offline mode: get classic soundtouch script processor node
-                    this.currentPitchShifter = this.getSoundtouchScriptProcessorNode(buffer, context);
-                    this.updateState();
-
-                    return {
-                        input: this.currentPitchShifter,
-                        output: this.currentPitchShifter
-                    };
-                }
             }
-        } else { // Rendering with soundtouch disabled
-            // Just return an audio buffer source node
-            const bufferSource = this.constructBufferSourceNode(context, buffer);
 
-            return {
-                input: bufferSource,
-                output: bufferSource
-            };
+            if(offline) {
+                return this.renderWithScriptProcessorNode(buffer, context);
+            }
+
+            // Not in offline mode: get classic soundtouch script processor node
+            this.currentPitchShifter = this.getSoundtouchScriptProcessorNode(buffer, context);
+            this.updateState();
+
+            return Promise.resolve({
+                input: this.currentPitchShifter,
+                output: this.currentPitchShifter
+            });
         }
+
+        // Rendering with soundtouch disabled
+        // Just return an audio buffer source node
+        const bufferSource = this.constructBufferSourceNode(context, buffer);
+
+        return Promise.resolve({
+            input: bufferSource,
+            output: bufferSource
+        });
     }
 
     private getSoundtouchScriptProcessorNode(buffer: AudioBuffer, context: BaseAudioContext): AudioNode {
@@ -114,7 +114,7 @@ export default class SoundtouchWrapperFilter extends AbstractAudioFilterWorklet<
      * @returns A promise resolving to audio nodes with the rendered audio as a buffer source
      */
     private async renderWithScriptProcessorNode(buffer: AudioBuffer, context: BaseAudioContext): Promise<AudioFilterNodes> {
-        const durationAudio = utils.calcAudioDuration(buffer, this.speedAudio);
+        const durationAudio = utilFunctions.calcAudioDuration(buffer, this.speedAudio);
         const offlineContext = new OfflineAudioContext(2, context.sampleRate * durationAudio, context.sampleRate);
 
         this.currentPitchShifter = this.getSoundtouchScriptProcessorNode(buffer, offlineContext);
@@ -142,7 +142,7 @@ export default class SoundtouchWrapperFilter extends AbstractAudioFilterWorklet<
      * @param context Audio context
      * @returns A promise resolving to audio nodes with the rendered audio as a buffer source
      */
-    private async renderWithWorklet(buffer: AudioBuffer, context: BaseAudioContext): Promise<AudioFilterNodes> {
+    private renderWithWorklet(buffer: AudioBuffer, context: BaseAudioContext): Promise<AudioFilterNodes> {
         try {
             const bufferSource = this.constructBufferSourceNode(context, buffer);
 
@@ -154,10 +154,10 @@ export default class SoundtouchWrapperFilter extends AbstractAudioFilterWorklet<
             // Setup pitch/speed of Soundtouch
             this.updateState();
 
-            return {
+            return Promise.resolve({
                 input: workletNode.input,
                 output: workletNode.output
-            };
+            });
         } catch (e) {
             // Fallback to script processor node
             console.error(e);
@@ -192,13 +192,13 @@ export default class SoundtouchWrapperFilter extends AbstractAudioFilterWorklet<
         // If the settings are untouched, we don't use Soundtouch
         if (this.isOfflineMode && (!this.isEnabled() || (this.speedAudio == 1 && this.frequencyAudio == 1))) {
             return { isWorklet: false, renderWithSoundtouch: false };
-        } else {
-            if (this.isAudioWorkletAvailable()) {
-                return { isWorklet: true, renderWithSoundtouch: true };
-            } else {
-                return { isWorklet: false, renderWithSoundtouch: true };
-            }
         }
+
+        if (this.isAudioWorkletAvailable()) {
+            return { isWorklet: true, renderWithSoundtouch: true };
+        }
+
+        return { isWorklet: false, renderWithSoundtouch: true };
     }
 
     updateState(): void {
@@ -210,11 +210,12 @@ export default class SoundtouchWrapperFilter extends AbstractAudioFilterWorklet<
         let tempo = 1;
 
         if (this.isEnabled()) {
+            tempo = this.speedAudio;
+
             if(isWorklet) {
                 pitch = this.frequencyAudio * (1 / this.speedAudio);
             } else {
                 pitch = this.frequencyAudio;
-                tempo = this.speedAudio;
             }
 
             this.currentSpeedAudio = this.speedAudio;
@@ -224,19 +225,17 @@ export default class SoundtouchWrapperFilter extends AbstractAudioFilterWorklet<
             this.setWorkletSetting("pitch", pitch);
 
             if (this.currentBufferSource) {
-                this.currentBufferSource.playbackRate.value = this.speedAudio;
+                this.currentBufferSource.playbackRate.value = tempo;
             }
-        } else {
-            if(this.currentPitchShifter) {
-                this.currentPitchShifter.pitch = pitch;
-                this.currentPitchShifter.tempo = tempo;
-            }
+        } else if(this.currentPitchShifter) {
+            this.currentPitchShifter.pitch = pitch;
+            this.currentPitchShifter.tempo = tempo;
         }
     }
 
-    async setSetting(settingId: string, value: FilterSettingValue) {
+    setSetting(settingId: string, value: FilterSettingValue): Promise<void> {
         if (!utilFunctions.isSettingValueValid(value)) {
-            return;
+            return Promise.resolve();
         }
 
         const valueFloat = parseFloat(value as string);
@@ -248,11 +247,14 @@ export default class SoundtouchWrapperFilter extends AbstractAudioFilterWorklet<
         case "frequencyAudio":
             this.frequencyAudio = valueFloat;
             break;
+        // TODO add key setting?
         default:
             break;
         }
 
         this.updateState();
+
+        return Promise.resolve();
     }
 
     setEnabled(state: boolean): void {

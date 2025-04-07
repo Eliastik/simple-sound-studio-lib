@@ -54,8 +54,8 @@ export default abstract class AbstractAudioFilter extends AbstractAudioNode {
      * Called when the buffer fetcher was reseted
      * @returns boolean
     */
-    public async bufferFetcherReseted(): Promise<boolean> {
-        return false;
+    public bufferFetcherReseted(): Promise<boolean> {
+        return Promise.resolve(false);
     }
 
     set totalSamples(value: number) {

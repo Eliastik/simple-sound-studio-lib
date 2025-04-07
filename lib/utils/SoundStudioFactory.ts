@@ -11,7 +11,7 @@ import SoundStudioFactoryInstance from "@/model/SoundStudioFactoryInstance";
 
 /**
  * Factory class to create instances of sound studio components.
- * 
+ *
  * This factory supports both singleton-based methods (deprecated) and a new
  * instance-based creation model. The singleton methods will be removed in a
  * future release.
@@ -29,7 +29,7 @@ export default class SoundStudioFactory {
 
     /**
      * Create a new instance of sound studio components.
-     * 
+     *
      * @param options Optional configuration for the new instance. See SoundStudioFactoryNewInstanceOptions
      * @returns A new instance of the sound studio components. See SoundStudioFactoryInstance
      */
@@ -56,7 +56,7 @@ export default class SoundStudioFactory {
 
     /**
      * Create a singleton AudioEditor instance.
-     * 
+     *
      * @param configService Optional configuration service.
      * @param buffersToFetch Optional list of audio buffers to pre-fetch.
      * @returns The singleton AudioEditor instance.
@@ -84,7 +84,7 @@ export default class SoundStudioFactory {
 
     /**
      * Create a singleton VoiceRecorder instance.
-     * 
+     *
      * @returns The singleton VoiceRecorder instance.
      * @deprecated This method is deprecated. Use createNewInstance instead.
      */
@@ -98,7 +98,7 @@ export default class SoundStudioFactory {
 
     /**
      * Get the singleton AudioEditor instance.
-     * 
+     *
      * @returns The singleton AudioEditor instance, or null if not initialized.
      * @deprecated This method is deprecated. Use createNewInstance instead.
      */
@@ -112,7 +112,7 @@ export default class SoundStudioFactory {
 
     /**
      * Get the singleton BufferPlayer instance.
-     * 
+     *
      * @returns The singleton BufferPlayer instance, or null if not initialized.
      * @deprecated This method is deprecated. Use createNewInstance instead.
      */
@@ -126,7 +126,7 @@ export default class SoundStudioFactory {
 
     /**
      * Get the singleton VoiceRecorder instance.
-     * 
+     *
      * @returns The singleton VoiceRecorder instance, or null if not initialized.
      * @deprecated This method is deprecated. Use createNewInstance instead.
      */
@@ -140,7 +140,7 @@ export default class SoundStudioFactory {
 
     /**
      * Get the singleton EventEmitter instance.
-     * 
+     *
      * @returns The singleton EventEmitter instance, or null if not initialized.
      * @deprecated This method is deprecated. Use createNewInstance instead.
      */
@@ -154,7 +154,7 @@ export default class SoundStudioFactory {
 
     /**
      * Get the singleton ConfigService instance.
-     * 
+     *
      * @returns The singleton ConfigService instance, or undefined if not initialized.
      * @deprecated This method is deprecated. Use createNewInstance instead.
      */

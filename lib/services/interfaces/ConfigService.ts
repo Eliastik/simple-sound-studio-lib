@@ -7,7 +7,7 @@ export interface ConfigService {
 
     /**
      * Set config
-     * @param key The key 
+     * @param key The key
      * @param value The config value
      */
     setConfig(key: string, value: string): void;
@@ -27,7 +27,7 @@ export interface ConfigService {
      */
     isAudioWorkletEnabled(): boolean;
 
-    /** 
+    /**
      * Check if AudioWorklet mode is enabled for Soundtouch
      */
     isSoundtouchAudioWorkletEnabled(): boolean;
@@ -74,21 +74,21 @@ export interface ConfigService {
 
     /**
      * Set the base path for worklet files
-     * 
+     *
      * @param workletBasePath The base path
      */
     setWorkletBasePath(workletBasePath: string): void;
 
      /**
      * Set the base path for worker files
-     * 
-     * @param workerBasePath The base path 
+     *
+     * @param workerBasePath The base path
      */
     setWorkerBasePath(workerBasePath: string): void;
 
      /**
      * Set the base path for audio files (reverb environments for example)
-     * 
+     *
      * @param soundBasePath The base path
      */
     setSoundBasePath(soundBasePath: string): void;

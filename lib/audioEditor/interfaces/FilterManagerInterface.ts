@@ -20,7 +20,7 @@ export default interface FilterManagerInterface {
 
     /**
      * Get the settings of all filters
-     * @returns 
+     * @returns
      */
     getFiltersSettings(): Map<string, FilterSettings>;
 
@@ -29,7 +29,7 @@ export default interface FilterManagerInterface {
      * @param filterId The filter ID
      */
     enableFilter(filterId: string): void;
-    
+
     /**
      * Disable a filter
      * @param filterId The filter ID

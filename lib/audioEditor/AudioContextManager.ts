@@ -72,7 +72,7 @@ export default class AudioContextManager implements AudioContextManagerInterface
         return false;
     }
 
-    /** 
+    /**
      * Stop previous audio context and create a new one
      * @param sampleRate New sample rate
      */

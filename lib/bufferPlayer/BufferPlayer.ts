@@ -38,7 +38,7 @@ export default class BufferPlayer extends AbstractAudioElement implements Buffer
     private intervals: number[] = [];
     private onBeforePlayingCallback: () => void = async () => { };
     private _volume = 1;
-    
+
     currentTime = 0;
     displayTime = 0;
     duration = 0;
@@ -176,19 +176,17 @@ export default class BufferPlayer extends AbstractAudioElement implements Buffer
                 } else {
                     return;
                 }
-            } else {
-                if (this.currentNode && this._contextManager && this._contextManager.currentContext) {
-                    this.createGainNode();
+            } else if (this.currentNode && this._contextManager && this._contextManager.currentContext) {
+                this.createGainNode();
 
-                    if(this.gainNode) {
-                        this.currentNode.connect(this.gainNode);
-                        this.gainNode.connect(this._contextManager.currentContext.destination);
-                    } else {
-                        this.currentNode.connect(this._contextManager.currentContext.destination);
-                    }
+                if(this.gainNode) {
+                    this.currentNode.connect(this.gainNode);
+                    this.gainNode.connect(this._contextManager.currentContext.destination);
                 } else {
-                    return;
+                    this.currentNode.connect(this._contextManager.currentContext.destination);
                 }
+            } else {
+                return;
             }
 
             let startTime = performance.now();
@@ -226,10 +224,10 @@ export default class BufferPlayer extends AbstractAudioElement implements Buffer
 
     async playDirect() {
         if (!this.compatibilityMode) {
-            this.start(true);
+            await this.start(true);
         } else {
             // Play direct is not possible when compatibility mode is enabled
-            this.start(false);
+            await this.start(false);
         }
     }
 

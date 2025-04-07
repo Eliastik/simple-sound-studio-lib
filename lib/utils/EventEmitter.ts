@@ -6,7 +6,7 @@ import EventEmitterInterface from "./interfaces/EventEmitterInterface";
 @injectable()
 export default class EventEmitter implements EventEmitterInterface {
     listeners: AudioEditorEvents = {};
-    
+
     constructor() {
         this.listeners = {};
     }

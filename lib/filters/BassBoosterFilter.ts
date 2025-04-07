@@ -27,7 +27,7 @@ export default class BassBoosterFilter extends AbstractAudioFilter {
             output: bassBoostFilter
         };
     }
-    
+
     get order(): number {
         return 3;
     }
@@ -45,24 +45,26 @@ export default class BassBoosterFilter extends AbstractAudioFilter {
         };
     }
 
-    async setSetting(settingId: string, value: FilterSettingValue) {
+    setSetting(settingId: string, value: FilterSettingValue): Promise<void> {
         if(!utilFunctions.isSettingValueValid(value)) {
-            return;
+            return Promise.resolve();
         }
 
         switch(settingId) {
         case "frequencyBooster":
-            this.frequencyBooster = parseInt(value as string);
+            this.frequencyBooster = parseInt(value as string, 10);
             break;
         case "frequencyReduce":
-            this.frequencyReduce = parseInt(value as string);
+            this.frequencyReduce = parseInt(value as string, 10);
             break;
         case "dbBooster":
-            this.dbBooster = parseInt(value as string);
+            this.dbBooster = parseInt(value as string, 10);
             break;
         case "dbReduce":
-            this.dbReduce = parseInt(value as string);
+            this.dbReduce = parseInt(value as string, 10);
             break;
         }
+
+        return Promise.resolve();
     }
 }

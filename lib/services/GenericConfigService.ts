@@ -55,7 +55,7 @@ export default class GenericConfigService implements ConfigService {
         const setting = this.getConfig(Constants.PREFERENCES_KEYS.BUFFER_SIZE);
 
         if(setting != null) {
-            return parseInt(setting);
+            return parseInt(setting, 10);
         }
 
         return Constants.DEFAULT_BUFFER_SIZE;
@@ -65,7 +65,7 @@ export default class GenericConfigService implements ConfigService {
         const setting = this.getConfig(Constants.PREFERENCES_KEYS.SAMPLE_RATE);
 
         if(setting != null) {
-            return parseInt(setting);
+            return parseInt(setting, 10);
         }
 
         return Constants.DEFAULT_SAMPLE_RATE;
@@ -75,7 +75,7 @@ export default class GenericConfigService implements ConfigService {
         const setting = this.getConfig(Constants.PREFERENCES_KEYS.BITRATE_MP3);
 
         if(setting != null) {
-            return parseInt(setting);
+            return parseInt(setting, 10);
         }
 
         return Constants.DEFAULT_MP3_BITRATE;

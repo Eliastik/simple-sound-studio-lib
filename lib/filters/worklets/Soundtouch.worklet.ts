@@ -16,6 +16,7 @@ class SoundTouchWorklet extends AudioWorkletProcessor {
             { name: "pitchSemitones", defaultValue: 0, minValue: -24, maxValue: 24 },
         ];
     }
+
     constructor() {
         super();
         this.bufferSize = 128;
@@ -24,7 +25,9 @@ class SoundTouchWorklet extends AudioWorkletProcessor {
     }
 
     process(inputs: Float32Array[][], outputs: Float32Array[][], parameters: Record<string, Float32Array>): boolean {
-        if (!inputs[0].length) return true;
+        if (!inputs[0].length) {
+            return true;
+        }
 
         const leftInput = inputs[0][0];
         const rightInput = inputs[0].length > 1 ? inputs[0][1] : inputs[0][0];
@@ -33,7 +36,9 @@ class SoundTouchWorklet extends AudioWorkletProcessor {
         const rightOutput = outputs[0].length > 1 ? outputs[0][1] : outputs[0][0];
         const samples = this._samples;
 
-        if (!leftOutput || !leftOutput.length) return false;
+        if (!leftOutput || !leftOutput.length) {
+            return false;
+        }
 
         const rate = parameters.rate[0] ?? parameters.rate;
         const tempo = parameters.tempo[0] ?? parameters.tempo;

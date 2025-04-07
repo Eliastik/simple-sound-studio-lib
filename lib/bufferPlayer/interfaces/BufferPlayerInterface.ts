@@ -47,7 +47,7 @@ export default interface BufferPlayerInterface {
      * Pause the audio
      */
     pause(): void;
-    
+
     /**
     * Set the current starting time of this player
     * @param percent Where to start playing, in percent
@@ -88,7 +88,7 @@ export default interface BufferPlayerInterface {
      */
     get currentTimeDisplay(): string;
 
-    /** 
+    /**
      * Get the audio duration in text format
      */
     get maxTimeDisplay(): string;

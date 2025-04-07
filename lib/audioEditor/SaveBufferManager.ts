@@ -90,7 +90,8 @@ export default class SaveBufferManager extends AbstractAudioElement implements S
     private saveBufferDirect(renderedBuffer: AudioBuffer | null, options?: SaveBufferOptions): Promise<boolean> {
         return new Promise((resolve, reject) => {
             if (!renderedBuffer || (this.contextManager && !this.contextManager.currentContext)) {
-                return reject("No rendered buffer or AudioContext not initialized");
+                reject("No rendered buffer or AudioContext not initialized");
+                return;
             }
 
             const worker = getRecorderWorker(this.configService?.getWorkerBasePath());
@@ -142,7 +143,8 @@ export default class SaveBufferManager extends AbstractAudioElement implements S
     private saveBufferCompatibilityMode(options?: SaveBufferOptions, recorder?: Recorder): Promise<boolean> {
         return new Promise((resolve, reject) => {
             if (!this.bufferPlayer) {
-                return reject("No buffer player found");
+                reject("No buffer player found");
+                return;
             }
 
             this.bufferPlayer.start().then(() => {
@@ -171,22 +173,6 @@ export default class SaveBufferManager extends AbstractAudioElement implements S
                 rec.setup(this.filterManager.currentNodes.output).then(() => {
                     rec.record();
 
-                    this.playingStoppedCallback = () => {
-                        rec.kill();
-
-                        this._savingBuffer = false;
-
-                        if (this.eventEmitter) {
-                            this.eventEmitter.off(EventType.PLAYING_FINISHED, finishedCallback);
-
-                            if (this.playingStoppedCallback) {
-                                this.eventEmitter.off(EventType.PLAYING_STOPPED, this.playingStoppedCallback);
-                            }
-                        }
-
-                        resolve(true);
-                    };
-
                     const finishedCallback = () => {
                         if (this.playingStoppedCallback && this.eventEmitter) {
                             this.eventEmitter.off(EventType.PLAYING_STOPPED, this.playingStoppedCallback);
@@ -213,6 +199,22 @@ export default class SaveBufferManager extends AbstractAudioElement implements S
                         } else {
                             rec.exportWAV(downloadBlobCallback);
                         }
+                    };
+
+                    this.playingStoppedCallback = () => {
+                        rec.kill();
+
+                        this._savingBuffer = false;
+
+                        if (this.eventEmitter) {
+                            this.eventEmitter.off(EventType.PLAYING_FINISHED, finishedCallback);
+
+                            if (this.playingStoppedCallback) {
+                                this.eventEmitter.off(EventType.PLAYING_STOPPED, this.playingStoppedCallback);
+                            }
+                        }
+
+                        resolve(true);
                     };
 
                     if (this.eventEmitter) {

@@ -9,7 +9,7 @@ export default class VocoderRenderer extends AbstractAudioRenderer {
         return new Promise(resolve => {
             const durationAudio = Functions.calcAudioDuration(buffer, 1);
             const offlineContext = new OfflineAudioContext(2, context.sampleRate * durationAudio, context.sampleRate);
-            
+
             offlineContext.oncomplete = e => {
                 resolve(e.renderedBuffer);
             };
@@ -26,7 +26,7 @@ export default class VocoderRenderer extends AbstractAudioRenderer {
             offlineContext.startRendering();
         });
     }
-    
+
     get order(): number {
         return 1;
     }

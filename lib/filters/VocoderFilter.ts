@@ -40,11 +40,11 @@ export default class VocoderFilter extends AbstractAudioFilter {
         };
     }
 
-    async setSetting(settingId: string, value: FilterSettingValue) {
+    setSetting(settingId: string, value: FilterSettingValue): Promise<void> {
         if(!utilFunctions.isSettingValueValid(value)) {
-            return;
+            return Promise.resolve();
         }
-        
+
         switch (settingId) {
         case "modulatorGainValue":
             this.modulatorGainValue = parseFloat(value as string);
@@ -64,6 +64,8 @@ export default class VocoderFilter extends AbstractAudioFilter {
         }
 
         this.applyCurrentSettingsToVocoder();
+
+        return Promise.resolve();
     }
 
     private applyCurrentSettingsToVocoder() {
@@ -75,7 +77,7 @@ export default class VocoderFilter extends AbstractAudioFilter {
             this.currentVocoder.updateDetuneValue(this.oscillatorDetuneValue);
         }
     }
-    
+
     get order(): number {
         return 1;
     }

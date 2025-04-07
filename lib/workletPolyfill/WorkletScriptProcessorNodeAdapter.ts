@@ -33,14 +33,14 @@ export default class WorkletScriptProcessorNodeAdapter {
     private setupPort(): void {
         const messageChannel = new MessageChannel();
 
-        messageChannel.port1.onmessage = (ev) => {
+        messageChannel.port1.onmessage = ev => {
             if(this.workletProcessor && this.workletProcessor.port2) {
                 this.workletProcessor.port2.postMessage(ev.data);
             }
         };
 
         if(this.workletProcessor && this.workletProcessor.port2) {
-            this.workletProcessor.port2.onmessage = (ev) => {
+            this.workletProcessor.port2.onmessage = ev => {
                 messageChannel.port1.postMessage(ev.data);
             };
         }
@@ -65,7 +65,7 @@ export default class WorkletScriptProcessorNodeAdapter {
                 }
 
                 const recordsMap: Record<string, Float32Array> = Object.fromEntries(records);
-                
+
                 this.workletProcessor.process(inputArray, ouputArray, recordsMap);
             }
         };

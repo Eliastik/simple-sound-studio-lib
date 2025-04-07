@@ -23,7 +23,7 @@ export default class EchoFilter extends AbstractAudioFilter {
             output: delayNode
         };
     }
-    
+
     get order(): number {
         return 7;
     }
@@ -43,11 +43,11 @@ export default class EchoFilter extends AbstractAudioFilter {
         };
     }
 
-    async setSetting(settingId: string, value: FilterSettingValue) {
+    setSetting(settingId: string, value: FilterSettingValue): Promise<void> {
         if(!utilFunctions.isSettingValueValid(value)) {
-            return;
+            return Promise.resolve();
         }
-        
+
         switch(settingId) {
         case "delay":
             this.delay = parseFloat(value as string);
@@ -56,5 +56,7 @@ export default class EchoFilter extends AbstractAudioFilter {
             this.gain = parseFloat(value as string);
             break;
         }
+
+        return Promise.resolve();
     }
 }

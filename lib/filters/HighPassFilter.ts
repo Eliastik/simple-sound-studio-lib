@@ -17,7 +17,7 @@ export default class HighPassFilter extends AbstractAudioFilter {
             output: highPassFilter
         };
     }
-    
+
     get order(): number {
         return 4;
     }
@@ -32,15 +32,17 @@ export default class HighPassFilter extends AbstractAudioFilter {
         };
     }
 
-    async setSetting(settingId: string, value: FilterSettingValue) {
+    setSetting(settingId: string, value: FilterSettingValue): Promise<void> {
         if(!utilFunctions.isSettingValueValid(value)) {
-            return;
+            return Promise.resolve();
         }
-        
+
         switch(settingId) {
         case "highFrequency":
-            this.highFrequency = parseInt(value as string);
+            this.highFrequency = parseInt(value as string, 10);
             break;
         }
+
+        return Promise.resolve();
     }
 }

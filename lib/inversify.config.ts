@@ -43,13 +43,13 @@ import VoiceRecorder from "./voiceRecorder/VoiceRecorder";
 
 function getAudioEditorContainer() {
     const audioEditorContainer = new Container({ defaultScope: "Singleton" });
-    
+
     // Entrypoint filter
     audioEditorContainer.bind<AudioFilterEntrypointInterface>(TYPES.EntryPointFilter).to(SoundtouchWrapperFilter);
-    
+
     // Renderers
     audioEditorContainer.bind<AbstractAudioRenderer>(TYPES.Renderers).to(ReturnAudioRenderer);
-    
+
     // Filters
     audioEditorContainer.bind<AbstractAudioFilter>(TYPES.Filters).toDynamicValue(() => audioEditorContainer.get<AbstractAudioFilter>(TYPES.EntryPointFilter));
     audioEditorContainer.bind<AbstractAudioFilter>(TYPES.Filters).to(BassBoosterFilter);
@@ -62,7 +62,7 @@ function getAudioEditorContainer() {
     audioEditorContainer.bind<AbstractAudioFilter>(TYPES.Filters).to(TelephonizerFilter);
     audioEditorContainer.bind<AbstractAudioFilter>(TYPES.Filters).to(VocoderFilter);
     audioEditorContainer.bind<AbstractAudioFilter>(TYPES.Filters).to(PassThroughFilter);
-    
+
     // Services
     audioEditorContainer.bind<EventEmitterInterface>(TYPES.EventEmitter).to(EventEmitter);
     audioEditorContainer.bind<AudioContextManagerInterface>(TYPES.AudioContextManager).to(AudioContextManager);

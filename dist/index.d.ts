@@ -868,7 +868,7 @@ interface VoiceRecorderInterface {
     /**
      * Stop audio recording
      */
-    stop(): Promise<void>;
+    stop(): void;
     /**
      * Pause audio recording
      */
@@ -952,7 +952,7 @@ declare class VoiceRecorder extends AbstractAudioElement implements VoiceRecorde
     private updateInputList;
     changeInput(deviceId: string, groupId: string | undefined): void;
     record(): Promise<void>;
-    stop(): Promise<void>;
+    stop(): void;
     pause(): void;
     /**
      * Stop stream

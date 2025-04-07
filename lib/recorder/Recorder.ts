@@ -145,8 +145,10 @@ export class Recorder implements RecorderInterface {
             this.node = (this.context.createScriptProcessor).call(this.context,
                 this.config.bufferLen, this.config.numChannels, this.config.numChannels);
 
-            this.node.onaudioprocess = (e) => {
-                if (!this.recording) return;
+            this.node.onaudioprocess = e => {
+                if (!this.recording) {
+                    return;
+                }
 
                 const buffer = [];
                 for (let channel = 0; channel < this.config.numChannels; channel++) {
@@ -156,7 +158,7 @@ export class Recorder implements RecorderInterface {
                 if (this.worker) {
                     this.worker.postMessage({
                         command: "record",
-                        buffer: buffer
+                        buffer
                     });
                 }
             };
@@ -196,7 +198,10 @@ export class Recorder implements RecorderInterface {
 
     getBuffer(cb: RecorderCallback<Float32Array[]>) {
         cb = cb || this.config.callback;
-        if (!cb) throw new Error("Callback not set");
+
+        if (!cb) {
+            throw new Error("Callback not set");
+        }
 
         this.callbacks.getBuffer.push(cb);
 
@@ -208,7 +213,10 @@ export class Recorder implements RecorderInterface {
     exportWAV(cb: RecorderCallback<Blob>, mimeType?: string) {
         mimeType = mimeType || this.config.mimeType;
         cb = cb || this.config.callback;
-        if (!cb) throw new Error("Callback not set");
+
+        if (!cb) {
+            throw new Error("Callback not set");
+        }
 
         this.callbacks.exportWAV.push(cb);
 
@@ -223,7 +231,10 @@ export class Recorder implements RecorderInterface {
     exportMP3(cb: RecorderCallback<Blob>, mimeType?: string) {
         mimeType = mimeType || this.config.mimeType;
         cb = cb || this.config.callback;
-        if (!cb) throw new Error("Callback not set");
+
+        if (!cb) {
+            throw new Error("Callback not set");
+        }
 
         this.callbacks.exportMP3.push(cb);
 
@@ -233,7 +244,7 @@ export class Recorder implements RecorderInterface {
                 type: mimeType
             });
         }
-    } 
+    }
 };
 
 export default Recorder;

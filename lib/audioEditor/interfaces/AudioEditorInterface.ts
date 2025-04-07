@@ -85,7 +85,7 @@ export default interface AudioEditorInterface {
 
     /**
      * Get the settings of all filters/renderers
-     * @returns 
+     * @returns
      */
     getFiltersSettings(): Map<string, FilterSettings>;
 
@@ -97,7 +97,7 @@ export default interface AudioEditorInterface {
      * @param filterId The filter/renderer ID
      */
     enableFilter(filterId: string): void;
-    
+
     /**
      * Disable a filter/renderer
      * @param filterId The filter/renderer ID

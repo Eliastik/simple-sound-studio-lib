@@ -17,5 +17,5 @@ export default interface RecorderInterface {
     exportWAV(cb: RecorderCallback<Blob>, mimeType?: string): void;
 
     exportMP3(cb: RecorderCallback<Blob>, mimeType?: string): void;
-    
+
 }

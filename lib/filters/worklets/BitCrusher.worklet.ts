@@ -7,7 +7,7 @@ class BitCrusherProcessor extends AudioWorkletProcessor {
 
     constructor() {
         super();
-        this.port.onmessage = (event) => {
+        this.port.onmessage = event => {
             if (event.data == "stop") {
                 this.stop();
             }
@@ -26,7 +26,9 @@ class BitCrusherProcessor extends AudioWorkletProcessor {
     }
 
     process(inputs: Float32Array[][], outputs: Float32Array[][], parameters: Record<string, Float32Array>): boolean {
-        if (this.stopped) return false;
+        if (this.stopped) {
+            return false;
+        }
 
         const input = inputs[0];
         const output = outputs[0];

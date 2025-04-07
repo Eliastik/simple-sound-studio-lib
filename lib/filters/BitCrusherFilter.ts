@@ -8,7 +8,7 @@ import utilFunctions from "../utils/Functions";
 export default class BitCrusherFilter extends AbstractAudioFilterWorklet<void> {
     private bits = 16;
     private normFreq = 0.9;
-    
+
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     receiveEvent(message: MessageEvent<void>): void {
         // Do nothing
@@ -17,7 +17,7 @@ export default class BitCrusherFilter extends AbstractAudioFilterWorklet<void> {
     get workletPath(): string {
         return Constants.WORKLET_PATHS.BITCRUSHER;
     }
-    
+
     get workletName(): string {
         return Constants.WORKLET_NAMES.BITCRUSHER;
     }
@@ -37,14 +37,14 @@ export default class BitCrusherFilter extends AbstractAudioFilterWorklet<void> {
         };
     }
 
-    async setSetting(settingId: string, value: FilterSettingValue) {
+    setSetting(settingId: string, value: FilterSettingValue): Promise<void> {
         if(!utilFunctions.isSettingValueValid(value)) {
-            return;
+            return Promise.resolve();
         }
 
         switch (settingId) {
         case "bits":
-            this.bits = parseInt(value as string);
+            this.bits = parseInt(value as string, 10);
             break;
         case "normFreq":
             this.normFreq = parseFloat(value as string);
@@ -52,5 +52,7 @@ export default class BitCrusherFilter extends AbstractAudioFilterWorklet<void> {
         }
 
         this.applyCurrentSettingsToWorklet();
+
+        return Promise.resolve();
     }
 }

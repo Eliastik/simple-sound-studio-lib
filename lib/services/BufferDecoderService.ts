@@ -28,11 +28,11 @@ export default class BufferDecoderService implements BufferDecoderServiceInterfa
         try {
             if (this.contextManager && this.contextManager.currentContext) {
                 const buffer = await utilFunctions.loadAudioBuffer(this.contextManager.currentContext, file);
-    
+
                 if (this.eventEmitter) {
                     this.eventEmitter.emit(EventType.DECODED_AUDIO_FILE);
                 }
-    
+
                 return buffer;
             }
         } catch (e) {

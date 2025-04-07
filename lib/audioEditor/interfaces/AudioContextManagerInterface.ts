@@ -6,7 +6,7 @@ export default interface AudioContextManagerInterface {
      */
     createNewContextIfNeeded(principalBuffer?: AudioBuffer | null): boolean;
 
-    /** 
+    /**
      * Stop previous audio context and create a new one
      * @param sampleRate New sample rate
      */

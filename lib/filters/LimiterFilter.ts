@@ -18,7 +18,7 @@ export default class LimiterFilter extends AbstractAudioFilterWorklet<void> {
         this.keepCurrentNodeIfPossible = true;
         this.setDefaultEnabled(true);
     }
-    
+
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     receiveEvent(message: MessageEvent<void>): void {
         // Do nothing
@@ -27,7 +27,7 @@ export default class LimiterFilter extends AbstractAudioFilterWorklet<void> {
     get workletPath(): string {
         return Constants.WORKLET_PATHS.LIMITER;
     }
-    
+
     get workletName(): string {
         return Constants.WORKLET_NAMES.LIMITER;
     }
@@ -55,11 +55,11 @@ export default class LimiterFilter extends AbstractAudioFilterWorklet<void> {
         };
     }
 
-    async setSetting(settingId: string, value: FilterSettingValue) {
+    setSetting(settingId: string, value: FilterSettingValue): Promise<void> {
         if(!utilFunctions.isSettingValueValid(value)) {
-            return;
+            return Promise.resolve();
         }
-        
+
         switch (settingId) {
         case "preGain":
             this.preGain = parseFloat(value as string);
@@ -82,5 +82,7 @@ export default class LimiterFilter extends AbstractAudioFilterWorklet<void> {
         }
 
         this.applyCurrentSettingsToWorklet();
+
+        return Promise.resolve();
     }
 }

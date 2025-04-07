@@ -146,52 +146,62 @@ export default class Vocoder {
     }
 
     selectSawtooth() {
-        if (this.wavetableSignalGain)
+        if (this.wavetableSignalGain) {
             this.wavetableSignalGain.gain.value = this.SAWTOOTHBOOST;
-        if (this.oscillatorNode)
+        }
+        if (this.oscillatorNode) {
             this.oscillatorNode.type = "sawtooth";
+        }
     }
 
     selectWavetable() {
-        if (this.wavetableSignalGain)
+        if (this.wavetableSignalGain) {
             this.wavetableSignalGain.gain.value = this.WAVETABLEBOOST;
-        if (this.oscillatorNode && this.wavetable)
+        }
+        if (this.oscillatorNode && this.wavetable) {
             this.oscillatorNode.setPeriodicWave(this.wavetable);
-        if (this.wavetableSignalGain)
+        }
+        if (this.wavetableSignalGain) {
             this.wavetableSignalGain.gain.value = this.WAVETABLEBOOST;
+        }
     }
 
     updateModGain(value: number) {
         this.modulatorGainValue = value;
-        if (this.modulatorGain)
+        if (this.modulatorGain) {
             this.modulatorGain.gain.value = value;
+        }
     }
 
     // sample-based carrier
     updateSampleLevel(value: number) {
         this.carrierSampleGainValue = value;
-        if (this.carrierSampleGain)
+        if (this.carrierSampleGain) {
             this.carrierSampleGain.gain.value = value;
+        }
     }
 
     // noise in carrier
     updateSynthLevel(value: number) {
         this.oscillatorGainValue = value;
-        if (this.oscillatorGain)
+        if (this.oscillatorGain) {
             this.oscillatorGain.gain.value = value;
+        }
     }
 
     // noise in carrier
     updateNoiseLevel(value: number) {
         this.noiseGainValue = value;
-        if (this.noiseGain)
+        if (this.noiseGain) {
             this.noiseGain.gain.value = value;
+        }
     }
 
     updateDetuneValue(value: number) {
         this.oscillatorDetuneValue = value;
-        if (this.oscillatorNode)
+        if (this.oscillatorNode) {
             this.oscillatorNode.detune.value = value;
+        }
     }
 
     // this will algorithmically re-calculate vocoder bands, distributing evenly
@@ -217,7 +227,9 @@ export default class Vocoder {
     }
 
     private loadNoiseBuffer() {  // create a 5-second buffer of noise
-        if (!this.audioContext) return;
+        if (!this.audioContext) {
+            return;
+        }
 
         const lengthInSamples = 5 * this.audioContext.sampleRate;
         this.noiseBuffer = this.audioContext.createBuffer(1, lengthInSamples, this.audioContext.sampleRate);
@@ -229,39 +241,50 @@ export default class Vocoder {
     }
 
     private initBandpassFilters() {
-        if (!this.audioContext) return;
+        if (!this.audioContext) {
+            return;
+        }
 
         // When this function is called, the carrierNode and modulatorAnalyser
         // may not already be created.  Create placeholder nodes for them.
         this.modulatorInput = this.audioContext.createGain();
         this.carrierInput = this.audioContext.createGain();
 
-        if (this.modFilterBands == null)
+        if (this.modFilterBands == null) {
             this.modFilterBands = [];
+        }
 
-        if (this.modFilterPostGains == null)
+        if (this.modFilterPostGains == null) {
             this.modFilterPostGains = [];
+        }
 
-        if (this.heterodynes == null)
+        if (this.heterodynes == null) {
             this.heterodynes = [];
+        }
 
-        if (this.powers == null)
+        if (this.powers == null) {
             this.powers = [];
+        }
 
-        if (this.lpFilters == null)
+        if (this.lpFilters == null) {
             this.lpFilters = [];
+        }
 
-        if (this.lpFilterPostGains == null)
+        if (this.lpFilterPostGains == null) {
             this.lpFilterPostGains = [];
+        }
 
-        if (this.carrierBands == null)
+        if (this.carrierBands == null) {
             this.carrierBands = [];
+        }
 
-        if (this.carrierFilterPostGains == null)
+        if (this.carrierFilterPostGains == null) {
             this.carrierFilterPostGains = [];
+        }
 
-        if (this.carrierBandGains == null)
+        if (this.carrierBandGains == null) {
             this.carrierBandGains = [];
+        }
 
         const waveShaperCurve = new Float32Array(65536);
         // Populate with a "curve" that does an abs()
@@ -311,16 +334,18 @@ export default class Vocoder {
         }
 
         const rectifierCurve = new Float32Array(65536);
-        for (let i = -32768; i < 32768; i++)
+        for (let i = -32768; i < 32768; i++) {
             rectifierCurve[i + 32768] = ((i > 0) ? i : -i) / 32768;
+        }
 
         for (let i = 0; i < this.numVocoderBands; i++) {
             // CREATE THE MODULATOR CHAIN
             // create the bandpass filter in the modulator chain
             const modulatorFilter = this.audioContext.createBiquadFilter();
             modulatorFilter.type = "bandpass";  // Bandpass filter
-            if (this.vocoderBands)
+            if (this.vocoderBands) {
                 modulatorFilter.frequency.value = this.vocoderBands[i].frequency;
+            }
             modulatorFilter.Q.value = this.FILTER_QUALITY; //  initial quality
             this.modulatorInput.connect(modulatorFilter);
             this.modFilterBands.push(modulatorFilter);
@@ -330,8 +355,9 @@ export default class Vocoder {
             // which has a steeper rolloff/octave
             const secondModulatorFilter = this.audioContext.createBiquadFilter();
             secondModulatorFilter.type = "bandpass";  // Bandpass filter
-            if (this.vocoderBands)
+            if (this.vocoderBands) {
                 secondModulatorFilter.frequency.value = this.vocoderBands[i].frequency;
+            }
             secondModulatorFilter.Q.value = this.FILTER_QUALITY; //  initial quality
             //modulatorFilter.chainedFilter = secondModulatorFilter;
             modulatorFilter.connect(secondModulatorFilter);
@@ -344,8 +370,9 @@ export default class Vocoder {
 
             // Create the sine oscillator for the heterodyne
             const heterodyneOscillator = this.audioContext.createOscillator();
-            if (this.vocoderBands)
+            if (this.vocoderBands) {
                 heterodyneOscillator.frequency.value = this.vocoderBands[i].frequency;
+            }
 
             heterodyneOscillator.start(0);
 
@@ -387,8 +414,9 @@ export default class Vocoder {
             // Create the bandpass filter in the carrier chain
             const carrierFilter = this.audioContext.createBiquadFilter();
             carrierFilter.type = "bandpass";
-            if (this.vocoderBands)
+            if (this.vocoderBands) {
                 carrierFilter.frequency.value = this.vocoderBands[i].frequency;
+            }
             carrierFilter.Q.value = this.FILTER_QUALITY;
             this.carrierBands.push(carrierFilter);
             this.carrierInput.connect(carrierFilter);
@@ -396,8 +424,9 @@ export default class Vocoder {
             // We want our carrier filters to be 4th-order filter too.
             const secondCarrierFilter = this.audioContext.createBiquadFilter();
             secondCarrierFilter.type = "bandpass";  // Bandpass filter
-            if (this.vocoderBands)
+            if (this.vocoderBands) {
                 secondCarrierFilter.frequency.value = this.vocoderBands[i].frequency;
+            }
             secondCarrierFilter.Q.value = this.FILTER_QUALITY; //  initial quality
             //carrierFilter.chainedFilter = secondCarrierFilter;
             carrierFilter.connect(secondCarrierFilter);
@@ -437,7 +466,9 @@ export default class Vocoder {
     }
 
     private createCarriersAndPlay(output: GainNode | null) {
-        if(!this.audioContext || !output) return;
+        if(!this.audioContext || !output) {
+            return;
+        }
 
         this.carrierSampleNode = this.audioContext.createBufferSource();
         this.carrierSampleNode.buffer = this.carrierBuffer;
@@ -484,7 +515,9 @@ export default class Vocoder {
     }
 
     private vocode() {
-        if(!this.audioContext) return;
+        if(!this.audioContext) {
+            return;
+        }
 
         if (this.vocoding) {
             if (this.modulatorNode) {
@@ -509,7 +542,8 @@ export default class Vocoder {
             this.modulatorNode.start(0);
         }
 
-        if (this.modulatorInput)
+        if (this.modulatorInput) {
             this.modulatorGain.connect(this.modulatorInput);
+        }
     }
 }

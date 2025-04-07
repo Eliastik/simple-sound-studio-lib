@@ -22,8 +22,8 @@ const utilFunctions = {
         const audioBuffer = await context.decodeAudioData(arrayBuffer);
         return utilFunctions.decodeBuffer(context, audioBuffer);
     },
-    readAsArrayBufferPromisified: (file: File): Promise<ArrayBuffer> => {
-        return new Promise((resolve, reject) => {
+    readAsArrayBufferPromisified: (file: File): Promise<ArrayBuffer> =>
+        new Promise((resolve, reject) => {
             const reader = new FileReader();
 
             reader.onload = ev => {
@@ -39,14 +39,13 @@ const utilFunctions = {
             if (file) {
                 reader.readAsArrayBuffer(file); // Read the file
             }
-        });
-    },
+        }),
     decodeBuffer: (context: AudioContext, buffer: AudioBuffer) => {
         if (buffer.numberOfChannels == 1) { // convert to stereo buffer
             context.resume();
 
-            const duration = buffer.duration;
-            const sampleRate = context.sampleRate;
+            const { duration } = buffer;
+            const { sampleRate } = context;
 
             const newBuffer = context.createBuffer(2, sampleRate * duration + sampleRate * 2, sampleRate);
 
@@ -99,7 +98,7 @@ const utilFunctions = {
     },
     /**
     * This method checks if the browser is compatible with audio worklets
-    * @param audioContext 
+    * @param audioContext
     */
     isAudioWorkletCompatible(audioContext: BaseAudioContext) {
         if (typeof (audioContext) !== "undefined" && typeof (audioContext.audioWorklet) !== "undefined") {

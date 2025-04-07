@@ -132,10 +132,9 @@ export default class AudioEditor extends AbstractAudioElement implements AudioEd
 
     get defaultDeviceSampleRate(): number {
         const tempContext = new AudioContext();
-        let sampleRate = 0;
+        const { sampleRate } = tempContext;
 
         if (tempContext) {
-            sampleRate = tempContext.sampleRate;
             tempContext.close();
         }
 
@@ -448,12 +447,12 @@ export default class AudioEditor extends AbstractAudioElement implements AudioEd
         }
     }
 
-    async saveBuffer(options?: SaveBufferOptions): Promise<boolean> {
+    saveBuffer(options?: SaveBufferOptions): Promise<boolean> {
         if (this.saveBufferManager && this.audioProcessor) {
-            return await this.saveBufferManager?.saveBuffer(this.audioProcessor.renderedBuffer, options);
+            return this.saveBufferManager?.saveBuffer(this.audioProcessor.renderedBuffer, options);
         }
 
-        return false;
+        return Promise.resolve(false);
     }
 
     set downloadingInitialData(state: boolean) {

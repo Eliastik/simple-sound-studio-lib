@@ -20,7 +20,7 @@ export default interface RendererManagerInterface {
      * @param filterId The filter ID
      */
     enableRenderer(rendererId: string): void;
-    
+
     /**
      * Disable a renderer
      * @param filterId The filter ID

@@ -20,13 +20,13 @@ export default class TelephonizerFilter extends AbstractAudioFilter {
         lpf1.connect(lpf2);
         lpf2.connect(hpf1);
         hpf1.connect(hpf2);
-    
+
         return {
             input: lpf1,
             output: hpf2
         };
     }
-    
+
     get order(): number {
         return 7;
     }

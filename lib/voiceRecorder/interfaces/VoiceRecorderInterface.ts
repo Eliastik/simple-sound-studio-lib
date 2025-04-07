@@ -2,7 +2,7 @@ import { EventEmitterCallback } from "@/model/EventEmitterCallback";
 import { RecorderSettings } from "@/model/RecorderSettings";
 
 export default interface VoiceRecorderInterface {
-    
+
     /** Initialize this voice recorder */
     init(): Promise<void>;
 
@@ -45,7 +45,7 @@ export default interface VoiceRecorderInterface {
     /**
      * Stop audio recording
      */
-    stop(): Promise<void>;
+    stop(): void;
 
     /**
      * Pause audio recording

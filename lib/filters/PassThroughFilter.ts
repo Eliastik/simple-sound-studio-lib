@@ -78,7 +78,7 @@ export default class PassThroughFilter extends AbstractAudioFilterWorklet<PassTh
 
     /**
      * Calculate smoothed samples per second
-     * @param timeDifferenceSamplePerSecond Time difference 
+     * @param timeDifferenceSamplePerSecond Time difference
      * @param samplesProcessed Samples count processed
      * @returns Smoothed samples per second
      */
