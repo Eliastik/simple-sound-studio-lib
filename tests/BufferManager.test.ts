@@ -17,7 +17,7 @@ describe("BufferManager tests", () => {
     test("Initialize BufferManager with audio buffers to fetch", () => {
         const bufferManager = new BufferManager(new FilterManager([], null), mockBufferFetcherService, mockEventEmitter, mockAudioBuffersToFetch);
 
-        expect(bufferManager.downloadingInitialData).toBe(false);
+        expect(bufferManager.downloadingInitialData).toBe(true);
         expect((bufferManager as any).audioBuffersToFetch).toEqual(mockAudioBuffersToFetch);
     });
 

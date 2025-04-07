@@ -41,11 +41,11 @@ export default class TimerSaveTime {
     count() {
         this.seconds += this.incr;
 
-        if(this.seconds <= 0) {
+        if (this.seconds <= 0) {
             this.stop();
         }
 
-        if(this.countCallback) {
+        if (this.countCallback) {
             this.countCallback();
         }
     }

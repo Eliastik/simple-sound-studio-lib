@@ -1,4 +1,5 @@
 import typescriptEslint from "@typescript-eslint/eslint-plugin";
+import stylistic from "@stylistic/eslint-plugin";
 import globals from "globals";
 import tsParser from "@typescript-eslint/parser";
 import path from "node:path";
@@ -19,6 +20,7 @@ export default [{
 }, ...compat.extends("eslint:recommended", "plugin:@typescript-eslint/recommended"), {
     plugins: {
         "@typescript-eslint": typescriptEslint,
+        "@stylistic": stylistic
     },
 
     languageOptions: {
@@ -89,6 +91,7 @@ export default [{
         "no-mixed-operators": ["warn", { "groups": [["&&", "||"]] }],
         "array-bracket-spacing": ["error", "never"],
         "no-prototype-builtins": "error",
-        "@typescript-eslint/no-explicit-any": "warn"
+        "@typescript-eslint/no-explicit-any": "warn",
+        "@stylistic/keyword-spacing": ["warn", { "before": true, "after": true }]
     },
 }];

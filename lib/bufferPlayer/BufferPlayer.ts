@@ -179,7 +179,7 @@ export default class BufferPlayer extends AbstractAudioElement implements Buffer
             } else if (this.currentNode && this._contextManager && this._contextManager.currentContext) {
                 this.createGainNode();
 
-                if(this.gainNode) {
+                if (this.gainNode) {
                     this.currentNode.connect(this.gainNode);
                     this.gainNode.connect(this._contextManager.currentContext.destination);
                 } else {
@@ -274,7 +274,7 @@ export default class BufferPlayer extends AbstractAudioElement implements Buffer
     }
 
     private setGainNodeValue() {
-        if(this.gainNode) {
+        if (this.gainNode) {
             this.gainNode.gain.value = Math.pow(this._volume, 2);
         }
     }

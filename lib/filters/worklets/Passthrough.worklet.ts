@@ -35,7 +35,7 @@ class PassthroughWorkletProcessor extends AudioWorkletProcessor {
         }
 
         if (output) {
-            for(let channel = 0; channel < output.length; channel++) {
+            for (let channel = 0; channel < output.length; channel++) {
                 const inp = input[channel];
                 const out = output[channel];
 

@@ -312,7 +312,7 @@ export default class Vocoder {
 
         hpFilter.connect(this.hpFilterGain);
 
-        if(this.modulatorBuffer) {
+        if (this.modulatorBuffer) {
             this.hpFilterGain.connect(this.audioContext.destination);
         }
 
@@ -329,7 +329,7 @@ export default class Vocoder {
 
         this.outputGain = this.audioContext.createGain();
 
-        if(this.modulatorBuffer) {
+        if (this.modulatorBuffer) {
             this.outputGain.connect(this.audioContext.destination);
         }
 
@@ -466,7 +466,7 @@ export default class Vocoder {
     }
 
     private createCarriersAndPlay(output: GainNode | null) {
-        if(!this.audioContext || !output) {
+        if (!this.audioContext || !output) {
             return;
         }
 
@@ -515,7 +515,7 @@ export default class Vocoder {
     }
 
     private vocode() {
-        if(!this.audioContext) {
+        if (!this.audioContext) {
             return;
         }
 
@@ -535,7 +535,7 @@ export default class Vocoder {
         this.modulatorGain = this.audioContext.createGain();
         this.modulatorGain.gain.value = this.modulatorGainValue;
 
-        if(this.modulatorBuffer) {
+        if (this.modulatorBuffer) {
             this.modulatorNode = this.audioContext.createBufferSource();
             this.modulatorNode.buffer = this.modulatorBuffer;
             this.modulatorNode.connect(this.modulatorGain);

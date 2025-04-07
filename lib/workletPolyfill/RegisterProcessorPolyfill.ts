@@ -14,7 +14,7 @@ export default class RegisterProcessorPolyfill {
     static getProcessor(processorName: string): SimpleAudioWorkletProcessor | null {
         const processor = RegisterProcessorPolyfill.processorsMap.get(processorName);
 
-        if(processor) {
+        if (processor) {
             return new processor();
         }
 

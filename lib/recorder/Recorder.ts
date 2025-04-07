@@ -104,7 +104,7 @@ export class Recorder implements RecorderInterface {
             if (utilFunctions.isAudioWorkletCompatible(this.context) && Constants.ENABLE_RECORDER_AUDIO_WORKLET) {
                 try {
                     await this.createRecorderWorklet();
-                } catch(e) {
+                } catch (e) {
                     console.error(e);
                     this.createRecorderScriptProcessorNode();
                 }
@@ -123,7 +123,7 @@ export class Recorder implements RecorderInterface {
             if (this.node && this.node.port) {
                 const numChannelParameter = this.node.parameters.get("numChannels");
 
-                if(numChannelParameter) {
+                if (numChannelParameter) {
                     numChannelParameter.value = this.config.numChannels;
                     numChannelParameter.setValueAtTime(this.config.numChannels, 0);
                 }

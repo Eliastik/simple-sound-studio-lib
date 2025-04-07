@@ -8,7 +8,7 @@ class RecorderWorklet extends AudioWorkletProcessor {
         this.port.onmessage = event => {
             if (event.data == "stop") {
                 this.recording = false;
-            } else if(event.data == "record") {
+            } else if (event.data == "record") {
                 this.recording = true;
             }
         };

@@ -114,7 +114,7 @@ export default abstract class AbstractAudioFilterWorklet<T> extends AbstractAudi
      * @param currentSettings The setting value
      */
     protected setWorkletSetting(settingKey: string, settingValue: FilterSettingValue) {
-        if(this.currentWorkletNode && this.currentWorkletNode.parameters) {
+        if (this.currentWorkletNode && this.currentWorkletNode.parameters) {
             const settingFromWorklet = this.currentWorkletNode.parameters.get(settingKey);
 
             if (settingFromWorklet) {

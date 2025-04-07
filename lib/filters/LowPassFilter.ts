@@ -33,7 +33,7 @@ export default class LowPassFilter extends AbstractAudioFilter {
     }
 
     setSetting(settingId: string, value: FilterSettingValue): Promise<void> {
-        if(!utilFunctions.isSettingValueValid(value)) {
+        if (!utilFunctions.isSettingValueValid(value)) {
             return Promise.resolve();
         }
 

@@ -34,7 +34,7 @@ export default class GenericConfigService implements ConfigService {
     isAudioWorkletEnabled(): boolean {
         const setting = this.getConfig(Constants.PREFERENCES_KEYS.ENABLE_AUDIO_WORKLET);
 
-        if(setting != null) {
+        if (setting != null) {
             return setting == "true";
         }
 
@@ -44,7 +44,7 @@ export default class GenericConfigService implements ConfigService {
     isSoundtouchAudioWorkletEnabled(): boolean {
         const setting = this.getConfig(Constants.PREFERENCES_KEYS.ENABLE_SOUNDTOUCH_AUDIO_WORKLET);
 
-        if(setting != null) {
+        if (setting != null) {
             return setting == "true";
         }
 
@@ -54,7 +54,7 @@ export default class GenericConfigService implements ConfigService {
     getBufferSize(): number {
         const setting = this.getConfig(Constants.PREFERENCES_KEYS.BUFFER_SIZE);
 
-        if(setting != null) {
+        if (setting != null) {
             return parseInt(setting, 10);
         }
 
@@ -64,7 +64,7 @@ export default class GenericConfigService implements ConfigService {
     getSampleRate(): number {
         const setting = this.getConfig(Constants.PREFERENCES_KEYS.SAMPLE_RATE);
 
-        if(setting != null) {
+        if (setting != null) {
             return parseInt(setting, 10);
         }
 
@@ -74,7 +74,7 @@ export default class GenericConfigService implements ConfigService {
     getBitrateMP3(): number {
         const setting = this.getConfig(Constants.PREFERENCES_KEYS.BITRATE_MP3);
 
-        if(setting != null) {
+        if (setting != null) {
             return parseInt(setting, 10);
         }
 
@@ -116,7 +116,7 @@ export default class GenericConfigService implements ConfigService {
     isInitialRenderingDisabled(): boolean {
         const setting = this.getConfig(Constants.PREFERENCES_KEYS.DISABLE_INITIAL_RENDERING);
 
-        if(setting != null) {
+        if (setting != null) {
             return setting == "true";
         }
 

@@ -44,11 +44,11 @@ export default class EchoFilter extends AbstractAudioFilter {
     }
 
     setSetting(settingId: string, value: FilterSettingValue): Promise<void> {
-        if(!utilFunctions.isSettingValueValid(value)) {
+        if (!utilFunctions.isSettingValueValid(value)) {
             return Promise.resolve();
         }
 
-        switch(settingId) {
+        switch (settingId) {
         case "delay":
             this.delay = parseFloat(value as string);
             break;

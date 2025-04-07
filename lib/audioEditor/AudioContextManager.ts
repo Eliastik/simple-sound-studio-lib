@@ -102,7 +102,7 @@ export default class AudioContextManager implements AudioContextManagerInterface
      * Destroy previous AudioContext
      */
     private destroyOldContext(oldAudioContext: AudioContext) {
-        if(oldAudioContext) {
+        if (oldAudioContext) {
             oldAudioContext.close();
         }
     }

@@ -424,7 +424,7 @@ export default class AudioEditor extends AbstractAudioElement implements AudioEd
         utils.clearAudioBuffer(this.principalBuffer);
         this.principalBuffer = null;
 
-        if(this.audioProcessor) {
+        if (this.audioProcessor) {
             this.audioProcessor.clearRenderedBuffer();
         }
     }

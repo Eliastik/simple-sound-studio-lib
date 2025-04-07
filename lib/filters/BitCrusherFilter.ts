@@ -38,7 +38,7 @@ export default class BitCrusherFilter extends AbstractAudioFilterWorklet<void> {
     }
 
     setSetting(settingId: string, value: FilterSettingValue): Promise<void> {
-        if(!utilFunctions.isSettingValueValid(value)) {
+        if (!utilFunctions.isSettingValueValid(value)) {
             return Promise.resolve();
         }
 

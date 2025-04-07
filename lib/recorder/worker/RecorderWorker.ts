@@ -63,11 +63,29 @@ const interleave = (inputL: Float32Array, inputR: Float32Array) => {
     return result;
 };
 
+const clamp = (value: number) => Math.max(-1.0, Math.min(1.0, value));
+
 const floatTo16BitPCM = (output: DataView, offset: number, input: Float32Array) => {
     for (let i = 0; i < input.length; i++, offset += 2) {
-        const s = Math.max(-1, Math.min(1, input[i]));
+        const s = clamp(input[i]);
         output.setInt16(offset, s < 0 ? s * 0x8000 : s * 0x7FFF, true);
     }
+};
+
+/**
+ * Convert a Float32Array to an Int16Array
+ * @param floatbuffer The buffer to convert
+ * @returns Int16Array buffer
+ */
+const convertFloatArray2Int16 = (floatbuffer: Float32Array) => {
+    const int16Buffer = new Int16Array(floatbuffer.length);
+
+    for (let i = 0, len = floatbuffer.length; i < len; i++) {
+        const floatValue = clamp(floatbuffer[i]);
+        int16Buffer[i] = Math.round(floatValue * 32767);
+    }
+
+    return int16Buffer;
 };
 
 const writeString = (view: DataView, offset: number, string: string) => {
@@ -110,32 +128,6 @@ const encodeWAV = (samples: Float32Array) => {
     floatTo16BitPCM(view, 44, samples);
 
     return view;
-};
-
-/**
- * Convert a Float32Array to an Int16Array
- * @param floatbuffer The buffer to convert
- * @returns Int16Array buffer
- */
-const convertFloatArray2Int16 = (floatbuffer: Float32Array) => {
-    const int16Buffer = new Int16Array(floatbuffer.length);
-
-    for (let i = 0, len = floatbuffer.length; i < len; i++) {
-        let floatValue = floatbuffer[i];
-
-        // Todo can be done with Math.min/Math.max
-        if (floatValue > 1.0) {
-            floatValue = 1.0;
-        }
-
-        if (floatValue < -1.0) {
-            floatValue = -1.0;
-        }
-
-        int16Buffer[i] = Math.floor(floatValue * 32767);
-    }
-
-    return int16Buffer;
 };
 
 /**

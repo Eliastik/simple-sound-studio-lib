@@ -46,11 +46,11 @@ export default class BassBoosterFilter extends AbstractAudioFilter {
     }
 
     setSetting(settingId: string, value: FilterSettingValue): Promise<void> {
-        if(!utilFunctions.isSettingValueValid(value)) {
+        if (!utilFunctions.isSettingValueValid(value)) {
             return Promise.resolve();
         }
 
-        switch(settingId) {
+        switch (settingId) {
         case "frequencyBooster":
             this.frequencyBooster = parseInt(value as string, 10);
             break;

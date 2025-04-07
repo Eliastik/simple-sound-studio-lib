@@ -14,10 +14,10 @@ export default class VocoderRenderer extends AbstractAudioRenderer {
                 resolve(e.renderedBuffer);
             };
 
-            if(this.bufferFetcherService) {
+            if (this.bufferFetcherService) {
                 const modulatorBuffer = this.bufferFetcherService.getAudioBuffer(Constants.VOCODER_MODULATOR);
 
-                if(modulatorBuffer) {
+                if (modulatorBuffer) {
                     const vocoder = new Vocoder(offlineContext, modulatorBuffer!, buffer);
                     vocoder.init();
                 }

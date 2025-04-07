@@ -34,12 +34,12 @@ export default class WorkletScriptProcessorNodeAdapter {
         const messageChannel = new MessageChannel();
 
         messageChannel.port1.onmessage = ev => {
-            if(this.workletProcessor && this.workletProcessor.port2) {
+            if (this.workletProcessor && this.workletProcessor.port2) {
                 this.workletProcessor.port2.postMessage(ev.data);
             }
         };
 
-        if(this.workletProcessor && this.workletProcessor.port2) {
+        if (this.workletProcessor && this.workletProcessor.port2) {
             this.workletProcessor.port2.onmessage = ev => {
                 messageChannel.port1.postMessage(ev.data);
             };
@@ -49,12 +49,12 @@ export default class WorkletScriptProcessorNodeAdapter {
     }
 
     private setupProcessor() {
-        if(!this._scriptProcessorNode) {
+        if (!this._scriptProcessorNode) {
             return;
         }
 
         this._scriptProcessorNode.onaudioprocess = (ev: AudioProcessingEvent) => {
-            if(this.workletProcessor) {
+            if (this.workletProcessor) {
                 const inputArray = [Functions.convertAudioBufferToFloat32Array(ev.inputBuffer)];
                 const ouputArray = [Functions.convertAudioBufferToFloat32Array(ev.outputBuffer)];
 
@@ -72,9 +72,9 @@ export default class WorkletScriptProcessorNodeAdapter {
 
         const descriptors = this.workletProcessor.defaultParameterDescriptors;
 
-        if(descriptors) {
+        if (descriptors) {
             descriptors.forEach(descriptor => {
-                if(this.currentContext) {
+                if (this.currentContext) {
                     this._parameters.set(descriptor.name, new AudioParamPolyfill(this.currentContext, descriptor.defaultValue));
                 }
             });
@@ -82,7 +82,7 @@ export default class WorkletScriptProcessorNodeAdapter {
     }
 
     private setupWorkletScope(context: BaseAudioContext) {
-        if(typeof(window) !== "undefined") {
+        if (typeof(window) !== "undefined") {
             window.sampleRate = context.sampleRate;
         }
     }

@@ -8,7 +8,7 @@
 
 > `const` **UtilFunctions**: `object`
 
-Defined in: [utils/Functions.ts:6](https://github.com/Eliastik/simple-sound-studio-lib/blob/0b10c3b81c1652144dad2a0ffc521944ea0abee2/lib/utils/Functions.ts#L6)
+Defined in: [utils/Functions.ts:6](https://github.com/Eliastik/simple-sound-studio-lib/blob/6f04613d35b939e1c2ba2c36d70bf3b1a970e83e/lib/utils/Functions.ts#L6)
 
 ## Type declaration
 
@@ -32,7 +32,7 @@ Defined in: [utils/Functions.ts:6](https://github.com/Eliastik/simple-sound-stud
 
 ### convertAudioBufferToFloat32Array()
 
-> **convertAudioBufferToFloat32Array**: (`buffer`) => `Float32Array`[]
+> **convertAudioBufferToFloat32Array**: (`buffer`) => `Float32Array`\<`ArrayBufferLike`\>[]
 
 #### Parameters
 
@@ -42,7 +42,7 @@ Defined in: [utils/Functions.ts:6](https://github.com/Eliastik/simple-sound-stud
 
 #### Returns
 
-`Float32Array`[]
+`Float32Array`\<`ArrayBufferLike`\>[]
 
 ### convertAudioParamToFloat32Array()
 
@@ -114,6 +114,8 @@ Defined in: [utils/Functions.ts:6](https://github.com/Eliastik/simple-sound-stud
 
 ### calculateAudioDuration()
 
+> **calculateAudioDuration**(`buffer`, `filterManager`, `speedAudio`): `number`
+
 Calculate approximative audio duration according to enabled filters and their settings
 
 #### Parameters
@@ -140,6 +142,8 @@ The audio duration
 
 ### clearAudioBuffer()
 
+> **clearAudioBuffer**(`buffer`): `void`
+
 #### Parameters
 
 ##### buffer
@@ -151,6 +155,8 @@ The audio duration
 `void`
 
 ### forceDownload()
+
+> **forceDownload**(`blob`, `filename`): `void`
 
 #### Parameters
 
@@ -168,6 +174,8 @@ The audio duration
 
 ### isAudioWorkletCompatible()
 
+> **isAudioWorkletCompatible**(`audioContext`): `boolean`
+
 This method checks if the browser is compatible with audio worklets
 
 #### Parameters
@@ -181,6 +189,8 @@ This method checks if the browser is compatible with audio worklets
 `boolean`
 
 ### isSettingValueValid()
+
+> **isSettingValueValid**(`value`): `boolean`
 
 Check that the setting value is correct
 
@@ -198,6 +208,8 @@ FilterSettingValue
 
 ### resetAudioRenderingProgress()
 
+> **resetAudioRenderingProgress**(`eventEmitter`): `void`
+
 Reset audio rendering progress
 
 #### Parameters
@@ -212,6 +224,8 @@ Reset audio rendering progress
 
 ### sumAudioBuffer()
 
+> **sumAudioBuffer**(`buffer`): `number`
+
 #### Parameters
 
 ##### buffer
@@ -223,6 +237,8 @@ Reset audio rendering progress
 `number`
 
 ### sumAudioBufferChannel()
+
+> **sumAudioBufferChannel**(`buffer`, `channel`): `number`
 
 #### Parameters
 

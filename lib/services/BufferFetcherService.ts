@@ -29,7 +29,7 @@ export default class BufferFetcherService implements BufferFetcherServiceInterfa
     async fetchBuffer(bufferURI: string, force?: boolean) {
         const realBufferURI = (this.configService ? this.configService.getSoundBasePath() : "") + bufferURI;
 
-        if(this.buffers.get(this.getKeyFromLocation(realBufferURI)) != null && !force) {
+        if (this.buffers.get(this.getKeyFromLocation(realBufferURI)) != null && !force) {
             return;
         }
 
@@ -38,7 +38,7 @@ export default class BufferFetcherService implements BufferFetcherServiceInterfa
         try {
             const response = await fetch(realBufferURI);
 
-            if(!response.ok) {
+            if (!response.ok) {
                 this.bufferErrors.push(realBufferURI);
                 this.eventEmitter?.emit(EventType.FETCHING_BUFFERS_ERROR, realBufferURI);
                 throw EventType.FETCHING_BUFFERS_ERROR;
@@ -52,7 +52,7 @@ export default class BufferFetcherService implements BufferFetcherServiceInterfa
             }
 
             this.eventEmitter?.emit(EventType.FINISHED_FETCHING_BUFFERS, realBufferURI);
-        } catch(e) {
+        } catch (e) {
             console.error(e);
 
             this.bufferErrors.push(realBufferURI);
@@ -62,7 +62,7 @@ export default class BufferFetcherService implements BufferFetcherServiceInterfa
     }
 
     async fetchAllBuffers(bufferURIs: string[]) {
-        for(const uri of bufferURIs) {
+        for (const uri of bufferURIs) {
             await this.fetchBuffer(uri);
         }
     }
@@ -72,7 +72,7 @@ export default class BufferFetcherService implements BufferFetcherServiceInterfa
     }
 
     async getOrFetchAudioBuffer(filename: string): Promise<AudioBuffer | undefined> {
-        if(this.getAudioBuffer(filename) == null) {
+        if (this.getAudioBuffer(filename) == null) {
             await this.fetchBuffer(filename);
         }
 
