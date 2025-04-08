@@ -13,6 +13,7 @@ export default class SoundtouchWrapperFilter extends AbstractAudioFilterWorklet<
 
     private speedAudio = 1;
     private frequencyAudio = 1;
+    private pitchSemitones = 0;
     private currentSpeedAudio = 1;
     private currentPitchShifter: PitchShifter;
     private currentBufferSource: AudioBufferSourceNode | null = null;
@@ -176,7 +177,8 @@ export default class SoundtouchWrapperFilter extends AbstractAudioFilterWorklet<
     getSettings(): SoundtouchSettings {
         return {
             speedAudio: this.speedAudio,
-            frequencyAudio: this.frequencyAudio
+            frequencyAudio: this.frequencyAudio,
+            pitchSemitones: this.pitchSemitones
         };
     }
 
@@ -190,7 +192,7 @@ export default class SoundtouchWrapperFilter extends AbstractAudioFilterWorklet<
 
     private getCurrentRenderingMode() {
         // If the settings are untouched, we don't use Soundtouch
-        if (this.isOfflineMode && (!this.isEnabled() || (this.speedAudio == 1 && this.frequencyAudio == 1))) {
+        if (this.isOfflineMode && (!this.isEnabled() || (this.speedAudio == 1 && this.frequencyAudio == 1 && this.pitchSemitones == 1))) {
             return { isWorklet: false, renderWithSoundtouch: false };
         }
 
@@ -208,9 +210,11 @@ export default class SoundtouchWrapperFilter extends AbstractAudioFilterWorklet<
 
         let pitch = 1;
         let tempo = 1;
+        let key = 0;
 
         if (this.isEnabled()) {
             tempo = this.speedAudio;
+            key = this.pitchSemitones;
 
             if (isWorklet) {
                 pitch = this.frequencyAudio * (1 / this.speedAudio);
@@ -223,6 +227,7 @@ export default class SoundtouchWrapperFilter extends AbstractAudioFilterWorklet<
 
         if (isWorklet) {
             this.setWorkletSetting("pitch", pitch);
+            this.setWorkletSetting("pitchSemitones", key);
 
             if (this.currentBufferSource) {
                 this.currentBufferSource.playbackRate.value = tempo;
@@ -230,6 +235,7 @@ export default class SoundtouchWrapperFilter extends AbstractAudioFilterWorklet<
         } else if (this.currentPitchShifter) {
             this.currentPitchShifter.pitch = pitch;
             this.currentPitchShifter.tempo = tempo;
+            this.currentPitchShifter.pitchSemitones = key;
         }
     }
 
@@ -247,7 +253,9 @@ export default class SoundtouchWrapperFilter extends AbstractAudioFilterWorklet<
         case "frequencyAudio":
             this.frequencyAudio = valueFloat;
             break;
-        // TODO add key setting?
+        case "pitchSemitones":
+            this.pitchSemitones = valueFloat;
+            break;
         default:
             break;
         }

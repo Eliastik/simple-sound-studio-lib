@@ -40,6 +40,7 @@ export default class AudioProcessor extends AbstractAudioElement implements Audi
 
     /** true if initial rendering for the current buffer was done */
     initialRenderingDone = false;
+
     /** The sum of all the samples of the input buffer,
      * used to detect the need to enable the compatibility mode */
     sumInputBuffer: number = 0;
