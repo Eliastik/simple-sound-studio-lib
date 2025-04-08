@@ -135,6 +135,7 @@ export default class AudioProcessor extends AbstractAudioElement implements Audi
         if (this._renderedBuffer && this.configService && this.eventEmitter && this.bufferPlayer && this.filterManager) {
             // Initialize worklets then connect the filter nodes
             await this.filterManager.initializeWorklets(outputContext);
+
             await this.filterManager.connectNodes(outputContext, this._renderedBuffer, false, this.configService.isCompatibilityModeEnabled());
 
             this.setupPlayerSpeed(this.bufferPlayer);
@@ -197,6 +198,7 @@ export default class AudioProcessor extends AbstractAudioElement implements Audi
                 }
 
                 this._renderedBuffer = renderedBuffer;
+
                 this.bufferPlayer.loadBuffer(this._renderedBuffer);
             } else if (!this.initialRenderingDone) {
                 this.loadInitialBuffer(inputBuffer);

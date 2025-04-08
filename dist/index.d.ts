@@ -624,6 +624,8 @@ declare class AudioEditor extends AbstractAudioElement implements AudioEditorInt
     resetAllFiltersState(): void;
     exit(): void;
     private clearBuffers;
+    private clearPrincipalBuffer;
+    private clearRenderedBuffer;
     cancelAudioRendering(): void;
     on(event: string, callback: EventEmitterCallback): void;
     off(event: string, callback: EventEmitterCallback): void;

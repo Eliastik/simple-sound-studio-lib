@@ -142,7 +142,6 @@ export default class AudioEditor extends AbstractAudioElement implements AudioEd
     }
 
     async loadBufferFromFile(file: File) {
-        this.clearBuffers();
         this.loadingAudio = true;
 
         if (this.audioProcessor) {
@@ -150,7 +149,10 @@ export default class AudioEditor extends AbstractAudioElement implements AudioEd
         }
 
         if (this.contextManager && this.contextManager.currentContext && this.bufferDecoderService && this.audioProcessor) {
+            this.clearPrincipalBuffer();
+
             this.principalBuffer = await this.bufferDecoderService.decodeBufferFromFile(file);
+
             this.audioProcessor.initialRenderingDone = false;
 
             if (this.principalBuffer) {
@@ -421,9 +423,16 @@ export default class AudioEditor extends AbstractAudioElement implements AudioEd
     }
 
     private clearBuffers() {
+        this.clearPrincipalBuffer();
+        this.clearRenderedBuffer();
+    }
+
+    private clearPrincipalBuffer() {
         utils.clearAudioBuffer(this.principalBuffer);
         this.principalBuffer = null;
+    }
 
+    private clearRenderedBuffer() {
         if (this.audioProcessor) {
             this.audioProcessor.clearRenderedBuffer();
         }
