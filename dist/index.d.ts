@@ -1150,6 +1150,9 @@ declare const Constants: {
     ENABLE_AUDIO_WORKLET: boolean;
     ENABLE_RECORDER_AUDIO_WORKLET: boolean;
     SOUNDTOUCH_PITCH_SHIFTER_BUFFER_SIZE: number;
+    SOUNDTOUCH_DEFAULT_SPEED: number;
+    SOUNDTOUCH_DEFAULT_FREQUENCY: number;
+    SOUNDTOUCH_DEFAULT_PITCH_SEMITONES: number;
     DEFAULT_REVERB_ENVIRONMENT: {
         name: string;
         url: string;

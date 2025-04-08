@@ -11,10 +11,10 @@ import utilFunctions from "../utils/Functions";
 
 export default class SoundtouchWrapperFilter extends AbstractAudioFilterWorklet<void> implements AudioFilterEntrypointInterface {
 
-    private speedAudio = 1;
-    private frequencyAudio = 1;
-    private pitchSemitones = 0;
-    private currentSpeedAudio = 1;
+    private speedAudio = Constants.SOUNDTOUCH_DEFAULT_SPEED;
+    private frequencyAudio = Constants.SOUNDTOUCH_DEFAULT_FREQUENCY;
+    private pitchSemitones = Constants.SOUNDTOUCH_DEFAULT_PITCH_SEMITONES;
+    private currentSpeedAudio = Constants.SOUNDTOUCH_DEFAULT_SPEED;
     private currentPitchShifter: PitchShifter;
     private currentBufferSource: AudioBufferSourceNode | null = null;
     private isOfflineMode = false;
@@ -192,7 +192,11 @@ export default class SoundtouchWrapperFilter extends AbstractAudioFilterWorklet<
 
     private getCurrentRenderingMode() {
         // If the settings are untouched, we don't use Soundtouch
-        if (this.isOfflineMode && (!this.isEnabled() || (this.speedAudio == 1 && this.frequencyAudio == 1 && this.pitchSemitones == 1))) {
+        const settingUntouched = this.speedAudio == Constants.SOUNDTOUCH_DEFAULT_SPEED
+            && this.frequencyAudio == Constants.SOUNDTOUCH_DEFAULT_FREQUENCY
+            && this.pitchSemitones == Constants.SOUNDTOUCH_DEFAULT_PITCH_SEMITONES;
+
+        if (this.isOfflineMode && (!this.isEnabled() || settingUntouched)) {
             return { isWorklet: false, renderWithSoundtouch: false };
         }
 
