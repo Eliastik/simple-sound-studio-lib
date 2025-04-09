@@ -85,6 +85,14 @@ export default class BufferPlayer extends AbstractAudioElement implements Buffer
 
     private createGainNode() {
         if (this._contextManager && this._contextManager.currentContext) {
+            if (this.gainNode) {
+                this.gainNode.disconnect();
+            }
+
+            if (this.source) {
+                this.source.disconnect();
+            }
+
             this.source = this._contextManager.currentContext.createBufferSource();
             this.source.buffer = this.buffer;
 

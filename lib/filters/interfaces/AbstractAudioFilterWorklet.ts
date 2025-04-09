@@ -14,6 +14,8 @@ export default abstract class AbstractAudioFilterWorklet<T> extends AbstractAudi
 
     protected keepCurrentNodeIfPossible = false;
 
+    private loadedModulesMap = new WeakMap<BaseAudioContext, Set<string>>();
+
     /**
      * Return the worklet name (as registered with method registerProcessor)
      */
@@ -44,11 +46,24 @@ export default abstract class AbstractAudioFilterWorklet<T> extends AbstractAudi
 
         const workletPath = (this.configService ? this.configService.getWorkletBasePath() : "") + this.workletPath;
 
-        await audioContext.audioWorklet.addModule(workletPath)
-            .catch(e => {
-                console.error(`Error when loading Worklet (${workletPath}) for filter ${this.id}. Fallback to ScriptProcessor. Exception:`, e);
-                this.fallbackToScriptProcessor = true;
-            });
+        const alreadyLoadedModules = this.loadedModulesMap.get(audioContext);
+
+        if (!alreadyLoadedModules || !alreadyLoadedModules.has(workletPath)) {
+            await audioContext.audioWorklet.addModule(workletPath)
+                .then(() => {
+                    const workletPathSet = alreadyLoadedModules ?? new Set<string>();
+
+                    if (!alreadyLoadedModules) {
+                        this.loadedModulesMap.set(audioContext, workletPathSet);
+                    }
+
+                    workletPathSet.add(workletPath);
+                })
+                .catch(e => {
+                    console.error(`Error when loading Worklet (${workletPath}) for filter ${this.id}. Fallback to ScriptProcessor. Exception:`, e);
+                    this.fallbackToScriptProcessor = true;
+                });
+        }
     }
 
     /**
@@ -158,6 +173,7 @@ export default abstract class AbstractAudioFilterWorklet<T> extends AbstractAudi
     stop() {
         if (this.currentWorkletNode && this.currentWorkletNode.port) {
             this.currentWorkletNode.port.postMessage("stop");
+            this.currentWorkletNode.port.close();
             this.currentWorkletNode.port.onmessage = null;
         }
 

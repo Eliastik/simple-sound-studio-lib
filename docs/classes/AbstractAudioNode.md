@@ -6,7 +6,7 @@
 
 # Class: `abstract` AbstractAudioNode
 
-Defined in: [filters/interfaces/AbstractAudioNode.ts:5](https://github.com/Eliastik/simple-sound-studio-lib/blob/6f04613d35b939e1c2ba2c36d70bf3b1a970e83e/lib/filters/interfaces/AbstractAudioNode.ts#L5)
+Defined in: [filters/interfaces/AbstractAudioNode.ts:5](https://github.com/Eliastik/simple-sound-studio-lib/blob/6682e5e836e2002f5da4644dfa82f1eb5b9a13da/lib/filters/interfaces/AbstractAudioNode.ts#L5)
 
 ## Extends
 
@@ -39,7 +39,7 @@ Defined in: [filters/interfaces/AbstractAudioNode.ts:5](https://github.com/Elias
 
 > **get** `abstract` **id**(): `string`
 
-Defined in: [filters/interfaces/AbstractAudioNode.ts:17](https://github.com/Eliastik/simple-sound-studio-lib/blob/6f04613d35b939e1c2ba2c36d70bf3b1a970e83e/lib/filters/interfaces/AbstractAudioNode.ts#L17)
+Defined in: [filters/interfaces/AbstractAudioNode.ts:17](https://github.com/Eliastik/simple-sound-studio-lib/blob/6682e5e836e2002f5da4644dfa82f1eb5b9a13da/lib/filters/interfaces/AbstractAudioNode.ts#L17)
 
 Returns the id of this filter/renderer
 
@@ -55,7 +55,7 @@ Returns the id of this filter/renderer
 
 > **get** `abstract` **order**(): `number`
 
-Defined in: [filters/interfaces/AbstractAudioNode.ts:14](https://github.com/Eliastik/simple-sound-studio-lib/blob/6f04613d35b939e1c2ba2c36d70bf3b1a970e83e/lib/filters/interfaces/AbstractAudioNode.ts#L14)
+Defined in: [filters/interfaces/AbstractAudioNode.ts:14](https://github.com/Eliastik/simple-sound-studio-lib/blob/6682e5e836e2002f5da4644dfa82f1eb5b9a13da/lib/filters/interfaces/AbstractAudioNode.ts#L14)
 
 Returns the order in which the filter/renderer needs to be applied
 
@@ -69,7 +69,7 @@ Returns the order in which the filter/renderer needs to be applied
 
 > **disable**(): `void`
 
-Defined in: [filters/interfaces/AbstractAudioNode.ts:54](https://github.com/Eliastik/simple-sound-studio-lib/blob/6f04613d35b939e1c2ba2c36d70bf3b1a970e83e/lib/filters/interfaces/AbstractAudioNode.ts#L54)
+Defined in: [filters/interfaces/AbstractAudioNode.ts:54](https://github.com/Eliastik/simple-sound-studio-lib/blob/6682e5e836e2002f5da4644dfa82f1eb5b9a13da/lib/filters/interfaces/AbstractAudioNode.ts#L54)
 
 Disable this filter/renderer
 
@@ -83,7 +83,7 @@ Disable this filter/renderer
 
 > **enable**(): `void`
 
-Defined in: [filters/interfaces/AbstractAudioNode.ts:49](https://github.com/Eliastik/simple-sound-studio-lib/blob/6f04613d35b939e1c2ba2c36d70bf3b1a970e83e/lib/filters/interfaces/AbstractAudioNode.ts#L49)
+Defined in: [filters/interfaces/AbstractAudioNode.ts:49](https://github.com/Eliastik/simple-sound-studio-lib/blob/6682e5e836e2002f5da4644dfa82f1eb5b9a13da/lib/filters/interfaces/AbstractAudioNode.ts#L49)
 
 Enable this filter/renderer
 
@@ -95,9 +95,9 @@ Enable this filter/renderer
 
 ### injectDependencies()
 
-> **injectDependencies**(`bufferFetcherService`, `bufferDecoderService`, `configService`, `eventEmitter`): `void`
+> **injectDependencies**(`bufferFetcherService`, `bufferDecoderService`, `configService`, `eventEmitter`, `contextManager`?): `void`
 
-Defined in: [interfaces/AbstractAudioElement.ts:23](https://github.com/Eliastik/simple-sound-studio-lib/blob/6f04613d35b939e1c2ba2c36d70bf3b1a970e83e/lib/interfaces/AbstractAudioElement.ts#L23)
+Defined in: [interfaces/AbstractAudioElement.ts:27](https://github.com/Eliastik/simple-sound-studio-lib/blob/6682e5e836e2002f5da4644dfa82f1eb5b9a13da/lib/interfaces/AbstractAudioElement.ts#L27)
 
 #### Parameters
 
@@ -117,6 +117,10 @@ Defined in: [interfaces/AbstractAudioElement.ts:23](https://github.com/Eliastik/
 
 `null` | `EventEmitterInterface`
 
+##### contextManager?
+
+`AudioContextManagerInterface`
+
 #### Returns
 
 `void`
@@ -131,7 +135,7 @@ Defined in: [interfaces/AbstractAudioElement.ts:23](https://github.com/Eliastik/
 
 > **isDefaultEnabled**(): `boolean`
 
-Defined in: [filters/interfaces/AbstractAudioNode.ts:25](https://github.com/Eliastik/simple-sound-studio-lib/blob/6f04613d35b939e1c2ba2c36d70bf3b1a970e83e/lib/filters/interfaces/AbstractAudioNode.ts#L25)
+Defined in: [filters/interfaces/AbstractAudioNode.ts:25](https://github.com/Eliastik/simple-sound-studio-lib/blob/6682e5e836e2002f5da4644dfa82f1eb5b9a13da/lib/filters/interfaces/AbstractAudioNode.ts#L25)
 
 Is this filter/renderer enabled by default?
 
@@ -145,7 +149,7 @@ Is this filter/renderer enabled by default?
 
 > **isEnabled**(): `boolean`
 
-Defined in: [filters/interfaces/AbstractAudioNode.ts:20](https://github.com/Eliastik/simple-sound-studio-lib/blob/6f04613d35b939e1c2ba2c36d70bf3b1a970e83e/lib/filters/interfaces/AbstractAudioNode.ts#L20)
+Defined in: [filters/interfaces/AbstractAudioNode.ts:20](https://github.com/Eliastik/simple-sound-studio-lib/blob/6682e5e836e2002f5da4644dfa82f1eb5b9a13da/lib/filters/interfaces/AbstractAudioNode.ts#L20)
 
 Is this filter/renderer enabled?
 
@@ -159,7 +163,7 @@ Is this filter/renderer enabled?
 
 > **setDefaultEnabled**(`state`): `void`
 
-Defined in: [filters/interfaces/AbstractAudioNode.ts:30](https://github.com/Eliastik/simple-sound-studio-lib/blob/6f04613d35b939e1c2ba2c36d70bf3b1a970e83e/lib/filters/interfaces/AbstractAudioNode.ts#L30)
+Defined in: [filters/interfaces/AbstractAudioNode.ts:30](https://github.com/Eliastik/simple-sound-studio-lib/blob/6682e5e836e2002f5da4644dfa82f1eb5b9a13da/lib/filters/interfaces/AbstractAudioNode.ts#L30)
 
 Set to true if this filter/renderer needs to be enabled by default
 
@@ -179,7 +183,7 @@ Set to true if this filter/renderer needs to be enabled by default
 
 > **setEnabled**(`state`): `void`
 
-Defined in: [filters/interfaces/AbstractAudioNode.ts:44](https://github.com/Eliastik/simple-sound-studio-lib/blob/6f04613d35b939e1c2ba2c36d70bf3b1a970e83e/lib/filters/interfaces/AbstractAudioNode.ts#L44)
+Defined in: [filters/interfaces/AbstractAudioNode.ts:44](https://github.com/Eliastik/simple-sound-studio-lib/blob/6682e5e836e2002f5da4644dfa82f1eb5b9a13da/lib/filters/interfaces/AbstractAudioNode.ts#L44)
 
 Set the enabled/disabled state
 
@@ -201,7 +205,7 @@ true to enable, false to disable
 
 > **toggle**(): `void`
 
-Defined in: [filters/interfaces/AbstractAudioNode.ts:59](https://github.com/Eliastik/simple-sound-studio-lib/blob/6f04613d35b939e1c2ba2c36d70bf3b1a970e83e/lib/filters/interfaces/AbstractAudioNode.ts#L59)
+Defined in: [filters/interfaces/AbstractAudioNode.ts:59](https://github.com/Eliastik/simple-sound-studio-lib/blob/6682e5e836e2002f5da4644dfa82f1eb5b9a13da/lib/filters/interfaces/AbstractAudioNode.ts#L59)
 
 Toggle to enabled/disabled this filter
 

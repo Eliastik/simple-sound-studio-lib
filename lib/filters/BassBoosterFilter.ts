@@ -7,8 +7,8 @@ import utilFunctions from "../utils/Functions";
 export default class BassBoosterFilter extends AbstractAudioFilter {
     private frequencyBooster = 200;
     private frequencyReduce = 200;
-    private dbBooster = 15;
-    private dbReduce = -2;
+    private dbBooster = 20;
+    private dbReduce = 0;
 
     getNode(context: BaseAudioContext) {
         const bassBoostFilter = context.createBiquadFilter();

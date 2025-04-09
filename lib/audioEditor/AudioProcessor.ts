@@ -6,7 +6,6 @@ import AudioProcessorInterface from "./interfaces/AudioProcessorInterface";
 import { inject, injectable } from "inversify";
 import type BufferPlayerInterface from "@/bufferPlayer/interfaces/BufferPlayerInterface";
 import type BufferManagerInterface from "./interfaces/BufferManagerInterface";
-import AudioContextManagerInterface from "./interfaces/AudioContextManagerInterface";
 import type RendererManagerInterface from "./interfaces/RendererManagerInterface";
 import type FilterManagerInterface from "./interfaces/FilterManagerInterface";
 import { TYPES } from "@/inversify.types";
@@ -19,9 +18,6 @@ export default class AudioProcessor extends AbstractAudioElement implements Audi
 
     /** The filter manager */
     private rendererManager: RendererManagerInterface | undefined;
-
-    /** The context manager */
-    private contextManager: AudioContextManagerInterface | undefined;
 
     /** The audio player */
     private bufferPlayer: BufferPlayerInterface | undefined;
@@ -48,12 +44,10 @@ export default class AudioProcessor extends AbstractAudioElement implements Audi
     constructor(
         @inject(TYPES.FilterManager) filterManager: FilterManagerInterface | undefined,
         @inject(TYPES.RendererManager) rendererManager: RendererManagerInterface | undefined,
-        @inject(TYPES.AudioContextManager) contextManager: AudioContextManagerInterface | undefined,
         @inject(TYPES.BufferPlayer) bufferPlayer: BufferPlayerInterface | undefined,
         @inject(TYPES.BufferManager) bufferManager: BufferManagerInterface | undefined) {
         super();
 
-        this.contextManager = contextManager;
         this.bufferPlayer = bufferPlayer;
         this.filterManager = filterManager;
         this.rendererManager = rendererManager;
@@ -111,7 +105,7 @@ export default class AudioProcessor extends AbstractAudioElement implements Audi
 
         const speedAudio = this.filterManager.entrypointFilter.getSpeed();
         const durationAudio = utils.calculateAudioDuration(inputBuffer, this.filterManager, speedAudio);
-        const offlineContext = new OfflineAudioContext(2, this.contextManager.currentContext.sampleRate * durationAudio, this.contextManager.currentContext.sampleRate);
+        const offlineContext = this.contextManager.createOfflineAudioContext(2, this.contextManager.currentContext.sampleRate * durationAudio, this.contextManager.currentContext.sampleRate);
         const outputContext = this.configService && this.configService.isCompatibilityModeEnabled() ? this.contextManager.currentContext : offlineContext;
 
         this._renderedBuffer = await this.rendererManager.executeAudioRenderers(inputBuffer, outputContext);
@@ -119,6 +113,7 @@ export default class AudioProcessor extends AbstractAudioElement implements Audi
         this.audioRenderingLastCanceled = false;
 
         utils.resetAudioRenderingProgress(this.eventEmitter);
+
         this.filterManager.setupTotalSamples(durationAudio, this.contextManager.currentContext);
 
         return this.setupOutput(inputBuffer, outputContext, durationAudio, offlineContext);
@@ -131,7 +126,7 @@ export default class AudioProcessor extends AbstractAudioElement implements Audi
         }
     }
 
-    async setupOutput(inputBuffer: AudioBuffer | null, outputContext: BaseAudioContext, durationAudio?: number, offlineContext?: OfflineAudioContext): Promise<boolean> {
+    async setupOutput(inputBuffer: AudioBuffer | null, outputContext: AudioContext | OfflineAudioContext, durationAudio?: number, offlineContext?: OfflineAudioContext): Promise<boolean> {
         if (this._renderedBuffer && this.configService && this.eventEmitter && this.bufferPlayer && this.filterManager) {
             // Initialize worklets then connect the filter nodes
             await this.filterManager.initializeWorklets(outputContext);
@@ -143,11 +138,12 @@ export default class AudioProcessor extends AbstractAudioElement implements Audi
             // Standard mode
             if (!this.configService.isCompatibilityModeEnabled() && offlineContext && this.filterManager.currentNodes) {
                 this.currentOfflineContext = offlineContext;
+
                 this.filterManager.currentNodes.output.connect(outputContext.destination);
 
                 const renderedBuffer = await offlineContext.startRendering();
 
-                this.filterManager.clearWorklets();
+                this.cleanupAfterRendering();
 
                 if (this.contextManager && !this.loadRenderedAudio(inputBuffer, renderedBuffer)) {
                     return this.setupOutput(inputBuffer, this.contextManager.currentContext!, durationAudio);
@@ -171,6 +167,18 @@ export default class AudioProcessor extends AbstractAudioElement implements Audi
         }
 
         return false;
+    }
+
+    private cleanupAfterRendering() {
+        if (this.filterManager) {
+            this.filterManager.clearWorklets();
+            this.filterManager.disconnectAllNodes();
+        }
+
+        if (this.currentOfflineContext) {
+            this.currentOfflineContext.destination.disconnect();
+            this.currentOfflineContext = null;
+        }
     }
 
     /**

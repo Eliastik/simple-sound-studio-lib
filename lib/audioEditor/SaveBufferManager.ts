@@ -10,7 +10,6 @@ import getRecorderWorker from "../recorder/getRecorderWorker";
 import SaveBufferManagerInterface from "./interfaces/SaveBufferManagerInteface";
 import type BufferPlayerInterface from "@/bufferPlayer/interfaces/BufferPlayerInterface";
 import type FilterManagerInterface from "./interfaces/FilterManagerInterface";
-import AudioContextManagerInterface from "./interfaces/AudioContextManagerInterface";
 import utilFunctions from "@/utils/Functions";
 
 @injectable()
@@ -18,9 +17,6 @@ export default class SaveBufferManager extends AbstractAudioElement implements S
 
     /** The filter manager */
     private filterManager: FilterManagerInterface | undefined;
-
-    /** The context manager */
-    private contextManager: AudioContextManagerInterface | undefined;
 
     /** The audio player */
     private bufferPlayer: BufferPlayerInterface | undefined;
@@ -33,12 +29,10 @@ export default class SaveBufferManager extends AbstractAudioElement implements S
 
     constructor(
         @inject(TYPES.FilterManager) filterManager: FilterManagerInterface,
-        @inject(TYPES.AudioContextManager) contextManager: AudioContextManagerInterface | undefined,
         @inject(TYPES.BufferPlayer) bufferPlayer: BufferPlayerInterface
     ) {
         super();
 
-        this.contextManager = contextManager;
         this.bufferPlayer = bufferPlayer;
         this.filterManager = filterManager;
 

@@ -33,9 +33,6 @@ export default class AudioEditor extends AbstractAudioElement implements AudioEd
     /** The renderer manager */
     private rendererManager: RendererManagerInterface | undefined;
 
-    /** The context manager */
-    private contextManager: AudioContextManagerInterface | undefined;
-
     /** The save buffer manager */
     private saveBufferManager: SaveBufferManagerInterface | undefined;
 

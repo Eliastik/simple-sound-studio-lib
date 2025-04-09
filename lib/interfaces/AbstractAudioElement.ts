@@ -4,6 +4,7 @@ import { TYPES } from "@/inversify.types";
 import type BufferFetcherServiceInterface from "@/services/interfaces/BufferFetcherServiceInterface";
 import type BufferDecoderServiceInterface from "@/services/interfaces/BufferDecoderServiceInterface";
 import type EventEmitterInterface from "@/utils/interfaces/EventEmitterInterface";
+import AudioContextManagerInterface from "@/audioEditor/interfaces/AudioContextManagerInterface";
 
 @injectable()
 export default abstract class AbstractAudioElement {
@@ -20,7 +21,14 @@ export default abstract class AbstractAudioElement {
     @inject(TYPES.EventEmitter)
     protected eventEmitter: EventEmitterInterface | null = null;
 
-    injectDependencies(bufferFetcherService: BufferFetcherServiceInterface | null, bufferDecoderService: BufferDecoderServiceInterface | null, configService: ConfigService | null, eventEmitter: EventEmitterInterface | null) {
+    @inject(TYPES.AudioContextManager)
+    protected contextManager: AudioContextManagerInterface | null = null;
+
+    injectDependencies(bufferFetcherService: BufferFetcherServiceInterface | null,
+        bufferDecoderService: BufferDecoderServiceInterface | null,
+        configService: ConfigService | null,
+        eventEmitter: EventEmitterInterface | null,
+        contextManager?: AudioContextManagerInterface) {
         if (bufferFetcherService) {
             this.bufferFetcherService = bufferFetcherService;
         }
@@ -35,6 +43,10 @@ export default abstract class AbstractAudioElement {
 
         if (eventEmitter) {
             this.eventEmitter = eventEmitter;
+        }
+
+        if (contextManager) {
+            this.contextManager = contextManager;
         }
     }
 }

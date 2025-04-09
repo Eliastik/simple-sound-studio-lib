@@ -13,6 +13,15 @@ export default interface AudioContextManagerInterface {
     createNewContext(sampleRate: number): void;
 
     /**
+     * Create and return a new OfflineAudioContext for one time use
+     * @param numberOfChannels The number of channels
+     * @param duration The duration of the buffer
+     * @param sampleRate The sample rate
+     * @returns The OfflineAudioContext
+     */
+    createOfflineAudioContext(numberOfChannels: number, duration: number, sampleRate: number): OfflineAudioContext;
+
+    /**
      * Get the current sample rate used
      */
     get currentSampleRate(): number;

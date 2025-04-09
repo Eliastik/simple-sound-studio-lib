@@ -6,6 +6,7 @@ import AudioContextManagerInterface from "./interfaces/AudioContextManagerInterf
 import { ConfigService } from "@/services/interfaces/ConfigService";
 import EventEmitterInterface from "@/utils/interfaces/EventEmitterInterface";
 import { TYPES } from "@/inversify.types";
+import WindowWithOfflineAudioContext from "@/model/WindowWithOfflineAudioContext";
 
 @injectable()
 export default class AudioContextManager implements AudioContextManagerInterface {
@@ -78,7 +79,7 @@ export default class AudioContextManager implements AudioContextManagerInterface
      */
     createNewContext(sampleRate: number) {
         if (this._currentContext) {
-            this.destroyOldContext(this._currentContext);
+            this._currentContext.close();
         }
 
         const options: AudioContextOptions = {
@@ -98,13 +99,33 @@ export default class AudioContextManager implements AudioContextManagerInterface
         this.previousSampleRate = sampleRate;
     }
 
-    /**
-     * Destroy previous AudioContext
-     */
-    private destroyOldContext(oldAudioContext: AudioContext) {
-        if (oldAudioContext) {
-            oldAudioContext.close();
+    createOfflineAudioContext(numberOfChannels: number, duration: number, sampleRate: number) {
+        /* Hack: we use an iframe to force the garbage collector to clean up the memory
+           used by the OfflineAudioContext, including audio buffers. This helps avoid
+           memory leaks in Chrome, where offline audio contexts may not be properly cleaned up. */
+        const iframe = document.createElement("iframe");
+        iframe.style.display = "none";
+
+        document.body.appendChild(iframe);
+
+        const iframeWindow = iframe.contentWindow;
+
+        if (!iframeWindow) {
+            throw new Error("Failed to create isolated OfflineAudioContext");
         }
+
+        const OfflineAudioContextConstructor = (iframeWindow as WindowWithOfflineAudioContext).OfflineAudioContext as typeof OfflineAudioContext;
+        const offlineAudioContext = new OfflineAudioContextConstructor(numberOfChannels, duration, sampleRate);
+
+        offlineAudioContext.addEventListener("complete", () => {
+            /* We use setTimeout (macro task) to ensure that the iframe removal happens after the audio processing is finished
+               and after event handling from other parts of the code has been completed. This ensures that the iframe
+               is removed at the right time, without interfering with the ongoing execution of other tasks related to
+               audio processing in the offline context. */
+            setTimeout(() => document.body.removeChild(iframe));
+        });
+
+        return offlineAudioContext;
     }
 
     get currentSampleRate(): number {

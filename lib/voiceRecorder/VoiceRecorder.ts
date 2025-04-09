@@ -37,8 +37,6 @@ import AudioContextManagerInterface from "@/audioEditor/interfaces/AudioContextM
 @injectable()
 export default class VoiceRecorder extends AbstractAudioElement implements VoiceRecorderInterface {
 
-    private contextManager: AudioContextManagerInterface | null | undefined;
-
     private recorder: Recorder | null = null;
 
     private input: MediaStreamAudioSourceNode | null = null;

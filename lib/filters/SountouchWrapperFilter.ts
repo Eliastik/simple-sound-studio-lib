@@ -116,24 +116,29 @@ export default class SoundtouchWrapperFilter extends AbstractAudioFilterWorklet<
      */
     private async renderWithScriptProcessorNode(buffer: AudioBuffer, context: BaseAudioContext): Promise<AudioFilterNodes> {
         const durationAudio = utilFunctions.calcAudioDuration(buffer, this.speedAudio);
-        const offlineContext = new OfflineAudioContext(2, context.sampleRate * durationAudio, context.sampleRate);
 
-        this.currentPitchShifter = this.getSoundtouchScriptProcessorNode(buffer, offlineContext);
+        if (this.contextManager) {
+            const offlineContext = this.contextManager.createOfflineAudioContext(2, context.sampleRate * durationAudio, context.sampleRate);
 
-        this.updateState();
+            this.currentPitchShifter = this.getSoundtouchScriptProcessorNode(buffer, offlineContext);
 
-        this.currentPitchShifter.connect(offlineContext.destination);
+            this.updateState();
 
-        const renderedBuffer = await offlineContext.startRendering();
+            this.currentPitchShifter.connect(offlineContext.destination);
 
-        const bufferSourceRendered = this.constructBufferSourceNode(context, renderedBuffer);
+            const renderedBuffer = await offlineContext.startRendering();
 
-        this.currentPitchShifter.disconnect();
+            const bufferSourceRendered = this.constructBufferSourceNode(context, renderedBuffer);
 
-        return {
-            input: bufferSourceRendered,
-            output: bufferSourceRendered
-        };
+            this.currentPitchShifter.disconnect();
+
+            return {
+                input: bufferSourceRendered,
+                output: bufferSourceRendered
+            };
+        }
+
+        throw new Error("AudioContextManager is not available!");
     }
 
     /**

@@ -1,6 +1,7 @@
 import BufferFetcherServiceInterface from '@/services/interfaces/BufferFetcherServiceInterface';
 import BufferDecoderServiceInterface from '@/services/interfaces/BufferDecoderServiceInterface';
 import EventEmitterInterface$1 from '@/utils/interfaces/EventEmitterInterface';
+import AudioContextManagerInterface$1 from '@/audioEditor/interfaces/AudioContextManagerInterface';
 import AbstractAudioElement$1 from '@/interfaces/AbstractAudioElement';
 import AbstractAudioFilter$1 from '@/filters/interfaces/AbstractAudioFilter';
 import AbstractAudioRenderer$1 from '@/filters/interfaces/AbstractAudioRenderer';
@@ -11,7 +12,6 @@ import { FilterSettings as FilterSettings$1, FilterSettingValue as FilterSetting
 import AudioFilterEntrypointInterface$1 from '@/filters/interfaces/AudioFilterEntrypointInterface';
 import { AudioFilterNodes as AudioFilterNodes$1 } from '@/model/AudioNodes';
 import BufferPlayerInterface$1 from '@/bufferPlayer/interfaces/BufferPlayerInterface';
-import AudioContextManagerInterface$1 from '@/audioEditor/interfaces/AudioContextManagerInterface';
 import { RecorderSettings as RecorderSettings$1 } from '@/model/RecorderSettings';
 import AudioEditorEvents$1 from '@/model/AudioEditorEvent';
 import FilterManagerInterface$1 from '@/audioEditor/interfaces/FilterManagerInterface';
@@ -110,7 +110,8 @@ declare abstract class AbstractAudioElement {
     protected bufferDecoderService: BufferDecoderServiceInterface | null;
     protected configService: ConfigService | null;
     protected eventEmitter: EventEmitterInterface$1 | null;
-    injectDependencies(bufferFetcherService: BufferFetcherServiceInterface | null, bufferDecoderService: BufferDecoderServiceInterface | null, configService: ConfigService | null, eventEmitter: EventEmitterInterface$1 | null): void;
+    protected contextManager: AudioContextManagerInterface$1 | null;
+    injectDependencies(bufferFetcherService: BufferFetcherServiceInterface | null, bufferDecoderService: BufferDecoderServiceInterface | null, configService: ConfigService | null, eventEmitter: EventEmitterInterface$1 | null, contextManager?: AudioContextManagerInterface$1): void;
 }
 
 interface AudioFilterNodes {
@@ -403,6 +404,10 @@ interface FilterManagerInterface {
      */
     disconnectOldNodes(keepCurrentOutput: boolean): void;
     /**
+     * Disconnect all nodes
+     */
+    disconnectAllNodes(): void;
+    /**
      * Initialize worklets filters
      */
     initializeWorklets(context: BaseAudioContext): Promise<void>;
@@ -484,6 +489,14 @@ interface AudioContextManagerInterface {
      * @param sampleRate New sample rate
      */
     createNewContext(sampleRate: number): void;
+    /**
+     * Create and return a new OfflineAudioContext for one time use
+     * @param numberOfChannels The number of channels
+     * @param duration The duration of the buffer
+     * @param sampleRate The sample rate
+     * @returns The OfflineAudioContext
+     */
+    createOfflineAudioContext(numberOfChannels: number, duration: number, sampleRate: number): OfflineAudioContext;
     /**
      * Get the current sample rate used
      */
@@ -577,8 +590,6 @@ declare class AudioEditor extends AbstractAudioElement implements AudioEditorInt
     private filterManager;
     /** The renderer manager */
     private rendererManager;
-    /** The context manager */
-    private contextManager;
     /** The save buffer manager */
     private saveBufferManager;
     /** The save buffer manager */
@@ -906,7 +917,6 @@ interface VoiceRecorderInterface {
 }
 
 declare class VoiceRecorder extends AbstractAudioElement implements VoiceRecorderInterface {
-    private contextManager;
     private recorder;
     private input;
     private stream;
@@ -1020,6 +1030,7 @@ declare abstract class AbstractAudioFilterWorklet<T> extends AbstractAudioFilter
     protected currentWorkletNode: AudioWorkletNode | WorkletScriptProcessorNodeAdapter | null;
     protected fallbackToScriptProcessor: boolean;
     protected keepCurrentNodeIfPossible: boolean;
+    private loadedModulesMap;
     /**
      * Return the worklet name (as registered with method registerProcessor)
      */
