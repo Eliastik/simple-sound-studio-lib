@@ -6,7 +6,7 @@
 
 # Class: EventEmitter
 
-Defined in: [utils/EventEmitter.ts:7](https://github.com/Eliastik/simple-sound-studio-lib/blob/6682e5e836e2002f5da4644dfa82f1eb5b9a13da/lib/utils/EventEmitter.ts#L7)
+Defined in: [utils/EventEmitter.ts:7](https://github.com/Eliastik/simple-sound-studio-lib/blob/1b0af6576bd7ecf35cd2f9871e987be9d83e1729/lib/utils/EventEmitter.ts#L7)
 
 ## Implements
 
@@ -18,7 +18,7 @@ Defined in: [utils/EventEmitter.ts:7](https://github.com/Eliastik/simple-sound-s
 
 > **new EventEmitter**(): `EventEmitter`
 
-Defined in: [utils/EventEmitter.ts:10](https://github.com/Eliastik/simple-sound-studio-lib/blob/6682e5e836e2002f5da4644dfa82f1eb5b9a13da/lib/utils/EventEmitter.ts#L10)
+Defined in: [utils/EventEmitter.ts:10](https://github.com/Eliastik/simple-sound-studio-lib/blob/1b0af6576bd7ecf35cd2f9871e987be9d83e1729/lib/utils/EventEmitter.ts#L10)
 
 #### Returns
 
@@ -30,7 +30,7 @@ Defined in: [utils/EventEmitter.ts:10](https://github.com/Eliastik/simple-sound-
 
 > **listeners**: `AudioEditorEvents` = `{}`
 
-Defined in: [utils/EventEmitter.ts:8](https://github.com/Eliastik/simple-sound-studio-lib/blob/6682e5e836e2002f5da4644dfa82f1eb5b9a13da/lib/utils/EventEmitter.ts#L8)
+Defined in: [utils/EventEmitter.ts:8](https://github.com/Eliastik/simple-sound-studio-lib/blob/1b0af6576bd7ecf35cd2f9871e987be9d83e1729/lib/utils/EventEmitter.ts#L8)
 
 #### Implementation of
 
@@ -40,9 +40,9 @@ Defined in: [utils/EventEmitter.ts:8](https://github.com/Eliastik/simple-sound-s
 
 ### emit()
 
-> **emit**(`event`, `data`?): `void`
+> **emit**(`event`, `data?`): `void`
 
-Defined in: [utils/EventEmitter.ts:21](https://github.com/Eliastik/simple-sound-studio-lib/blob/6682e5e836e2002f5da4644dfa82f1eb5b9a13da/lib/utils/EventEmitter.ts#L21)
+Defined in: [utils/EventEmitter.ts:21](https://github.com/Eliastik/simple-sound-studio-lib/blob/1b0af6576bd7ecf35cd2f9871e987be9d83e1729/lib/utils/EventEmitter.ts#L21)
 
 #### Parameters
 
@@ -68,7 +68,7 @@ Defined in: [utils/EventEmitter.ts:21](https://github.com/Eliastik/simple-sound-
 
 > **off**(`event`, `callback`): `void`
 
-Defined in: [utils/EventEmitter.ts:29](https://github.com/Eliastik/simple-sound-studio-lib/blob/6682e5e836e2002f5da4644dfa82f1eb5b9a13da/lib/utils/EventEmitter.ts#L29)
+Defined in: [utils/EventEmitter.ts:29](https://github.com/Eliastik/simple-sound-studio-lib/blob/1b0af6576bd7ecf35cd2f9871e987be9d83e1729/lib/utils/EventEmitter.ts#L29)
 
 #### Parameters
 
@@ -94,7 +94,7 @@ Defined in: [utils/EventEmitter.ts:29](https://github.com/Eliastik/simple-sound-
 
 > **on**(`event`, `callback`): `void`
 
-Defined in: [utils/EventEmitter.ts:14](https://github.com/Eliastik/simple-sound-studio-lib/blob/6682e5e836e2002f5da4644dfa82f1eb5b9a13da/lib/utils/EventEmitter.ts#L14)
+Defined in: [utils/EventEmitter.ts:14](https://github.com/Eliastik/simple-sound-studio-lib/blob/1b0af6576bd7ecf35cd2f9871e987be9d83e1729/lib/utils/EventEmitter.ts#L14)
 
 #### Parameters
 
