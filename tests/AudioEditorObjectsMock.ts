@@ -8,7 +8,7 @@ import SaveBufferManagerInterface from "../lib/audioEditor/interfaces/SaveBuffer
 import BufferPlayerInterface from "../lib/bufferPlayer/interfaces/BufferPlayerInterface";
 import EventEmitterInterface from "../lib/utils/interfaces/EventEmitterInterface";
 import { MockAudioBuffer } from "./AudioBufferMock";
-import { createMockAudioContext } from "./AudioContextMock";
+import { createMockAudioContext, MockAudioContextWithLongRunningRendering } from "./AudioContextMock";
 import MockAudioNode from "./MockAudioNode";
 
 const mockFilterManager = {
@@ -29,6 +29,7 @@ const mockFilterManager = {
     getAddingTime: jest.fn(),
     setupTotalSamples: jest.fn(),
     resetFilterBuffers: jest.fn(),
+    disconnectAllNodes: jest.fn(),
     currentNodes: {
         input: new MockAudioNode(),
         output: new MockAudioNode(),
@@ -72,6 +73,15 @@ const mockRendererManagerWithFakeRenderedBuffer = {
 
 const mockContextManager = {
     currentContext: createMockAudioContext(),
+    createOfflineAudioContext: jest.fn(() => createMockAudioContext()),
+    currentSampleRate: 44100,
+    createNewContextIfNeeded: jest.fn(),
+    createNewContext: jest.fn()
+} as unknown as AudioContextManagerInterface;
+
+const mockContextManagerWithLongRunningRendering = {
+    currentContext: createMockAudioContext(),
+    createOfflineAudioContext: jest.fn(() => new MockAudioContextWithLongRunningRendering()),
     currentSampleRate: 44100,
     createNewContextIfNeeded: jest.fn(),
     createNewContext: jest.fn()
@@ -125,4 +135,4 @@ const mockRecorder = {
     getBuffer: jest.fn((callback) => callback([[], []]))
 };
 
-export { mockAudioProcessor, mockBufferManager, mockContextManager, mockFilterManager, mockRendererManager, mockSaveBufferManager, mockBufferPlayer, mockEventEmitter, mockFilterManagerWithoutEntrypoint, mockRecorder, mockRendererManagerWithFakeRenderedBuffer as mockRendererManagerWithFakeRenderedBuffer };
+export { mockAudioProcessor, mockBufferManager, mockContextManager, mockFilterManager, mockRendererManager, mockSaveBufferManager, mockBufferPlayer, mockEventEmitter, mockFilterManagerWithoutEntrypoint, mockRecorder, mockRendererManagerWithFakeRenderedBuffer as mockRendererManagerWithFakeRenderedBuffer, mockContextManagerWithLongRunningRendering };

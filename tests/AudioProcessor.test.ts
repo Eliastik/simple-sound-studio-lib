@@ -1,6 +1,6 @@
 import "reflect-metadata";
 import AudioProcessor from "../lib/audioEditor/AudioProcessor";
-import { mockBufferManager, mockContextManager, mockFilterManager, mockRendererManager, mockBufferPlayer, mockFilterManagerWithoutEntrypoint, mockRendererManagerWithFakeRenderedBuffer } from "./AudioEditorObjectsMock";
+import { mockBufferManager, mockContextManager, mockFilterManager, mockRendererManager, mockBufferPlayer, mockFilterManagerWithoutEntrypoint, mockRendererManagerWithFakeRenderedBuffer, mockContextManagerWithLongRunningRendering } from "./AudioEditorObjectsMock";
 import { MockAudioContext, createMockAudioContext, MockAudioContextWithEmptyData, MockAudioContextWithLongRunningRendering } from "./AudioContextMock";
 import { MockAudioBuffer } from "./AudioBufferMock";
 import Constants from "../lib/model/Constants";
@@ -17,10 +17,11 @@ describe("AudioProcessor", () => {
         audioProcessor = new AudioProcessor(
             mockFilterManager,
             mockRendererManager,
-            mockContextManager,
             mockBufferPlayer,
             mockBufferManager
         );
+
+        (audioProcessor as any).injectDependencies(null, null, null, null, mockContextManager);
     });
 
     test("should be defined", () => {
@@ -36,7 +37,6 @@ describe("AudioProcessor", () => {
         const audioProcessor2 = new AudioProcessor(
             mockFilterManager,
             mockRendererManager,
-            undefined,
             mockBufferPlayer,
             mockBufferManager
         );
@@ -52,10 +52,11 @@ describe("AudioProcessor", () => {
         const audioProcessor2 = new AudioProcessor(
             undefined,
             mockRendererManager,
-            mockContextManager,
             mockBufferPlayer,
             mockBufferManager
         );
+
+        (audioProcessor2 as any).injectDependencies(null, null, null, null, mockContextManager);
 
         await expect(audioProcessor2.renderAudio(null)).rejects.toThrow("Filter manager is not available");
     });
@@ -64,10 +65,11 @@ describe("AudioProcessor", () => {
         const audioProcessor2 = new AudioProcessor(
             mockFilterManager,
             undefined,
-            mockContextManager,
             mockBufferPlayer,
             mockBufferManager
         );
+
+        (audioProcessor2 as any).injectDependencies(null, null, null, null, mockContextManager);
 
         await expect(audioProcessor2.renderAudio(null)).rejects.toThrow("Renderer manager is not available");
     });
@@ -76,10 +78,11 @@ describe("AudioProcessor", () => {
         const audioProcessor2 = new AudioProcessor(
             mockFilterManagerWithoutEntrypoint,
             mockRendererManager,
-            mockContextManager,
             mockBufferPlayer,
             mockBufferManager
         );
+
+        (audioProcessor2 as any).injectDependencies(null, null, null, null, mockContextManager);
 
         await expect(audioProcessor2.renderAudio(null)).rejects.toThrow("Entrypoint filter is not available");
     });
@@ -88,13 +91,12 @@ describe("AudioProcessor", () => {
         const audioProcessor2 = new AudioProcessor(
             mockFilterManager,
             mockRendererManager,
-            mockContextManager,
             mockBufferPlayer,
             mockBufferManager
         );
         const genericConfigService = new GenericConfigService();
 
-        (audioProcessor2 as any).injectDependencies(null, null, genericConfigService, new EventEmitter());
+        (audioProcessor2 as any).injectDependencies(null, null, genericConfigService, new EventEmitter(), mockContextManager);
 
         genericConfigService.setConfig(Constants.PREFERENCES_KEYS.DISABLE_INITIAL_RENDERING, "true");
 
@@ -108,13 +110,12 @@ describe("AudioProcessor", () => {
         const audioProcessor2 = new AudioProcessor(
             mockFilterManager,
             mockRendererManager,
-            mockContextManager,
             mockBufferPlayer,
             mockBufferManager
         );
         const genericConfigService = new GenericConfigService();
 
-        (audioProcessor2 as any).injectDependencies(null, null, genericConfigService, new EventEmitter());
+        (audioProcessor2 as any).injectDependencies(null, null, genericConfigService, new EventEmitter(), mockContextManager);
 
         genericConfigService.setConfig(Constants.PREFERENCES_KEYS.DISABLE_INITIAL_RENDERING, "false");
         genericConfigService.setConfig(Constants.PREFERENCES_KEYS.COMPATIBILITY_MODE_ENABLED, "false");
@@ -133,13 +134,12 @@ describe("AudioProcessor", () => {
         const audioProcessor2 = new AudioProcessor(
             mockFilterManager,
             mockRendererManagerWithFakeRenderedBuffer,
-            mockContextManager,
             mockBufferPlayer,
             mockBufferManager
         );
         const genericConfigService = new GenericConfigService();
 
-        (audioProcessor2 as any).injectDependencies(null, null, genericConfigService, eventEmitter);
+        (audioProcessor2 as any).injectDependencies(null, null, genericConfigService, eventEmitter, mockContextManager);
 
         genericConfigService.setConfig(Constants.PREFERENCES_KEYS.DISABLE_INITIAL_RENDERING, "false");
 
@@ -163,13 +163,12 @@ describe("AudioProcessor", () => {
         const audioProcessor2 = new AudioProcessor(
             mockFilterManager,
             mockRendererManagerWithFakeRenderedBuffer,
-            mockContextManager,
             mockBufferPlayer,
             mockBufferManager
         );
         const genericConfigService = new GenericConfigService();
 
-        (audioProcessor2 as any).injectDependencies(null, null, genericConfigService, eventEmitter);
+        (audioProcessor2 as any).injectDependencies(null, null, genericConfigService, eventEmitter, mockContextManager);
 
         genericConfigService.setConfig(Constants.PREFERENCES_KEYS.DISABLE_INITIAL_RENDERING, "false");
         genericConfigService.setConfig(Constants.PREFERENCES_KEYS.COMPATIBILITY_MODE_ENABLED, "true");
@@ -199,13 +198,12 @@ describe("AudioProcessor", () => {
         const audioProcessor2 = new AudioProcessor(
             mockFilterManager,
             mockRendererManagerWithFakeRenderedBuffer,
-            mockContextManager,
             mockBufferPlayer,
             mockBufferManager
         );
         const genericConfigService = new GenericConfigService();
 
-        (audioProcessor2 as any).injectDependencies(null, null, genericConfigService, new EventEmitter());
+        (audioProcessor2 as any).injectDependencies(null, null, genericConfigService, new EventEmitter(), mockContextManager);
 
         audioProcessor2.sumInputBuffer = 500;
 
@@ -236,13 +234,12 @@ describe("AudioProcessor", () => {
         const audioProcessor2 = new AudioProcessor(
             mockFilterManager,
             mockRendererManagerWithFakeRenderedBuffer,
-            mockContextManager,
             mockBufferPlayer,
             mockBufferManager
         );
         const genericConfigService = new GenericConfigService();
 
-        (audioProcessor2 as any).injectDependencies(null, null, genericConfigService, eventEmitter);
+        (audioProcessor2 as any).injectDependencies(null, null, genericConfigService, eventEmitter, mockContextManager);
 
         audioProcessor2.sumInputBuffer = 500;
 
@@ -277,13 +274,12 @@ describe("AudioProcessor", () => {
         const audioProcessor2 = new AudioProcessor(
             mockFilterManager,
             mockRendererManagerWithFakeRenderedBuffer,
-            mockContextManager,
             mockBufferPlayer,
             mockBufferManager
         );
         const genericConfigService = new GenericConfigService();
 
-        (audioProcessor2 as any).injectDependencies(null, null, genericConfigService, eventEmitter);
+        (audioProcessor2 as any).injectDependencies(null, null, genericConfigService, eventEmitter, mockContextManagerWithLongRunningRendering);
 
         audioProcessor2.sumInputBuffer = 500;
 

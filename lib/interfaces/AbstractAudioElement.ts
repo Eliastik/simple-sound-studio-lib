@@ -28,7 +28,7 @@ export default abstract class AbstractAudioElement {
         bufferDecoderService: BufferDecoderServiceInterface | null,
         configService: ConfigService | null,
         eventEmitter: EventEmitterInterface | null,
-        contextManager?: AudioContextManagerInterface) {
+        contextManager: AudioContextManagerInterface | null) {
         if (bufferFetcherService) {
             this.bufferFetcherService = bufferFetcherService;
         }

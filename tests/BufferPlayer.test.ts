@@ -27,12 +27,13 @@ describe("BufferPlayer tests", () => {
                 createBufferSource: jest.fn(() => ({
                     buffer: null,
                     connect: jest.fn(),
+                    disconnect: jest.fn(),
                     start: jest.fn(),
-                    stop: jest.fn(),
-                    disconnect: jest.fn()
+                    stop: jest.fn()
                 })),
                 createGain: jest.fn(() => ({
                     connect: jest.fn(),
+                    disconnect: jest.fn(),
                     gain: {
                         value: 1
                     }
@@ -43,7 +44,7 @@ describe("BufferPlayer tests", () => {
         mockEventEmitter = new EventEmitter();
 
         bufferPlayer = new BufferPlayer(mockAudioContextManager);
-        bufferPlayer.injectDependencies(null, null, null, mockEventEmitter);
+        bufferPlayer.injectDependencies(null, null, null, mockEventEmitter, null);
     });
 
     test("Initialize BufferPlayer", () => {

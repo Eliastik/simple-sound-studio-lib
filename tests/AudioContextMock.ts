@@ -11,7 +11,9 @@ export class MockAudioContext {
         this.sampleRate = options?.sampleRate || 44100;
         this.currentTime = 0;
         this.state = "suspended";
-        this.destination = {} as AudioDestinationNode;
+        this.destination = {
+            disconnect: () => {}
+        } as AudioDestinationNode;
         this.emptyData = emptyData || false;
     }
 

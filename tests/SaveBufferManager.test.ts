@@ -54,7 +54,7 @@ describe("SaveBufferManager tests", () => {
     });
 
     test("Initialize SaveBufferManager with dependencies", () => {
-        const saveBufferManager = new SaveBufferManager(mockFilterManagerInstance, mockAudioContextManagerInstance, mockBufferPlayerInstance);
+        const saveBufferManager = new SaveBufferManager(mockFilterManagerInstance, mockBufferPlayerInstance);
 
         expect(saveBufferManager.savingBuffer).toBe(false);
     });
@@ -65,7 +65,7 @@ describe("SaveBufferManager tests", () => {
             format: "wav",
             bitrate: 128
         };
-        const saveBufferManager = new SaveBufferManager(mockFilterManagerInstance, mockAudioContextManagerInstance, mockBufferPlayerInstance);
+        const saveBufferManager = new SaveBufferManager(mockFilterManagerInstance, mockBufferPlayerInstance);
         mockBufferPlayerInstance.compatibilityMode = false;
 
         const savingResult = await saveBufferManager.saveBuffer(mockRenderedBuffer, saveBufferOptions);
@@ -78,7 +78,7 @@ describe("SaveBufferManager tests", () => {
             format: "wav",
             bitrate: 128
         };
-        const saveBufferManager = new SaveBufferManager(mockFilterManagerInstance, mockAudioContextManagerInstance, mockBufferPlayerInstance);
+        const saveBufferManager = new SaveBufferManager(mockFilterManagerInstance, mockBufferPlayerInstance);
         mockBufferPlayerInstance.compatibilityMode = false;
 
         await expect(saveBufferManager.saveBuffer(null, saveBufferOptions)).rejects.toEqual("No rendered buffer or AudioContext not initialized");
@@ -89,7 +89,7 @@ describe("SaveBufferManager tests", () => {
             format: "wav",
             bitrate: 128
         };
-        const saveBufferManager = new SaveBufferManager(mockFilterManagerInstance, mockAudioContextManagerInstance, null);
+        const saveBufferManager = new SaveBufferManager(mockFilterManagerInstance, null);
         mockBufferPlayerInstance.compatibilityMode = true;
 
         await expect(saveBufferManager.saveBuffer(null, saveBufferOptions)).rejects.toThrowError("No buffer player was found");
@@ -106,8 +106,8 @@ describe("SaveBufferManager tests", () => {
         mockFilterManagerInstance.connectNodes(createMockAudioContext(), new AudioBuffer({ length: 44100, numberOfChannels: 2, sampleRate: 44100 }), false, true);
         mockBufferPlayerInstance.compatibilityMode = true;
 
-        const saveBufferManager = new SaveBufferManager(mockFilterManagerInstance, mockAudioContextManagerInstance, mockBufferPlayerInstance);
-        (saveBufferManager as any).injectDependencies(null, null, mockConfigService, eventEmitter);
+        const saveBufferManager = new SaveBufferManager(mockFilterManagerInstance, mockBufferPlayerInstance);
+        (saveBufferManager as any).injectDependencies(null, null, mockConfigService, eventEmitter, mockAudioContextManagerInstance);
 
         jest.spyOn(mockRecorder, "stop");
         jest.spyOn(mockRecorder, "record");
@@ -144,8 +144,8 @@ describe("SaveBufferManager tests", () => {
         mockFilterManagerInstance.connectNodes(createMockAudioContext(), new AudioBuffer({ length: 44100, numberOfChannels: 2, sampleRate: 44100 }), false, true);
         mockBufferPlayerInstance.compatibilityMode = true;
 
-        const saveBufferManager = new SaveBufferManager(mockFilterManagerInstance, mockAudioContextManagerInstance, mockBufferPlayerInstance);
-        (saveBufferManager as any).injectDependencies(null, null, mockConfigService, eventEmitter);
+        const saveBufferManager = new SaveBufferManager(mockFilterManagerInstance, mockBufferPlayerInstance);
+        (saveBufferManager as any).injectDependencies(null, null, mockConfigService, eventEmitter, mockAudioContextManagerInstance);
 
         const savePromise = saveBufferManager.saveBuffer(mockRenderedBuffer, saveBufferOptions, mockRecorder as any);
 
@@ -175,10 +175,10 @@ describe("SaveBufferManager tests", () => {
         mockFilterManagerInstance.connectNodes(createMockAudioContext(), new AudioBuffer({ length: 44100, numberOfChannels: 2, sampleRate: 44100 }), false, true);
 
         mockBufferPlayerInstanceOther.compatibilityMode = true;
-        mockBufferPlayerInstanceOther.injectDependencies(null, null, null, eventEmitter);
+        mockBufferPlayerInstanceOther.injectDependencies(null, null, null, eventEmitter, mockAudioContextManagerInstance);
 
-        const saveBufferManager = new SaveBufferManager(mockFilterManagerInstance, mockAudioContextManagerInstance, mockBufferPlayerInstanceOther);
-        (saveBufferManager as any).injectDependencies(null, null, mockConfigService, eventEmitter);
+        const saveBufferManager = new SaveBufferManager(mockFilterManagerInstance, mockBufferPlayerInstanceOther);
+        (saveBufferManager as any).injectDependencies(null, null, mockConfigService, eventEmitter, mockAudioContextManagerInstance);
 
         const savePromise = saveBufferManager.saveBuffer(mockRenderedBuffer, saveBufferOptions, mockRecorder as any);
 
@@ -207,7 +207,7 @@ describe("SaveBufferManager tests", () => {
         mockFilterManagerInstance.connectNodes(createMockAudioContext(), new AudioBuffer({ length: 44100, numberOfChannels: 2, sampleRate: 44100 }), false, true);
         mockBufferPlayerInstance.compatibilityMode = true;
 
-        const saveBufferManager = new SaveBufferManager(mockFilterManagerInstance, mockAudioContextManagerInstance, mockBufferPlayerInstance);
+        const saveBufferManager = new SaveBufferManager(mockFilterManagerInstance, mockBufferPlayerInstance);
         (saveBufferManager as any).injectDependencies(null, null, mockConfigService, eventEmitter);
 
         saveBufferManager.saveBuffer(mockRenderedBuffer, saveBufferOptions, mockRecorder as any);
@@ -227,9 +227,9 @@ describe("SaveBufferManager tests", () => {
         mockFilterManagerInstance.connectNodes(createMockAudioContext(), new AudioBuffer({ length: 44100, numberOfChannels: 2, sampleRate: 44100 }), false, true);
 
         mockBufferPlayerInstanceOther.compatibilityMode = true;
-        mockBufferPlayerInstanceOther.injectDependencies(null, null, null, eventEmitter);
+        mockBufferPlayerInstanceOther.injectDependencies(null, null, null, eventEmitter, mockAudioContextManagerInstance);
 
-        const saveBufferManager = new SaveBufferManager(mockFilterManagerInstance, mockAudioContextManagerInstance, mockBufferPlayerInstanceOther);
+        const saveBufferManager = new SaveBufferManager(mockFilterManagerInstance, mockBufferPlayerInstanceOther);
         (saveBufferManager as any).injectDependencies(null, null, mockConfigService, eventEmitter);
 
         const savePromise = saveBufferManager.saveBuffer(mockRenderedBuffer, saveBufferOptions, mockRecorder as any);

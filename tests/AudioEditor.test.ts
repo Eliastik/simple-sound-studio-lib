@@ -126,11 +126,11 @@ describe("AudioEditor", () => {
     test("should handle event subscriptions", () => {
         const callback = jest.fn();
 
-        audioEditor.injectDependencies(null, null, null, mockEventEmitter);
+        audioEditor.injectDependencies(null, null, null, mockEventEmitter, mockContextManager);
         audioEditor.on("testEvent", callback);
         expect(audioEditor["eventEmitter"].on).toHaveBeenCalledWith("testEvent", callback);
 
-        audioEditor.injectDependencies(null, null, null, mockEventEmitter);
+        audioEditor.injectDependencies(null, null, null, mockEventEmitter, mockContextManager);
         audioEditor.off("testEvent", callback);
         expect(audioEditor["eventEmitter"].off).toHaveBeenCalledWith("testEvent", callback);
     });
@@ -230,7 +230,6 @@ describe("AudioEditor", () => {
         const audioProcessor = new AudioProcessor(
             mockFilterManager,
             mockRendererManagerWithFakeRenderedBuffer,
-            mockContextManager,
             bufferPlayer,
             mockBufferManager
         );
@@ -247,8 +246,8 @@ describe("AudioEditor", () => {
 
         const genericConfigService = new GenericConfigService();
 
-        (audioProcessor as any).injectDependencies(null, null, genericConfigService, eventEmitter);
-        (audioEditor2 as any).injectDependencies(null, null, genericConfigService, eventEmitter);
+        (audioProcessor as any).injectDependencies(null, null, genericConfigService, eventEmitter, mockContextManager);
+        (audioEditor2 as any).injectDependencies(null, null, genericConfigService, eventEmitter, mockContextManager);
 
         genericConfigService.setConfig(Constants.PREFERENCES_KEYS.DISABLE_INITIAL_RENDERING, "true");
         genericConfigService.setConfig(Constants.PREFERENCES_KEYS.COMPATIBILITY_MODE_ENABLED, "true");

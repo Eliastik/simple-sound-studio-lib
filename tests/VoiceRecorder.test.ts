@@ -27,7 +27,9 @@ describe("VoiceRecorder", () => {
             // Mock navigator.mediaDevices.getUserMedia
             (navigator as any).mediaDevices = {
                 getUserMedia: jest.fn(() => Promise.resolve({
-                    getTracks: jest.fn()
+                    getTracks: jest.fn(() => {
+                        stop: jest.fn()
+                    })
                 })),
                 getSupportedConstraints: jest.fn(() => ({
                     sampleRate: 44100
@@ -252,7 +254,7 @@ describe("VoiceRecorder", () => {
         jest.spyOn(voiceRecorder, "audioFeedback");
         jest.spyOn(eventEmitter, "emit");
 
-        voiceRecorder.injectDependencies(null, null, null, eventEmitter);
+        voiceRecorder.injectDependencies(null, null, null, eventEmitter, null);
 
         voiceRecorder.reset();
 
@@ -290,7 +292,7 @@ describe("VoiceRecorder", () => {
         jest.spyOn(voiceRecorder, "audioFeedback");
         jest.spyOn(eventEmitter, "emit");
 
-        voiceRecorder.injectDependencies(null, null, null, eventEmitter);
+        voiceRecorder.injectDependencies(null, null, null, eventEmitter, null);
 
         await voiceRecorder.init();
 
