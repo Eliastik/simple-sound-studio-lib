@@ -27,9 +27,7 @@ describe("VoiceRecorder", () => {
             // Mock navigator.mediaDevices.getUserMedia
             (navigator as any).mediaDevices = {
                 getUserMedia: jest.fn(() => Promise.resolve({
-                    getTracks: jest.fn(() => {
-                        stop: jest.fn()
-                    })
+                    getTracks: jest.fn()
                 })),
                 getSupportedConstraints: jest.fn(() => ({
                     sampleRate: 44100
@@ -120,6 +118,7 @@ describe("VoiceRecorder", () => {
                 getUserMedia: jest.fn(() => Promise.resolve({
                     getTracks: jest.fn(() => [{
                         applyConstraints: jest.fn(),
+                        stop: jest.fn(),
                         getSettings: jest.fn(() => {
                             return { "noiseSuppression": false };
                         })
@@ -164,6 +163,7 @@ describe("VoiceRecorder", () => {
                 getUserMedia: jest.fn(() => Promise.resolve({
                     getTracks: jest.fn(() => [{
                         applyConstraints: jest.fn(),
+                        stop: jest.fn(),
                         getSettings: jest.fn(() => {
                             return { "autoGainControl": false };
                         })
@@ -208,6 +208,7 @@ describe("VoiceRecorder", () => {
                 getUserMedia: jest.fn(() => Promise.resolve({
                     getTracks: jest.fn(() => [{
                         applyConstraints: jest.fn(),
+                        stop: jest.fn(),
                         getSettings: jest.fn(() => {
                             return { "echoCancellation": false };
                         })

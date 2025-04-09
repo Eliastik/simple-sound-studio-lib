@@ -111,7 +111,7 @@ declare abstract class AbstractAudioElement {
     protected configService: ConfigService | null;
     protected eventEmitter: EventEmitterInterface$1 | null;
     protected contextManager: AudioContextManagerInterface$1 | null;
-    injectDependencies(bufferFetcherService: BufferFetcherServiceInterface | null, bufferDecoderService: BufferDecoderServiceInterface | null, configService: ConfigService | null, eventEmitter: EventEmitterInterface$1 | null, contextManager?: AudioContextManagerInterface$1): void;
+    injectDependencies(bufferFetcherService: BufferFetcherServiceInterface | null, bufferDecoderService: BufferDecoderServiceInterface | null, configService: ConfigService | null, eventEmitter: EventEmitterInterface$1 | null, contextManager: AudioContextManagerInterface$1 | null): void;
 }
 
 interface AudioFilterNodes {
