@@ -6,7 +6,7 @@ import AbstractAudioFilterWorklet from "@/filters/interfaces/AbstractAudioFilter
 import { FilterState } from "@/model/FilterState";
 import { FilterSettings } from "@/model/filtersSettings/FilterSettings";
 import FilterManagerInterface from "./interfaces/FilterManagerInterface";
-import { inject, injectable, multiInject } from "inversify";
+import { inject, injectable, multiInject, postConstruct } from "inversify";
 import { TYPES } from "@/inversify.types";
 
 @injectable()
@@ -29,11 +29,10 @@ export default class FilterManager extends AbstractAudioElement implements Filte
 
         this.filters = filters;
         this._entryPointFilter = entryPointFilter;
-
-        this.setup();
     }
 
-    private setup() {
+    @postConstruct()
+    protected setup() {
         for (const filter of this.filters) {
             filter.initializeDefaultSettings();
         }

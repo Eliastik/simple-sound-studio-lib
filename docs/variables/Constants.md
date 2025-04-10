@@ -8,7 +8,7 @@
 
 > `const` **Constants**: `object`
 
-Defined in: [model/Constants.ts:3](https://github.com/Eliastik/simple-sound-studio-lib/blob/d94b8862bac18f1ada54e8a1e0a7ef4f520fbc86/lib/model/Constants.ts#L3)
+Defined in: [model/Constants.ts:3](https://github.com/Eliastik/simple-sound-studio-lib/blob/ac774fbcc31e7b2bb36869a329e7b93025fe1f8e/lib/model/Constants.ts#L3)
 
 ## Type declaration
 

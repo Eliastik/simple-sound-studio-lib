@@ -21,22 +21,18 @@
 import { EventType } from "../model/EventTypeEnum";
 import { EventEmitterCallback } from "../model/EventEmitterCallback";
 import AbstractAudioElement from "../interfaces/AbstractAudioElement";
-import { TYPES } from "../inversify.types";
-import { inject, injectable } from "inversify";
+import { injectable, postConstruct } from "inversify";
 import BufferPlayerInterface from "./interfaces/BufferPlayerInterface";
-import AudioContextManagerInterface from "@/audioEditor/interfaces/AudioContextManagerInterface";
 
 // Also used in compatibility mode (which doesn't use audio buffer) with less functions (no time control)
 @injectable()
 export default class BufferPlayer extends AbstractAudioElement implements BufferPlayerInterface {
 
-    private _contextManager: AudioContextManagerInterface | undefined | null;
-
     private buffer: AudioBuffer | null = null;
     private source: AudioBufferSourceNode | null = null;
     private gainNode: GainNode | null = null;
     private intervals: number[] = [];
-    private onBeforePlayingCallback: () => void = async () => { };
+    private onBeforePlayingCallback: () => Promise<void> = async () => { };
     private _volume = 1;
     private _duration = 0;
 
@@ -50,16 +46,8 @@ export default class BufferPlayer extends AbstractAudioElement implements Buffer
     compatibilityMode = false;
     currentNode: AudioNode | null = null;
 
-    constructor(
-        @inject(TYPES.AudioContextManager) contextManager: AudioContextManagerInterface | undefined | null) {
-        super();
-
-        this._contextManager = contextManager;
-
-        this.setup();
-    }
-
-    private setup() {
+    @postConstruct()
+    protected setup() {
         if (this.eventEmitter) {
             this.eventEmitter.on(EventType.AUDIO_SPEED_UPDATED, speed => {
                 if (speed) {
@@ -72,14 +60,16 @@ export default class BufferPlayer extends AbstractAudioElement implements Buffer
                     this.duration = duration as number;
                 }
             });
+        } else {
+            console.error("Event Emitter is not available!");
         }
     }
 
     init(direct?: boolean) {
         this.playing = false;
 
-        if (this._contextManager && this._contextManager.currentContext) {
-            this._contextManager.currentContext.resume();
+        if (this.contextManager && this.contextManager.currentContext) {
+            this.contextManager.currentContext.resume();
 
             if (!this.compatibilityMode && this.buffer) {
                 if (this.source != null && !direct) {
@@ -93,7 +83,7 @@ export default class BufferPlayer extends AbstractAudioElement implements Buffer
 
                 if (this.source && this.gainNode) {
                     this.source.connect(this.gainNode);
-                    this.gainNode.connect(this._contextManager.currentContext.destination);
+                    this.gainNode.connect(this.contextManager.currentContext.destination);
                 }
             }
         }
@@ -102,7 +92,7 @@ export default class BufferPlayer extends AbstractAudioElement implements Buffer
     }
 
     private createGainNode() {
-        if (this._contextManager && this._contextManager.currentContext) {
+        if (this.contextManager && this.contextManager.currentContext) {
             if (this.gainNode) {
                 this.gainNode.disconnect();
             }
@@ -111,10 +101,10 @@ export default class BufferPlayer extends AbstractAudioElement implements Buffer
                 this.source.disconnect();
             }
 
-            this.source = this._contextManager.currentContext.createBufferSource();
+            this.source = this.contextManager.currentContext.createBufferSource();
             this.source.buffer = this.buffer;
 
-            this.gainNode = this._contextManager.currentContext.createGain();
+            this.gainNode = this.contextManager.currentContext.createGain();
 
             this.setGainNodeValue();
         }
@@ -202,14 +192,14 @@ export default class BufferPlayer extends AbstractAudioElement implements Buffer
                 } else {
                     return;
                 }
-            } else if (this.currentNode && this._contextManager && this._contextManager.currentContext) {
+            } else if (this.currentNode && this.contextManager && this.contextManager.currentContext) {
                 this.createGainNode();
 
                 if (this.gainNode) {
                     this.currentNode.connect(this.gainNode);
-                    this.gainNode.connect(this._contextManager.currentContext.destination);
+                    this.gainNode.connect(this.contextManager.currentContext.destination);
                 } else {
-                    this.currentNode.connect(this._contextManager.currentContext.destination);
+                    this.currentNode.connect(this.contextManager.currentContext.destination);
                 }
             } else {
                 return;
@@ -244,7 +234,7 @@ export default class BufferPlayer extends AbstractAudioElement implements Buffer
                 } else {
                     this.updateInfos();
                 }
-            }, 500));
+            }, 100));
         }
     }
 
@@ -317,7 +307,7 @@ export default class BufferPlayer extends AbstractAudioElement implements Buffer
         this._duration = duration * (this.speedAudio || 1);
     }
 
-    onBeforePlaying(callback: () => void) {
+    onBeforePlaying(callback: () => Promise<void>) {
         this.onBeforePlayingCallback = callback;
     }
 

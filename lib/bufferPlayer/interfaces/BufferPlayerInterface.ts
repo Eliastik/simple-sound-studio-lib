@@ -64,7 +64,7 @@ export default interface BufferPlayerInterface {
      * Callback called just before starting playing the audio
      * @param callback The callback
      */
-   onBeforePlaying(callback: () => void): void;
+   onBeforePlaying(callback: () => Promise<void>): void;
 
    /**
      * Enable/disable loop playing

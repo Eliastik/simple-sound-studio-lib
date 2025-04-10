@@ -8,7 +8,7 @@ import { EventEmitterCallback } from "../model/EventEmitterCallback";
 import { FilterState } from "../model/FilterState";
 import SaveBufferOptions from "../model/SaveBufferOptions";
 import { TYPES } from "../inversify.types";
-import { inject, injectable } from "inversify";
+import { inject, injectable, postConstruct } from "inversify";
 import AudioEditorInterface from "./interfaces/AudioEditorInterface";
 import type FilterManagerInterface from "./interfaces/FilterManagerInterface";
 import type RendererManagerInterface from "./interfaces/RendererManagerInterface";
@@ -76,12 +76,11 @@ export default class AudioEditor extends AbstractAudioElement implements AudioEd
         this.audioProcessor = audioProcessor;
         this.bufferManager = bufferManager;
         this.bufferPlayer = player;
-
-        this.setup();
     }
 
-    private setup() {
-        if (this.bufferPlayer && this.eventEmitter) {
+    @postConstruct()
+    protected setup() {
+        if (this.bufferPlayer) {
             // Callback called just before starting playing audio, when compatibility mode is enabled
             this.bufferPlayer.onBeforePlaying(async () => {
                 if (this.bufferPlayer && this.bufferPlayer.compatibilityMode
@@ -89,7 +88,11 @@ export default class AudioEditor extends AbstractAudioElement implements AudioEd
                     await this.audioProcessor.setupOutput(this.principalBuffer, this.contextManager.currentContext);
                 }
             });
+        } else {
+            console.error("Buffer Player is not available!");
+        }
 
+        if (this.eventEmitter) {
             // Callback called when playing is finished
             this.eventEmitter.on(EventType.PLAYING_FINISHED, () => {
                 if (this.bufferPlayer && this.bufferPlayer.loop) {
@@ -104,6 +107,8 @@ export default class AudioEditor extends AbstractAudioElement implements AudioEd
                     this.bufferPlayer.start();
                 }
             });
+        } else {
+            console.error("Event Emitter is not available!");
         }
     }
 
@@ -341,7 +346,9 @@ export default class AudioEditor extends AbstractAudioElement implements AudioEd
             await this.filterManager.connectNodes(this.contextManager.currentContext, this.principalBuffer, true, this.bufferPlayer.compatibilityMode);
 
             if (this.audioProcessor) {
-                const audioDuration = utils.calculateAudioDuration(this.principalBuffer, this.filterManager);
+                const speedAudio = this.filterManager.entrypointFilter.getSpeed();
+                const audioDuration = utils.calculateAudioDuration(this.principalBuffer, this.filterManager, speedAudio);
+
                 this.audioProcessor.updateAudioSpeedAndDuration(audioDuration);
             }
         }

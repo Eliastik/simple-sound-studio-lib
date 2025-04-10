@@ -1,4 +1,4 @@
-import { inject, injectable } from "inversify";
+import { inject, injectable, postConstruct } from "inversify";
 import { TYPES } from "../inversify.types";
 import { Recorder } from "../recorder/Recorder";
 import { EventType } from "@/model/EventTypeEnum";
@@ -35,12 +35,10 @@ export default class SaveBufferManager extends AbstractAudioElement implements S
 
         this.bufferPlayer = bufferPlayer;
         this.filterManager = filterManager;
-
-        // Callback called just before starting audio player
-        this.setup();
     }
 
-    private setup() {
+    @postConstruct()
+    protected setup() {
         if (this.eventEmitter) {
             // Callback called when playing is finished
             this.eventEmitter.on(EventType.PLAYING_FINISHED, () => {

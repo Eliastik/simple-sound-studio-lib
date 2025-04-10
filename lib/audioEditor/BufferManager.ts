@@ -1,7 +1,7 @@
 import AbstractAudioElement from "@/interfaces/AbstractAudioElement";
 import { EventType } from "@/model/EventTypeEnum";
 import BufferManagerInterface from "./interfaces/BufferManagerInterface";
-import { inject, injectable } from "inversify";
+import { inject, injectable, postConstruct } from "inversify";
 import { TYPES } from "@/inversify.types";
 import EventEmitterInterface from "@/utils/interfaces/EventEmitterInterface";
 import type FilterManagerInterface from "./interfaces/FilterManagerInterface";
@@ -31,11 +31,10 @@ export default class BufferManager extends AbstractAudioElement implements Buffe
         this.filterManager = filterManager;
         this.filterManager = filterManager;
         this.audioBuffersToFetch = audioBuffersToFetch;
-
-        this.setup();
     }
 
-    private setup() {
+    @postConstruct()
+    protected setup() {
         if (this.audioBuffersToFetch.length > 0) {
             this.fetchBuffers(false);
         }

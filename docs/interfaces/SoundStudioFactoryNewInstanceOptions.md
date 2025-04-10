@@ -6,7 +6,7 @@
 
 # Interface: SoundStudioFactoryNewInstanceOptions
 
-Defined in: [model/SoundStudioFactoryNewInstanceOptions.ts:3](https://github.com/Eliastik/simple-sound-studio-lib/blob/d94b8862bac18f1ada54e8a1e0a7ef4f520fbc86/lib/model/SoundStudioFactoryNewInstanceOptions.ts#L3)
+Defined in: [model/SoundStudioFactoryNewInstanceOptions.ts:3](https://github.com/Eliastik/simple-sound-studio-lib/blob/ac774fbcc31e7b2bb36869a329e7b93025fe1f8e/lib/model/SoundStudioFactoryNewInstanceOptions.ts#L3)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: [model/SoundStudioFactoryNewInstanceOptions.ts:3](https://github.com
 
 > `optional` **buffersToFetch**: `string`[]
 
-Defined in: [model/SoundStudioFactoryNewInstanceOptions.ts:5](https://github.com/Eliastik/simple-sound-studio-lib/blob/d94b8862bac18f1ada54e8a1e0a7ef4f520fbc86/lib/model/SoundStudioFactoryNewInstanceOptions.ts#L5)
+Defined in: [model/SoundStudioFactoryNewInstanceOptions.ts:5](https://github.com/Eliastik/simple-sound-studio-lib/blob/ac774fbcc31e7b2bb36869a329e7b93025fe1f8e/lib/model/SoundStudioFactoryNewInstanceOptions.ts#L5)
 
 ***
 
@@ -22,4 +22,4 @@ Defined in: [model/SoundStudioFactoryNewInstanceOptions.ts:5](https://github.com
 
 > `optional` **configService**: [`ConfigService`](ConfigService.md)
 
-Defined in: [model/SoundStudioFactoryNewInstanceOptions.ts:4](https://github.com/Eliastik/simple-sound-studio-lib/blob/d94b8862bac18f1ada54e8a1e0a7ef4f520fbc86/lib/model/SoundStudioFactoryNewInstanceOptions.ts#L4)
+Defined in: [model/SoundStudioFactoryNewInstanceOptions.ts:4](https://github.com/Eliastik/simple-sound-studio-lib/blob/ac774fbcc31e7b2bb36869a329e7b93025fe1f8e/lib/model/SoundStudioFactoryNewInstanceOptions.ts#L4)

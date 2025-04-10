@@ -186,7 +186,7 @@ export default class AudioProcessor extends AbstractAudioElement implements Audi
 
                 this.eventEmitter.emit(EventType.OFFLINE_AUDIO_RENDERING_FINISHED);
             } else if (this.filterManager.currentNodes) { // Compatibility mode
-                this.resetAudioRenderingProgress();
+                //this.resetAudioRenderingProgress();
 
                 this.bufferPlayer.setCompatibilityMode(this.filterManager.currentNodes.output);
 

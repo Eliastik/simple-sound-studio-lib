@@ -33,7 +33,6 @@ class RenderingProgressCalculationWorkletProcessor extends AudioWorkletProcessor
     }
 
     process(inputs: Float32Array[][], outputs: Float32Array[][]): boolean {
-        console.log(this.stopped, this.disabled);
         if (this.stopped || this.disabled) {
             return false;
         }

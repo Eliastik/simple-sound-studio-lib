@@ -25,8 +25,6 @@ export default class EventEmitter implements EventEmitterInterface {
                 callback(data);
             });
         }
-
-        console.log(event, data);
     }
 
     off(event: string, callback: EventEmitterCallback) {

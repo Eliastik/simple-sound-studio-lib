@@ -611,7 +611,7 @@ declare class AudioEditor extends AbstractAudioElement implements AudioEditorInt
     private loadingAudio;
     private renderingAudio;
     constructor(filterManager: FilterManagerInterface, rendererManager: RendererManagerInterface, contextManager: AudioContextManagerInterface, saveBufferManager: SaveBufferManagerInterface, audioProcessor: AudioProcessorInterface, bufferManager: BufferManagerInterface, player: BufferPlayerInterface$1);
-    private setup;
+    protected setup(): void;
     addFilters(...filters: AbstractAudioFilter[]): void;
     addRenderers(...renderers: AbstractAudioRenderer[]): void;
     get currentSampleRate(): number;
@@ -702,7 +702,7 @@ interface BufferPlayerInterface {
       * Callback called just before starting playing the audio
       * @param callback The callback
       */
-    onBeforePlaying(callback: () => void): void;
+    onBeforePlaying(callback: () => Promise<void>): void;
     /**
       * Enable/disable loop playing
       */
@@ -780,7 +780,6 @@ interface BufferPlayerInterface {
 }
 
 declare class BufferPlayer extends AbstractAudioElement implements BufferPlayerInterface {
-    private _contextManager;
     private buffer;
     private source;
     private gainNode;
@@ -796,8 +795,7 @@ declare class BufferPlayer extends AbstractAudioElement implements BufferPlayerI
     speedAudio: number;
     compatibilityMode: boolean;
     currentNode: AudioNode | null;
-    constructor(contextManager: AudioContextManagerInterface$1 | undefined | null);
-    private setup;
+    protected setup(): void;
     init(direct?: boolean): void;
     private createGainNode;
     loadBuffer(buffer: AudioBuffer): void;
@@ -820,7 +818,7 @@ declare class BufferPlayer extends AbstractAudioElement implements BufferPlayerI
     get volume(): number;
     get duration(): number;
     set duration(duration: number);
-    onBeforePlaying(callback: () => void): void;
+    onBeforePlaying(callback: () => Promise<void>): void;
     toggleLoop(): void;
     toggleLoopAll(): void;
     on(event: string, callback: EventEmitterCallback): void;
