@@ -157,15 +157,19 @@ export default class AudioProcessor extends AbstractAudioElement implements Audi
 
     async setupOutput(inputBuffer: AudioBuffer | null, outputContext: AudioContext | OfflineAudioContext, durationAudio?: number): Promise<boolean> {
         if (this._renderedBuffer && this.configService && this.eventEmitter && this.bufferPlayer && this.filterManager) {
+            const compatibilityModeEnabled = this.configService.isCompatibilityModeEnabled();
+
+            if (!compatibilityModeEnabled) {
+                this.startRenderingProgressCalculation();
+            }
+
             // Initialize worklets then connect the filter nodes
             await this.filterManager.initializeWorklets(outputContext);
-
-            this.startRenderingProgressCalculation();
 
             await this.filterManager.connectNodes(outputContext, this._renderedBuffer, false, this.configService.isCompatibilityModeEnabled());
 
             // Standard mode
-            if (!this.configService.isCompatibilityModeEnabled() && this.filterManager.currentNodes) {
+            if (!compatibilityModeEnabled && this.filterManager.currentNodes) {
                 const offlineContext = outputContext as OfflineAudioContext;
 
                 this.currentOfflineContext = offlineContext;
@@ -186,8 +190,6 @@ export default class AudioProcessor extends AbstractAudioElement implements Audi
 
                 this.eventEmitter.emit(EventType.OFFLINE_AUDIO_RENDERING_FINISHED);
             } else if (this.filterManager.currentNodes) { // Compatibility mode
-                //this.resetAudioRenderingProgress();
-
                 this.bufferPlayer.setCompatibilityMode(this.filterManager.currentNodes.output);
 
                 this.updateAudioSpeedAndDuration(durationAudio);
