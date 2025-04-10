@@ -34,7 +34,7 @@ export default class BufferManager extends AbstractAudioElement implements Buffe
     }
 
     @postConstruct()
-    protected setup() {
+    setup() {
         if (this.audioBuffersToFetch.length > 0) {
             this.fetchBuffers(false);
         }

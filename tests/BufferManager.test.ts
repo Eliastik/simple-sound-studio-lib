@@ -16,6 +16,7 @@ const mockAudioBuffersToFetch = ["buffer1", "buffer2"];
 describe("BufferManager tests", () => {
     test("Initialize BufferManager with audio buffers to fetch", () => {
         const bufferManager = new BufferManager(new FilterManager([], null), mockBufferFetcherService, mockEventEmitter, mockAudioBuffersToFetch);
+        bufferManager.setup();
 
         expect(bufferManager.downloadingInitialData).toBe(true);
         expect((bufferManager as any).audioBuffersToFetch).toEqual(mockAudioBuffersToFetch);
@@ -23,6 +24,7 @@ describe("BufferManager tests", () => {
 
     test("Fetch buffers from network", async () => {
         const bufferManager = new BufferManager(new FilterManager([], null), mockBufferFetcherService, mockEventEmitter, mockAudioBuffersToFetch);
+        bufferManager.setup();
         
         await bufferManager.resetBufferFetcher();
 
@@ -32,6 +34,7 @@ describe("BufferManager tests", () => {
     test("Emit loading buffers event", async () => {
         const mockEventEmitterEmit = jest.spyOn(mockEventEmitter, "emit");
         const bufferManager = new BufferManager(new FilterManager([], null), mockBufferFetcherService, mockEventEmitter, mockAudioBuffersToFetch);
+        bufferManager.setup();
         
         await bufferManager.resetBufferFetcher();
 
@@ -41,6 +44,7 @@ describe("BufferManager tests", () => {
     test("Emit loaded buffers event after successful fetch", async () => {
         const mockEventEmitterEmit = jest.spyOn(mockEventEmitter, "emit");
         const bufferManager = new BufferManager(new FilterManager([], null), mockBufferFetcherService, mockEventEmitter, mockAudioBuffersToFetch);
+        bufferManager.setup();
         
         await bufferManager.resetBufferFetcher();
 
@@ -56,6 +60,7 @@ describe("BufferManager tests", () => {
         };
         const mockEventEmitterEmit = jest.spyOn(mockEventEmitter, "emit");
         const bufferManager = new BufferManager(new FilterManager([], null), mockBufferFetcherServiceError, mockEventEmitter, mockAudioBuffersToFetch);
+        bufferManager.setup();
         
         await bufferManager.resetBufferFetcher();
 

@@ -30,6 +30,8 @@ const mockFilterManager = {
     setupTotalSamples: jest.fn(),
     resetFilterBuffers: jest.fn(),
     disconnectAllNodes: jest.fn(),
+    disableFilter: jest.fn(),
+    enableFilter: jest.fn(),
     currentNodes: {
         input: new MockAudioNode(),
         output: new MockAudioNode(),
@@ -99,7 +101,9 @@ const mockAudioProcessor = {
     clearRenderedBuffer: jest.fn(),
     sumInputBuffer: 0,
     renderedBuffer: new MockAudioBuffer(2, 0, 44100),
-    initialRenderingDone: false
+    initialRenderingDone: false,
+    updateAudioSpeedAndDuration: jest.fn(),
+    resetAudioRenderingProgress: jest.fn()
 } as unknown as AudioProcessorInterface;
 
 const mockBufferManager = {
@@ -122,7 +126,8 @@ const mockBufferPlayer = {
 
 const mockEventEmitter = {
     on: jest.fn(),
-    off: jest.fn()
+    off: jest.fn(),
+    emit: jest.fn()
 } as unknown as EventEmitterInterface;
 
 const mockRecorder = {

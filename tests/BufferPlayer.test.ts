@@ -43,8 +43,9 @@ describe("BufferPlayer tests", () => {
         };
         mockEventEmitter = new EventEmitter();
 
-        bufferPlayer = new BufferPlayer(mockAudioContextManager);
-        bufferPlayer.injectDependencies(null, null, null, mockEventEmitter, null);
+        bufferPlayer = new BufferPlayer();
+        bufferPlayer.injectDependencies(null, null, null, mockEventEmitter, mockAudioContextManager);
+        bufferPlayer.setup();
     });
 
     test("Initialize BufferPlayer", () => {

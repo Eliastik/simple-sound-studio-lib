@@ -47,7 +47,7 @@ export default class BufferPlayer extends AbstractAudioElement implements Buffer
     currentNode: AudioNode | null = null;
 
     @postConstruct()
-    protected setup() {
+    setup() {
         if (this.eventEmitter) {
             this.eventEmitter.on(EventType.AUDIO_SPEED_UPDATED, speed => {
                 if (speed) {

@@ -79,7 +79,7 @@ export default class AudioEditor extends AbstractAudioElement implements AudioEd
     }
 
     @postConstruct()
-    protected setup() {
+    setup() {
         if (this.bufferPlayer) {
             // Callback called just before starting playing audio, when compatibility mode is enabled
             this.bufferPlayer.onBeforePlaying(async () => {

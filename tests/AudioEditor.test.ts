@@ -31,6 +31,8 @@ describe("AudioEditor", () => {
             mockBufferManager,
             mockBufferPlayer
         );
+        audioEditor.injectDependencies(null, null, null, mockEventEmitter, null);
+        audioEditor.setup();
     });
 
     test("should initialize with provided managers", () => {
@@ -201,12 +203,10 @@ describe("AudioEditor", () => {
     });
 
     test("loop buffer player", async () => {
-        const eventEmitter = (mockBufferPlayer as any).eventEmitter;
-
         mockBufferPlayer.compatibilityMode = false;
         mockBufferPlayer.loop = true;
 
-        eventEmitter.emit(EventType.PLAYING_FINISHED);
+        mockEventEmitter.emit(EventType.PLAYING_FINISHED);
 
         expect(mockBufferPlayer.start).toHaveBeenCalled();
     });
@@ -225,7 +225,9 @@ describe("AudioEditor", () => {
     test("render audio should enable compatibility mode even when initial rendering is disabled", async () => {
         const eventEmitter = new EventEmitter();
 
-        const bufferPlayer = new BufferPlayer(mockContextManager);
+        const bufferPlayer = new BufferPlayer();
+        bufferPlayer.injectDependencies(null, null, null, mockEventEmitter, mockContextManager);
+        bufferPlayer.setup();
 
         const audioProcessor = new AudioProcessor(
             mockFilterManager,
@@ -243,6 +245,8 @@ describe("AudioEditor", () => {
             mockBufferManager,
             bufferPlayer
         );
+        audioEditor2.injectDependencies(null, null, null, mockEventEmitter, null);
+        audioEditor2.setup();
 
         const genericConfigService = new GenericConfigService();
 
