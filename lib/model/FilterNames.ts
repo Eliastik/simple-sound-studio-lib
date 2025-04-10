@@ -6,7 +6,7 @@ const FilterNames = {
     HIGH_PASS: "highpass",
     LIMITER: "limiter",
     LOW_PASS: "lowpass",
-    PASSTHROUGH: "passthroughfilter",
+    RENDERING_PROGRESS_CALCULATION: "renderingProgressCalculationFilter",
     RETURN_AUDIO: "returnAudio",
     SOUNDTOUCH: "soundtouch",
     TELEPHONIZER: "telephonizer",

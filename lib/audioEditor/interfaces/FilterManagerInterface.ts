@@ -76,11 +76,6 @@ export default interface FilterManagerInterface {
     disconnectOldNodes(keepCurrentOutput: boolean): void;
 
     /**
-     * Disconnect all nodes
-     */
-    disconnectAllNodes(): void;
-
-    /**
      * Initialize worklets filters
      */
     initializeWorklets(context: BaseAudioContext): Promise<void>;

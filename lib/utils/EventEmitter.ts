@@ -15,6 +15,7 @@ export default class EventEmitter implements EventEmitterInterface {
         if (!this.listeners[event]) {
             this.listeners[event] = [];
         }
+
         this.listeners[event].push(callback);
     }
 
@@ -24,6 +25,8 @@ export default class EventEmitter implements EventEmitterInterface {
                 callback(data);
             });
         }
+
+        console.log(event, data);
     }
 
     off(event: string, callback: EventEmitterCallback) {

@@ -22,14 +22,14 @@ const Constants = {
         LIMITER: "Limiter.worklet.js",
         SOUNDTOUCH: "Soundtouch.worklet.js",
         RECORDER_WORKLET: "RecorderWorklet.js",
-        PASSTHROUGH: "Passthrough.worklet.js"
+        RENDERING_PROGRESS_CALCULATION: "RenderingProgressCalculation.worklet.js"
     },
     WORKLET_NAMES: {
         BITCRUSHER: "bitcrusher-processor",
         LIMITER: "limiter-processor",
         SOUNDTOUCH: "soundtouch-processor",
         RECORDER_WORKLET: "recorder-worklet",
-        PASSTHROUGH: "passthrough"
+        RENDERING_PROGRESS_CALCULATION: "rendering-progress-calculation-worklet"
     },
     PREFERENCES_KEYS: {
         COMPATIBILITY_MODE_ENABLED: "compatibility-mode-enabled",

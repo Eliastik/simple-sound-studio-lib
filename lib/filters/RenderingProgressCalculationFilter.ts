@@ -1,18 +1,18 @@
 import AbstractAudioFilterWorklet from "./interfaces/AbstractAudioFilterWorklet";
 import Constants from "../model/Constants";
-import "./worklets/Passthrough.worklet";
+import "./worklets/RenderingProgressCalculation.worklet";
 import { FilterSettingValue } from "../model/filtersSettings/FilterSettings";
-import PassThroughWorkletEvent from "@/model/PassThroughWorkletEvent";
+import RenderingProgressCalculationFilterEvent from "@/model/RenderingProgressCalculationFilterEvent";
 import { EventType } from "@/model/EventTypeEnum";
 
-export default class PassThroughFilter extends AbstractAudioFilterWorklet<PassThroughWorkletEvent> {
+export default class RenderingProgressCalculationFilter extends AbstractAudioFilterWorklet<RenderingProgressCalculationFilterEvent> {
 
     private currentTime = 0;
     private lastSampleCount = 0;
     private samplePerSecond = 0;
     private currentTimeSamplesPerSecond = 0;
 
-    receiveEvent(message: MessageEvent<PassThroughWorkletEvent>): void {
+    receiveEvent(message: MessageEvent<RenderingProgressCalculationFilterEvent>): void {
         const currentTime = performance.now();
         const samplesProcessed = message.data.samplesCount;
 
@@ -34,11 +34,15 @@ export default class PassThroughFilter extends AbstractAudioFilterWorklet<PassTh
         }
 
         const timeDifference = currentTime - this.currentTime;
-        const percentageProcessed = (samplesProcessed / this._totalSamples);
+        const percentageProcessed = (samplesProcessed / this._totalSamples) * 100;
 
         if (this.eventEmitter && timeDifference >= Constants.TREATMENT_TIME_COUNTING_THROTTLE_INTERVAL) {
-            this.eventEmitter.emit(EventType.UPDATE_AUDIO_TREATMENT_PERCENT, percentageProcessed * 100);
+            this.eventEmitter.emit(EventType.UPDATE_AUDIO_TREATMENT_PERCENT, percentageProcessed);
             this.currentTime = currentTime;
+        }
+
+        if (percentageProcessed >= 100) {
+            this.stop();
         }
     }
 
@@ -90,11 +94,11 @@ export default class PassThroughFilter extends AbstractAudioFilterWorklet<PassTh
     }
 
     get workletName(): string {
-        return Constants.WORKLET_NAMES.PASSTHROUGH;
+        return Constants.WORKLET_NAMES.RENDERING_PROGRESS_CALCULATION;
     }
 
     get workletPath(): string {
-        return Constants.WORKLET_PATHS.PASSTHROUGH;
+        return Constants.WORKLET_PATHS.RENDERING_PROGRESS_CALCULATION;
     }
 
     get order(): number {
@@ -102,7 +106,7 @@ export default class PassThroughFilter extends AbstractAudioFilterWorklet<PassTh
     }
 
     get id(): string {
-        return Constants.FILTERS_NAMES.PASSTHROUGH;
+        return Constants.FILTERS_NAMES.RENDERING_PROGRESS_CALCULATION;
     }
 
     set totalSamples(value: number) {
@@ -115,10 +119,6 @@ export default class PassThroughFilter extends AbstractAudioFilterWorklet<PassTh
 
     getSettings() {
         return {};
-    }
-
-    isEnabled(): boolean {
-        return true;
     }
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars

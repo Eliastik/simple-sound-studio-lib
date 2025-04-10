@@ -8,7 +8,7 @@
 
 > `const` **Constants**: `object`
 
-Defined in: [model/Constants.ts:3](https://github.com/Eliastik/simple-sound-studio-lib/blob/1b0af6576bd7ecf35cd2f9871e987be9d83e1729/lib/model/Constants.ts#L3)
+Defined in: [model/Constants.ts:3](https://github.com/Eliastik/simple-sound-studio-lib/blob/d94b8862bac18f1ada54e8a1e0a7ef4f520fbc86/lib/model/Constants.ts#L3)
 
 ## Type declaration
 
@@ -136,9 +136,9 @@ Defined in: [model/Constants.ts:3](https://github.com/Eliastik/simple-sound-stud
 
 > **LOW\_PASS**: `string` = `"lowpass"`
 
-#### FILTERS\_NAMES.PASSTHROUGH
+#### FILTERS\_NAMES.RENDERING\_PROGRESS\_CALCULATION
 
-> **PASSTHROUGH**: `string` = `"passthroughfilter"`
+> **RENDERING\_PROGRESS\_CALCULATION**: `string` = `"renderingProgressCalculationFilter"`
 
 #### FILTERS\_NAMES.RETURN\_AUDIO
 
@@ -268,13 +268,13 @@ Defined in: [model/Constants.ts:3](https://github.com/Eliastik/simple-sound-stud
 
 > **LIMITER**: `string` = `"limiter-processor"`
 
-#### WORKLET\_NAMES.PASSTHROUGH
-
-> **PASSTHROUGH**: `string` = `"passthrough"`
-
 #### WORKLET\_NAMES.RECORDER\_WORKLET
 
 > **RECORDER\_WORKLET**: `string` = `"recorder-worklet"`
+
+#### WORKLET\_NAMES.RENDERING\_PROGRESS\_CALCULATION
+
+> **RENDERING\_PROGRESS\_CALCULATION**: `string` = `"rendering-progress-calculation-worklet"`
 
 #### WORKLET\_NAMES.SOUNDTOUCH
 
@@ -292,13 +292,13 @@ Defined in: [model/Constants.ts:3](https://github.com/Eliastik/simple-sound-stud
 
 > **LIMITER**: `string` = `"Limiter.worklet.js"`
 
-#### WORKLET\_PATHS.PASSTHROUGH
-
-> **PASSTHROUGH**: `string` = `"Passthrough.worklet.js"`
-
 #### WORKLET\_PATHS.RECORDER\_WORKLET
 
 > **RECORDER\_WORKLET**: `string` = `"RecorderWorklet.js"`
+
+#### WORKLET\_PATHS.RENDERING\_PROGRESS\_CALCULATION
+
+> **RENDERING\_PROGRESS\_CALCULATION**: `string` = `"RenderingProgressCalculation.worklet.js"`
 
 #### WORKLET\_PATHS.SOUNDTOUCH
 

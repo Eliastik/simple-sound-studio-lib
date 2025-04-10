@@ -41,9 +41,9 @@ export default class SaveBufferManager extends AbstractAudioElement implements S
     }
 
     private setup() {
-        if (this.bufferPlayer) {
+        if (this.eventEmitter) {
             // Callback called when playing is finished
-            this.bufferPlayer.on(EventType.PLAYING_FINISHED, () => {
+            this.eventEmitter.on(EventType.PLAYING_FINISHED, () => {
                 if (this._savingBuffer && this.playingStoppedCallback && this.eventEmitter) {
                     this.eventEmitter.off(EventType.PLAYING_STOPPED, this.playingStoppedCallback);
                 }

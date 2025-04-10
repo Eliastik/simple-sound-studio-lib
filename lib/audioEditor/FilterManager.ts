@@ -180,17 +180,6 @@ export default class FilterManager extends AbstractAudioElement implements Filte
         }
     }
 
-    disconnectAllNodes() {
-        if (this._currentNodes) {
-            this._currentNodes.input.disconnect();
-            this._currentNodes.output.disconnect();
-
-            this.disconnecteIntermediateNodes();
-
-            this._currentNodes = null;
-        }
-    }
-
     private disconnecteIntermediateNodes() {
         if (this._currentNodes && this._currentNodes.intermediateNodes) {
             for (const intermediate of this._currentNodes.intermediateNodes) {

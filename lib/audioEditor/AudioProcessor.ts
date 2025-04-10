@@ -68,6 +68,36 @@ export default class AudioProcessor extends AbstractAudioElement implements Audi
         }
     }
 
+    updateAudioSpeedAndDuration(durationAudio?: number | null) {
+        if (this.eventEmitter) {
+            if (this.filterManager && this.filterManager.entrypointFilter) {
+                const speedAudio = this.filterManager.entrypointFilter.getSpeed();
+                this.eventEmitter.emit(EventType.AUDIO_SPEED_UPDATED, speedAudio);
+            }
+
+            if (durationAudio != null) {
+                this.eventEmitter.emit(EventType.AUDIO_DURATION_UPDATED, durationAudio);
+            }
+        }
+    }
+
+    resetAudioRenderingProgress() {
+        if (this.eventEmitter) {
+            this.eventEmitter.emit(EventType.UPDATE_AUDIO_TREATMENT_PERCENT, 0);
+            this.eventEmitter.emit(EventType.UPDATE_REMAINING_TIME_ESTIMATED, -1);
+        }
+
+        if (this.filterManager) {
+            this.filterManager.disableFilter(Constants.FILTERS_NAMES.RENDERING_PROGRESS_CALCULATION);
+        }
+    }
+
+    startRenderingProgressCalculation() {
+        if (this.filterManager) {
+            this.filterManager.enableFilter(Constants.FILTERS_NAMES.RENDERING_PROGRESS_CALCULATION);
+        }
+    }
+
     async renderAudio(inputBuffer: AudioBuffer | null, forceInitialRendering?: boolean): Promise<boolean> {
         await this.prepareContext(inputBuffer);
 
@@ -91,6 +121,10 @@ export default class AudioProcessor extends AbstractAudioElement implements Audi
             throw new Error("No principal buffer available");
         }
 
+        if (this.eventEmitter) {
+            this.eventEmitter.emit(EventType.AUDIO_SPEED_UPDATED, 1);
+        }
+
         // If initial rendering is disabled and compatibility mode is disabled, we stop here
         if (!this.initialRenderingDone && this.configService && this.configService.isInitialRenderingDisabled() && !this.configService.isCompatibilityModeEnabled() && !forceInitialRendering) {
             this.loadInitialBuffer(inputBuffer);
@@ -103,47 +137,44 @@ export default class AudioProcessor extends AbstractAudioElement implements Audi
             this.bufferPlayer.stop();
         }
 
-        const speedAudio = this.filterManager.entrypointFilter.getSpeed();
-        const durationAudio = utils.calculateAudioDuration(inputBuffer, this.filterManager, speedAudio);
-        const offlineContext = this.contextManager.createOfflineAudioContext(2, this.contextManager.currentContext.sampleRate * durationAudio, this.contextManager.currentContext.sampleRate);
-        const outputContext = this.configService && this.configService.isCompatibilityModeEnabled() ? this.contextManager.currentContext : offlineContext;
-
-        this._renderedBuffer = await this.rendererManager.executeAudioRenderers(inputBuffer, outputContext);
         this.currentOfflineContext = null;
         this.audioRenderingLastCanceled = false;
 
-        utils.resetAudioRenderingProgress(this.eventEmitter);
+        const speedAudio = this.filterManager.entrypointFilter.getSpeed();
+        const durationAudio = utils.calculateAudioDuration(inputBuffer, this.filterManager, speedAudio);
+        const outputContext = this.configService && this.configService.isCompatibilityModeEnabled() ?
+            this.contextManager.currentContext :
+            this.contextManager.createOfflineAudioContext(2, this.contextManager.currentContext.sampleRate * durationAudio, this.contextManager.currentContext.sampleRate);
+
+        this._renderedBuffer = await this.rendererManager.executeAudioRenderers(inputBuffer, outputContext);
+
+        this.resetAudioRenderingProgress();
 
         this.filterManager.setupTotalSamples(durationAudio, this.contextManager.currentContext);
 
-        return this.setupOutput(inputBuffer, outputContext, durationAudio, offlineContext);
+        return this.setupOutput(inputBuffer, outputContext, durationAudio);
     }
 
-    private setupPlayerSpeed(bufferPlayer: BufferPlayerInterface) {
-        if (this.filterManager && this.filterManager.entrypointFilter) {
-            const speedAudio = this.filterManager.entrypointFilter.getSpeed();
-            bufferPlayer.speedAudio = speedAudio;
-        }
-    }
-
-    async setupOutput(inputBuffer: AudioBuffer | null, outputContext: AudioContext | OfflineAudioContext, durationAudio?: number, offlineContext?: OfflineAudioContext): Promise<boolean> {
+    async setupOutput(inputBuffer: AudioBuffer | null, outputContext: AudioContext | OfflineAudioContext, durationAudio?: number): Promise<boolean> {
         if (this._renderedBuffer && this.configService && this.eventEmitter && this.bufferPlayer && this.filterManager) {
             // Initialize worklets then connect the filter nodes
             await this.filterManager.initializeWorklets(outputContext);
 
+            this.startRenderingProgressCalculation();
+
             await this.filterManager.connectNodes(outputContext, this._renderedBuffer, false, this.configService.isCompatibilityModeEnabled());
 
-            this.setupPlayerSpeed(this.bufferPlayer);
-
             // Standard mode
-            if (!this.configService.isCompatibilityModeEnabled() && offlineContext && this.filterManager.currentNodes) {
+            if (!this.configService.isCompatibilityModeEnabled() && this.filterManager.currentNodes) {
+                const offlineContext = outputContext as OfflineAudioContext;
+
                 this.currentOfflineContext = offlineContext;
 
                 this.filterManager.currentNodes.output.connect(outputContext.destination);
 
                 const renderedBuffer = await offlineContext.startRendering();
 
-                this.cleanupAfterRendering();
+                this.cleanupAfterOfflineRendering();
 
                 if (this.contextManager && !this.loadRenderedAudio(inputBuffer, renderedBuffer)) {
                     return this.setupOutput(inputBuffer, this.contextManager.currentContext!, durationAudio);
@@ -155,7 +186,12 @@ export default class AudioProcessor extends AbstractAudioElement implements Audi
 
                 this.eventEmitter.emit(EventType.OFFLINE_AUDIO_RENDERING_FINISHED);
             } else if (this.filterManager.currentNodes) { // Compatibility mode
-                this.bufferPlayer.setCompatibilityMode(this.filterManager.currentNodes.output, durationAudio);
+                this.resetAudioRenderingProgress();
+
+                this.bufferPlayer.setCompatibilityMode(this.filterManager.currentNodes.output);
+
+                this.updateAudioSpeedAndDuration(durationAudio);
+
                 this.initialRenderingDone = true;
             }
 
@@ -169,10 +205,21 @@ export default class AudioProcessor extends AbstractAudioElement implements Audi
         return false;
     }
 
-    private cleanupAfterRendering() {
+    public cancelAudioRendering() {
+        if (this.currentOfflineContext && !this.audioRenderingLastCanceled && this.filterManager) {
+            this.audioRenderingLastCanceled = true;
+            this.filterManager.disconnectOldNodes(false);
+
+            if (this.eventEmitter) {
+                this.eventEmitter.emit(EventType.CANCELLING_AUDIO_PROCESSING);
+            }
+        }
+    }
+
+    private cleanupAfterOfflineRendering() {
         if (this.filterManager) {
             this.filterManager.clearWorklets();
-            this.filterManager.disconnectAllNodes();
+            this.filterManager.disconnectOldNodes(false);
         }
 
         if (this.currentOfflineContext) {
@@ -208,6 +255,8 @@ export default class AudioProcessor extends AbstractAudioElement implements Audi
                 this._renderedBuffer = renderedBuffer;
 
                 this.bufferPlayer.loadBuffer(this._renderedBuffer);
+
+                this.updateAudioSpeedAndDuration(null);
             } else if (!this.initialRenderingDone) {
                 this.loadInitialBuffer(inputBuffer);
                 this.eventEmitter.emit(EventType.CANCELLED_AND_LOADED_INITIAL_AUDIO);
@@ -226,17 +275,6 @@ export default class AudioProcessor extends AbstractAudioElement implements Audi
         if (this.bufferPlayer) {
             this._renderedBuffer = inputBuffer;
             this.bufferPlayer.loadBuffer(inputBuffer!);
-        }
-    }
-
-    public cancelAudioRendering() {
-        if (this.currentOfflineContext && !this.audioRenderingLastCanceled && this.filterManager) {
-            this.audioRenderingLastCanceled = true;
-            this.filterManager.disconnectOldNodes(false);
-
-            if (this.eventEmitter) {
-                this.eventEmitter.emit(EventType.CANCELLING_AUDIO_PROCESSING);
-            }
         }
     }
 

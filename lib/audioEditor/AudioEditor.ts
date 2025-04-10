@@ -81,7 +81,7 @@ export default class AudioEditor extends AbstractAudioElement implements AudioEd
     }
 
     private setup() {
-        if (this.bufferPlayer) {
+        if (this.bufferPlayer && this.eventEmitter) {
             // Callback called just before starting playing audio, when compatibility mode is enabled
             this.bufferPlayer.onBeforePlaying(async () => {
                 if (this.bufferPlayer && this.bufferPlayer.compatibilityMode
@@ -91,14 +91,14 @@ export default class AudioEditor extends AbstractAudioElement implements AudioEd
             });
 
             // Callback called when playing is finished
-            this.bufferPlayer.on(EventType.PLAYING_FINISHED, () => {
+            this.eventEmitter.on(EventType.PLAYING_FINISHED, () => {
                 if (this.bufferPlayer && this.bufferPlayer.loop) {
                     this.bufferPlayer.start();
                 }
             });
 
             // Callback called when playing is finished and looping all audio
-            this.bufferPlayer.on(EventType.PLAYING_FINISHED_LOOP_ALL, async () => {
+            this.eventEmitter.on(EventType.PLAYING_FINISHED_LOOP_ALL, async () => {
                 if (this.bufferPlayer && this.bufferPlayer.loopAll && !this.renderingAudio && !this.loadingAudio) {
                     await this.loadNextAudio(true);
                     this.bufferPlayer.start();
@@ -159,7 +159,7 @@ export default class AudioEditor extends AbstractAudioElement implements AudioEd
                 throw new Error("Error decoding audio file");
             }
 
-            utils.resetAudioRenderingProgress(this.eventEmitter);
+            this.audioProcessor.resetAudioRenderingProgress();
 
             // If switching between a list of audio to one audio, reset the loop audio playing
             if (this.bufferPlayer && this.bufferPlayer.loopAll && this.totalFileList <= 1) {
@@ -340,9 +340,10 @@ export default class AudioEditor extends AbstractAudioElement implements AudioEd
             this.filterManager && this.filterManager.entrypointFilter) {
             await this.filterManager.connectNodes(this.contextManager.currentContext, this.principalBuffer, true, this.bufferPlayer.compatibilityMode);
 
-            const speedAudio = this.filterManager.entrypointFilter.getSpeed();
-            this.bufferPlayer.speedAudio = speedAudio;
-            this.bufferPlayer.duration = utils.calculateAudioDuration(this.principalBuffer, this.filterManager, speedAudio) * speedAudio;
+            if (this.audioProcessor) {
+                const audioDuration = utils.calculateAudioDuration(this.principalBuffer, this.filterManager);
+                this.audioProcessor.updateAudioSpeedAndDuration(audioDuration);
+            }
         }
     }
 

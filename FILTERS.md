@@ -111,7 +111,7 @@ This filter is brickwall limiter used to reduce distorsion. It can also be set a
 * `lookAheadTime`: The time in seconds, indicating how much ahead the limiter looks at the signal to adjust compression.
 
 
-### PassThroughFilter
+### RenderingProgressCalculationFilter
 
 This filter should not be used. It is used to monitor audio processing. It is automatically managed by the library.
 
@@ -319,7 +319,7 @@ Ce filtre est un limiteur de type brickwall utilisé pour réduire la distorsion
 * `threshold` : Le niveau auquel le limiteur commence à agir. Les signaux au-dessus de ce niveau sont réduits.
 * `lookAheadTime` : Le temps (en secondes) qui indique combien d'avance le limiteur analyse le signal pour ajuster la compression.
 
-### PassThroughFilter
+### RenderingProgressCalculationFilter
 
 Ce filtre ne doit pas être utilisé. Il sert à surveiller le traitement audio. Il est géré automatiquement par la bibliothèque.
 

@@ -1,14 +1,12 @@
 import { FilterSettingValue } from "../model/filtersSettings/FilterSettings";
-import { EventType } from "@/model/EventTypeEnum";
 import FilterManagerInterface from "@/audioEditor/interfaces/FilterManagerInterface";
-import EventEmitterInterface from "./interfaces/EventEmitterInterface";
 
 const utilFunctions = {
-    calcAudioDuration: (audio: AudioBuffer, speed: number) => {
+    calcAudioDuration: (audio: AudioBuffer, speed?: number) => {
         if (audio) {
             let duration = audio.duration + 1;
 
-            if (speed) {
+            if (speed != undefined) {
                 duration = duration / speed;
             }
 
@@ -119,22 +117,13 @@ const utilFunctions = {
      * @param speedAudio Current audio speed
      * @returns The audio duration
      */
-    calculateAudioDuration(buffer: AudioBuffer, filterManager: FilterManagerInterface, speedAudio: number): number {
+    calculateAudioDuration(buffer: AudioBuffer, filterManager: FilterManagerInterface, speedAudio?: number): number {
         if (buffer && filterManager) {
             const duration = this.calcAudioDuration(buffer, speedAudio);
             return duration + filterManager.getAddingTime();
         }
 
         return 0;
-    },
-    /**
-     * Reset audio rendering progress
-     */
-    resetAudioRenderingProgress(eventEmitter: EventEmitterInterface | null) {
-        if (eventEmitter) {
-            eventEmitter.emit(EventType.UPDATE_AUDIO_TREATMENT_PERCENT, 0);
-            eventEmitter.emit(EventType.UPDATE_REMAINING_TIME_ESTIMATED, -1);
-        }
     },
     forceDownload(blob: Blob, filename: string) {
         const link = window.document.createElement("a");

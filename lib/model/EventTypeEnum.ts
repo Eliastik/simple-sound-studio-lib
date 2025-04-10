@@ -35,5 +35,7 @@ export enum EventType {
     CANCELLED_AND_LOADED_INITIAL_AUDIO = "cancelledAndLoadedInitialAudio",
     CANCELLING_AUDIO_PROCESSING = "cancellingAudioProcessing",
     PLAYING_FINISHED_LOOP_ALL = "playingFinishedLoopAll",
-    LOADED_AUDIO_FILE_FROM_LIST = "loadedAudioFileFromList"
+    LOADED_AUDIO_FILE_FROM_LIST = "loadedAudioFileFromList",
+    AUDIO_SPEED_UPDATED = "audioSpeedUpdated",
+    AUDIO_DURATION_UPDATED = "audioDurationUpdated"
 };

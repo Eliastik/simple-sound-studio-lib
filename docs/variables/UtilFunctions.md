@@ -8,13 +8,13 @@
 
 > `const` **UtilFunctions**: `object`
 
-Defined in: [utils/Functions.ts:6](https://github.com/Eliastik/simple-sound-studio-lib/blob/1b0af6576bd7ecf35cd2f9871e987be9d83e1729/lib/utils/Functions.ts#L6)
+Defined in: [utils/Functions.ts:4](https://github.com/Eliastik/simple-sound-studio-lib/blob/d94b8862bac18f1ada54e8a1e0a7ef4f520fbc86/lib/utils/Functions.ts#L4)
 
 ## Type declaration
 
 ### calcAudioDuration()
 
-> **calcAudioDuration**: (`audio`, `speed`) => `number`
+> **calcAudioDuration**: (`audio`, `speed?`) => `number`
 
 #### Parameters
 
@@ -22,7 +22,7 @@ Defined in: [utils/Functions.ts:6](https://github.com/Eliastik/simple-sound-stud
 
 `AudioBuffer`
 
-##### speed
+##### speed?
 
 `number`
 
@@ -114,7 +114,7 @@ Defined in: [utils/Functions.ts:6](https://github.com/Eliastik/simple-sound-stud
 
 ### calculateAudioDuration()
 
-> **calculateAudioDuration**(`buffer`, `filterManager`, `speedAudio`): `number`
+> **calculateAudioDuration**(`buffer`, `filterManager`, `speedAudio?`): `number`
 
 Calculate approximative audio duration according to enabled filters and their settings
 
@@ -128,7 +128,7 @@ Calculate approximative audio duration according to enabled filters and their se
 
 `FilterManagerInterface`
 
-##### speedAudio
+##### speedAudio?
 
 `number`
 
@@ -205,22 +205,6 @@ FilterSettingValue
 #### Returns
 
 `boolean`
-
-### resetAudioRenderingProgress()
-
-> **resetAudioRenderingProgress**(`eventEmitter`): `void`
-
-Reset audio rendering progress
-
-#### Parameters
-
-##### eventEmitter
-
-`null` | `EventEmitterInterface`
-
-#### Returns
-
-`void`
 
 ### sumAudioBuffer()
 

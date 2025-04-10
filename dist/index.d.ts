@@ -404,10 +404,6 @@ interface FilterManagerInterface {
      */
     disconnectOldNodes(keepCurrentOutput: boolean): void;
     /**
-     * Disconnect all nodes
-     */
-    disconnectAllNodes(): void;
-    /**
      * Initialize worklets filters
      */
     initializeWorklets(context: BaseAudioContext): Promise<void>;
@@ -537,10 +533,9 @@ interface AudioProcessorInterface {
      * @param inputBuffer The input audio buffer
      * @param outputContext Output audio context
      * @param durationAudio Duration of the audio buffer
-     * @param offlineContext An offline context to do the rendering (can be omited, in this case the rendering is done in real time - "compatibility mode")
      * @returns A promise resolved when the audio processing is done. The promise returns false if the audio processing was cancelled, or if an error occurred.
      */
-    setupOutput(inputBuffer: AudioBuffer | null, outputContext: BaseAudioContext, durationAudio?: number, offlineContext?: OfflineAudioContext): Promise<boolean>;
+    setupOutput(inputBuffer: AudioBuffer | null, outputContext: BaseAudioContext, durationAudio?: number): Promise<boolean>;
     /**
      * Cancel the audio rendering
      */
@@ -549,6 +544,15 @@ interface AudioProcessorInterface {
      * Clear and remove rendered buffer to free memory
      */
     clearRenderedBuffer(): void;
+    /**
+     * Reset the audio rendering progress
+     */
+    resetAudioRenderingProgress(): void;
+    /**
+     * Update the audio speed and duration
+     * @param audioDuration The duration of the audio
+     */
+    updateAudioSpeedAndDuration(audioDuration?: number): void;
     /**
      * Get the rendered audio buffer
      */
@@ -783,9 +787,9 @@ declare class BufferPlayer extends AbstractAudioElement implements BufferPlayerI
     private intervals;
     private onBeforePlayingCallback;
     private _volume;
+    private _duration;
     currentTime: number;
     displayTime: number;
-    duration: number;
     playing: boolean;
     loop: boolean;
     loopAll: boolean;
@@ -793,6 +797,7 @@ declare class BufferPlayer extends AbstractAudioElement implements BufferPlayerI
     compatibilityMode: boolean;
     currentNode: AudioNode | null;
     constructor(contextManager: AudioContextManagerInterface$1 | undefined | null);
+    private setup;
     init(direct?: boolean): void;
     private createGainNode;
     loadBuffer(buffer: AudioBuffer): void;
@@ -813,6 +818,8 @@ declare class BufferPlayer extends AbstractAudioElement implements BufferPlayerI
     set volume(volume: number);
     private setGainNodeValue;
     get volume(): number;
+    get duration(): number;
+    set duration(duration: number);
     onBeforePlaying(callback: () => void): void;
     toggleLoop(): void;
     toggleLoopAll(): void;
@@ -1129,7 +1136,7 @@ declare const Constants: {
         HIGH_PASS: string;
         LIMITER: string;
         LOW_PASS: string;
-        PASSTHROUGH: string;
+        RENDERING_PROGRESS_CALCULATION: string;
         RETURN_AUDIO: string;
         SOUNDTOUCH: string;
         TELEPHONIZER: string;
@@ -1140,14 +1147,14 @@ declare const Constants: {
         LIMITER: string;
         SOUNDTOUCH: string;
         RECORDER_WORKLET: string;
-        PASSTHROUGH: string;
+        RENDERING_PROGRESS_CALCULATION: string;
     };
     WORKLET_NAMES: {
         BITCRUSHER: string;
         LIMITER: string;
         SOUNDTOUCH: string;
         RECORDER_WORKLET: string;
-        PASSTHROUGH: string;
+        RENDERING_PROGRESS_CALCULATION: string;
     };
     PREFERENCES_KEYS: {
         COMPATIBILITY_MODE_ENABLED: string;
@@ -1236,7 +1243,7 @@ declare class GenericConfigService implements ConfigService {
 }
 
 declare const utilFunctions: {
-    calcAudioDuration: (audio: AudioBuffer, speed: number) => number;
+    calcAudioDuration: (audio: AudioBuffer, speed?: number) => number;
     loadAudioBuffer: (context: AudioContext, file: File) => Promise<AudioBuffer>;
     readAsArrayBufferPromisified: (file: File) => Promise<ArrayBuffer>;
     decodeBuffer: (context: AudioContext, buffer: AudioBuffer) => AudioBuffer;
@@ -1259,11 +1266,7 @@ declare const utilFunctions: {
      * @param speedAudio Current audio speed
      * @returns The audio duration
      */
-    calculateAudioDuration(buffer: AudioBuffer, filterManager: FilterManagerInterface$1, speedAudio: number): number;
-    /**
-     * Reset audio rendering progress
-     */
-    resetAudioRenderingProgress(eventEmitter: EventEmitterInterface | null): void;
+    calculateAudioDuration(buffer: AudioBuffer, filterManager: FilterManagerInterface$1, speedAudio?: number): number;
     forceDownload(blob: Blob, filename: string): void;
     clearAudioBuffer(buffer: AudioBuffer | null): void;
 };
@@ -1305,7 +1308,9 @@ declare enum EventType {
     CANCELLED_AND_LOADED_INITIAL_AUDIO = "cancelledAndLoadedInitialAudio",
     CANCELLING_AUDIO_PROCESSING = "cancellingAudioProcessing",
     PLAYING_FINISHED_LOOP_ALL = "playingFinishedLoopAll",
-    LOADED_AUDIO_FILE_FROM_LIST = "loadedAudioFileFromList"
+    LOADED_AUDIO_FILE_FROM_LIST = "loadedAudioFileFromList",
+    AUDIO_SPEED_UPDATED = "audioSpeedUpdated",
+    AUDIO_DURATION_UPDATED = "audioDurationUpdated"
 }
 
 /**
@@ -1390,7 +1395,7 @@ declare const FilterNames: {
     HIGH_PASS: string;
     LIMITER: string;
     LOW_PASS: string;
-    PASSTHROUGH: string;
+    RENDERING_PROGRESS_CALCULATION: string;
     RETURN_AUDIO: string;
     SOUNDTOUCH: string;
     TELEPHONIZER: string;

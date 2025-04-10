@@ -35,7 +35,7 @@ import ReverbFilter from "./filters/ReverbFilter";
 import SoundtouchWrapperFilter from "./filters/SountouchWrapperFilter";
 import TelephonizerFilter from "./filters/TelephonizerFilter";
 import VocoderFilter from "./filters/VocoderFilter";
-import PassThroughFilter from "./filters/PassThroughFilter";
+import RenderingProgressCalculationFilter from "./filters/RenderingProgressCalculationFilter";
 import AbstractAudioFilter from "./filters/interfaces/AbstractAudioFilter";
 import AudioFilterEntrypointInterface from "./filters/interfaces/AudioFilterEntrypointInterface";
 import VoiceRecorderInterface from "./voiceRecorder/interfaces/VoiceRecorderInterface";
@@ -61,7 +61,7 @@ function getAudioEditorContainer() {
     audioEditorContainer.bind<AbstractAudioFilter>(TYPES.Filters).to(ReverbFilter);
     audioEditorContainer.bind<AbstractAudioFilter>(TYPES.Filters).to(TelephonizerFilter);
     audioEditorContainer.bind<AbstractAudioFilter>(TYPES.Filters).to(VocoderFilter);
-    audioEditorContainer.bind<AbstractAudioFilter>(TYPES.Filters).to(PassThroughFilter);
+    audioEditorContainer.bind<AbstractAudioFilter>(TYPES.Filters).to(RenderingProgressCalculationFilter);
 
     // Services
     audioEditorContainer.bind<EventEmitterInterface>(TYPES.EventEmitter).to(EventEmitter);

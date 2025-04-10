@@ -1,15 +1,25 @@
 import Constants from "../../model/Constants";
 
 class BitCrusherProcessor extends AudioWorkletProcessor {
+
     private stopped = false;
+    private disabled = false;
     private phaser: number[] | null = null;
     private last: number[] | null = null;
 
     constructor() {
         super();
         this.port.onmessage = event => {
-            if (event.data == "stop") {
+            switch (event.data) {
+            case "stop":
                 this.stop();
+                break;
+            case "disable":
+                this.disabled = true;
+                break;
+            case "enable":
+                this.disabled = false;
+                break;
             }
         };
     }
@@ -26,7 +36,7 @@ class BitCrusherProcessor extends AudioWorkletProcessor {
     }
 
     process(inputs: Float32Array[][], outputs: Float32Array[][], parameters: Record<string, Float32Array>): boolean {
-        if (this.stopped) {
+        if (this.stopped || this.disabled) {
             return false;
         }
 

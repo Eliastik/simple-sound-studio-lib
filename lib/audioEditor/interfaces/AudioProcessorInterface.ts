@@ -21,10 +21,9 @@ export default interface AudioProcessorInterface {
      * @param inputBuffer The input audio buffer
      * @param outputContext Output audio context
      * @param durationAudio Duration of the audio buffer
-     * @param offlineContext An offline context to do the rendering (can be omited, in this case the rendering is done in real time - "compatibility mode")
      * @returns A promise resolved when the audio processing is done. The promise returns false if the audio processing was cancelled, or if an error occurred.
      */
-    setupOutput(inputBuffer: AudioBuffer | null, outputContext: BaseAudioContext, durationAudio?: number, offlineContext?: OfflineAudioContext): Promise<boolean>;
+    setupOutput(inputBuffer: AudioBuffer | null, outputContext: BaseAudioContext, durationAudio?: number): Promise<boolean>;
 
     /**
      * Cancel the audio rendering
@@ -35,6 +34,17 @@ export default interface AudioProcessorInterface {
      * Clear and remove rendered buffer to free memory
      */
     clearRenderedBuffer(): void;
+
+    /**
+     * Reset the audio rendering progress
+     */
+    resetAudioRenderingProgress(): void;
+
+    /**
+     * Update the audio speed and duration
+     * @param audioDuration The duration of the audio
+     */
+    updateAudioSpeedAndDuration(audioDuration?: number): void;
 
     /**
      * Get the rendered audio buffer

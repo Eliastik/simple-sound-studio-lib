@@ -1,15 +1,25 @@
 import Constants from "../../model/Constants";
 
-class PassthroughWorkletProcessor extends AudioWorkletProcessor {
+class RenderingProgressCalculationWorkletProcessor extends AudioWorkletProcessor {
 
-    stopped = false;
-    samplesCount = 0;
+    private stopped = false;
+    private disabled = false;
+    private samplesCount = 0;
 
     constructor() {
         super();
+
         this.port.onmessage = event => {
-            if (event.data == "stop") {
+            switch (event.data) {
+            case "stop":
                 this.stop();
+                break;
+            case "disable":
+                this.disabled = true;
+                break;
+            case "enable":
+                this.disabled = false;
+                break;
             }
         };
     }
@@ -19,11 +29,12 @@ class PassthroughWorkletProcessor extends AudioWorkletProcessor {
     }
 
     get defaultParameterDescriptors() {
-        return PassthroughWorkletProcessor.parameterDescriptors;
+        return RenderingProgressCalculationWorkletProcessor.parameterDescriptors;
     }
 
     process(inputs: Float32Array[][], outputs: Float32Array[][]): boolean {
-        if (this.stopped) {
+        console.log(this.stopped, this.disabled);
+        if (this.stopped || this.disabled) {
             return false;
         }
 
@@ -57,4 +68,4 @@ class PassthroughWorkletProcessor extends AudioWorkletProcessor {
     }
 }
 
-registerProcessor(Constants.WORKLET_NAMES.PASSTHROUGH, PassthroughWorkletProcessor);
+registerProcessor(Constants.WORKLET_NAMES.RENDERING_PROGRESS_CALCULATION, RenderingProgressCalculationWorkletProcessor);

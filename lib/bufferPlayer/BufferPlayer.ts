@@ -38,10 +38,10 @@ export default class BufferPlayer extends AbstractAudioElement implements Buffer
     private intervals: number[] = [];
     private onBeforePlayingCallback: () => void = async () => { };
     private _volume = 1;
+    private _duration = 0;
 
     currentTime = 0;
     displayTime = 0;
-    duration = 0;
     playing = false;
     loop = false;
     loopAll = false;
@@ -55,6 +55,24 @@ export default class BufferPlayer extends AbstractAudioElement implements Buffer
         super();
 
         this._contextManager = contextManager;
+
+        this.setup();
+    }
+
+    private setup() {
+        if (this.eventEmitter) {
+            this.eventEmitter.on(EventType.AUDIO_SPEED_UPDATED, speed => {
+                if (speed) {
+                    this.speedAudio = speed as number;
+                }
+            });
+
+            this.eventEmitter.on(EventType.AUDIO_DURATION_UPDATED, duration => {
+                if (duration) {
+                    this.duration = duration as number;
+                }
+            });
+        }
     }
 
     init(direct?: boolean) {
@@ -71,7 +89,7 @@ export default class BufferPlayer extends AbstractAudioElement implements Buffer
 
                 this.createGainNode();
 
-                this.duration = this.buffer.duration * this.speedAudio;
+                this.duration = this.buffer.duration;
 
                 if (this.source && this.gainNode) {
                     this.source.connect(this.gainNode);
@@ -226,7 +244,7 @@ export default class BufferPlayer extends AbstractAudioElement implements Buffer
                 } else {
                     this.updateInfos();
                 }
-            }, 100));
+            }, 500));
         }
     }
 
@@ -289,6 +307,14 @@ export default class BufferPlayer extends AbstractAudioElement implements Buffer
 
     get volume() {
         return this._volume;
+    }
+
+    get duration() {
+        return this._duration;
+    }
+
+    set duration(duration: number) {
+        this._duration = duration * (this.speedAudio || 1);
     }
 
     onBeforePlaying(callback: () => void) {

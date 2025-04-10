@@ -23,6 +23,7 @@ import Constants from "../../model/Constants";
 import DelayBuffer from "../../utils/DelayBuffer";
 
 class LimiterProcessor extends AudioWorkletProcessor {
+
     private delayBuffer: DelayBuffer[] = [];
     private envelopeSample = 0;
     private stopped = false;
@@ -30,15 +31,21 @@ class LimiterProcessor extends AudioWorkletProcessor {
 
     constructor() {
         super();
+
         this.port.onmessage = event => {
-            if (event.data == "reset") {
+            switch (event.data) {
+            case "reset":
                 this.reset();
-            } else if (event.data == "stop") {
+                break;
+            case "stop":
                 this.stop();
-            } else if (event.data == "disable") {
+                break;
+            case "disable":
                 this.disabled = true;
-            } else if (event.data == "enable") {
+                break;
+            case "enable":
                 this.disabled = false;
+                break;
             }
         };
     }
@@ -100,7 +107,7 @@ class LimiterProcessor extends AudioWorkletProcessor {
     }
 
     process(inputs: Float32Array[][], outputs: Float32Array[][], parameters: Record<string, Float32Array>): boolean {
-        if (this.stopped) {
+        if (this.stopped || this.disabled) {
             return false;
         }
 

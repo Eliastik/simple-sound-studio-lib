@@ -8,7 +8,7 @@
 
 > `const` **FilterNames**: `object`
 
-Defined in: [model/FilterNames.ts:1](https://github.com/Eliastik/simple-sound-studio-lib/blob/1b0af6576bd7ecf35cd2f9871e987be9d83e1729/lib/model/FilterNames.ts#L1)
+Defined in: [model/FilterNames.ts:1](https://github.com/Eliastik/simple-sound-studio-lib/blob/d94b8862bac18f1ada54e8a1e0a7ef4f520fbc86/lib/model/FilterNames.ts#L1)
 
 ## Type declaration
 
@@ -36,9 +36,9 @@ Defined in: [model/FilterNames.ts:1](https://github.com/Eliastik/simple-sound-st
 
 > **LOW\_PASS**: `string` = `"lowpass"`
 
-### PASSTHROUGH
+### RENDERING\_PROGRESS\_CALCULATION
 
-> **PASSTHROUGH**: `string` = `"passthroughfilter"`
+> **RENDERING\_PROGRESS\_CALCULATION**: `string` = `"renderingProgressCalculationFilter"`
 
 ### RETURN\_AUDIO
 
