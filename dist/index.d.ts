@@ -1030,6 +1030,7 @@ declare class WorkletScriptProcessorNodeAdapter {
     private setupPort;
     private setupProcessor;
     private setupWorkletScope;
+    private stop;
     get port(): MessagePort | null;
     get parameters(): AudioParamMap;
     get node(): ScriptProcessorNode | null;

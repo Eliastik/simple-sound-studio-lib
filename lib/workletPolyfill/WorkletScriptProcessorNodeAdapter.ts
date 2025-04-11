@@ -8,7 +8,7 @@ import Functions from "../utils/Functions";
  */
 export default class WorkletScriptProcessorNodeAdapter {
 
-    private workletProcessor: SimpleAudioWorkletProcessor;
+    private workletProcessor: SimpleAudioWorkletProcessor | null;
     private _parameters = new Map<string, AudioParamPolyfill>();
     private _port: MessagePort | null = null;
     private _scriptProcessorNode: ScriptProcessorNode | null;
@@ -37,6 +37,10 @@ export default class WorkletScriptProcessorNodeAdapter {
             if (this.workletProcessor && this.workletProcessor.port2) {
                 this.workletProcessor.port2.postMessage(ev.data);
             }
+
+            if (ev && ev.data === "stop") {
+                this.stop();
+            }
         };
 
         if (this.workletProcessor && this.workletProcessor.port2) {
@@ -49,7 +53,7 @@ export default class WorkletScriptProcessorNodeAdapter {
     }
 
     private setupProcessor() {
-        if (!this._scriptProcessorNode) {
+        if (!this._scriptProcessorNode || !this.workletProcessor) {
             return;
         }
 
@@ -85,6 +89,14 @@ export default class WorkletScriptProcessorNodeAdapter {
         if (typeof(window) !== "undefined") {
             window.sampleRate = context.sampleRate;
         }
+    }
+
+    private stop() {
+        this._scriptProcessorNode = null;
+        this._port = null;
+        this._parameters = new Map();
+        this.currentContext = null;
+        this.workletProcessor = null;
     }
 
     get port() {
