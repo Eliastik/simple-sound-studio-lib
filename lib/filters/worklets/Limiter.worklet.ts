@@ -25,7 +25,7 @@ import DelayBuffer from "../../utils/DelayBuffer";
 class LimiterProcessor extends AudioWorkletProcessor {
 
     private delayBuffer: DelayBuffer[] = [];
-    private envelopeSample = 0;
+    private envelopeSamples: number[] = [];
     private stopped = false;
     private disabled = false;
 
@@ -65,22 +65,26 @@ class LimiterProcessor extends AudioWorkletProcessor {
         return LimiterProcessor.parameterDescriptors;
     }
 
-    getEnvelope(data: Float32Array, attackTime: number, releaseTime: number, sampleRate: number) {
+    getEnvelope(data: Float32Array, attackTime: number, releaseTime: number, sampleRate: number, channel: number) {
         const attackGain = Math.exp(-1 / (sampleRate * attackTime));
         const releaseGain = Math.exp(-1 / (sampleRate * releaseTime));
 
         const envelope = new Float32Array(data.length);
 
+        if (this.envelopeSamples[channel] == null) {
+            this.envelopeSamples[channel] = 0;
+        }
+
         for (let i = 0; i < data.length; i++) {
             const envIn = Math.abs(data[i]);
 
-            if (this.envelopeSample < envIn) {
-                this.envelopeSample = envIn + attackGain * (this.envelopeSample - envIn);
+            if (this.envelopeSamples[channel] < envIn) {
+                this.envelopeSamples[channel] = envIn + attackGain * (this.envelopeSamples[channel] - envIn);
             } else {
-                this.envelopeSample = envIn + releaseGain * (this.envelopeSample - envIn);
+                this.envelopeSamples[channel] = envIn + releaseGain * (this.envelopeSamples[channel] - envIn);
             }
 
-            envelope[i] = this.envelopeSample;
+            envelope[i] = this.envelopeSamples[channel];
         }
 
         return envelope;
@@ -107,7 +111,7 @@ class LimiterProcessor extends AudioWorkletProcessor {
     }
 
     process(inputs: Float32Array[][], outputs: Float32Array[][], parameters: Record<string, Float32Array>): boolean {
-        if (this.stopped || this.disabled) {
+        if (this.stopped) {
             return false;
         }
 
@@ -143,7 +147,7 @@ class LimiterProcessor extends AudioWorkletProcessor {
 
             // compute the envelope
             if (!this.disabled && out) {
-                envelopeData[channel] = this.getEnvelope(out, parameters.attackTime[0], parameters.releaseTime[0], sampleRate);
+                envelopeData[channel] = this.getEnvelope(out, parameters.attackTime[0], parameters.releaseTime[0], sampleRate, channel);
             }
         }
 
@@ -189,7 +193,7 @@ class LimiterProcessor extends AudioWorkletProcessor {
             }
         }
 
-        this.envelopeSample = 0;
+        this.envelopeSamples = [];
     }
 
     stop() {
@@ -200,7 +204,7 @@ class LimiterProcessor extends AudioWorkletProcessor {
         }
 
         this.delayBuffer = [];
-        this.envelopeSample = 0;
+        this.envelopeSamples = [];
         this.stopped = true;
     }
 }
