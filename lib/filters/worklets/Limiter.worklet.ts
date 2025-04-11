@@ -73,9 +73,9 @@ class LimiterProcessor extends AudioWorkletProcessor {
         const inputBuffer = inputs[0];
         const outputBuffer = outputs[0];
 
-        const envelopeData = this.applyPreGainAndComputeEnvelope(outputBuffer, inputBuffer, parameters);
+        const envelopeData = this.applyPreGainAndComputeEnvelope(inputBuffer, outputBuffer, parameters);
 
-        this.applyLimiter(outputBuffer, inputBuffer, parameters, envelopeData);
+        this.applyLimiter(inputBuffer, outputBuffer, parameters, envelopeData);
 
         return true;
     }
@@ -125,7 +125,7 @@ class LimiterProcessor extends AudioWorkletProcessor {
         return Math.pow(10, db / 20);
     }
 
-    private applyPreGainAndComputeEnvelope(outputBuffer: Float32Array[], inputBuffer: Float32Array[], parameters: Record<string, Float32Array>) {
+    private applyPreGainAndComputeEnvelope(inputBuffer: Float32Array[], outputBuffer: Float32Array[], parameters: Record<string, Float32Array>) {
         const preGainAmp = this.dBToAmp(parameters.preGain[0]);
 
         const envelopeData = [];
