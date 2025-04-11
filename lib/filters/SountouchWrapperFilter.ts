@@ -99,6 +99,7 @@ export default class SoundtouchWrapperFilter extends AbstractAudioFilterWorklet<
         if (this.currentPitchShifter) {
             this.currentPitchShifter.disconnect();
             this.currentPitchShifter._filter = null;
+            this.currentPitchShifter = null;
         }
 
         if (this.currentBufferSource) {

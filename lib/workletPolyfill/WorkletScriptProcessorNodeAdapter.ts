@@ -21,8 +21,8 @@ export default class WorkletScriptProcessorNodeAdapter {
         // Create a ScriptProcessorNode with two channels
         this._scriptProcessorNode = context.createScriptProcessor(
             bufferSize,
-            2,
-            2
+            context.destination.channelCount,
+            context.destination.channelCount
         );
 
         this.setupPort();
