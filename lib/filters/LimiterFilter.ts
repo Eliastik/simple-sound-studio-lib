@@ -6,6 +6,7 @@ import "./worklets/Limiter.worklet";
 import utilFunctions from "../utils/Functions";
 
 export default class LimiterFilter extends AbstractAudioFilterWorklet<void> {
+
     private preGain = 0; // dB
     private postGain = 0; // dB
     private attackTime = 0; // s
@@ -56,6 +57,7 @@ export default class LimiterFilter extends AbstractAudioFilterWorklet<void> {
     }
 
     setSetting(settingId: string, value: FilterSettingValue): Promise<void> {
+        console.log(settingId, value);
         if (!utilFunctions.isSettingValueValid(value)) {
             return Promise.resolve();
         }

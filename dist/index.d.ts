@@ -14,6 +14,7 @@ import { AudioFilterNodes as AudioFilterNodes$1 } from '@/model/AudioNodes';
 import BufferPlayerInterface$1 from '@/bufferPlayer/interfaces/BufferPlayerInterface';
 import { RecorderSettings as RecorderSettings$1 } from '@/model/RecorderSettings';
 import AudioEditorEvents$1 from '@/model/AudioEditorEvent';
+import { EventType as EventType$1 } from '@/model/EventTypeEnum';
 import FilterManagerInterface$1 from '@/audioEditor/interfaces/FilterManagerInterface';
 import AudioEditorInterface$1 from '@/audioEditor/interfaces/AudioEditorInterface';
 import { ConfigService as ConfigService$1 } from '@/services/interfaces/ConfigService';
@@ -199,7 +200,7 @@ declare abstract class AbstractAudioRenderer extends AbstractAudioNode {
     abstract renderAudio(context: BaseAudioContext, buffer: AudioBuffer): Promise<AudioBuffer>;
 }
 
-type EventEmitterCallback = (data: string | number | AudioBuffer | undefined) => void;
+type EventEmitterCallback = (data: string | number | AudioBuffer | undefined) => Promise<void> | void;
 
 interface FilterState {
     [filterId: string]: boolean;
@@ -322,12 +323,14 @@ interface AudioEditorInterface {
      * Subscribe to an event
      * @param event The event ID
      * @param callback The callback function
+     * @deprecated Will be removed in a future release, use the EventEmitter.on method instead.
      */
     on(event: string, callback: EventEmitterCallback$1): void;
     /**
      * Unsubscribe to an event
      * @param event The event ID
      * @param callback The callback function
+     * @deprecated Will be removed in a future release, use the EventEmitter.off method instead.
      */
     off(event: string, callback: EventEmitterCallback$1): void;
     /**
@@ -611,7 +614,7 @@ declare class AudioEditor extends AbstractAudioElement implements AudioEditorInt
     private loadingAudio;
     private renderingAudio;
     constructor(filterManager: FilterManagerInterface, rendererManager: RendererManagerInterface, contextManager: AudioContextManagerInterface, saveBufferManager: SaveBufferManagerInterface, audioProcessor: AudioProcessorInterface, bufferManager: BufferManagerInterface, player: BufferPlayerInterface$1);
-    protected setup(): void;
+    setup(): void;
     addFilters(...filters: AbstractAudioFilter[]): void;
     addRenderers(...renderers: AbstractAudioRenderer[]): void;
     get currentSampleRate(): number;
@@ -701,6 +704,7 @@ interface BufferPlayerInterface {
     /**
       * Callback called just before starting playing the audio
       * @param callback The callback
+      * @deprecated Will be removed in a future release, use the EventEmitter.on(EventType.PLAYING_STARTED) method instead.
       */
     onBeforePlaying(callback: () => Promise<void>): void;
     /**
@@ -715,6 +719,7 @@ interface BufferPlayerInterface {
       * Observe an event
       * @param event The event name
       * @param callback Callback called when an event of this type occurs
+      * @deprecated Will be removed in a future release, use the EventEmitter.on method instead.
       */
     on(event: string, callback: EventEmitterCallback$1): void;
     /**
@@ -784,7 +789,6 @@ declare class BufferPlayer extends AbstractAudioElement implements BufferPlayerI
     private source;
     private gainNode;
     private intervals;
-    private onBeforePlayingCallback;
     private _volume;
     private _duration;
     currentTime: number;
@@ -795,7 +799,7 @@ declare class BufferPlayer extends AbstractAudioElement implements BufferPlayerI
     speedAudio: number;
     compatibilityMode: boolean;
     currentNode: AudioNode | null;
-    protected setup(): void;
+    setup(): void;
     init(direct?: boolean): void;
     private createGainNode;
     loadBuffer(buffer: AudioBuffer): void;
@@ -912,6 +916,7 @@ interface VoiceRecorderInterface {
      * Observe an event
      * @param event The event name
      * @param callback Callback called when an event of this type occurs
+     * @deprecated Will be removed in a future release, use the EventEmitter.on method instead.
      */
     on(event: string, callback: EventEmitterCallback$1): void;
     /**
@@ -1196,19 +1201,52 @@ interface AudioEditorEvents {
 }
 
 interface EventEmitterInterface {
-    on(event: string, callback: EventEmitterCallback$1): void;
-    emit(event: string, data?: string | number | AudioBuffer | Error): void;
-    off(event: string, callback: EventEmitterCallback$1): void;
+    /**
+     * Adds a listener for a specific event.
+     *
+     * @param event The name of the event to listen for.
+     * Can be a predefined {@link EventType} or a custom string.
+     * @param callback The callback function to execute when the event is triggered.
+     */
+    on(event: EventType$1 | string, callback: EventEmitterCallback$1): void;
+    /**
+     * Emits an event with optional data.
+     *
+     * @param event The name of the event to emit.
+     * Can be a predefined {@link EventType} or a custom string.
+     * @param data (Optional) The data associated with the event,
+     * which can be a string, number, AudioBuffer, or Error.
+     * @returns A promise that resolves once all listeners have been executed.
+     */
+    emit(event: EventType$1 | string, data?: string | number | AudioBuffer | Error): Promise<void>;
+    /**
+     * Removes a listener for a specific event.
+     *
+     * @param event The name of the event.
+     * Can be a predefined {@link EventType} or a custom string.
+     * @param callback The callback function to remove from the event.
+     */
+    off(event: EventType$1 | string, callback: EventEmitterCallback$1): void;
+    /**
+     * Gets the current list of events and their listeners.
+     */
     get listeners(): AudioEditorEvents$1;
+    /**
+     * Sets the list of events and their listeners.
+     *
+     * @param listeners - The new list of events.
+     */
     set listeners(listeners: AudioEditorEvents$1);
 }
 
 declare class EventEmitter implements EventEmitterInterface {
-    listeners: AudioEditorEvents;
+    private _listeners;
     constructor();
-    on(event: string, callback: EventEmitterCallback): void;
-    emit(event: string, data?: string | number | AudioBuffer): void;
-    off(event: string, callback: EventEmitterCallback): void;
+    on(event: EventType$1 | string, callback: EventEmitterCallback): void;
+    emit(event: EventType$1 | string, data?: string | number | AudioBuffer): Promise<void>;
+    off(event: EventType$1 | string, callback: EventEmitterCallback): void;
+    get listeners(): AudioEditorEvents;
+    set listeners(events: AudioEditorEvents);
 }
 
 /**

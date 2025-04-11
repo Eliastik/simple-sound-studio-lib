@@ -63,6 +63,7 @@ export default interface BufferPlayerInterface {
    /**
      * Callback called just before starting playing the audio
      * @param callback The callback
+     * @deprecated Will be removed in a future release, use the EventEmitter.on(EventType.PLAYING_STARTED) method instead.
      */
    onBeforePlaying(callback: () => Promise<void>): void;
 
@@ -80,6 +81,7 @@ export default interface BufferPlayerInterface {
      * Observe an event
      * @param event The event name
      * @param callback Callback called when an event of this type occurs
+     * @deprecated Will be removed in a future release, use the EventEmitter.on method instead.
      */
    on(event: string, callback: EventEmitterCallback): void;
 

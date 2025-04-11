@@ -12,6 +12,7 @@ import { AudioFilterNodes } from "../lib/model/AudioNodes";
 describe("FilterManager tests", () => {
     test("Initialize filter manager with 1 filter", () => {
         const filterManager = new FilterManager([new LimiterFilter()], null);
+        filterManager.setup();
 
         expect(filterManager.getFiltersState()).toStrictEqual({
             "limiter": true
@@ -20,6 +21,7 @@ describe("FilterManager tests", () => {
 
     test("Add filters should inject dependencies", async () => {
         const filterManager = new FilterManager([], null);
+        filterManager.setup();
 
         const limiterFilter = new LimiterFilter();
         const soundtouch = new SountouchWrapperFilter();
@@ -35,6 +37,7 @@ describe("FilterManager tests", () => {
 
     test("Disable one filter", () => {
         const filterManager = new FilterManager([new SountouchWrapperFilter(), new LimiterFilter()], null);
+        filterManager.setup();
 
         filterManager.toggleFilter("limiter");
 
@@ -46,6 +49,7 @@ describe("FilterManager tests", () => {
 
     test("Disable inexistent filter", () => {
         const filterManager = new FilterManager([new SountouchWrapperFilter(), new LimiterFilter()], null);
+        filterManager.setup();
 
         filterManager.toggleFilter("fake");
 
@@ -57,6 +61,7 @@ describe("FilterManager tests", () => {
 
     test("Reset one filter state", () => {
         const filterManager = new FilterManager([new LimiterFilter()], null);
+        filterManager.setup();
 
         filterManager.toggleFilter("limiter");
 
@@ -73,6 +78,7 @@ describe("FilterManager tests", () => {
 
     test("Reset one filter state - not default enabled", () => {
         const filterManager = new FilterManager([new BassBoosterFilter()], null);
+        filterManager.setup();
 
         filterManager.toggleFilter("bassboost");
 
@@ -89,6 +95,7 @@ describe("FilterManager tests", () => {
 
     test("Change one filter settings", () => {
         const filterManager = new FilterManager([new LimiterFilter()], null);
+        filterManager.setup();
 
         expect(filterManager.getFiltersSettings().get("limiter")).toMatchObject({
             "attackTime": 0
@@ -105,12 +112,13 @@ describe("FilterManager tests", () => {
 
     test("Reset one filter settings", async () => {
         const filterManager = new FilterManager([new LimiterFilter()], null);
+        filterManager.setup();
 
         expect(filterManager.getFiltersSettings().get("limiter")).toMatchObject({
             "attackTime": 0
         });
 
-        filterManager.changeFilterSettings("limiter", {
+        await filterManager.changeFilterSettings("limiter", {
             "attackTime": 5
         });
 
@@ -123,6 +131,7 @@ describe("FilterManager tests", () => {
 
     test("Connect nodes without entry point filter", async () => {
         const filterManager = new FilterManager([], null);
+        filterManager.setup();
         const context = createMockAudioContext();
         const buffer = context.createBuffer(1, 44100, 44100);
         await expect(filterManager.connectNodes(context, buffer, false, false)).resolves.toBeUndefined();
@@ -134,6 +143,7 @@ describe("FilterManager tests", () => {
         const filter3 = new MockAudioFilter(3, "filter3", true);
     
         const filterManager = new FilterManager([filter1, filter2, filter3], filter1);
+        filterManager.setup();
     
         jest.spyOn(filter1, "getEntrypointNode");
         jest.spyOn(filter1, "updateState");
@@ -164,6 +174,7 @@ describe("FilterManager tests", () => {
         const filter3 = new MockAudioFilter(3, "filter3", true);
     
         const filterManager = new FilterManager([filter1, filter2, filter3], filter1);
+        filterManager.setup();
     
         jest.spyOn(filter1, "getEntrypointNode");
         jest.spyOn(filter2, "getNode");
@@ -188,6 +199,7 @@ describe("FilterManager tests", () => {
         const filter3 = new MockAudioFilter(3, "filter3", false);
     
         const filterManager = new FilterManager([filter1, filter2, filter3], filter1);
+        filterManager.setup();
     
         jest.spyOn(filter1, "getEntrypointNode");
         jest.spyOn(filter2, "getNode");
@@ -211,6 +223,7 @@ describe("FilterManager tests", () => {
         const filter3 = new MockAudioFilter(3, "filter3", true);
     
         const filterManager = new FilterManager([filter1, filter2, filter3], filter1);
+        filterManager.setup();
     
         jest.spyOn(filter1, "getEntrypointNode");
         jest.spyOn(filter2, "getNode");
@@ -239,6 +252,7 @@ describe("FilterManager tests", () => {
         const filter3 = new MockAudioFilter(3, "filter3", true, 9);
     
         const filterManager = new FilterManager([filter1, filter2, filter3], filter1);
+        filterManager.setup();
     
         expect(filterManager.getAddingTime()).toBe(3 + 10 + 9);
     });
@@ -250,6 +264,7 @@ describe("FilterManager tests", () => {
         const filter3 = new MockAudioFilter(3, "filter3", true, 9);
     
         const filterManager = new FilterManager([filter1, filter2, filter3], filter1);
+        filterManager.setup();
     
         expect(filterManager.getAddingTime()).toBe(3 + 9);
     });
@@ -264,6 +279,8 @@ describe("FilterManager tests", () => {
         jest.spyOn(filter4, "initializeWorklet");
     
         const filterManager = new FilterManager([filter1, filter2, filter3, filter4], filter1);
+        filterManager.setup();
+
         const context = new MockAudioContext() as any;
     
         try {

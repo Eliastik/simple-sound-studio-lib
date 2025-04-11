@@ -32,7 +32,6 @@ export default class BufferPlayer extends AbstractAudioElement implements Buffer
     private source: AudioBufferSourceNode | null = null;
     private gainNode: GainNode | null = null;
     private intervals: number[] = [];
-    private onBeforePlayingCallback: () => Promise<void> = async () => { };
     private _volume = 1;
     private _duration = 0;
 
@@ -173,7 +172,7 @@ export default class BufferPlayer extends AbstractAudioElement implements Buffer
         this.intervals = [];
     }
 
-    async start(direct?: boolean) {
+    async start(direct?: boolean): Promise<void> {
         if (this.source || this.compatibilityMode) {
             if (!direct) {
                 this.stop();
@@ -181,16 +180,14 @@ export default class BufferPlayer extends AbstractAudioElement implements Buffer
 
             this.init(direct);
 
-            await this.onBeforePlayingCallback();
-
-            this.eventEmitter?.emit(EventType.PLAYING_STARTED);
+            await this.eventEmitter?.emit(EventType.PLAYING_STARTED);
 
             if (!this.compatibilityMode) {
                 if (this.source) {
                     this.source.start(0, direct ? 0 : this.currentTime / this.speedAudio);
                     this.playing = true;
                 } else {
-                    return;
+                    return Promise.resolve();
                 }
             } else if (this.currentNode && this.contextManager && this.contextManager.currentContext) {
                 this.createGainNode();
@@ -202,7 +199,7 @@ export default class BufferPlayer extends AbstractAudioElement implements Buffer
                     this.currentNode.connect(this.contextManager.currentContext.destination);
                 }
             } else {
-                return;
+                return Promise.resolve();
             }
 
             let startTime = performance.now();
@@ -236,6 +233,8 @@ export default class BufferPlayer extends AbstractAudioElement implements Buffer
                 }
             }, 100));
         }
+
+        return Promise.resolve();
     }
 
     async playDirect() {
@@ -308,7 +307,9 @@ export default class BufferPlayer extends AbstractAudioElement implements Buffer
     }
 
     onBeforePlaying(callback: () => Promise<void>) {
-        this.onBeforePlayingCallback = callback;
+        if (this.eventEmitter) {
+            this.eventEmitter.on(EventType.PLAYING_STARTED, callback);
+        }
     }
 
     toggleLoop() {

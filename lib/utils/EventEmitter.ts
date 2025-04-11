@@ -2,34 +2,44 @@ import { injectable } from "inversify";
 import AudioEditorEvents from "../model/AudioEditorEvent";
 import { EventEmitterCallback } from "../model/EventEmitterCallback";
 import EventEmitterInterface from "./interfaces/EventEmitterInterface";
+import { EventType } from "@/model/EventTypeEnum";
 
 @injectable()
 export default class EventEmitter implements EventEmitterInterface {
-    listeners: AudioEditorEvents = {};
+
+    private _listeners: AudioEditorEvents = {};
 
     constructor() {
-        this.listeners = {};
+        this._listeners = {};
     }
 
-    on(event: string, callback: EventEmitterCallback) {
-        if (!this.listeners[event]) {
-            this.listeners[event] = [];
+    on(event: EventType | string, callback: EventEmitterCallback) {
+        if (!this._listeners[event]) {
+            this._listeners[event] = [];
         }
 
-        this.listeners[event].push(callback);
+        this._listeners[event].push(callback);
     }
 
-    emit(event: string, data?: string | number | AudioBuffer) {
-        if (this.listeners[event]) {
-            this.listeners[event].forEach(callback => {
-                callback(data);
-            });
+    async emit(event: EventType | string, data?: string | number | AudioBuffer) {
+        if (this._listeners[event]) {
+            for (const callback of this._listeners[event]) {
+                await callback(data);
+            }
         }
     }
 
-    off(event: string, callback: EventEmitterCallback) {
-        if (this.listeners[event]) {
-            this.listeners[event] = this.listeners[event].filter(cb => cb !== callback);
+    off(event: EventType | string, callback: EventEmitterCallback) {
+        if (this._listeners[event]) {
+            this._listeners[event] = this._listeners[event].filter(cb => cb !== callback);
         }
+    }
+
+    get listeners() {
+        return this._listeners;
+    }
+
+    set listeners(events: AudioEditorEvents) {
+        this._listeners = events;
     }
 }

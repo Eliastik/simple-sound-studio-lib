@@ -80,19 +80,15 @@ export default class AudioEditor extends AbstractAudioElement implements AudioEd
 
     @postConstruct()
     setup() {
-        if (this.bufferPlayer) {
+        if (this.eventEmitter) {
             // Callback called just before starting playing audio, when compatibility mode is enabled
-            this.bufferPlayer.onBeforePlaying(async () => {
+            this.eventEmitter.on(EventType.PLAYING_STARTED, async () => {
                 if (this.bufferPlayer && this.bufferPlayer.compatibilityMode
                     && this.contextManager && this.contextManager.currentContext && this.audioProcessor) {
                     await this.audioProcessor.setupOutput(this.principalBuffer, this.contextManager.currentContext);
                 }
             });
-        } else {
-            console.error("Buffer Player is not available!");
-        }
 
-        if (this.eventEmitter) {
             // Callback called when playing is finished
             this.eventEmitter.on(EventType.PLAYING_FINISHED, () => {
                 if (this.bufferPlayer && this.bufferPlayer.loop) {

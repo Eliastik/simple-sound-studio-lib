@@ -32,7 +32,7 @@ export default class FilterManager extends AbstractAudioElement implements Filte
     }
 
     @postConstruct()
-    protected setup() {
+    setup() {
         for (const filter of this.filters) {
             filter.initializeDefaultSettings();
         }

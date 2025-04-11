@@ -36,6 +36,7 @@ export default abstract class AbstractAudioFilter extends AbstractAudioNode {
 
     /** Reset the default settings of this filter */
     public async resetSettings() {
+        console.log(this.id, this.defaultSettings);
         if (this.defaultSettings) {
             for (const key in this.defaultSettings) {
                 if (this.defaultSettings && typeof (this.defaultSettings[key]) !== "undefined") {

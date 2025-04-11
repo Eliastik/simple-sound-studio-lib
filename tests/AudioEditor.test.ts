@@ -16,11 +16,14 @@ import GenericConfigService from "../lib/services/GenericConfigService";
 
 describe("AudioEditor", () => {
     let audioEditor: AudioEditor;
+    let eventEmitter: EventEmitter;
 
     beforeEach(() => {
         (AudioContext as any) = MockAudioContext;
         (AudioBuffer as any) = MockAudioBuffer;
         (OfflineAudioContext as any) = MockAudioContext;
+
+        eventEmitter = new EventEmitter();
 
         audioEditor = new AudioEditor(
             mockFilterManager,
@@ -31,7 +34,7 @@ describe("AudioEditor", () => {
             mockBufferManager,
             mockBufferPlayer
         );
-        audioEditor.injectDependencies(null, null, null, mockEventEmitter, null);
+        audioEditor.injectDependencies(null, null, null, eventEmitter, null);
         audioEditor.setup();
     });
 
@@ -193,7 +196,7 @@ describe("AudioEditor", () => {
         const filters = [new SountouchWrapperFilter(), new LimiterFilter()];
 
         audioEditor.addFilters(...filters);
-        await audioEditor.loadBuffer(new MockAudioBuffer(2, 1000, 44100));
+        audioEditor.loadBuffer(new MockAudioBuffer(2, 1000, 44100));
 
         mockBufferPlayer.compatibilityMode = false;
 
@@ -206,18 +209,16 @@ describe("AudioEditor", () => {
         mockBufferPlayer.compatibilityMode = false;
         mockBufferPlayer.loop = true;
 
-        mockEventEmitter.emit(EventType.PLAYING_FINISHED);
+        eventEmitter.emit(EventType.PLAYING_FINISHED);
 
         expect(mockBufferPlayer.start).toHaveBeenCalled();
     });
 
     test("on before playing buffer player", async () => {
-        const eventEmitter = (mockBufferPlayer as any).eventEmitter;
-
         mockBufferPlayer.compatibilityMode = true;
         mockBufferPlayer.loop = false;
 
-        eventEmitter.emit("onBeforePlaying");
+        eventEmitter.emit(EventType.PLAYING_STARTED);
 
         expect(mockAudioProcessor.setupOutput).toHaveBeenCalled();
     });

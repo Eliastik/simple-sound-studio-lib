@@ -77,6 +77,7 @@ export default interface VoiceRecorderInterface {
      * Observe an event
      * @param event The event name
      * @param callback Callback called when an event of this type occurs
+     * @deprecated Will be removed in a future release, use the EventEmitter.on method instead.
      */
     on(event: string, callback: EventEmitterCallback): void;
 

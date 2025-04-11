@@ -142,6 +142,7 @@ export default interface AudioEditorInterface {
      * Subscribe to an event
      * @param event The event ID
      * @param callback The callback function
+     * @deprecated Will be removed in a future release, use the EventEmitter.on method instead.
      */
     on(event: string, callback: EventEmitterCallback): void;
 
@@ -149,6 +150,7 @@ export default interface AudioEditorInterface {
      * Unsubscribe to an event
      * @param event The event ID
      * @param callback The callback function
+     * @deprecated Will be removed in a future release, use the EventEmitter.off method instead.
      */
     off(event: string, callback: EventEmitterCallback): void;
 
