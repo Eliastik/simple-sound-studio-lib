@@ -65,7 +65,22 @@ class LimiterProcessor extends AudioWorkletProcessor {
         return LimiterProcessor.parameterDescriptors;
     }
 
-    getEnvelope(data: Float32Array, attackTime: number, releaseTime: number, sampleRate: number, channel: number) {
+    process(inputs: Float32Array[][], outputs: Float32Array[][], parameters: Record<string, Float32Array>): boolean {
+        if (this.stopped) {
+            return false;
+        }
+
+        const inputBuffer = inputs[0];
+        const outputBuffer = outputs[0];
+
+        const envelopeData = this.applyPreGainAndComputeEnvelope(outputBuffer, inputBuffer, parameters);
+
+        this.applyLimiter(outputBuffer, inputBuffer, parameters, envelopeData);
+
+        return true;
+    }
+
+    private getEnvelope(data: Float32Array, attackTime: number, releaseTime: number, sampleRate: number, channel: number) {
         const attackGain = Math.exp(-1 / (sampleRate * attackTime));
         const releaseGain = Math.exp(-1 / (sampleRate * releaseTime));
 
@@ -90,7 +105,7 @@ class LimiterProcessor extends AudioWorkletProcessor {
         return envelope;
     }
 
-    getMaxEnvelope(envelope: Float32Array[], channels: number, index: number) {
+    private getMaxEnvelope(envelope: Float32Array[], channels: number, index: number) {
         let max = envelope[0][index];
 
         for (let channel = 0; channel < channels; channel++) {
@@ -102,26 +117,18 @@ class LimiterProcessor extends AudioWorkletProcessor {
         return max;
     }
 
-    ampToDB(value: number) {
+    private ampToDB(value: number) {
         return 20 * Math.log10(value);
     }
 
-    dBToAmp(db: number) {
+    private dBToAmp(db: number) {
         return Math.pow(10, db / 20);
     }
 
-    process(inputs: Float32Array[][], outputs: Float32Array[][], parameters: Record<string, Float32Array>): boolean {
-        if (this.stopped) {
-            return false;
-        }
-
-        const inputBuffer = inputs[0];
-        const outputBuffer = outputs[0];
-        const envelopeData = [];
-
-        // transform db to amplitude value
-        const postGainAmp = this.dBToAmp(parameters.postGain[0]);
+    private applyPreGainAndComputeEnvelope(outputBuffer: Float32Array[], inputBuffer: Float32Array[], parameters: Record<string, Float32Array>) {
         const preGainAmp = this.dBToAmp(parameters.preGain[0]);
+
+        const envelopeData = [];
 
         // apply pre gain to signal
         // compute the envelope for each channel
@@ -136,13 +143,7 @@ class LimiterProcessor extends AudioWorkletProcessor {
 
             // apply pre gain to signal
             if (inp && out) {
-                for (let k = 0; k < inp.length; ++k) {
-                    if (!this.disabled) {
-                        out[k] = preGainAmp * inp[k];
-                    } else {
-                        out[k] = inp[k];
-                    }
-                }
+                this.applyPreGain(inp, out, preGainAmp);
             }
 
             // compute the envelope
@@ -151,16 +152,29 @@ class LimiterProcessor extends AudioWorkletProcessor {
             }
         }
 
+        return envelopeData;
+    }
+
+    private applyPreGain(inp: Float32Array, out: Float32Array, preGainAmp: number) {
+        for (let k = 0; k < inp.length; ++k) {
+            if (!this.disabled) {
+                out[k] = preGainAmp * inp[k];
+            } else {
+                out[k] = inp[k];
+            }
+        }
+    }
+
+    private applyLimiter(inputBuffer: Float32Array[], outputBuffer: Float32Array[], parameters: Record<string, Float32Array>, envelopeData: Float32Array[]) {
+        const postGainAmp = this.dBToAmp(parameters.postGain[0]);
+
         for (let channel = 0; channel < outputBuffer.length; channel++) {
             const inp = inputBuffer[channel];
             const out = outputBuffer[channel];
 
             if (parameters.lookAheadTime[0] > 0 && out) {
                 // write signal into buffer and read delayed signal
-                for (let i = 0; i < out.length; i++) {
-                    this.delayBuffer[channel].push(out[i]);
-                    out[i] = this.delayBuffer[channel].read();
-                }
+                this.applyLookAheadDelay(out, channel);
             }
 
             // If disabled we don't apply the limitation to the audio
@@ -177,26 +191,23 @@ class LimiterProcessor extends AudioWorkletProcessor {
 
                     // is gain below zero?
                     gainDB = Math.min(0, gainDB);
-                    const gain = this.dBToAmp(gainDB);
-                    out[i] *= (gain * postGainAmp);
+
+                    const gainAmp = this.dBToAmp(gainDB);
+
+                    out[i] *= (gainAmp * postGainAmp);
                 }
             }
         }
-
-        return true;
     }
 
-    reset() {
-        for (let i = 0; i < this.delayBuffer.length; i++) {
-            if (this.delayBuffer[i] != null) {
-                this.delayBuffer[i].reset();
-            }
+    private applyLookAheadDelay(out: Float32Array, channel: number) {
+        for (let i = 0; i < out.length; i++) {
+            this.delayBuffer[channel].push(out[i]);
+            out[i] = this.delayBuffer[channel].read();
         }
-
-        this.envelopeSamples = [];
     }
 
-    stop() {
+    private clearBuffers() {
         for (let i = 0; i < this.delayBuffer.length; i++) {
             if (this.delayBuffer[i] != null) {
                 this.delayBuffer[i].clear();
@@ -205,6 +216,14 @@ class LimiterProcessor extends AudioWorkletProcessor {
 
         this.delayBuffer = [];
         this.envelopeSamples = [];
+    }
+
+    private reset() {
+        this.clearBuffers();
+    }
+
+    private stop() {
+        this.clearBuffers();
         this.stopped = true;
     }
 }
