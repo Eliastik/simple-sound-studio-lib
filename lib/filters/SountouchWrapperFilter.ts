@@ -213,7 +213,7 @@ export default class SoundtouchWrapperFilter extends AbstractAudioFilterWorklet<
     }
 
     updateState(): void {
-        const { isWorklet } = this.getCurrentRenderingMode();
+        const { isWorklet, renderWithSoundtouch } = this.getCurrentRenderingMode();
 
         this.currentSpeedAudio = 1;
 
@@ -221,7 +221,7 @@ export default class SoundtouchWrapperFilter extends AbstractAudioFilterWorklet<
         let tempo = 1;
         let key = 0;
 
-        if (this.isEnabled()) {
+        if (renderWithSoundtouch) {
             tempo = this.speedAudio;
             key = this.pitchSemitones;
 
@@ -242,9 +242,8 @@ export default class SoundtouchWrapperFilter extends AbstractAudioFilterWorklet<
                 this.currentBufferSource.playbackRate.value = tempo;
             }
         } else if (this.currentPitchShifter) {
-            this.currentPitchShifter.pitch = pitch;
+            this.currentPitchShifter.pitch = pitch * Math.pow(2, key / 12);
             this.currentPitchShifter.tempo = tempo;
-            this.currentPitchShifter.pitchSemitones = key;
         }
     }
 
