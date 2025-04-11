@@ -6,7 +6,7 @@
 
 # Class: EventEmitter
 
-Defined in: [utils/EventEmitter.ts:7](https://github.com/Eliastik/simple-sound-studio-lib/blob/ac774fbcc31e7b2bb36869a329e7b93025fe1f8e/lib/utils/EventEmitter.ts#L7)
+Defined in: [utils/EventEmitter.ts:8](https://github.com/Eliastik/simple-sound-studio-lib/blob/644508463a58a8a0be6c83a6947a5b631bba11e9/lib/utils/EventEmitter.ts#L8)
 
 ## Implements
 
@@ -18,19 +18,45 @@ Defined in: [utils/EventEmitter.ts:7](https://github.com/Eliastik/simple-sound-s
 
 > **new EventEmitter**(): `EventEmitter`
 
-Defined in: [utils/EventEmitter.ts:10](https://github.com/Eliastik/simple-sound-studio-lib/blob/ac774fbcc31e7b2bb36869a329e7b93025fe1f8e/lib/utils/EventEmitter.ts#L10)
+Defined in: [utils/EventEmitter.ts:12](https://github.com/Eliastik/simple-sound-studio-lib/blob/644508463a58a8a0be6c83a6947a5b631bba11e9/lib/utils/EventEmitter.ts#L12)
 
 #### Returns
 
 `EventEmitter`
 
-## Properties
+## Accessors
 
 ### listeners
 
-> **listeners**: `AudioEditorEvents` = `{}`
+#### Get Signature
 
-Defined in: [utils/EventEmitter.ts:8](https://github.com/Eliastik/simple-sound-studio-lib/blob/ac774fbcc31e7b2bb36869a329e7b93025fe1f8e/lib/utils/EventEmitter.ts#L8)
+> **get** **listeners**(): `AudioEditorEvents`
+
+Defined in: [utils/EventEmitter.ts:38](https://github.com/Eliastik/simple-sound-studio-lib/blob/644508463a58a8a0be6c83a6947a5b631bba11e9/lib/utils/EventEmitter.ts#L38)
+
+Gets the current list of events and their listeners.
+
+##### Returns
+
+`AudioEditorEvents`
+
+#### Set Signature
+
+> **set** **listeners**(`events`): `void`
+
+Defined in: [utils/EventEmitter.ts:42](https://github.com/Eliastik/simple-sound-studio-lib/blob/644508463a58a8a0be6c83a6947a5b631bba11e9/lib/utils/EventEmitter.ts#L42)
+
+Gets the current list of events and their listeners.
+
+##### Parameters
+
+###### events
+
+`AudioEditorEvents`
+
+##### Returns
+
+`void`
 
 #### Implementation of
 
@@ -40,9 +66,11 @@ Defined in: [utils/EventEmitter.ts:8](https://github.com/Eliastik/simple-sound-s
 
 ### emit()
 
-> **emit**(`event`, `data?`): `void`
+> **emit**(`event`, `data?`): `Promise`\<`void`\>
 
-Defined in: [utils/EventEmitter.ts:22](https://github.com/Eliastik/simple-sound-studio-lib/blob/ac774fbcc31e7b2bb36869a329e7b93025fe1f8e/lib/utils/EventEmitter.ts#L22)
+Defined in: [utils/EventEmitter.ts:24](https://github.com/Eliastik/simple-sound-studio-lib/blob/644508463a58a8a0be6c83a6947a5b631bba11e9/lib/utils/EventEmitter.ts#L24)
+
+Emits an event with optional data.
 
 #### Parameters
 
@@ -50,13 +78,21 @@ Defined in: [utils/EventEmitter.ts:22](https://github.com/Eliastik/simple-sound-
 
 `string`
 
+The name of the event to emit.
+Can be a predefined [EventType](../enumerations/EventType.md) or a custom string.
+
 ##### data?
+
+(Optional) The data associated with the event,
+which can be a string, number, AudioBuffer, or Error.
 
 `string` | `number` | `AudioBuffer`
 
 #### Returns
 
-`void`
+`Promise`\<`void`\>
+
+A promise that resolves once all listeners have been executed.
 
 #### Implementation of
 
@@ -68,7 +104,9 @@ Defined in: [utils/EventEmitter.ts:22](https://github.com/Eliastik/simple-sound-
 
 > **off**(`event`, `callback`): `void`
 
-Defined in: [utils/EventEmitter.ts:30](https://github.com/Eliastik/simple-sound-studio-lib/blob/ac774fbcc31e7b2bb36869a329e7b93025fe1f8e/lib/utils/EventEmitter.ts#L30)
+Defined in: [utils/EventEmitter.ts:32](https://github.com/Eliastik/simple-sound-studio-lib/blob/644508463a58a8a0be6c83a6947a5b631bba11e9/lib/utils/EventEmitter.ts#L32)
+
+Removes a listener for a specific event.
 
 #### Parameters
 
@@ -76,9 +114,14 @@ Defined in: [utils/EventEmitter.ts:30](https://github.com/Eliastik/simple-sound-
 
 `string`
 
+The name of the event.
+Can be a predefined [EventType](../enumerations/EventType.md) or a custom string.
+
 ##### callback
 
 [`EventEmitterCallback`](../type-aliases/EventEmitterCallback.md)
+
+The callback function to remove from the event.
 
 #### Returns
 
@@ -94,7 +137,9 @@ Defined in: [utils/EventEmitter.ts:30](https://github.com/Eliastik/simple-sound-
 
 > **on**(`event`, `callback`): `void`
 
-Defined in: [utils/EventEmitter.ts:14](https://github.com/Eliastik/simple-sound-studio-lib/blob/ac774fbcc31e7b2bb36869a329e7b93025fe1f8e/lib/utils/EventEmitter.ts#L14)
+Defined in: [utils/EventEmitter.ts:16](https://github.com/Eliastik/simple-sound-studio-lib/blob/644508463a58a8a0be6c83a6947a5b631bba11e9/lib/utils/EventEmitter.ts#L16)
+
+Adds a listener for a specific event.
 
 #### Parameters
 
@@ -102,9 +147,14 @@ Defined in: [utils/EventEmitter.ts:14](https://github.com/Eliastik/simple-sound-
 
 `string`
 
+The name of the event to listen for.
+Can be a predefined [EventType](../enumerations/EventType.md) or a custom string.
+
 ##### callback
 
 [`EventEmitterCallback`](../type-aliases/EventEmitterCallback.md)
+
+The callback function to execute when the event is triggered.
 
 #### Returns
 

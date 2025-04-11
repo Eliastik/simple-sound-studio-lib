@@ -6,7 +6,7 @@
 
 # Class: AudioEditor
 
-Defined in: [audioEditor/AudioEditor.ts:28](https://github.com/Eliastik/simple-sound-studio-lib/blob/ac774fbcc31e7b2bb36869a329e7b93025fe1f8e/lib/audioEditor/AudioEditor.ts#L28)
+Defined in: [audioEditor/AudioEditor.ts:28](https://github.com/Eliastik/simple-sound-studio-lib/blob/644508463a58a8a0be6c83a6947a5b631bba11e9/lib/audioEditor/AudioEditor.ts#L28)
 
 Principal class used to manage audio processing: load an audio file or buffer,
 manage filters/renderers (enable/disable, settings), add new filters/renderers,
@@ -26,7 +26,7 @@ download rendered audio, get rendered audio buffer
 
 > **new AudioEditor**(`filterManager`, `rendererManager`, `contextManager`, `saveBufferManager`, `audioProcessor`, `bufferManager`, `player`): `AudioEditor`
 
-Defined in: [audioEditor/AudioEditor.ts:61](https://github.com/Eliastik/simple-sound-studio-lib/blob/ac774fbcc31e7b2bb36869a329e7b93025fe1f8e/lib/audioEditor/AudioEditor.ts#L61)
+Defined in: [audioEditor/AudioEditor.ts:61](https://github.com/Eliastik/simple-sound-studio-lib/blob/644508463a58a8a0be6c83a6947a5b631bba11e9/lib/audioEditor/AudioEditor.ts#L61)
 
 #### Parameters
 
@@ -74,7 +74,7 @@ Defined in: [audioEditor/AudioEditor.ts:61](https://github.com/Eliastik/simple-s
 
 > **get** **currentIndexFileList**(): `number`
 
-Defined in: [audioEditor/AudioEditor.ts:253](https://github.com/Eliastik/simple-sound-studio-lib/blob/ac774fbcc31e7b2bb36869a329e7b93025fe1f8e/lib/audioEditor/AudioEditor.ts#L253)
+Defined in: [audioEditor/AudioEditor.ts:249](https://github.com/Eliastik/simple-sound-studio-lib/blob/644508463a58a8a0be6c83a6947a5b631bba11e9/lib/audioEditor/AudioEditor.ts#L249)
 
 Get the index of the current loaded audio file from the file list
 
@@ -94,7 +94,7 @@ Get the index of the current loaded audio file from the file list
 
 > **get** **currentSampleRate**(): `number`
 
-Defined in: [audioEditor/AudioEditor.ts:127](https://github.com/Eliastik/simple-sound-studio-lib/blob/ac774fbcc31e7b2bb36869a329e7b93025fe1f8e/lib/audioEditor/AudioEditor.ts#L127)
+Defined in: [audioEditor/AudioEditor.ts:123](https://github.com/Eliastik/simple-sound-studio-lib/blob/644508463a58a8a0be6c83a6947a5b631bba11e9/lib/audioEditor/AudioEditor.ts#L123)
 
 Get the current sample rate used
 
@@ -114,7 +114,7 @@ Get the current sample rate used
 
 > **get** **defaultDeviceSampleRate**(): `number`
 
-Defined in: [audioEditor/AudioEditor.ts:135](https://github.com/Eliastik/simple-sound-studio-lib/blob/ac774fbcc31e7b2bb36869a329e7b93025fe1f8e/lib/audioEditor/AudioEditor.ts#L135)
+Defined in: [audioEditor/AudioEditor.ts:131](https://github.com/Eliastik/simple-sound-studio-lib/blob/644508463a58a8a0be6c83a6947a5b631bba11e9/lib/audioEditor/AudioEditor.ts#L131)
 
 Get the default device sample rate
 
@@ -134,7 +134,7 @@ Get the default device sample rate
 
 > **get** **downloadingInitialData**(): `boolean`
 
-Defined in: [audioEditor/AudioEditor.ts:478](https://github.com/Eliastik/simple-sound-studio-lib/blob/ac774fbcc31e7b2bb36869a329e7b93025fe1f8e/lib/audioEditor/AudioEditor.ts#L478)
+Defined in: [audioEditor/AudioEditor.ts:474](https://github.com/Eliastik/simple-sound-studio-lib/blob/644508463a58a8a0be6c83a6947a5b631bba11e9/lib/audioEditor/AudioEditor.ts#L474)
 
 ##### Returns
 
@@ -144,7 +144,7 @@ Defined in: [audioEditor/AudioEditor.ts:478](https://github.com/Eliastik/simple-
 
 > **set** **downloadingInitialData**(`state`): `void`
 
-Defined in: [audioEditor/AudioEditor.ts:472](https://github.com/Eliastik/simple-sound-studio-lib/blob/ac774fbcc31e7b2bb36869a329e7b93025fe1f8e/lib/audioEditor/AudioEditor.ts#L472)
+Defined in: [audioEditor/AudioEditor.ts:468](https://github.com/Eliastik/simple-sound-studio-lib/blob/644508463a58a8a0be6c83a6947a5b631bba11e9/lib/audioEditor/AudioEditor.ts#L468)
 
 ##### Parameters
 
@@ -168,7 +168,7 @@ Defined in: [audioEditor/AudioEditor.ts:472](https://github.com/Eliastik/simple-
 
 > **get** **totalFileList**(): `number`
 
-Defined in: [audioEditor/AudioEditor.ts:257](https://github.com/Eliastik/simple-sound-studio-lib/blob/ac774fbcc31e7b2bb36869a329e7b93025fe1f8e/lib/audioEditor/AudioEditor.ts#L257)
+Defined in: [audioEditor/AudioEditor.ts:253](https://github.com/Eliastik/simple-sound-studio-lib/blob/644508463a58a8a0be6c83a6947a5b631bba11e9/lib/audioEditor/AudioEditor.ts#L253)
 
 Get the total number of audio files loaded
 
@@ -186,7 +186,7 @@ Get the total number of audio files loaded
 
 > **addFilters**(...`filters`): `void`
 
-Defined in: [audioEditor/AudioEditor.ts:115](https://github.com/Eliastik/simple-sound-studio-lib/blob/ac774fbcc31e7b2bb36869a329e7b93025fe1f8e/lib/audioEditor/AudioEditor.ts#L115)
+Defined in: [audioEditor/AudioEditor.ts:111](https://github.com/Eliastik/simple-sound-studio-lib/blob/644508463a58a8a0be6c83a6947a5b631bba11e9/lib/audioEditor/AudioEditor.ts#L111)
 
 Add a new custom filter for this audio editor
 
@@ -212,7 +212,7 @@ One or more AbstractAudioFilter
 
 > **addRenderers**(...`renderers`): `void`
 
-Defined in: [audioEditor/AudioEditor.ts:121](https://github.com/Eliastik/simple-sound-studio-lib/blob/ac774fbcc31e7b2bb36869a329e7b93025fe1f8e/lib/audioEditor/AudioEditor.ts#L121)
+Defined in: [audioEditor/AudioEditor.ts:117](https://github.com/Eliastik/simple-sound-studio-lib/blob/644508463a58a8a0be6c83a6947a5b631bba11e9/lib/audioEditor/AudioEditor.ts#L117)
 
 Add a new custom renderer for this audio editor
 
@@ -238,7 +238,7 @@ One or more AbstractAudioRenderer
 
 > **cancelAudioRendering**(): `void`
 
-Defined in: [audioEditor/AudioEditor.ts:446](https://github.com/Eliastik/simple-sound-studio-lib/blob/ac774fbcc31e7b2bb36869a329e7b93025fe1f8e/lib/audioEditor/AudioEditor.ts#L446)
+Defined in: [audioEditor/AudioEditor.ts:442](https://github.com/Eliastik/simple-sound-studio-lib/blob/644508463a58a8a0be6c83a6947a5b631bba11e9/lib/audioEditor/AudioEditor.ts#L442)
 
 Cancel the audio rendering
 
@@ -256,7 +256,7 @@ Cancel the audio rendering
 
 > **changeFilterSettings**(`filterId`, `settings`): `Promise`\<`void`\>
 
-Defined in: [audioEditor/AudioEditor.ts:390](https://github.com/Eliastik/simple-sound-studio-lib/blob/ac774fbcc31e7b2bb36869a329e7b93025fe1f8e/lib/audioEditor/AudioEditor.ts#L390)
+Defined in: [audioEditor/AudioEditor.ts:386](https://github.com/Eliastik/simple-sound-studio-lib/blob/644508463a58a8a0be6c83a6947a5b631bba11e9/lib/audioEditor/AudioEditor.ts#L386)
 
 Change a filter setting
 
@@ -288,7 +288,7 @@ Filter setting (key/value)
 
 > **disableFilter**(`filterId`): `void`
 
-Defined in: [audioEditor/AudioEditor.ts:368](https://github.com/Eliastik/simple-sound-studio-lib/blob/ac774fbcc31e7b2bb36869a329e7b93025fe1f8e/lib/audioEditor/AudioEditor.ts#L368)
+Defined in: [audioEditor/AudioEditor.ts:364](https://github.com/Eliastik/simple-sound-studio-lib/blob/644508463a58a8a0be6c83a6947a5b631bba11e9/lib/audioEditor/AudioEditor.ts#L364)
 
 Disable a filter/renderer
 
@@ -314,7 +314,7 @@ The filter/renderer ID
 
 > **enableFilter**(`filterId`): `void`
 
-Defined in: [audioEditor/AudioEditor.ts:357](https://github.com/Eliastik/simple-sound-studio-lib/blob/ac774fbcc31e7b2bb36869a329e7b93025fe1f8e/lib/audioEditor/AudioEditor.ts#L357)
+Defined in: [audioEditor/AudioEditor.ts:353](https://github.com/Eliastik/simple-sound-studio-lib/blob/644508463a58a8a0be6c83a6947a5b631bba11e9/lib/audioEditor/AudioEditor.ts#L353)
 
 Enable a filter/renderer
 
@@ -340,7 +340,7 @@ The filter/renderer ID
 
 > **exit**(): `void`
 
-Defined in: [audioEditor/AudioEditor.ts:417](https://github.com/Eliastik/simple-sound-studio-lib/blob/ac774fbcc31e7b2bb36869a329e7b93025fe1f8e/lib/audioEditor/AudioEditor.ts#L417)
+Defined in: [audioEditor/AudioEditor.ts:413](https://github.com/Eliastik/simple-sound-studio-lib/blob/644508463a58a8a0be6c83a6947a5b631bba11e9/lib/audioEditor/AudioEditor.ts#L413)
 
 Exit/reset the audio editor basic state
 
@@ -358,7 +358,7 @@ Exit/reset the audio editor basic state
 
 > **getCurrentFileList**(): `Map`\<`string`, `boolean`\>
 
-Defined in: [audioEditor/AudioEditor.ts:235](https://github.com/Eliastik/simple-sound-studio-lib/blob/ac774fbcc31e7b2bb36869a329e7b93025fe1f8e/lib/audioEditor/AudioEditor.ts#L235)
+Defined in: [audioEditor/AudioEditor.ts:231](https://github.com/Eliastik/simple-sound-studio-lib/blob/644508463a58a8a0be6c83a6947a5b631bba11e9/lib/audioEditor/AudioEditor.ts#L231)
 
 #### Returns
 
@@ -376,7 +376,7 @@ Return a map with key = filename and value = true if the audio file is currently
 
 > **getFiltersSettings**(): `Map`\<`string`, [`FilterSettings`](../interfaces/FilterSettings.md)\>
 
-Defined in: [audioEditor/AudioEditor.ts:334](https://github.com/Eliastik/simple-sound-studio-lib/blob/ac774fbcc31e7b2bb36869a329e7b93025fe1f8e/lib/audioEditor/AudioEditor.ts#L334)
+Defined in: [audioEditor/AudioEditor.ts:330](https://github.com/Eliastik/simple-sound-studio-lib/blob/644508463a58a8a0be6c83a6947a5b631bba11e9/lib/audioEditor/AudioEditor.ts#L330)
 
 Get the settings of all filters/renderers
 
@@ -394,7 +394,7 @@ Get the settings of all filters/renderers
 
 > **getFiltersState**(): [`FilterState`](../interfaces/FilterState.md)
 
-Defined in: [audioEditor/AudioEditor.ts:323](https://github.com/Eliastik/simple-sound-studio-lib/blob/ac774fbcc31e7b2bb36869a329e7b93025fe1f8e/lib/audioEditor/AudioEditor.ts#L323)
+Defined in: [audioEditor/AudioEditor.ts:319](https://github.com/Eliastik/simple-sound-studio-lib/blob/644508463a58a8a0be6c83a6947a5b631bba11e9/lib/audioEditor/AudioEditor.ts#L319)
 
 Get enabled/disabled state of all filters/renderers
 
@@ -414,7 +414,7 @@ The filters state (enabled/disabled)
 
 > **getOutputBuffer**(): `null` \| `AudioBuffer`
 
-Defined in: [audioEditor/AudioEditor.ts:274](https://github.com/Eliastik/simple-sound-studio-lib/blob/ac774fbcc31e7b2bb36869a329e7b93025fe1f8e/lib/audioEditor/AudioEditor.ts#L274)
+Defined in: [audioEditor/AudioEditor.ts:270](https://github.com/Eliastik/simple-sound-studio-lib/blob/644508463a58a8a0be6c83a6947a5b631bba11e9/lib/audioEditor/AudioEditor.ts#L270)
 
 Get the rendered audio buffer
 
@@ -434,7 +434,7 @@ The AudioBuffer
 
 > **injectDependencies**(`bufferFetcherService`, `bufferDecoderService`, `configService`, `eventEmitter`, `contextManager`): `void`
 
-Defined in: [interfaces/AbstractAudioElement.ts:27](https://github.com/Eliastik/simple-sound-studio-lib/blob/ac774fbcc31e7b2bb36869a329e7b93025fe1f8e/lib/interfaces/AbstractAudioElement.ts#L27)
+Defined in: [interfaces/AbstractAudioElement.ts:27](https://github.com/Eliastik/simple-sound-studio-lib/blob/644508463a58a8a0be6c83a6947a5b631bba11e9/lib/interfaces/AbstractAudioElement.ts#L27)
 
 #### Parameters
 
@@ -472,7 +472,7 @@ Defined in: [interfaces/AbstractAudioElement.ts:27](https://github.com/Eliastik/
 
 > **isAudioWorkletAvailable**(): `boolean`
 
-Defined in: [audioEditor/AudioEditor.ts:313](https://github.com/Eliastik/simple-sound-studio-lib/blob/ac774fbcc31e7b2bb36869a329e7b93025fe1f8e/lib/audioEditor/AudioEditor.ts#L313)
+Defined in: [audioEditor/AudioEditor.ts:309](https://github.com/Eliastik/simple-sound-studio-lib/blob/644508463a58a8a0be6c83a6947a5b631bba11e9/lib/audioEditor/AudioEditor.ts#L309)
 
 Check if AudioWorklet are available
 
@@ -492,7 +492,7 @@ boolean
 
 > **loadBuffer**(`audioBuffer`): `void`
 
-Defined in: [audioEditor/AudioEditor.ts:265](https://github.com/Eliastik/simple-sound-studio-lib/blob/ac774fbcc31e7b2bb36869a329e7b93025fe1f8e/lib/audioEditor/AudioEditor.ts#L265)
+Defined in: [audioEditor/AudioEditor.ts:261](https://github.com/Eliastik/simple-sound-studio-lib/blob/644508463a58a8a0be6c83a6947a5b631bba11e9/lib/audioEditor/AudioEditor.ts#L261)
 
 Change the principal audio buffer of this editor
 
@@ -516,7 +516,7 @@ Change the principal audio buffer of this editor
 
 > **loadBufferFromFile**(`file`): `Promise`\<`void`\>
 
-Defined in: [audioEditor/AudioEditor.ts:146](https://github.com/Eliastik/simple-sound-studio-lib/blob/ac774fbcc31e7b2bb36869a329e7b93025fe1f8e/lib/audioEditor/AudioEditor.ts#L146)
+Defined in: [audioEditor/AudioEditor.ts:142](https://github.com/Eliastik/simple-sound-studio-lib/blob/644508463a58a8a0be6c83a6947a5b631bba11e9/lib/audioEditor/AudioEditor.ts#L142)
 
 Decode and load an audio buffer from an audio file
 
@@ -540,7 +540,7 @@ Decode and load an audio buffer from an audio file
 
 > **loadBufferFromFileListIndex**(`index`): `Promise`\<`void`\>
 
-Defined in: [audioEditor/AudioEditor.ts:187](https://github.com/Eliastik/simple-sound-studio-lib/blob/ac774fbcc31e7b2bb36869a329e7b93025fe1f8e/lib/audioEditor/AudioEditor.ts#L187)
+Defined in: [audioEditor/AudioEditor.ts:183](https://github.com/Eliastik/simple-sound-studio-lib/blob/644508463a58a8a0be6c83a6947a5b631bba11e9/lib/audioEditor/AudioEditor.ts#L183)
 
 Load the audio buffer from the nth file from the file list loaded with the loadFileList method
 
@@ -564,7 +564,7 @@ Load the audio buffer from the nth file from the file list loaded with the loadF
 
 > **loadFileList**(`fileList`): `Promise`\<`void`\>
 
-Defined in: [audioEditor/AudioEditor.ts:181](https://github.com/Eliastik/simple-sound-studio-lib/blob/ac774fbcc31e7b2bb36869a329e7b93025fe1f8e/lib/audioEditor/AudioEditor.ts#L181)
+Defined in: [audioEditor/AudioEditor.ts:177](https://github.com/Eliastik/simple-sound-studio-lib/blob/644508463a58a8a0be6c83a6947a5b631bba11e9/lib/audioEditor/AudioEditor.ts#L177)
 
 Load a list of file and load the first file into an audio buffer
 
@@ -588,7 +588,7 @@ Load a list of file and load the first file into an audio buffer
 
 > **loadNextAudio**(`forceInitialRendering?`): `Promise`\<`void`\>
 
-Defined in: [audioEditor/AudioEditor.ts:219](https://github.com/Eliastik/simple-sound-studio-lib/blob/ac774fbcc31e7b2bb36869a329e7b93025fe1f8e/lib/audioEditor/AudioEditor.ts#L219)
+Defined in: [audioEditor/AudioEditor.ts:215](https://github.com/Eliastik/simple-sound-studio-lib/blob/644508463a58a8a0be6c83a6947a5b631bba11e9/lib/audioEditor/AudioEditor.ts#L215)
 
 Load the next audio from list
 
@@ -614,7 +614,7 @@ true to force initial rendering of audio, ignoring user setting
 
 > **loadPreviousAudio**(`forceInitialRendering?`): `Promise`\<`void`\>
 
-Defined in: [audioEditor/AudioEditor.ts:203](https://github.com/Eliastik/simple-sound-studio-lib/blob/ac774fbcc31e7b2bb36869a329e7b93025fe1f8e/lib/audioEditor/AudioEditor.ts#L203)
+Defined in: [audioEditor/AudioEditor.ts:199](https://github.com/Eliastik/simple-sound-studio-lib/blob/644508463a58a8a0be6c83a6947a5b631bba11e9/lib/audioEditor/AudioEditor.ts#L199)
 
 Load the previous audio from list
 
@@ -636,11 +636,11 @@ true to force initial rendering of audio, ignoring user setting
 
 ***
 
-### off()
+### ~~off()~~
 
 > **off**(`event`, `callback`): `void`
 
-Defined in: [audioEditor/AudioEditor.ts:458](https://github.com/Eliastik/simple-sound-studio-lib/blob/ac774fbcc31e7b2bb36869a329e7b93025fe1f8e/lib/audioEditor/AudioEditor.ts#L458)
+Defined in: [audioEditor/AudioEditor.ts:454](https://github.com/Eliastik/simple-sound-studio-lib/blob/644508463a58a8a0be6c83a6947a5b631bba11e9/lib/audioEditor/AudioEditor.ts#L454)
 
 Unsubscribe to an event
 
@@ -662,17 +662,21 @@ The callback function
 
 `void`
 
+#### Deprecated
+
+Will be removed in a future release, use the EventEmitter.off method instead.
+
 #### Implementation of
 
 `AudioEditorInterface.off`
 
 ***
 
-### on()
+### ~~on()~~
 
 > **on**(`event`, `callback`): `void`
 
-Defined in: [audioEditor/AudioEditor.ts:452](https://github.com/Eliastik/simple-sound-studio-lib/blob/ac774fbcc31e7b2bb36869a329e7b93025fe1f8e/lib/audioEditor/AudioEditor.ts#L452)
+Defined in: [audioEditor/AudioEditor.ts:448](https://github.com/Eliastik/simple-sound-studio-lib/blob/644508463a58a8a0be6c83a6947a5b631bba11e9/lib/audioEditor/AudioEditor.ts#L448)
 
 Subscribe to an event
 
@@ -694,6 +698,10 @@ The callback function
 
 `void`
 
+#### Deprecated
+
+Will be removed in a future release, use the EventEmitter.on method instead.
+
 #### Implementation of
 
 `AudioEditorInterface.on`
@@ -704,7 +712,7 @@ The callback function
 
 > **reconnectNodesIfNeeded**(): `Promise`\<`void`\>
 
-Defined in: [audioEditor/AudioEditor.ts:342](https://github.com/Eliastik/simple-sound-studio-lib/blob/ac774fbcc31e7b2bb36869a329e7b93025fe1f8e/lib/audioEditor/AudioEditor.ts#L342)
+Defined in: [audioEditor/AudioEditor.ts:338](https://github.com/Eliastik/simple-sound-studio-lib/blob/644508463a58a8a0be6c83a6947a5b631bba11e9/lib/audioEditor/AudioEditor.ts#L338)
 
 Reconnect the nodes if the compatibility/direct mode is enabled
 
@@ -722,7 +730,7 @@ Reconnect the nodes if the compatibility/direct mode is enabled
 
 > **renderAudio**(`forceInitialRendering?`): `Promise`\<`boolean`\>
 
-Defined in: [audioEditor/AudioEditor.ts:282](https://github.com/Eliastik/simple-sound-studio-lib/blob/ac774fbcc31e7b2bb36869a329e7b93025fe1f8e/lib/audioEditor/AudioEditor.ts#L282)
+Defined in: [audioEditor/AudioEditor.ts:278](https://github.com/Eliastik/simple-sound-studio-lib/blob/644508463a58a8a0be6c83a6947a5b631bba11e9/lib/audioEditor/AudioEditor.ts#L278)
 
 Render the audio to a buffer
 
@@ -752,7 +760,7 @@ The resulting audio buffer can then be obtained by using the "getOutputBuffer" m
 
 > **resetAllFiltersState**(): `void`
 
-Defined in: [audioEditor/AudioEditor.ts:404](https://github.com/Eliastik/simple-sound-studio-lib/blob/ac774fbcc31e7b2bb36869a329e7b93025fe1f8e/lib/audioEditor/AudioEditor.ts#L404)
+Defined in: [audioEditor/AudioEditor.ts:400](https://github.com/Eliastik/simple-sound-studio-lib/blob/644508463a58a8a0be6c83a6947a5b631bba11e9/lib/audioEditor/AudioEditor.ts#L400)
 
 Reset all filters/renderers state (enabled/disabled) based on their default states
 
@@ -770,7 +778,7 @@ Reset all filters/renderers state (enabled/disabled) based on their default stat
 
 > **resetFilterSettings**(`filterId`): `Promise`\<`void`\>
 
-Defined in: [audioEditor/AudioEditor.ts:397](https://github.com/Eliastik/simple-sound-studio-lib/blob/ac774fbcc31e7b2bb36869a329e7b93025fe1f8e/lib/audioEditor/AudioEditor.ts#L397)
+Defined in: [audioEditor/AudioEditor.ts:393](https://github.com/Eliastik/simple-sound-studio-lib/blob/644508463a58a8a0be6c83a6947a5b631bba11e9/lib/audioEditor/AudioEditor.ts#L393)
 
 Reset the settings of a filter
 
@@ -796,7 +804,7 @@ Id of the filter
 
 > **saveBuffer**(`options?`): `Promise`\<`boolean`\>
 
-Defined in: [audioEditor/AudioEditor.ts:464](https://github.com/Eliastik/simple-sound-studio-lib/blob/ac774fbcc31e7b2bb36869a329e7b93025fe1f8e/lib/audioEditor/AudioEditor.ts#L464)
+Defined in: [audioEditor/AudioEditor.ts:460](https://github.com/Eliastik/simple-sound-studio-lib/blob/644508463a58a8a0be6c83a6947a5b631bba11e9/lib/audioEditor/AudioEditor.ts#L460)
 
 Save the rendered audio to a buffer
 
@@ -820,11 +828,23 @@ A promise resolved when the audio buffer is downloaded to the user
 
 ***
 
+### setup()
+
+> **setup**(): `void`
+
+Defined in: [audioEditor/AudioEditor.ts:82](https://github.com/Eliastik/simple-sound-studio-lib/blob/644508463a58a8a0be6c83a6947a5b631bba11e9/lib/audioEditor/AudioEditor.ts#L82)
+
+#### Returns
+
+`void`
+
+***
+
 ### toggleFilter()
 
 > **toggleFilter**(`filterId`): `void`
 
-Defined in: [audioEditor/AudioEditor.ts:379](https://github.com/Eliastik/simple-sound-studio-lib/blob/ac774fbcc31e7b2bb36869a329e7b93025fe1f8e/lib/audioEditor/AudioEditor.ts#L379)
+Defined in: [audioEditor/AudioEditor.ts:375](https://github.com/Eliastik/simple-sound-studio-lib/blob/644508463a58a8a0be6c83a6947a5b631bba11e9/lib/audioEditor/AudioEditor.ts#L375)
 
 Toggle enabled/disabled state for a filter/renderer
 
