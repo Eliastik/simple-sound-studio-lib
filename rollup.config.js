@@ -18,7 +18,7 @@ const workerFiles = [
 
 const bundleConfig = [
     {
-        input: "./dist/dts/index.d.ts",
+        input: "./dist/types/index.d.ts",
         output: [{ file: "dist/index.d.ts", format: "es" }],
         plugins: [
             dts.default()
@@ -56,7 +56,10 @@ const bundleConfig = [
                 inlineSourceMap: true,
                 noEmit: true,
                 experimentalDecorators: true,
-                emitDecoratorMetadata: true
+                emitDecoratorMetadata: true,
+                declaration: false,
+                declarationDir: null,
+                outputToFilesystem: true
             }),
             terser({
                 sourceMap: true
@@ -81,7 +84,10 @@ const workletConfig = workletFiles.map((input) => ({
             browser: true,
         }),
         typescript({
-            noEmit: true
+            noEmit: true,
+            declaration: false,
+            declarationDir: null,
+            outputToFilesystem: true
         }),
         terser(),
         cleanup()
@@ -107,7 +113,10 @@ const workerConfig = workerFiles.map((input) => ({
             requireReturnsDefault: "auto",
         }),
         typescript({
-            noEmit: true
+            noEmit: true,
+            declaration: false,
+            declarationDir: null,
+            outputToFilesystem: true
         }),
         terser(),
         cleanup()

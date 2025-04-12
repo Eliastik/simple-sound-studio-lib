@@ -28,6 +28,7 @@ yarn-error.log*
 lib/**/*.js
 lib/**/*.d.ts
 dist/**/dts/**/*.d.ts
+dist/**/types/**/*.d.ts
 
 # service worker
 .rollup.cache
