@@ -1,4 +1,4 @@
-import { inject, injectable, postConstruct } from "inversify";
+import { inject, injectable, injectFromBase, postConstruct } from "inversify";
 import { TYPES } from "../inversify.types";
 import { Recorder } from "../recorder/Recorder";
 import { EventType } from "@/model/EventTypeEnum";
@@ -13,6 +13,7 @@ import type FilterManagerInterface from "./interfaces/FilterManagerInterface";
 import utilFunctions from "@/utils/Functions";
 
 @injectable()
+@injectFromBase()
 export default class SaveBufferManager extends AbstractAudioElement implements SaveBufferManagerInterface {
 
     /** The filter manager */

@@ -34,24 +34,29 @@ export default class SoundStudioFactory {
      * @returns A new instance of the sound studio components. See SoundStudioFactoryInstance
      */
     static createNewInstance(options?: SoundStudioFactoryNewInstanceOptions): SoundStudioFactoryInstance {
-        const audioEditorContainer = getAudioEditorContainer();
+        try {
+            const audioEditorContainer = getAudioEditorContainer();
 
-        if (options && options.configService) {
-            audioEditorContainer.bind<ConfigService>(TYPES.ConfigService).toDynamicValue(() => options.configService!);
-        } else {
-            audioEditorContainer.bind<ConfigService>(TYPES.ConfigService).to(GenericConfigService);
-            console.warn("No ConfigService provided. Using default generic implementation.");
+            if (options && options.configService) {
+                audioEditorContainer.bind<ConfigService>(TYPES.ConfigService).toDynamicValue(() => options.configService!);
+            } else {
+                audioEditorContainer.bind<ConfigService>(TYPES.ConfigService).to(GenericConfigService);
+                console.warn("No ConfigService provided. Using default generic implementation.");
+            }
+
+            audioEditorContainer.bind<string[]>(TYPES.AudioBuffersToFetch).toConstantValue((options && options.buffersToFetch) || []);
+
+            return {
+                audioEditor: audioEditorContainer.get<AudioEditorInterface>(TYPES.AudioEditor),
+                audioPlayer: audioEditorContainer.get<BufferPlayerInterface>(TYPES.BufferPlayer),
+                configService: audioEditorContainer.get<ConfigService>(TYPES.ConfigService),
+                eventEmitter: audioEditorContainer.get<EventEmitterInterface>(TYPES.EventEmitter),
+                voiceRecorder: audioEditorContainer.get<VoiceRecorderInterface>(TYPES.VoiceRecorder)
+            };
+        } catch (e) {
+            console.error("Error when creating new Sound Studio instance\n", e);
+            throw new Error("Error when creating new Sound Studio instance");
         }
-
-        audioEditorContainer.bind<string[]>(TYPES.AudioBuffersToFetch).toConstantValue((options && options.buffersToFetch) || []);
-
-        return {
-            audioEditor: audioEditorContainer.get<AudioEditorInterface>(TYPES.AudioEditor),
-            audioPlayer: audioEditorContainer.get<BufferPlayerInterface>(TYPES.BufferPlayer),
-            configService: audioEditorContainer.get<ConfigService>(TYPES.ConfigService),
-            eventEmitter: audioEditorContainer.get<EventEmitterInterface>(TYPES.EventEmitter),
-            voiceRecorder: audioEditorContainer.get<VoiceRecorderInterface>(TYPES.VoiceRecorder)
-        };
     }
 
     /**

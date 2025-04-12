@@ -23,7 +23,8 @@ describe("AudioContextManager tests", () => {
             "createNewContext"
         );
 
-        new AudioContextManager(eventEmitter, configService);
+        const audioContextManager = new AudioContextManager(eventEmitter, configService);
+        audioContextManager.setup();
 
         expect(configService.getSampleRate).toHaveBeenCalled();
         expect(spyContextManager).toHaveBeenCalledWith(192000);
@@ -41,6 +42,7 @@ describe("AudioContextManager tests", () => {
             eventEmitter,
             configService
         );
+        audioContextManager.setup();
         const result = audioContextManager.createNewContextIfNeeded(null);
 
         expect(result).toBe(false); // Since compatibility mode is enabled, no new context should be created
@@ -60,6 +62,7 @@ describe("AudioContextManager tests", () => {
             eventEmitter,
             configService
         );
+        audioContextManager.setup();
         const result = audioContextManager.createNewContextIfNeeded(null);
 
         expect(result).toBe(false); // Sample rate has not changed
@@ -86,6 +89,7 @@ describe("AudioContextManager tests", () => {
             eventEmitter,
             configService
         );
+        audioContextManager.setup();
         audioContextManager.createNewContext(48000);
 
         expect(audioContextManager.currentSampleRate).toBe(48000);
@@ -103,6 +107,7 @@ describe("AudioContextManager tests", () => {
             eventEmitter,
             configService
         );
+        audioContextManager.setup();
 
         const spyDestroy = jest.spyOn(MockAudioContext.prototype, "close");
         
@@ -126,6 +131,7 @@ describe("AudioContextManager tests", () => {
             eventEmitter,
             configService
         );
+        audioContextManager.setup();
         
         audioContextManager.createNewContextIfNeeded(new MockAudioBuffer(2, 0, bufferSampleRate));
 

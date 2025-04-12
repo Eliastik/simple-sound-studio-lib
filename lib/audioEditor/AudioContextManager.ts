@@ -1,4 +1,4 @@
-import { inject, injectable } from "inversify";
+import { inject, injectable, postConstruct } from "inversify";
 import { EventType } from "@/model/EventTypeEnum";
 import Constants from "@/model/Constants";
 import EventEmitter from "@/utils/EventEmitter";
@@ -28,11 +28,10 @@ export default class AudioContextManager implements AudioContextManagerInterface
         @inject(TYPES.ConfigService) configService: ConfigService | null) {
         this.eventEmitter = eventEmitter || new EventEmitter();
         this.configService = configService;
-
-        this.setup();
     }
 
-    private setup() {
+    @postConstruct()
+    setup() {
         if (this.configService) {
             this.previousSampleRate = this.configService.getSampleRate();
 

@@ -1,4 +1,4 @@
-import { injectable, multiInject } from "inversify";
+import { injectable, injectFromBase, multiInject, postConstruct } from "inversify";
 import { TYPES } from "@/inversify.types";
 import AbstractAudioElement from "@/interfaces/AbstractAudioElement";
 import AbstractAudioRenderer from "@/filters/interfaces/AbstractAudioRenderer";
@@ -6,6 +6,7 @@ import { FilterState } from "@/model/FilterState";
 import RendererManagerInterface from "./interfaces/RendererManagerInterface";
 
 @injectable()
+@injectFromBase()
 export default class RendererManager extends AbstractAudioElement implements RendererManagerInterface {
 
     /** A list of renderers */
@@ -18,12 +19,20 @@ export default class RendererManager extends AbstractAudioElement implements Ren
         this.renderers = renderers;
     }
 
+    @postConstruct()
+    setup() {
+        this.initializeRenderers(this.renderers);
+    }
+
     addRenderers(...renderers: AbstractAudioRenderer[]) {
+        this.initializeRenderers(renderers);
+        this.renderers.push(...renderers);
+    }
+
+    private initializeRenderers(renderers: AbstractAudioRenderer[]) {
         for (const renderer of renderers) {
             renderer.injectDependencies(this.bufferFetcherService, this.bufferDecoderService, this.configService, this.eventEmitter, this.contextManager);
         }
-
-        this.renderers.push(...renderers);
     }
 
     getRenderersState(): FilterState {

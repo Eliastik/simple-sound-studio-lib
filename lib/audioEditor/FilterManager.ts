@@ -6,10 +6,11 @@ import AbstractAudioFilterWorklet from "@/filters/interfaces/AbstractAudioFilter
 import { FilterState } from "@/model/FilterState";
 import { FilterSettings } from "@/model/filtersSettings/FilterSettings";
 import FilterManagerInterface from "./interfaces/FilterManagerInterface";
-import { inject, injectable, multiInject, postConstruct } from "inversify";
+import { inject, injectable, injectFromBase, multiInject, postConstruct } from "inversify";
 import { TYPES } from "@/inversify.types";
 
 @injectable()
+@injectFromBase()
 export default class FilterManager extends AbstractAudioElement implements FilterManagerInterface {
 
     /** A list of filters */
@@ -33,18 +34,19 @@ export default class FilterManager extends AbstractAudioElement implements Filte
 
     @postConstruct()
     setup() {
-        for (const filter of this.filters) {
-            filter.initializeDefaultSettings();
-        }
+        this.initializeFilters(this.filters);
     }
 
     addFilters(...filters: AbstractAudioFilter[]) {
+        this.initializeFilters(filters);
+        this.filters.push(...filters);
+    }
+
+    private initializeFilters(filters: AbstractAudioFilter[]) {
         for (const filter of filters) {
             filter.initializeDefaultSettings();
             filter.injectDependencies(this.bufferFetcherService, this.bufferDecoderService, this.configService, this.eventEmitter, this.contextManager);
         }
-
-        this.filters.push(...filters);
     }
 
     getFiltersState(): FilterState {

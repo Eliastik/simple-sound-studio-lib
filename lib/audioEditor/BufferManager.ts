@@ -1,13 +1,14 @@
 import AbstractAudioElement from "@/interfaces/AbstractAudioElement";
 import { EventType } from "@/model/EventTypeEnum";
 import BufferManagerInterface from "./interfaces/BufferManagerInterface";
-import { inject, injectable, postConstruct } from "inversify";
+import { inject, injectable, injectFromBase, postConstruct } from "inversify";
 import { TYPES } from "@/inversify.types";
 import EventEmitterInterface from "@/utils/interfaces/EventEmitterInterface";
 import type FilterManagerInterface from "./interfaces/FilterManagerInterface";
 import type BufferFetcherServiceInterface from "@/services/interfaces/BufferFetcherServiceInterface";
 
 @injectable()
+@injectFromBase()
 export default class BufferManager extends AbstractAudioElement implements BufferManagerInterface {
 
     /** The filter manager */

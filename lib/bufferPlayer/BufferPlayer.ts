@@ -21,11 +21,12 @@
 import { EventType } from "../model/EventTypeEnum";
 import { EventEmitterCallback } from "../model/EventEmitterCallback";
 import AbstractAudioElement from "../interfaces/AbstractAudioElement";
-import { injectable, postConstruct } from "inversify";
+import { injectable, injectFromBase, postConstruct } from "inversify";
 import BufferPlayerInterface from "./interfaces/BufferPlayerInterface";
 
 // Also used in compatibility mode (which doesn't use audio buffer) with less functions (no time control)
 @injectable()
+@injectFromBase()
 export default class BufferPlayer extends AbstractAudioElement implements BufferPlayerInterface {
 
     private buffer: AudioBuffer | null = null;

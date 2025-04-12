@@ -18,8 +18,11 @@ describe("VoiceRecorder", () => {
     let configService;
 
     beforeEach(() => {
+        const audioContextManager = new AudioContextManager(null, configService);
+        audioContextManager.setup();
+
         configService = new GenericConfigService();
-        voiceRecorder = new VoiceRecorder(new AudioContextManager(null, configService), configService);
+        voiceRecorder = new VoiceRecorder(audioContextManager, configService);
     });
 
     describe("init()", () => {

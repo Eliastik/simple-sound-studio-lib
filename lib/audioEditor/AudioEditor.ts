@@ -8,7 +8,7 @@ import { EventEmitterCallback } from "../model/EventEmitterCallback";
 import { FilterState } from "../model/FilterState";
 import SaveBufferOptions from "../model/SaveBufferOptions";
 import { TYPES } from "../inversify.types";
-import { inject, injectable, postConstruct } from "inversify";
+import { inject, injectable, injectFromBase, postConstruct } from "inversify";
 import AudioEditorInterface from "./interfaces/AudioEditorInterface";
 import type FilterManagerInterface from "./interfaces/FilterManagerInterface";
 import type RendererManagerInterface from "./interfaces/RendererManagerInterface";
@@ -25,6 +25,7 @@ import type BufferPlayerInterface from "@/bufferPlayer/interfaces/BufferPlayerIn
  * download rendered audio, get rendered audio buffer
  */
 @injectable()
+@injectFromBase()
 export default class AudioEditor extends AbstractAudioElement implements AudioEditorInterface {
 
     /** The filter manager */

@@ -20,7 +20,7 @@
 // The Voice Recorder class
 // Used to record a sound (voice, etc.) with the user microphone
 // Offer control with play/pause and audio feedback
-import { inject, injectable } from "inversify";
+import { inject, injectable, injectFromBase } from "inversify";
 import TimerSaveTime from "../utils/TimerSaveTime";
 import { EventType } from "../model/EventTypeEnum";
 import AudioConstraintWrapper from "../model/AudioConstraintWrapper";
@@ -35,6 +35,7 @@ import { TYPES } from "@/inversify.types";
 import AudioContextManagerInterface from "@/audioEditor/interfaces/AudioContextManagerInterface";
 
 @injectable()
+@injectFromBase()
 export default class VoiceRecorder extends AbstractAudioElement implements VoiceRecorderInterface {
 
     private recorder: Recorder | null = null;

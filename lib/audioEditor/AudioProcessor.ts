@@ -3,7 +3,7 @@ import { EventType } from "@/model/EventTypeEnum";
 import utils from "../utils/Functions";
 import Constants from "@/model/Constants";
 import AudioProcessorInterface from "./interfaces/AudioProcessorInterface";
-import { inject, injectable } from "inversify";
+import { inject, injectable, injectFromBase } from "inversify";
 import type BufferPlayerInterface from "@/bufferPlayer/interfaces/BufferPlayerInterface";
 import type BufferManagerInterface from "./interfaces/BufferManagerInterface";
 import type RendererManagerInterface from "./interfaces/RendererManagerInterface";
@@ -11,6 +11,7 @@ import type FilterManagerInterface from "./interfaces/FilterManagerInterface";
 import { TYPES } from "@/inversify.types";
 
 @injectable()
+@injectFromBase()
 export default class AudioProcessor extends AbstractAudioElement implements AudioProcessorInterface {
 
     /** The filter manager */
