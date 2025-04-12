@@ -6,7 +6,7 @@
 
 # Interface: FilterSettings
 
-Defined in: [model/filtersSettings/FilterSettings.ts:5](https://github.com/Eliastik/simple-sound-studio-lib/blob/644508463a58a8a0be6c83a6947a5b631bba11e9/lib/model/filtersSettings/FilterSettings.ts#L5)
+Defined in: [model/filtersSettings/FilterSettings.ts:5](https://github.com/Eliastik/simple-sound-studio-lib/blob/e04ad49295783c41bb6a6926027e9768dbfd228c/lib/model/filtersSettings/FilterSettings.ts#L5)
 
 ## Indexable
 
@@ -18,4 +18,4 @@ Defined in: [model/filtersSettings/FilterSettings.ts:5](https://github.com/Elias
 
 > `optional` **downloadedBuffers**: `string`[]
 
-Defined in: [model/filtersSettings/FilterSettings.ts:7](https://github.com/Eliastik/simple-sound-studio-lib/blob/644508463a58a8a0be6c83a6947a5b631bba11e9/lib/model/filtersSettings/FilterSettings.ts#L7)
+Defined in: [model/filtersSettings/FilterSettings.ts:7](https://github.com/Eliastik/simple-sound-studio-lib/blob/e04ad49295783c41bb6a6926027e9768dbfd228c/lib/model/filtersSettings/FilterSettings.ts#L7)

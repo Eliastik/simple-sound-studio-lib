@@ -6,7 +6,7 @@
 
 # Interface: AudioFilterEntrypointInterface
 
-Defined in: [filters/interfaces/AudioFilterEntrypointInterface.ts:3](https://github.com/Eliastik/simple-sound-studio-lib/blob/644508463a58a8a0be6c83a6947a5b631bba11e9/lib/filters/interfaces/AudioFilterEntrypointInterface.ts#L3)
+Defined in: [filters/interfaces/AudioFilterEntrypointInterface.ts:3](https://github.com/Eliastik/simple-sound-studio-lib/blob/e04ad49295783c41bb6a6926027e9768dbfd228c/lib/filters/interfaces/AudioFilterEntrypointInterface.ts#L3)
 
 ## Methods
 
@@ -14,7 +14,7 @@ Defined in: [filters/interfaces/AudioFilterEntrypointInterface.ts:3](https://git
 
 > **getEntrypointNode**(`context`, `buffer`, `offline`): `Promise`\<[`AudioFilterNodes`](AudioFilterNodes.md)\>
 
-Defined in: [filters/interfaces/AudioFilterEntrypointInterface.ts:6](https://github.com/Eliastik/simple-sound-studio-lib/blob/644508463a58a8a0be6c83a6947a5b631bba11e9/lib/filters/interfaces/AudioFilterEntrypointInterface.ts#L6)
+Defined in: [filters/interfaces/AudioFilterEntrypointInterface.ts:6](https://github.com/Eliastik/simple-sound-studio-lib/blob/e04ad49295783c41bb6a6926027e9768dbfd228c/lib/filters/interfaces/AudioFilterEntrypointInterface.ts#L6)
 
 Return the entrypoint node, with an audio context and an input AudioBuffer
 
@@ -42,7 +42,7 @@ Return the entrypoint node, with an audio context and an input AudioBuffer
 
 > **getSpeed**(): `number`
 
-Defined in: [filters/interfaces/AudioFilterEntrypointInterface.ts:9](https://github.com/Eliastik/simple-sound-studio-lib/blob/644508463a58a8a0be6c83a6947a5b631bba11e9/lib/filters/interfaces/AudioFilterEntrypointInterface.ts#L9)
+Defined in: [filters/interfaces/AudioFilterEntrypointInterface.ts:9](https://github.com/Eliastik/simple-sound-studio-lib/blob/e04ad49295783c41bb6a6926027e9768dbfd228c/lib/filters/interfaces/AudioFilterEntrypointInterface.ts#L9)
 
 Get the speed of the audio
 
@@ -56,7 +56,7 @@ Get the speed of the audio
 
 > **updateState**(): `void`
 
-Defined in: [filters/interfaces/AudioFilterEntrypointInterface.ts:12](https://github.com/Eliastik/simple-sound-studio-lib/blob/644508463a58a8a0be6c83a6947a5b631bba11e9/lib/filters/interfaces/AudioFilterEntrypointInterface.ts#L12)
+Defined in: [filters/interfaces/AudioFilterEntrypointInterface.ts:12](https://github.com/Eliastik/simple-sound-studio-lib/blob/e04ad49295783c41bb6a6926027e9768dbfd228c/lib/filters/interfaces/AudioFilterEntrypointInterface.ts#L12)
 
 Update the state of the filter
 
