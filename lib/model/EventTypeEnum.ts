@@ -37,5 +37,7 @@ export enum EventType {
     PLAYING_FINISHED_LOOP_ALL = "playingFinishedLoopAll",
     LOADED_AUDIO_FILE_FROM_LIST = "loadedAudioFileFromList",
     AUDIO_SPEED_UPDATED = "audioSpeedUpdated",
-    AUDIO_DURATION_UPDATED = "audioDurationUpdated"
+    AUDIO_DURATION_UPDATED = "audioDurationUpdated",
+    FALLBACK_WORKLET_TO_SCRIPT_PROCESSOR = "fallbackWorkletToScriptProcessor",
+    WORKLET_SUCCESSFULLY_LOADED = "workletSuccessfullyLoaded"
 };

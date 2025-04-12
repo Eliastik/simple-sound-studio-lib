@@ -5,6 +5,7 @@ import "../../workletPolyfill/AudioWorkletProcessorPolyfill";
 import RegisterProcessorPolyfill from "../../workletPolyfill/RegisterProcessorPolyfill";
 import utilFunctions from "../../utils/Functions";
 import { FilterSettingValue } from "@/model/filtersSettings/FilterSettings";
+import { EventType } from "@/model/EventTypeEnum";
 
 export default abstract class AbstractAudioFilterWorklet<T> extends AbstractAudioFilter {
 
@@ -58,10 +59,18 @@ export default abstract class AbstractAudioFilterWorklet<T> extends AbstractAudi
                     }
 
                     workletPathSet.add(workletPath);
+
+                    if (this.eventEmitter) {
+                        this.eventEmitter.emit(EventType.WORKLET_SUCCESSFULLY_LOADED);
+                    }
                 })
                 .catch(e => {
                     console.error(`Error when loading Worklet (${workletPath}) for filter ${this.id}. Fallback to ScriptProcessor. Exception:`, e);
                     this.fallbackToScriptProcessor = true;
+
+                    if (this.eventEmitter) {
+                        this.eventEmitter.emit(EventType.FALLBACK_WORKLET_TO_SCRIPT_PROCESSOR);
+                    }
                 });
         }
     }
