@@ -306,4 +306,41 @@ describe("BufferPlayer tests", () => {
         expect(bufferPlayer.reset).toHaveBeenCalledTimes(2);
         expect(mockEventEmitter.emit).not.toHaveBeenCalledWith(EventType.PLAYING_FINISHED);
     });
+    
+    test("Set volume - Should set the volume of the gainNode", async () => {
+        const mockAudioBuffer = {
+            duration: 120
+        } as AudioBuffer;
+
+        bufferPlayer.loadBuffer(mockAudioBuffer);
+
+        const initialGainNodeValue = (bufferPlayer as any).gainNode.gain.value;
+
+        bufferPlayer.volume = 0.5;
+        bufferPlayer.setTime(0);
+
+        expect((bufferPlayer as any).gainNode.gain.value).not.toEqual(initialGainNodeValue);
+    });
+    
+    test("Volume - Gain Node should be connected", async () => {
+        const mockAudioBuffer = {
+            duration: 120
+        } as AudioBuffer;
+
+        bufferPlayer.loadBuffer(mockAudioBuffer);
+        bufferPlayer.setTime(0);
+
+        expect((bufferPlayer as any).source.connect).toHaveBeenCalledWith((bufferPlayer as any).gainNode);
+        expect((bufferPlayer as any).gainNode.connect).toHaveBeenCalledWith((bufferPlayer as any).contextManager.currentContext.destination);
+    });
+    
+    test("Volume - Gain Node should be connected (compatibility mode)", async () => {
+        bufferPlayer.setCompatibilityMode(new MockAudioNode(), 30);
+        bufferPlayer.setTime(0);
+
+        await bufferPlayer.start();
+
+        expect((bufferPlayer as any).currentNode.connect).toHaveBeenCalledWith((bufferPlayer as any).gainNode);
+        expect((bufferPlayer as any).gainNode.connect).toHaveBeenCalledWith((bufferPlayer as any).contextManager.currentContext.destination);
+    });
 });
