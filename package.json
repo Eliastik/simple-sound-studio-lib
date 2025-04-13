@@ -1,7 +1,7 @@
 {
   "name": "@eliastik/simple-sound-studio-lib",
   "description": "A Web Audio API library used in my Simple Voice Changer (soon to be renamed to Simple Sound Studio) project",
-  "version": "2.2.2",
+  "version": "2.3.0",
   "private": false,
   "scripts": {
     "lint": "eslint .",
