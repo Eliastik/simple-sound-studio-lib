@@ -335,8 +335,12 @@ describe("BufferPlayer tests", () => {
     });
     
     test("Volume - Gain Node should be connected (compatibility mode)", async () => {
-        bufferPlayer.setCompatibilityMode(new MockAudioNode(), 30);
+        const node = new MockAudioNode();
+
+        bufferPlayer.setCompatibilityMode(node, 30);
         bufferPlayer.setTime(0);
+
+        jest.spyOn(node, "connect");
 
         await bufferPlayer.start();
 

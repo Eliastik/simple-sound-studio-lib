@@ -120,7 +120,13 @@ const utilFunctions = {
     calculateAudioDuration(buffer: AudioBuffer, filterManager: FilterManagerInterface, speedAudio?: number): number {
         if (buffer && filterManager) {
             const duration = this.calcAudioDuration(buffer, speedAudio);
-            return duration + filterManager.getAddingTime();
+            const addingTime = filterManager.getAddingTime();
+
+            if (addingTime) {
+                return duration + addingTime;
+            }
+
+            return duration;
         }
 
         return 0;

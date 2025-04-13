@@ -1,6 +1,6 @@
 export class MockAudioBuffer implements AudioBuffer {
     readonly length: number;
-    readonly duration: number;
+    duration: number = 500;
     readonly numberOfChannels: number;
     readonly sampleRate: number;
     private channelData: Float32Array[];

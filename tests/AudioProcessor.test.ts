@@ -316,4 +316,142 @@ describe("AudioProcessor", () => {
         const result = await audioProcessor.setupOutput(null, createMockAudioContext());
         expect(result).toBe(false);
     });
+
+    test("Render audio - should reset audio speed", async () => {
+        const audioProcessor2 = new AudioProcessor(
+            mockFilterManager,
+            mockRendererManager,
+            mockBufferPlayer,
+            mockBufferManager
+        );
+        const genericConfigService = new GenericConfigService();
+
+        const eventEmitter = new EventEmitter();
+
+        jest.spyOn(eventEmitter, "emit");
+
+        (audioProcessor2 as any).injectDependencies(null, null, genericConfigService, eventEmitter, mockContextManager);
+
+        await audioProcessor2.renderAudio(new MockAudioBuffer(2, 10000, 44100));
+
+        expect(eventEmitter.emit).toHaveBeenCalledWith(EventType.AUDIO_SPEED_UPDATED, 1);
+    });
+
+    test("Render audio - should reset rendering progress", async () => {
+        const audioProcessor2 = new AudioProcessor(
+            mockFilterManager,
+            mockRendererManager,
+            mockBufferPlayer,
+            mockBufferManager
+        );
+        const genericConfigService = new GenericConfigService();
+        const eventEmitter = new EventEmitter();
+
+        jest.spyOn(eventEmitter, "emit");
+        jest.spyOn(mockFilterManager, "disableFilter");
+
+        (audioProcessor2 as any).injectDependencies(null, null, genericConfigService, eventEmitter, mockContextManager);
+
+        await audioProcessor2.renderAudio(new MockAudioBuffer(2, 10000, 44100));
+
+        expect(eventEmitter.emit).toHaveBeenCalledWith(EventType.UPDATE_AUDIO_TREATMENT_PERCENT, 0);
+        expect(eventEmitter.emit).toHaveBeenCalledWith(EventType.UPDATE_REMAINING_TIME_ESTIMATED, -1);
+        expect(mockFilterManager.disableFilter).toHaveBeenCalledWith(Constants.FILTERS_NAMES.RENDERING_PROGRESS_CALCULATION);
+    });
+
+    test("Render audio - should enable rendering calculation", async () => {
+        const audioProcessor2 = new AudioProcessor(
+            mockFilterManager,
+            mockRendererManagerWithFakeRenderedBuffer,
+            mockBufferPlayer,
+            mockBufferManager
+        );
+        const genericConfigService = new GenericConfigService();
+
+        (audioProcessor2 as any).injectDependencies(null, null, genericConfigService, new EventEmitter(), mockContextManager);
+
+        genericConfigService.setConfig(Constants.PREFERENCES_KEYS.DISABLE_INITIAL_RENDERING, "false");
+        genericConfigService.setConfig(Constants.PREFERENCES_KEYS.COMPATIBILITY_MODE_CHECKED, "true");
+        genericConfigService.setConfig(Constants.PREFERENCES_KEYS.COMPATIBILITY_MODE_ENABLED, "false");
+
+        jest.spyOn(mockFilterManager, "enableFilter");
+
+        await audioProcessor2.renderAudio(new MockAudioBuffer(2, 10000, 44100));
+
+        expect(mockFilterManager.enableFilter).toHaveBeenCalledWith(Constants.FILTERS_NAMES.RENDERING_PROGRESS_CALCULATION);
+    });
+
+    test("Render audio - compatibility mode - shouldn't enable rendering calculation", async () => {
+        const audioProcessor2 = new AudioProcessor(
+            mockFilterManager,
+            mockRendererManagerWithFakeRenderedBuffer,
+            mockBufferPlayer,
+            mockBufferManager
+        );
+        const genericConfigService = new GenericConfigService();
+
+        (audioProcessor2 as any).injectDependencies(null, null, genericConfigService, new EventEmitter(), mockContextManager);
+
+        genericConfigService.setConfig(Constants.PREFERENCES_KEYS.DISABLE_INITIAL_RENDERING, "false");
+        genericConfigService.setConfig(Constants.PREFERENCES_KEYS.COMPATIBILITY_MODE_CHECKED, "true");
+        genericConfigService.setConfig(Constants.PREFERENCES_KEYS.COMPATIBILITY_MODE_ENABLED, "true");
+
+        jest.spyOn(mockFilterManager, "enableFilter");
+
+        await audioProcessor2.renderAudio(new MockAudioBuffer(2, 10000, 44100));
+
+        expect(mockFilterManager.enableFilter).not.toHaveBeenCalledWith(Constants.FILTERS_NAMES.RENDERING_PROGRESS_CALCULATION);
+    });
+
+    test("Render audio - should update audio speed when rendering is finished", async () => {
+        const audioProcessor2 = new AudioProcessor(
+            mockFilterManager,
+            mockRendererManagerWithFakeRenderedBuffer,
+            mockBufferPlayer,
+            mockBufferManager
+        );
+        const genericConfigService = new GenericConfigService();
+        const eventEmitter = new EventEmitter();
+
+        jest.spyOn(eventEmitter, "emit");
+
+        (audioProcessor2 as any).injectDependencies(null, null, genericConfigService, eventEmitter, mockContextManager);
+
+        genericConfigService.setConfig(Constants.PREFERENCES_KEYS.DISABLE_INITIAL_RENDERING, "false");
+        genericConfigService.setConfig(Constants.PREFERENCES_KEYS.COMPATIBILITY_MODE_CHECKED, "true");
+        genericConfigService.setConfig(Constants.PREFERENCES_KEYS.COMPATIBILITY_MODE_ENABLED, "false");
+
+        const mockAudioBuffer = new MockAudioBuffer(2, 10000, 44100);
+
+        await audioProcessor2.renderAudio(mockAudioBuffer);
+
+        expect(eventEmitter.emit).toHaveBeenCalledWith(EventType.AUDIO_SPEED_UPDATED, 1);
+    });
+
+    test("Render audio - compatibility mode - should update audio speed and duration when rendering is finished", async () => {
+        const audioProcessor2 = new AudioProcessor(
+            mockFilterManager,
+            mockRendererManagerWithFakeRenderedBuffer,
+            mockBufferPlayer,
+            mockBufferManager
+        );
+        const genericConfigService = new GenericConfigService();
+        const eventEmitter = new EventEmitter();
+
+        jest.spyOn(eventEmitter, "emit");
+
+        (audioProcessor2 as any).injectDependencies(null, null, genericConfigService, eventEmitter, mockContextManager);
+
+        genericConfigService.setConfig(Constants.PREFERENCES_KEYS.DISABLE_INITIAL_RENDERING, "false");
+        genericConfigService.setConfig(Constants.PREFERENCES_KEYS.COMPATIBILITY_MODE_CHECKED, "true");
+        genericConfigService.setConfig(Constants.PREFERENCES_KEYS.COMPATIBILITY_MODE_ENABLED, "true");
+
+        const mockAudioBuffer = new MockAudioBuffer(2, 10000, 44100);
+        mockAudioBuffer.duration = 500;
+
+        await audioProcessor2.renderAudio(mockAudioBuffer);
+
+        expect(eventEmitter.emit).toHaveBeenCalledWith(EventType.AUDIO_SPEED_UPDATED, 1);
+        expect(eventEmitter.emit).toHaveBeenCalledWith(EventType.AUDIO_DURATION_UPDATED, 501);
+    });
 });
