@@ -170,12 +170,14 @@ This filter applies speed and frequency modifications to the audio using the Sou
 ```
 {
     speedAudio: "1",
-    frequencyAudio: "1"
+    frequencyAudio: "1",
+    pitchSemitones: "0"
 }
 ```
 
 * `speedAudio`: This parameter sets the speed of the audio. For example, if set to "2", the audio will play at 2x its normal speed.
 * `frequencyAudio`: This parameter adjusts the frequency of the audio. For example, if set to "2", the audio will sound sharper (higher frequency) and pitched up by 2x.
+* `pitchSemitones`: This parameter adjusts the pitch of the audio in semitones.
 
 ### TelephonizerFilter
 
@@ -378,12 +380,14 @@ Ce filtre applique des modifications de vitesse et de fréquence à l'audio en u
 ```
 {
     speedAudio: "1",
-    frequencyAudio: "1"
+    frequencyAudio: "1",
+    pitchSemitones: "0"
 }
 ```
 
 * `speedAudio` : Ce paramètre définit la vitesse de l'audio. Par exemple, si la valeur est "2", l'audio sera joué à 2x sa vitesse normale.
 * `frequencyAudio` : Ce paramètre ajuste la fréquence de l'audio. Par exemple, si la valeur est "2", l'audio sera plus aigu (fréquence plus élevée) et la tonalité sera doublée.
+* `pitchSemitones` : Ce paramètre ajuste la hauteur de l'audio en demi-tons.
 
 ### TelephonizerFilter
 
