@@ -27,15 +27,15 @@ console.log("Bass booster settings:", audioEditor.getFiltersSettings().get(Filte
 // Listen to events from event emitter to get audio rendering state (progress)
 eventEmitter.on(EventType.STARTED_RENDERING_AUDIO, () => document.getElementById("processing-audio").style.display = "block");
 eventEmitter.on(EventType.UPDATE_AUDIO_TREATMENT_PERCENT, percent => document.getElementById("processing-progress").value = percent);
-eventEmitter.on(EventType.AUDIO_RENDERING_FINISHED, () => document.getElementById("processing-audio").style.display = "none");
 eventEmitter.on(EventType.UPDATE_REMAINING_TIME_ESTIMATED, estimatedTime => displayRemainingTime(estimatedTime));
+eventEmitter.on(EventType.AUDIO_RENDERING_FINISHED, () => document.getElementById("processing-audio").style.display = "none");
 
 // The audio editor is now ready for audio processing
 
 document.getElementById("volume").value = audioPlayer.volume;
 
 // When the user selects an audio file and clicks "validate", process and download the rendered audio as a WAV file
-async function processAudioThenDownload(file) {
+async function processAudio(file) {
     // Load the selected audio file into the audio editor
     try {
         await audioEditor.loadBufferFromFile(file);
@@ -62,7 +62,7 @@ document.getElementById("validate-button").addEventListener("click", async () =>
     const fileInput = document.getElementById("file-input");
 
     if(fileInput && fileInput.files[0]) {
-        await processAudioThenDownload(fileInput.files[0]);
+        await processAudio(fileInput.files[0]);
     }
 
     // Re-enable the button after processing is complete
