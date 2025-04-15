@@ -347,4 +347,21 @@ describe("BufferPlayer tests", () => {
         expect((bufferPlayer as any).currentNode.connect).toHaveBeenCalledWith((bufferPlayer as any).gainNode);
         expect((bufferPlayer as any).gainNode.connect).toHaveBeenCalledWith((bufferPlayer as any).contextManager.currentContext.destination);
     });
+    
+    test("Volume - Play direct should not disconnect gain and source node", async () => {
+        const mockAudioBuffer = {
+            duration: 120
+        } as AudioBuffer;
+
+        bufferPlayer.loadBuffer(mockAudioBuffer);
+        bufferPlayer.setTime(0);
+
+        const currentGainNode = (bufferPlayer as any).gainNode;
+        const currentSourceNode = (bufferPlayer as any).source;
+
+        await bufferPlayer.playDirect();
+
+        expect(currentGainNode.disconnect).not.toHaveBeenCalled();
+        expect(currentSourceNode.disconnect).not.toHaveBeenCalled();
+    });
 });

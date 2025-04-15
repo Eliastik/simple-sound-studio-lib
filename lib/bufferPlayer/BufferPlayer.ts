@@ -77,7 +77,7 @@ export default class BufferPlayer extends AbstractAudioElement implements Buffer
                     this.source.disconnect();
                 }
 
-                this.createGainNode();
+                this.createGainNode(direct);
 
                 this.duration = this.buffer.duration;
 
@@ -91,14 +91,16 @@ export default class BufferPlayer extends AbstractAudioElement implements Buffer
         this.updateInfos();
     }
 
-    private createGainNode() {
+    private createGainNode(direct?: boolean) {
         if (this.contextManager && this.contextManager.currentContext) {
-            if (this.gainNode) {
-                this.gainNode.disconnect();
-            }
+            if (!direct) {
+                if (this.gainNode) {
+                    this.gainNode.disconnect();
+                }
 
-            if (this.source) {
-                this.source.disconnect();
+                if (this.source) {
+                    this.source.disconnect();
+                }
             }
 
             this.source = this.contextManager.currentContext.createBufferSource();
@@ -184,6 +186,7 @@ export default class BufferPlayer extends AbstractAudioElement implements Buffer
             await this.eventEmitter?.emit(EventType.PLAYING_STARTED);
 
             if (!this.compatibilityMode) {
+                // Classical mode
                 if (this.source) {
                     this.source.start(0, direct ? 0 : this.currentTime / this.speedAudio);
                     this.playing = true;
@@ -191,7 +194,8 @@ export default class BufferPlayer extends AbstractAudioElement implements Buffer
                     return Promise.resolve();
                 }
             } else if (this.currentNode && this.contextManager && this.contextManager.currentContext) {
-                this.createGainNode();
+                // Compatibility/direct mode
+                this.createGainNode(direct);
 
                 if (this.gainNode) {
                     this.currentNode.connect(this.gainNode);
