@@ -364,4 +364,21 @@ describe("BufferPlayer tests", () => {
         expect(currentGainNode.disconnect).not.toHaveBeenCalled();
         expect(currentSourceNode.disconnect).not.toHaveBeenCalled();
     });
+    
+    test("Volume - Classical play method should disconnect gain and source node", async () => {
+        const mockAudioBuffer = {
+            duration: 120
+        } as AudioBuffer;
+
+        bufferPlayer.loadBuffer(mockAudioBuffer);
+        bufferPlayer.setTime(0);
+
+        const currentGainNode = (bufferPlayer as any).gainNode;
+        const currentSourceNode = (bufferPlayer as any).source;
+
+        await bufferPlayer.start();
+
+        expect(currentGainNode.disconnect).toHaveBeenCalled();
+        expect(currentSourceNode.disconnect).toHaveBeenCalled();
+    });
 });
