@@ -8,7 +8,7 @@
 
 > `const` **UtilFunctions**: `object`
 
-Defined in: [utils/Functions.ts:4](https://github.com/Eliastik/simple-sound-studio-lib/blob/a46864ae7461e78d2626d76886652564d08a6ff1/lib/utils/Functions.ts#L4)
+Defined in: [utils/Functions.ts:4](https://github.com/Eliastik/simple-sound-studio-lib/blob/ed5af082cb367d081813596dd50d04cea5746b12/lib/utils/Functions.ts#L4)
 
 ## Type declaration
 
