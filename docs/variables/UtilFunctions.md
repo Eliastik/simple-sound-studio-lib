@@ -8,7 +8,7 @@
 
 > `const` **UtilFunctions**: `object`
 
-Defined in: [utils/Functions.ts:4](https://github.com/Eliastik/simple-sound-studio-lib/blob/ed5af082cb367d081813596dd50d04cea5746b12/lib/utils/Functions.ts#L4)
+Defined in: [utils/Functions.ts:5](https://github.com/Eliastik/simple-sound-studio-lib/blob/da752c51f31a2272f1f3e80486e8056fec3d0b87/lib/utils/Functions.ts#L5)
 
 ## Type declaration
 
@@ -140,6 +140,20 @@ Current audio speed
 
 The audio duration
 
+### clampFloatValue()
+
+> **clampFloatValue**(`value`): `number`
+
+#### Parameters
+
+##### value
+
+`number`
+
+#### Returns
+
+`number`
+
 ### clearAudioBuffer()
 
 > **clearAudioBuffer**(`buffer`): `void`
@@ -149,6 +163,48 @@ The audio duration
 ##### buffer
 
 `null` | `AudioBuffer`
+
+#### Returns
+
+`void`
+
+### convertFloat32Array2Int16()
+
+> **convertFloat32Array2Int16**(`floatbuffer`): `Int16Array`\<`ArrayBuffer`\>
+
+Convert a Float32Array to an Int16Array
+
+#### Parameters
+
+##### floatbuffer
+
+`Float32Array`
+
+The buffer to convert
+
+#### Returns
+
+`Int16Array`\<`ArrayBuffer`\>
+
+Int16Array buffer
+
+### floatTo16BitPCM()
+
+> **floatTo16BitPCM**(`output`, `offset`, `input`): `void`
+
+#### Parameters
+
+##### output
+
+`DataView`
+
+##### offset
+
+`number`
+
+##### input
+
+`Float32Array`
 
 #### Returns
 
@@ -171,6 +227,50 @@ The audio duration
 #### Returns
 
 `void`
+
+### getLengthFromBuffers()
+
+> **getLengthFromBuffers**\<`T`\>(`buffers`): `number`
+
+#### Type Parameters
+
+##### T
+
+`T` *extends* `TypedArray`
+
+#### Parameters
+
+##### buffers
+
+`T`[]
+
+#### Returns
+
+`number`
+
+### interleaveBuffers()
+
+> **interleaveBuffers**\<`T`\>(`inputL`, `inputR`): `T`
+
+#### Type Parameters
+
+##### T
+
+`T` *extends* `TypedArray`
+
+#### Parameters
+
+##### inputL
+
+`T`
+
+##### inputR
+
+`T`
+
+#### Returns
+
+`T`
 
 ### isAudioWorkletCompatible()
 
@@ -206,6 +306,26 @@ FilterSettingValue
 
 `boolean`
 
+### mergeBuffers()
+
+> **mergeBuffers**\<`T`\>(`buffers`): `T`
+
+#### Type Parameters
+
+##### T
+
+`T` *extends* `TypedArray`
+
+#### Parameters
+
+##### buffers
+
+`T`[]
+
+#### Returns
+
+`T`
+
 ### sumAudioBuffer()
 
 > **sumAudioBuffer**(`buffer`): `number`
@@ -237,3 +357,25 @@ FilterSettingValue
 #### Returns
 
 `number`
+
+### writeStringToDataView()
+
+> **writeStringToDataView**(`view`, `offset`, `string`): `void`
+
+#### Parameters
+
+##### view
+
+`DataView`
+
+##### offset
+
+`number`
+
+##### string
+
+`string`
+
+#### Returns
+
+`void`

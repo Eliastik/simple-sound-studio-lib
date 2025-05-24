@@ -6,7 +6,7 @@
 
 # Interface: RecorderSettings
 
-Defined in: [model/RecorderSettings.ts:3](https://github.com/Eliastik/simple-sound-studio-lib/blob/ed5af082cb367d081813596dd50d04cea5746b12/lib/model/RecorderSettings.ts#L3)
+Defined in: [model/RecorderSettings.ts:3](https://github.com/Eliastik/simple-sound-studio-lib/blob/da752c51f31a2272f1f3e80486e8056fec3d0b87/lib/model/RecorderSettings.ts#L3)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: [model/RecorderSettings.ts:3](https://github.com/Eliastik/simple-sou
 
 > **audioFeedback**: `boolean`
 
-Defined in: [model/RecorderSettings.ts:6](https://github.com/Eliastik/simple-sound-studio-lib/blob/ed5af082cb367d081813596dd50d04cea5746b12/lib/model/RecorderSettings.ts#L6)
+Defined in: [model/RecorderSettings.ts:6](https://github.com/Eliastik/simple-sound-studio-lib/blob/da752c51f31a2272f1f3e80486e8056fec3d0b87/lib/model/RecorderSettings.ts#L6)
 
 ***
 
@@ -22,7 +22,7 @@ Defined in: [model/RecorderSettings.ts:6](https://github.com/Eliastik/simple-sou
 
 > **constraints**: `AudioConstraint`
 
-Defined in: [model/RecorderSettings.ts:5](https://github.com/Eliastik/simple-sound-studio-lib/blob/ed5af082cb367d081813596dd50d04cea5746b12/lib/model/RecorderSettings.ts#L5)
+Defined in: [model/RecorderSettings.ts:5](https://github.com/Eliastik/simple-sound-studio-lib/blob/da752c51f31a2272f1f3e80486e8056fec3d0b87/lib/model/RecorderSettings.ts#L5)
 
 ***
 
@@ -30,4 +30,4 @@ Defined in: [model/RecorderSettings.ts:5](https://github.com/Eliastik/simple-sou
 
 > **deviceList**: `MediaDeviceInfo`[]
 
-Defined in: [model/RecorderSettings.ts:4](https://github.com/Eliastik/simple-sound-studio-lib/blob/ed5af082cb367d081813596dd50d04cea5746b12/lib/model/RecorderSettings.ts#L4)
+Defined in: [model/RecorderSettings.ts:4](https://github.com/Eliastik/simple-sound-studio-lib/blob/da752c51f31a2272f1f3e80486e8056fec3d0b87/lib/model/RecorderSettings.ts#L4)
