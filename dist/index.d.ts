@@ -206,8 +206,10 @@ interface FilterState {
     [filterId: string]: boolean;
 }
 
+type AudioEncoderFormat = "mp3" | "wav";
+
 interface SaveBufferOptions {
-    format?: "mp3" | "wav";
+    format?: AudioEncoderFormat;
     bitrate?: number;
 }
 
@@ -1306,6 +1308,17 @@ declare const utilFunctions: {
     calculateAudioDuration(buffer: AudioBuffer, filterManager: FilterManagerInterface$1, speedAudio?: number): number;
     forceDownload(blob: Blob, filename: string): void;
     clearAudioBuffer(buffer: AudioBuffer | null): void;
+    floatTo16BitPCM(output: DataView, offset: number, input: Float32Array): void;
+    /**
+     * Convert a Float32Array to an Int16Array
+     * @param floatbuffer The buffer to convert
+     * @returns Int16Array buffer
+     */
+    convertFloatArray2Int16(floatbuffer: Float32Array): Int16Array<ArrayBuffer>;
+    clampFloatValue(value: number): number;
+    writeStringToDataView(view: DataView, offset: number, string: string): void;
+    interleaveBuffers(inputL: Float32Array, inputR: Float32Array): Float32Array<ArrayBuffer>;
+    mergeBuffers(buffers: Float32Array[], length: number): Float32Array<ArrayBuffer>;
 };
 
 declare enum EventType {

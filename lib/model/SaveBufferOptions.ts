@@ -1,4 +1,6 @@
+import { AudioEncoderFormat } from "./AudioEncoderFormat";
+
 export default interface SaveBufferOptions {
-    format?: "mp3" | "wav",
+    format?: AudioEncoderFormat,
     bitrate?: number
 };

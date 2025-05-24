@@ -151,6 +151,64 @@ const utilFunctions = {
                 }
             }
         }
+    },
+    floatTo16BitPCM(output: DataView, offset: number, input: Float32Array) {
+        for (let i = 0; i < input.length; i++, offset += 2) {
+            const s = this.clampFloatValue(input[i]);
+            output.setInt16(offset, s < 0 ? s * 0x8000 : s * 0x7FFF, true);
+        }
+    },
+    /**
+     * Convert a Float32Array to an Int16Array
+     * @param floatbuffer The buffer to convert
+     * @returns Int16Array buffer
+     */
+    convertFloatArray2Int16(floatbuffer: Float32Array) {
+        const int16Buffer = new Int16Array(floatbuffer.length);
+
+        for (let i = 0, len = floatbuffer.length; i < len; i++) {
+            const floatValue = this.clampFloatValue(floatbuffer[i]);
+            int16Buffer[i] = Math.round(floatValue * 32767);
+        }
+
+        return int16Buffer;
+    },
+    clampFloatValue(value: number) {
+        return Math.max(-1.0, Math.min(1.0, value))
+    },
+    writeStringToDataView(view: DataView, offset: number, string: string) {
+        for (let i = 0; i < string.length; i++) {
+            view.setUint8(offset + i, string.charCodeAt(i));
+        }
+    },
+    interleaveBuffers(inputL: Float32Array, inputR: Float32Array) {
+        const length = inputL.length + inputR.length;
+        const result = new Float32Array(length);
+
+        let index = 0,
+            inputIndex = 0;
+
+        while (index < length) {
+            result[index++] = inputL[inputIndex];
+            result[index++] = inputR[inputIndex];
+            inputIndex++;
+        }
+        return result;
+    },
+    mergeBuffers(buffers: Float32Array[], length: number) {
+        const result = new Float32Array(length);
+        let offset = 0;
+
+        for (let i = 0; i < buffers.length; i++) {
+            if (buffers[i]) {
+                result.set(buffers[i], offset);
+                offset += buffers[i].length;
+            } else {
+                console.warn("mergeBuffers: undefined buffer has been detected");
+            }
+        }
+
+        return result;
     }
 };
 

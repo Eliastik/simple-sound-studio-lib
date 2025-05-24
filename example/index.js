@@ -47,8 +47,8 @@ async function processAudioThenDownload(file) {
     }
 
     // Save the rendered audio to a file (default format is WAV, but can be changed to MP3)
-    await audioEditor.saveBuffer();
-    // await audioEditor.saveBuffer({ format: "mp3" }); // Uncomment to save as MP3 file
+    // await audioEditor.saveBuffer();
+    await audioEditor.saveBuffer({ format: "mp3" }); // Uncomment to save as MP3 file
 }
 
 document.getElementById("validate-button").addEventListener("click", async () => {
