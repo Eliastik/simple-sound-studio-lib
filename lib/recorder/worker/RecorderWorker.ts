@@ -1,10 +1,10 @@
 /* eslint-disable prefer-destructuring */
-import AudioEncoderInterface from "@/encoder/interfaces/AudioEncoderInterface";
+import AudioEncoderManagerInterface from "@/encoder/interfaces/AudioEncoderManagerInterface";
 import UtilFunctions from "@/utils/Functions";
 import { TYPES } from "@/inversify.types";
 import RecorderConfig from "@/model/RecorderConfig";
 import { getAudioEncoderContainer } from "@/inversify.encoder.config";
-import { AudioEncoderFormat } from "@/model/AudioEncoderFormat";
+import { AudioEncoderFormat } from "@/model/encoder/AudioEncoderFormat";
 
 let recLength = 0,
     recBuffers: Float32Array[][] = [],
@@ -13,7 +13,7 @@ let recLength = 0,
     bitrate: number;
 
 const audioEncoderContainer = getAudioEncoderContainer();
-const baseAudioEncoder = audioEncoderContainer.get<AudioEncoderInterface>(TYPES.BaseAudioEncoder);
+const audioEncoderManager = audioEncoderContainer.get<AudioEncoderManagerInterface>(TYPES.AudioEncoderManager);
 
 const initBuffers = () => {
     for (let channel = 0; channel < numChannels; channel++) {
@@ -47,7 +47,7 @@ const mergeBuffers = () => {
 };
 
 const exportAudioToBlob = async (format: AudioEncoderFormat, type: string) => {
-    const output = await baseAudioEncoder.encodeAudio(mergeBuffers(), {
+    const output = await audioEncoderManager.encodeAudio(mergeBuffers(), {
         audioLength: recLength,
         bitrate,
         format,

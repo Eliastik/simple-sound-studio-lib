@@ -1,8 +1,8 @@
-import AudioEncoderOptions from "@/model/AudioEncoderOptions";
+import AudioEncoderOptions from "@/model/encoder/AudioEncoderOptions";
 import AbstractAudioEncoder from "./AbstractAudioEncoder";
 import UtilFunctions from "@/utils/Functions";
 import { injectable, postConstruct } from "inversify";
-import { AudioEncoderFormat } from "@/model/AudioEncoderFormat";
+import AudioEncoderMetadata from "@/model/encoder/AudioEncoderMetadata";
 
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 //@ts-ignore
@@ -20,8 +20,16 @@ import BitStream from "lamejs/src/js/BitStream";
 @injectable()
 export default class MP3AudioEncoder extends AbstractAudioEncoder {
 
-    getFormat(): AudioEncoderFormat | null {
-        return "mp3";
+    async getMetadata(): Promise<AudioEncoderMetadata> {
+        const audioEncoderAPISupported = await this.isWebAudioEncoderAPISupportedForSettings({
+            audioLength: -1, format: "mp3", bitrate: 320000, numChannels: 2, sampleRate: 44100
+        });
+
+        return {
+            format: "mp3",
+            implementationType: audioEncoderAPISupported ? "audioEncoderAPI" : "custom",
+            supported: true
+        };
     }
 
     @postConstruct()

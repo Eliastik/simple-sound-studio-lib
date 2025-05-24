@@ -5,5 +5,5 @@ export default interface AudioEncoderOptions {
     bitrate?: number,
     numChannels: number,
     sampleRate: number,
-    audioLength: number
+    audioLength: number;
 };

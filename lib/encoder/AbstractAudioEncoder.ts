@@ -1,11 +1,10 @@
-import { AudioEncoderFormat } from "@/model/AudioEncoderFormat";
-import AudioEncoderOptions from "@/model/AudioEncoderOptions";
-import AudioEncoderInterface from "./interfaces/AudioEncoderInterface";
+import AudioEncoderMetadata from "@/model/encoder/AudioEncoderMetadata";
+import AudioEncoderOptions from "@/model/encoder/AudioEncoderOptions";
 import UtilFunctions from "@/utils/Functions";
 
-export default abstract class AbstractAudioEncoder implements AudioEncoderInterface {
+export default abstract class AbstractAudioEncoder {
 
-    abstract getFormat(): AudioEncoderFormat | null;
+    abstract getMetadata(): Promise<AudioEncoderMetadata>;
 
     abstract encodeAudio(input: Float32Array[], options: AudioEncoderOptions): Promise<ArrayBuffer>;
 
@@ -30,7 +29,8 @@ export default abstract class AbstractAudioEncoder implements AudioEncoderInterf
      * @returns ArrayBuffer buffer with encoded data
      */
     protected async encodeWithWebAudioEncoderAPI(buffers: Float32Array[], options: AudioEncoderOptions): Promise<ArrayBuffer> {
-        const codec = this.getFormat();
+        const metadata = await this.getMetadata();
+        const codec = metadata.format;
 
         if (!codec) {
             throw new Error("encodeWebAudioEncoderAPI: No format provided");
@@ -47,7 +47,7 @@ export default abstract class AbstractAudioEncoder implements AudioEncoderInterf
             codec,
             sampleRate: options.sampleRate,
             numberOfChannels: options.numChannels,
-            bitrate: options.bitrate
+            bitrate: (options.bitrate || 0) * 100
         });
 
         const numberOfFrames = buffers[0].length;
@@ -61,7 +61,7 @@ export default abstract class AbstractAudioEncoder implements AudioEncoderInterf
 
         const audioData = new AudioData({
             format: "f32",
-            sampleRate,
+            sampleRate: options.sampleRate,
             numberOfFrames,
             numberOfChannels: 2,
             timestamp: 0,
@@ -73,6 +73,8 @@ export default abstract class AbstractAudioEncoder implements AudioEncoderInterf
         await audioEncoder.flush();
 
         audioEncoder.close();
+
+        console.log(chunks);
 
         const totalLength = chunks.reduce((sum, chunk) => sum + chunk.byteLength, 0);
         const output = new Float32Array(totalLength);

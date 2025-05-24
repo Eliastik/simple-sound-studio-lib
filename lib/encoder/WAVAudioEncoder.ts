@@ -1,14 +1,18 @@
-import AudioEncoderOptions from "@/model/AudioEncoderOptions";
+import AudioEncoderOptions from "@/model/encoder/AudioEncoderOptions";
 import AbstractAudioEncoder from "./AbstractAudioEncoder";
 import UtilFunctions from "@/utils/Functions";
 import { injectable } from "inversify";
-import { AudioEncoderFormat } from "@/model/AudioEncoderFormat";
+import AudioEncoderMetadata from "@/model/encoder/AudioEncoderMetadata";
 
 @injectable()
 export default class WAVAudioEncoder extends AbstractAudioEncoder {
 
-    getFormat(): AudioEncoderFormat | null {
-        return "wav";
+    getMetadata(): Promise<AudioEncoderMetadata> {
+        return Promise.resolve({
+            format: "wav",
+            implementationType: "custom",
+            supported: true
+        });
     }
 
     encodeAudio(input: Float32Array[], options: AudioEncoderOptions) {

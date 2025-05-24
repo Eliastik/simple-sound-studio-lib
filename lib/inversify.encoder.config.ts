@@ -1,19 +1,21 @@
 import "reflect-metadata";
 import { Container } from "inversify";
 import { TYPES } from "./inversify.types";
-import AudioEncoderInterface from "./encoder/interfaces/AudioEncoderInterface";
+import AudioEncoderManagerInterface from "./encoder/interfaces/AudioEncoderManagerInterface";
 import AbstractAudioEncoder from "./encoder/AbstractAudioEncoder";
-import BaseAudioEncoder from "./encoder/BaseAudioEncoder";
+import AudioEncoderManager from "./encoder/AudioEncoderManager";
 import WAVAudioEncoder from "./encoder/WAVAudioEncoder";
 import MP3AudioEncoder from "./encoder/MP3AudioEncoder";
+import OpusAudioEncoder from "./encoder/OpusAudioEncoder";
 
 function getAudioEncoderContainer() {
     const audioEncoderContainer = new Container({ defaultScope: "Singleton" });
 
-    audioEncoderContainer.bind<AudioEncoderInterface>(TYPES.BaseAudioEncoder).to(BaseAudioEncoder);
+    audioEncoderContainer.bind<AudioEncoderManagerInterface>(TYPES.AudioEncoderManager).to(AudioEncoderManager);
 
     audioEncoderContainer.bind<AbstractAudioEncoder>(TYPES.AudioEncoders).to(WAVAudioEncoder);
     audioEncoderContainer.bind<AbstractAudioEncoder>(TYPES.AudioEncoders).to(MP3AudioEncoder);
+    audioEncoderContainer.bind<AbstractAudioEncoder>(TYPES.AudioEncoders).to(OpusAudioEncoder);
 
     return audioEncoderContainer;
 }

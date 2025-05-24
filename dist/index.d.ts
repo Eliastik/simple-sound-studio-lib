@@ -207,7 +207,7 @@ interface FilterState {
     [filterId: string]: boolean;
 }
 
-type AudioEncoderFormat = "mp3" | "wav";
+type AudioEncoderFormat = "mp3" | "wav" | "opus";
 
 interface SaveBufferOptions {
     format?: AudioEncoderFormat;
