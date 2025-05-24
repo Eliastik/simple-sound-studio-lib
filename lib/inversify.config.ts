@@ -40,11 +40,6 @@ import AbstractAudioFilter from "./filters/interfaces/AbstractAudioFilter";
 import AudioFilterEntrypointInterface from "./filters/interfaces/AudioFilterEntrypointInterface";
 import VoiceRecorderInterface from "./voiceRecorder/interfaces/VoiceRecorderInterface";
 import VoiceRecorder from "./voiceRecorder/VoiceRecorder";
-import WAVAudioEncoder from "./encoder/WAVAudioEncoder";
-import MP3AudioEncoder from "./encoder/MP3AudioEncoder";
-import AbstractAudioEncoder from "./encoder/AbstractAudioEncoder";
-import AudioEncoderInterface from "./encoder/interfaces/AudioEncoderInterface";
-import BaseAudioEncoder from "./encoder/BaseAudioEncoder";
 
 function getAudioEditorContainer() {
     const audioEditorContainer = new Container({ defaultScope: "Singleton" });
@@ -81,11 +76,6 @@ function getAudioEditorContainer() {
     audioEditorContainer.bind<BufferFetcherServiceInterface>(TYPES.BufferFetcherService).to(BufferFetcherService);
     audioEditorContainer.bind<BufferDecoderServiceInterface>(TYPES.BufferDecoderService).to(BufferDecoderService);
     audioEditorContainer.bind<VoiceRecorderInterface>(TYPES.VoiceRecorder).to(VoiceRecorder);
-    audioEditorContainer.bind<AudioEncoderInterface>(TYPES.BaseAudioEncoder).to(BaseAudioEncoder);
-
-    // Audio Encoders
-    audioEditorContainer.bind<AbstractAudioEncoder>(TYPES.AudioEncoders).to(WAVAudioEncoder);
-    audioEditorContainer.bind<AbstractAudioEncoder>(TYPES.AudioEncoders).to(MP3AudioEncoder);
 
     return audioEditorContainer;
 }

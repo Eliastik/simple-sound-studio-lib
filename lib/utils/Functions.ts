@@ -1,3 +1,4 @@
+import { TypedArray } from "@/model/TypedArray";
 import { FilterSettingValue } from "../model/filtersSettings/FilterSettings";
 import FilterManagerInterface from "@/audioEditor/interfaces/FilterManagerInterface";
 
@@ -163,7 +164,7 @@ const utilFunctions = {
      * @param floatbuffer The buffer to convert
      * @returns Int16Array buffer
      */
-    convertFloatArray2Int16(floatbuffer: Float32Array) {
+    convertFloat32Array2Int16(floatbuffer: Float32Array) {
         const int16Buffer = new Int16Array(floatbuffer.length);
 
         for (let i = 0, len = floatbuffer.length; i < len; i++) {
@@ -181,9 +182,15 @@ const utilFunctions = {
             view.setUint8(offset + i, string.charCodeAt(i));
         }
     },
-    interleaveBuffers(inputL: Float32Array, inputR: Float32Array) {
+    interleaveBuffers<T extends TypedArray>(inputL: T, inputR: T) {
         const length = inputL.length + inputR.length;
-        const result = new Float32Array(length);
+
+        if (length === 0) {
+            throw new Error("interleaveBuffers: input buffers are empty or invalid");
+        }
+
+        const ArrayType = inputL.constructor as { new (bufferLength: number): T };
+        const result = new ArrayType(length);
 
         let index = 0,
             inputIndex = 0;
@@ -193,18 +200,34 @@ const utilFunctions = {
             result[index++] = inputR[inputIndex];
             inputIndex++;
         }
+
         return result;
     },
-    mergeBuffers(buffers: Float32Array[], length: number) {
-        const result = new Float32Array(length);
+    getLengthFromBuffers<T extends TypedArray>(buffers: T[]) {
+        if (!buffers) {
+            return 0;
+        }
+
+        return buffers.reduce((sum, arr) => sum + arr.length, 0);
+    },
+    mergeBuffers<T extends TypedArray>(buffers: T[]): T {
+        const length = this.getLengthFromBuffers(buffers);
+
+        if (length === 0) {
+            throw new Error("mergeTypedArrayBuffers: input buffers are empty or invalid");
+        }
+
+        const ArrayType = buffers[0].constructor as { new (bufferLength: number): T };
+        const result = new ArrayType(length);
+
         let offset = 0;
 
-        for (let i = 0; i < buffers.length; i++) {
-            if (buffers[i]) {
-                result.set(buffers[i], offset);
-                offset += buffers[i].length;
+        for (const buffer of buffers) {
+            if (buffer) {
+                result.set(buffer, offset);
+                offset += buffer.length;
             } else {
-                console.warn("mergeBuffers: undefined buffer has been detected");
+                console.warn("mergeTypedArrayBuffers: undefined buffer has been detected");
             }
         }
 

@@ -7,7 +7,7 @@ import { AudioEncoderFormat } from "@/model/AudioEncoderFormat";
 @injectable()
 export default class WAVAudioEncoder extends AbstractAudioEncoder {
 
-    getFormat(): AudioEncoderFormat {
+    getFormat(): AudioEncoderFormat | null {
         return "wav";
     }
 

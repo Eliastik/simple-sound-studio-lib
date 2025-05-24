@@ -15,6 +15,7 @@ import BufferPlayerInterface$1 from '@/bufferPlayer/interfaces/BufferPlayerInter
 import { RecorderSettings as RecorderSettings$1 } from '@/model/RecorderSettings';
 import AudioEditorEvents$1 from '@/model/AudioEditorEvent';
 import { EventType as EventType$1 } from '@/model/EventTypeEnum';
+import { TypedArray } from '@/model/TypedArray';
 import FilterManagerInterface$1 from '@/audioEditor/interfaces/FilterManagerInterface';
 import AudioEditorInterface$1 from '@/audioEditor/interfaces/AudioEditorInterface';
 import { ConfigService as ConfigService$1 } from '@/services/interfaces/ConfigService';
@@ -1314,11 +1315,12 @@ declare const utilFunctions: {
      * @param floatbuffer The buffer to convert
      * @returns Int16Array buffer
      */
-    convertFloatArray2Int16(floatbuffer: Float32Array): Int16Array<ArrayBuffer>;
+    convertFloat32Array2Int16(floatbuffer: Float32Array): Int16Array<ArrayBuffer>;
     clampFloatValue(value: number): number;
     writeStringToDataView(view: DataView, offset: number, string: string): void;
-    interleaveBuffers(inputL: Float32Array, inputR: Float32Array): Float32Array<ArrayBuffer>;
-    mergeBuffers(buffers: Float32Array[], length: number): Float32Array<ArrayBuffer>;
+    interleaveBuffers<T extends TypedArray>(inputL: T, inputR: T): T;
+    getLengthFromBuffers<T extends TypedArray>(buffers: T[]): number;
+    mergeBuffers<T extends TypedArray>(buffers: T[]): T;
 };
 
 declare enum EventType {
