@@ -1,11 +1,10 @@
 import AudioEncoderOptions from "@/model/AudioEncoderOptions";
-import { injectable, injectFromBase, multiInject } from "inversify";
+import { injectable, multiInject } from "inversify";
 import AbstractAudioEncoder from "./AbstractAudioEncoder";
 import { TYPES } from "@/inversify.types";
 import AudioEncoderInterface from "./interfaces/AudioEncoderInterface";
 
 @injectable()
-@injectFromBase()
 export default class BaseAudioEncoder implements AudioEncoderInterface {
 
     constructor(
