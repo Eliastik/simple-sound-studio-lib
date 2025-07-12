@@ -17,7 +17,7 @@ export default abstract class AbstractAudioEncoder {
             codec: options.format,
             sampleRate: options.sampleRate,
             numberOfChannels: options.numChannels,
-            bitrate: (options.bitrate || 0) * 100
+            bitrate: (options.bitrate || 0) * 1000
         });
 
         return Boolean(support.supported);
@@ -47,7 +47,7 @@ export default abstract class AbstractAudioEncoder {
             codec,
             sampleRate: options.sampleRate,
             numberOfChannels: options.numChannels,
-            bitrate: (options.bitrate || 0) * 100
+            bitrate: (options.bitrate || 0) * 1000
         });
 
         const numberOfFrames = buffers[0].length;
@@ -74,14 +74,12 @@ export default abstract class AbstractAudioEncoder {
 
         audioEncoder.close();
 
-        console.log(chunks);
-
         const totalLength = chunks.reduce((sum, chunk) => sum + chunk.byteLength, 0);
-        const output = new Float32Array(totalLength);
+        const output = new Uint8Array(totalLength);
         let offset = 0;
 
         for (const chunk of chunks) {
-            const buffer = new Float32Array(chunk.byteLength);
+            const buffer = new Uint8Array(chunk.byteLength);
             chunk.copyTo(buffer);
             output.set(buffer, offset);
             offset += buffer.length;

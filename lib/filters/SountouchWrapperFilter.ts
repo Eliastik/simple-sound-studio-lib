@@ -222,7 +222,7 @@ export default class SoundtouchWrapperFilter extends AbstractAudioFilterWorklet<
         let tempo = 1;
         let key = 0;
 
-        if (renderWithSoundtouch) {
+        if (renderWithSoundtouch && this.isEnabled()) {
             tempo = this.speedAudio;
             key = this.pitchSemitones;
 

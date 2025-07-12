@@ -5,6 +5,7 @@ import { TYPES } from "@/inversify.types";
 import RecorderConfig from "@/model/RecorderConfig";
 import { getAudioEncoderContainer } from "@/inversify.encoder.config";
 import { AudioEncoderFormat } from "@/model/encoder/AudioEncoderFormat";
+import Constants from "@/model/Constants";
 
 let recLength = 0,
     recBuffers: Float32Array[][] = [],
@@ -79,10 +80,10 @@ self.onmessage = function (e) {
         record(e.data.buffer);
         break;
     case "exportWAV":
-        exportAudioToBlob("wav", e.data.type);
+        exportAudioToBlob("wav", Constants.AUDIO_WAV);
         break;
     case "exportMP3":
-        exportAudioToBlob("mp3", e.data.type);
+        exportAudioToBlob("mp3", Constants.AUDIO_MP3);
         break;
     case "getBuffer":
         getBuffer();
