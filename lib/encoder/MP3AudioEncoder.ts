@@ -20,16 +20,12 @@ import BitStream from "lamejs/src/js/BitStream";
 @injectable()
 export default class MP3AudioEncoder extends AbstractAudioEncoder {
 
-    async getMetadata(): Promise<AudioEncoderMetadata> {
-        const audioEncoderAPISupported = await this.isWebAudioEncoderAPISupportedForSettings({
-            audioLength: -1, format: "mp3", bitrate: 320000, numChannels: 2, sampleRate: 44100
-        });
-
-        return {
+    getMetadata(): Promise<AudioEncoderMetadata> {
+        return Promise.resolve({
             format: "mp3",
-            implementationType: audioEncoderAPISupported ? "audioEncoderAPI" : "custom",
+            implementationType: "custom",
             supported: true
-        };
+        });
     }
 
     @postConstruct()
