@@ -1,7 +1,7 @@
 import "reflect-metadata";
 import AudioProcessor from "../lib/audioEditor/AudioProcessor";
 import { mockBufferManager, mockContextManager, mockFilterManager, mockRendererManager, mockBufferPlayer, mockFilterManagerWithoutEntrypoint, mockRendererManagerWithFakeRenderedBuffer, mockContextManagerWithLongRunningRendering } from "./AudioEditorObjectsMock";
-import { MockAudioContext, createMockAudioContext, MockAudioContextWithEmptyData, MockAudioContextWithLongRunningRendering } from "./AudioContextMock";
+import { MockAudioContext, createMockAudioContext, MockOfflineAudioContext, MockOfflineAudioContextWithEmptyData, MockOfflineAudioContextWithLongRunningRendering } from "./AudioContextMock";
 import { MockAudioBuffer } from "./AudioBufferMock";
 import Constants from "../lib/model/Constants";
 import GenericConfigService from "../lib/services/GenericConfigService";
@@ -12,7 +12,8 @@ describe("AudioProcessor", () => {
     let audioProcessor: AudioProcessor;
 
     beforeEach(() => {
-        (OfflineAudioContext as any) = MockAudioContext;
+        (AudioContext as any) = MockAudioContext;
+        (OfflineAudioContext as any) = MockOfflineAudioContext;
 
         audioProcessor = new AudioProcessor(
             mockFilterManager,
@@ -193,7 +194,7 @@ describe("AudioProcessor", () => {
     });
 
     test("Render audio - Setup output with empty result should enable compatibility mode", async () => {
-        (OfflineAudioContext as any) = MockAudioContextWithEmptyData;
+        (OfflineAudioContext as any) = MockOfflineAudioContextWithEmptyData;
 
         const audioProcessor2 = new AudioProcessor(
             mockFilterManager,
@@ -228,7 +229,7 @@ describe("AudioProcessor", () => {
     });
 
     test("Render audio - Setup output with empty result, compatibility mode already checked", async () => {
-        (OfflineAudioContext as any) = MockAudioContextWithEmptyData;
+        (OfflineAudioContext as any) = MockOfflineAudioContextWithEmptyData;
 
         const eventEmitter = new EventEmitter();
         const audioProcessor2 = new AudioProcessor(
@@ -268,7 +269,7 @@ describe("AudioProcessor", () => {
     });
 
     test("Render audio - Cancelling audio rendering", async () => {
-        (OfflineAudioContext as any) = MockAudioContextWithLongRunningRendering;
+        (OfflineAudioContext as any) = MockOfflineAudioContextWithLongRunningRendering;
 
         const eventEmitter = new EventEmitter();
         const audioProcessor2 = new AudioProcessor(

@@ -8,7 +8,7 @@ import SaveBufferManagerInterface from "../lib/audioEditor/interfaces/SaveBuffer
 import BufferPlayerInterface from "../lib/bufferPlayer/interfaces/BufferPlayerInterface";
 import EventEmitterInterface from "../lib/utils/interfaces/EventEmitterInterface";
 import { MockAudioBuffer } from "./AudioBufferMock";
-import { createMockAudioContext, MockAudioContextWithLongRunningRendering } from "./AudioContextMock";
+import { createMockAudioContext, createMockOfflineAudioContext, MockOfflineAudioContextWithLongRunningRendering } from "./AudioContextMock";
 import MockAudioNode from "./MockAudioNode";
 
 const mockFilterManager = {
@@ -75,7 +75,7 @@ const mockRendererManagerWithFakeRenderedBuffer = {
 
 const mockContextManager = {
     currentContext: createMockAudioContext(),
-    createOfflineAudioContext: jest.fn(() => createMockAudioContext()),
+    createOfflineAudioContext: jest.fn(() => createMockOfflineAudioContext()),
     currentSampleRate: 44100,
     createNewContextIfNeeded: jest.fn(),
     createNewContext: jest.fn()
@@ -83,7 +83,7 @@ const mockContextManager = {
 
 const mockContextManagerWithLongRunningRendering = {
     currentContext: createMockAudioContext(),
-    createOfflineAudioContext: jest.fn(() => new MockAudioContextWithLongRunningRendering()),
+    createOfflineAudioContext: jest.fn(() => new MockOfflineAudioContextWithLongRunningRendering()),
     currentSampleRate: 44100,
     createNewContextIfNeeded: jest.fn(),
     createNewContext: jest.fn()

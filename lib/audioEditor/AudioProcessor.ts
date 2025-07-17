@@ -126,15 +126,17 @@ export default class AudioProcessor extends AbstractAudioElement implements Audi
             this.eventEmitter.emit(EventType.AUDIO_SPEED_UPDATED, 1);
         }
 
+        const isDirectRenderingModeEnabled = this.configService ? this.configService.isCompatibilityModeEnabled() : false;
+
         // If initial rendering is disabled and compatibility mode is disabled, we stop here
-        if (!this.initialRenderingDone && this.configService && this.configService.isInitialRenderingDisabled() && !this.configService.isCompatibilityModeEnabled() && !forceInitialRendering) {
+        if (!this.initialRenderingDone && this.configService && this.configService.isInitialRenderingDisabled() && !isDirectRenderingModeEnabled && !forceInitialRendering) {
             this.loadInitialBuffer(inputBuffer);
             this.initialRenderingDone = true;
             return true;
         }
 
         // If switching from compatiblity mode to normal mode, we stop the audio player
-        if (this.configService && this.bufferPlayer && !this.configService.isCompatibilityModeEnabled() && this.bufferPlayer.compatibilityMode) {
+        if (this.configService && this.bufferPlayer && !isDirectRenderingModeEnabled && this.bufferPlayer.compatibilityMode) {
             this.bufferPlayer.stop();
         }
 
@@ -143,7 +145,7 @@ export default class AudioProcessor extends AbstractAudioElement implements Audi
 
         const speedAudio = this.filterManager.entrypointFilter.getSpeed();
         const durationAudio = utils.calculateAudioDuration(inputBuffer, this.filterManager, speedAudio);
-        const outputContext = this.configService && this.configService.isCompatibilityModeEnabled() ?
+        const outputContext = isDirectRenderingModeEnabled ?
             this.contextManager.currentContext :
             this.contextManager.createOfflineAudioContext(2, this.contextManager.currentContext.sampleRate * durationAudio, this.contextManager.currentContext.sampleRate);
 
@@ -158,26 +160,28 @@ export default class AudioProcessor extends AbstractAudioElement implements Audi
 
     async setupOutput(inputBuffer: AudioBuffer | null, outputContext: AudioContext | OfflineAudioContext, durationAudio?: number): Promise<boolean> {
         if (this._renderedBuffer && this.configService && this.eventEmitter && this.bufferPlayer && this.filterManager) {
-            const compatibilityModeEnabled = this.configService.isCompatibilityModeEnabled();
+            const isDirectRenderingModeEnabled = outputContext instanceof AudioContext;
 
-            if (!compatibilityModeEnabled) {
+            if (!isDirectRenderingModeEnabled) {
                 this.startRenderingProgressCalculation();
             }
 
             // Initialize worklets then connect the filter nodes
             await this.filterManager.initializeWorklets(outputContext);
 
-            await this.filterManager.connectNodes(outputContext, this._renderedBuffer, false, this.configService.isCompatibilityModeEnabled());
+            await this.filterManager.connectNodes(outputContext, this._renderedBuffer, false, isDirectRenderingModeEnabled);
+
+            if (!this.filterManager.currentNodes) {
+                throw new Error("Audio nodes are not connected. Please call FilterManager.connectNodes before calling AudioProcessor.setupOutput");
+            }
 
             // Standard mode
-            if (!compatibilityModeEnabled && this.filterManager.currentNodes) {
-                const offlineContext = outputContext as OfflineAudioContext;
-
-                this.currentOfflineContext = offlineContext;
+            if (!isDirectRenderingModeEnabled) {
+                this.currentOfflineContext = outputContext;
 
                 this.filterManager.currentNodes.output.connect(outputContext.destination);
 
-                const renderedBuffer = await offlineContext.startRendering();
+                const renderedBuffer = await outputContext.startRendering();
 
                 this.cleanupAfterOfflineRendering();
 
@@ -190,7 +194,7 @@ export default class AudioProcessor extends AbstractAudioElement implements Audi
                 }
 
                 this.eventEmitter.emit(EventType.OFFLINE_AUDIO_RENDERING_FINISHED);
-            } else if (this.filterManager.currentNodes) { // Compatibility mode
+            } else { // Direct rendering mode
                 this.bufferPlayer.setCompatibilityMode(this.filterManager.currentNodes.output);
 
                 this.updateAudioSpeedAndDuration(durationAudio);
