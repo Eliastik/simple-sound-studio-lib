@@ -83,8 +83,8 @@ describe("RendererManager tests", () => {
 
         await rendererManager.executeAudioRenderers(new MockAudioBuffer(2, 100000, 44100), createMockAudioContext());
 
-        expect(spyMock1).toBeCalled();
-        expect(spyMock2).toBeCalled();
-        expect(spyMock3).toBeCalledTimes(0);
+        expect(spyMock1).toHaveBeenCalled();
+        expect(spyMock2).toHaveBeenCalled();
+        expect(spyMock3).toHaveBeenCalledTimes(0);
     });
 });

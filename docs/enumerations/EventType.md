@@ -6,7 +6,7 @@
 
 # Enumeration: EventType
 
-Defined in: [model/EventTypeEnum.ts:1](https://github.com/Eliastik/simple-sound-studio-lib/blob/da752c51f31a2272f1f3e80486e8056fec3d0b87/lib/model/EventTypeEnum.ts#L1)
+Defined in: [model/EventTypeEnum.ts:1](https://github.com/Eliastik/simple-sound-studio-lib/blob/61c9eeaf822611325d0c50ace4e91cc6de3ae8d9/lib/model/EventTypeEnum.ts#L1)
 
 ## Enumeration Members
 
@@ -14,7 +14,7 @@ Defined in: [model/EventTypeEnum.ts:1](https://github.com/Eliastik/simple-sound-
 
 > **AUDIO\_DURATION\_UPDATED**: `"audioDurationUpdated"`
 
-Defined in: [model/EventTypeEnum.ts:40](https://github.com/Eliastik/simple-sound-studio-lib/blob/da752c51f31a2272f1f3e80486e8056fec3d0b87/lib/model/EventTypeEnum.ts#L40)
+Defined in: [model/EventTypeEnum.ts:40](https://github.com/Eliastik/simple-sound-studio-lib/blob/61c9eeaf822611325d0c50ace4e91cc6de3ae8d9/lib/model/EventTypeEnum.ts#L40)
 
 ***
 
@@ -22,7 +22,7 @@ Defined in: [model/EventTypeEnum.ts:40](https://github.com/Eliastik/simple-sound
 
 > **AUDIO\_RENDERING\_EXCEPTION\_THROWN**: `"audioRenderingExceptionThrown"`
 
-Defined in: [model/EventTypeEnum.ts:12](https://github.com/Eliastik/simple-sound-studio-lib/blob/da752c51f31a2272f1f3e80486e8056fec3d0b87/lib/model/EventTypeEnum.ts#L12)
+Defined in: [model/EventTypeEnum.ts:12](https://github.com/Eliastik/simple-sound-studio-lib/blob/61c9eeaf822611325d0c50ace4e91cc6de3ae8d9/lib/model/EventTypeEnum.ts#L12)
 
 ***
 
@@ -30,7 +30,7 @@ Defined in: [model/EventTypeEnum.ts:12](https://github.com/Eliastik/simple-sound
 
 > **AUDIO\_RENDERING\_FINISHED**: `"audioRenderingFinished"`
 
-Defined in: [model/EventTypeEnum.ts:11](https://github.com/Eliastik/simple-sound-studio-lib/blob/da752c51f31a2272f1f3e80486e8056fec3d0b87/lib/model/EventTypeEnum.ts#L11)
+Defined in: [model/EventTypeEnum.ts:11](https://github.com/Eliastik/simple-sound-studio-lib/blob/61c9eeaf822611325d0c50ace4e91cc6de3ae8d9/lib/model/EventTypeEnum.ts#L11)
 
 ***
 
@@ -38,7 +38,7 @@ Defined in: [model/EventTypeEnum.ts:11](https://github.com/Eliastik/simple-sound
 
 > **AUDIO\_SPEED\_UPDATED**: `"audioSpeedUpdated"`
 
-Defined in: [model/EventTypeEnum.ts:39](https://github.com/Eliastik/simple-sound-studio-lib/blob/da752c51f31a2272f1f3e80486e8056fec3d0b87/lib/model/EventTypeEnum.ts#L39)
+Defined in: [model/EventTypeEnum.ts:39](https://github.com/Eliastik/simple-sound-studio-lib/blob/61c9eeaf822611325d0c50ace4e91cc6de3ae8d9/lib/model/EventTypeEnum.ts#L39)
 
 ***
 
@@ -46,7 +46,7 @@ Defined in: [model/EventTypeEnum.ts:39](https://github.com/Eliastik/simple-sound
 
 > **CANCELLED\_AND\_LOADED\_INITIAL\_AUDIO**: `"cancelledAndLoadedInitialAudio"`
 
-Defined in: [model/EventTypeEnum.ts:35](https://github.com/Eliastik/simple-sound-studio-lib/blob/da752c51f31a2272f1f3e80486e8056fec3d0b87/lib/model/EventTypeEnum.ts#L35)
+Defined in: [model/EventTypeEnum.ts:35](https://github.com/Eliastik/simple-sound-studio-lib/blob/61c9eeaf822611325d0c50ace4e91cc6de3ae8d9/lib/model/EventTypeEnum.ts#L35)
 
 ***
 
@@ -54,7 +54,7 @@ Defined in: [model/EventTypeEnum.ts:35](https://github.com/Eliastik/simple-sound
 
 > **CANCELLING\_AUDIO\_PROCESSING**: `"cancellingAudioProcessing"`
 
-Defined in: [model/EventTypeEnum.ts:36](https://github.com/Eliastik/simple-sound-studio-lib/blob/da752c51f31a2272f1f3e80486e8056fec3d0b87/lib/model/EventTypeEnum.ts#L36)
+Defined in: [model/EventTypeEnum.ts:36](https://github.com/Eliastik/simple-sound-studio-lib/blob/61c9eeaf822611325d0c50ace4e91cc6de3ae8d9/lib/model/EventTypeEnum.ts#L36)
 
 ***
 
@@ -62,7 +62,7 @@ Defined in: [model/EventTypeEnum.ts:36](https://github.com/Eliastik/simple-sound
 
 > **COMPATIBILITY\_MODE\_AUTO\_ENABLED**: `"compatibilityModeAutoEnabled"`
 
-Defined in: [model/EventTypeEnum.ts:8](https://github.com/Eliastik/simple-sound-studio-lib/blob/da752c51f31a2272f1f3e80486e8056fec3d0b87/lib/model/EventTypeEnum.ts#L8)
+Defined in: [model/EventTypeEnum.ts:8](https://github.com/Eliastik/simple-sound-studio-lib/blob/61c9eeaf822611325d0c50ace4e91cc6de3ae8d9/lib/model/EventTypeEnum.ts#L8)
 
 ***
 
@@ -70,7 +70,7 @@ Defined in: [model/EventTypeEnum.ts:8](https://github.com/Eliastik/simple-sound-
 
 > **DECODED\_AUDIO\_FILE**: `"decodedAudioFile"`
 
-Defined in: [model/EventTypeEnum.ts:29](https://github.com/Eliastik/simple-sound-studio-lib/blob/da752c51f31a2272f1f3e80486e8056fec3d0b87/lib/model/EventTypeEnum.ts#L29)
+Defined in: [model/EventTypeEnum.ts:29](https://github.com/Eliastik/simple-sound-studio-lib/blob/61c9eeaf822611325d0c50ace4e91cc6de3ae8d9/lib/model/EventTypeEnum.ts#L29)
 
 ***
 
@@ -78,7 +78,7 @@ Defined in: [model/EventTypeEnum.ts:29](https://github.com/Eliastik/simple-sound
 
 > **DECODING\_AUDIO\_FILE**: `"decodingAudioFile"`
 
-Defined in: [model/EventTypeEnum.ts:28](https://github.com/Eliastik/simple-sound-studio-lib/blob/da752c51f31a2272f1f3e80486e8056fec3d0b87/lib/model/EventTypeEnum.ts#L28)
+Defined in: [model/EventTypeEnum.ts:28](https://github.com/Eliastik/simple-sound-studio-lib/blob/61c9eeaf822611325d0c50ace4e91cc6de3ae8d9/lib/model/EventTypeEnum.ts#L28)
 
 ***
 
@@ -86,7 +86,7 @@ Defined in: [model/EventTypeEnum.ts:28](https://github.com/Eliastik/simple-sound
 
 > **ERROR\_DECODING\_AUDIO\_FILE**: `"errorDecodingAudioFile"`
 
-Defined in: [model/EventTypeEnum.ts:30](https://github.com/Eliastik/simple-sound-studio-lib/blob/da752c51f31a2272f1f3e80486e8056fec3d0b87/lib/model/EventTypeEnum.ts#L30)
+Defined in: [model/EventTypeEnum.ts:30](https://github.com/Eliastik/simple-sound-studio-lib/blob/61c9eeaf822611325d0c50ace4e91cc6de3ae8d9/lib/model/EventTypeEnum.ts#L30)
 
 ***
 
@@ -94,7 +94,7 @@ Defined in: [model/EventTypeEnum.ts:30](https://github.com/Eliastik/simple-sound
 
 > **FALLBACK\_WORKLET\_TO\_SCRIPT\_PROCESSOR**: `"fallbackWorkletToScriptProcessor"`
 
-Defined in: [model/EventTypeEnum.ts:41](https://github.com/Eliastik/simple-sound-studio-lib/blob/da752c51f31a2272f1f3e80486e8056fec3d0b87/lib/model/EventTypeEnum.ts#L41)
+Defined in: [model/EventTypeEnum.ts:41](https://github.com/Eliastik/simple-sound-studio-lib/blob/61c9eeaf822611325d0c50ace4e91cc6de3ae8d9/lib/model/EventTypeEnum.ts#L41)
 
 ***
 
@@ -102,7 +102,7 @@ Defined in: [model/EventTypeEnum.ts:41](https://github.com/Eliastik/simple-sound
 
 > **FETCHING\_BUFFERS**: `"fetchingBuffers"`
 
-Defined in: [model/EventTypeEnum.ts:4](https://github.com/Eliastik/simple-sound-studio-lib/blob/da752c51f31a2272f1f3e80486e8056fec3d0b87/lib/model/EventTypeEnum.ts#L4)
+Defined in: [model/EventTypeEnum.ts:4](https://github.com/Eliastik/simple-sound-studio-lib/blob/61c9eeaf822611325d0c50ace4e91cc6de3ae8d9/lib/model/EventTypeEnum.ts#L4)
 
 ***
 
@@ -110,7 +110,7 @@ Defined in: [model/EventTypeEnum.ts:4](https://github.com/Eliastik/simple-sound-
 
 > **FETCHING\_BUFFERS\_ERROR**: `"fetchingBuffersError"`
 
-Defined in: [model/EventTypeEnum.ts:5](https://github.com/Eliastik/simple-sound-studio-lib/blob/da752c51f31a2272f1f3e80486e8056fec3d0b87/lib/model/EventTypeEnum.ts#L5)
+Defined in: [model/EventTypeEnum.ts:5](https://github.com/Eliastik/simple-sound-studio-lib/blob/61c9eeaf822611325d0c50ace4e91cc6de3ae8d9/lib/model/EventTypeEnum.ts#L5)
 
 ***
 
@@ -118,7 +118,7 @@ Defined in: [model/EventTypeEnum.ts:5](https://github.com/Eliastik/simple-sound-
 
 > **FINISHED\_FETCHING\_BUFFERS**: `"finishedFetchingBuffers"`
 
-Defined in: [model/EventTypeEnum.ts:6](https://github.com/Eliastik/simple-sound-studio-lib/blob/da752c51f31a2272f1f3e80486e8056fec3d0b87/lib/model/EventTypeEnum.ts#L6)
+Defined in: [model/EventTypeEnum.ts:6](https://github.com/Eliastik/simple-sound-studio-lib/blob/61c9eeaf822611325d0c50ace4e91cc6de3ae8d9/lib/model/EventTypeEnum.ts#L6)
 
 ***
 
@@ -126,7 +126,7 @@ Defined in: [model/EventTypeEnum.ts:6](https://github.com/Eliastik/simple-sound-
 
 > **LOADED\_AUDIO\_FILE\_FROM\_LIST**: `"loadedAudioFileFromList"`
 
-Defined in: [model/EventTypeEnum.ts:38](https://github.com/Eliastik/simple-sound-studio-lib/blob/da752c51f31a2272f1f3e80486e8056fec3d0b87/lib/model/EventTypeEnum.ts#L38)
+Defined in: [model/EventTypeEnum.ts:38](https://github.com/Eliastik/simple-sound-studio-lib/blob/61c9eeaf822611325d0c50ace4e91cc6de3ae8d9/lib/model/EventTypeEnum.ts#L38)
 
 ***
 
@@ -134,7 +134,7 @@ Defined in: [model/EventTypeEnum.ts:38](https://github.com/Eliastik/simple-sound
 
 > **LOADED\_BUFFERS**: `"loadedBuffers"`
 
-Defined in: [model/EventTypeEnum.ts:7](https://github.com/Eliastik/simple-sound-studio-lib/blob/da752c51f31a2272f1f3e80486e8056fec3d0b87/lib/model/EventTypeEnum.ts#L7)
+Defined in: [model/EventTypeEnum.ts:7](https://github.com/Eliastik/simple-sound-studio-lib/blob/61c9eeaf822611325d0c50ace4e91cc6de3ae8d9/lib/model/EventTypeEnum.ts#L7)
 
 ***
 
@@ -142,7 +142,7 @@ Defined in: [model/EventTypeEnum.ts:7](https://github.com/Eliastik/simple-sound-
 
 > **LOADING\_BUFFERS**: `"loadingBuffers"`
 
-Defined in: [model/EventTypeEnum.ts:2](https://github.com/Eliastik/simple-sound-studio-lib/blob/da752c51f31a2272f1f3e80486e8056fec3d0b87/lib/model/EventTypeEnum.ts#L2)
+Defined in: [model/EventTypeEnum.ts:2](https://github.com/Eliastik/simple-sound-studio-lib/blob/61c9eeaf822611325d0c50ace4e91cc6de3ae8d9/lib/model/EventTypeEnum.ts#L2)
 
 ***
 
@@ -150,7 +150,7 @@ Defined in: [model/EventTypeEnum.ts:2](https://github.com/Eliastik/simple-sound-
 
 > **LOADING\_BUFFERS\_ERROR**: `"loadingBuffersError"`
 
-Defined in: [model/EventTypeEnum.ts:3](https://github.com/Eliastik/simple-sound-studio-lib/blob/da752c51f31a2272f1f3e80486e8056fec3d0b87/lib/model/EventTypeEnum.ts#L3)
+Defined in: [model/EventTypeEnum.ts:3](https://github.com/Eliastik/simple-sound-studio-lib/blob/61c9eeaf822611325d0c50ace4e91cc6de3ae8d9/lib/model/EventTypeEnum.ts#L3)
 
 ***
 
@@ -158,7 +158,7 @@ Defined in: [model/EventTypeEnum.ts:3](https://github.com/Eliastik/simple-sound-
 
 > **OFFLINE\_AUDIO\_RENDERING\_FINISHED**: `"offlineAudioRenderingFinished"`
 
-Defined in: [model/EventTypeEnum.ts:13](https://github.com/Eliastik/simple-sound-studio-lib/blob/da752c51f31a2272f1f3e80486e8056fec3d0b87/lib/model/EventTypeEnum.ts#L13)
+Defined in: [model/EventTypeEnum.ts:13](https://github.com/Eliastik/simple-sound-studio-lib/blob/61c9eeaf822611325d0c50ace4e91cc6de3ae8d9/lib/model/EventTypeEnum.ts#L13)
 
 ***
 
@@ -166,7 +166,7 @@ Defined in: [model/EventTypeEnum.ts:13](https://github.com/Eliastik/simple-sound
 
 > **PLAYING\_FINISHED**: `"playingFinished"`
 
-Defined in: [model/EventTypeEnum.ts:16](https://github.com/Eliastik/simple-sound-studio-lib/blob/da752c51f31a2272f1f3e80486e8056fec3d0b87/lib/model/EventTypeEnum.ts#L16)
+Defined in: [model/EventTypeEnum.ts:16](https://github.com/Eliastik/simple-sound-studio-lib/blob/61c9eeaf822611325d0c50ace4e91cc6de3ae8d9/lib/model/EventTypeEnum.ts#L16)
 
 ***
 
@@ -174,7 +174,7 @@ Defined in: [model/EventTypeEnum.ts:16](https://github.com/Eliastik/simple-sound
 
 > **PLAYING\_FINISHED\_LOOP\_ALL**: `"playingFinishedLoopAll"`
 
-Defined in: [model/EventTypeEnum.ts:37](https://github.com/Eliastik/simple-sound-studio-lib/blob/da752c51f31a2272f1f3e80486e8056fec3d0b87/lib/model/EventTypeEnum.ts#L37)
+Defined in: [model/EventTypeEnum.ts:37](https://github.com/Eliastik/simple-sound-studio-lib/blob/61c9eeaf822611325d0c50ace4e91cc6de3ae8d9/lib/model/EventTypeEnum.ts#L37)
 
 ***
 
@@ -182,7 +182,7 @@ Defined in: [model/EventTypeEnum.ts:37](https://github.com/Eliastik/simple-sound
 
 > **PLAYING\_STARTED**: `"playingStarted"`
 
-Defined in: [model/EventTypeEnum.ts:15](https://github.com/Eliastik/simple-sound-studio-lib/blob/da752c51f31a2272f1f3e80486e8056fec3d0b87/lib/model/EventTypeEnum.ts#L15)
+Defined in: [model/EventTypeEnum.ts:15](https://github.com/Eliastik/simple-sound-studio-lib/blob/61c9eeaf822611325d0c50ace4e91cc6de3ae8d9/lib/model/EventTypeEnum.ts#L15)
 
 ***
 
@@ -190,7 +190,7 @@ Defined in: [model/EventTypeEnum.ts:15](https://github.com/Eliastik/simple-sound
 
 > **PLAYING\_STOPPED**: `"playingStopped"`
 
-Defined in: [model/EventTypeEnum.ts:14](https://github.com/Eliastik/simple-sound-studio-lib/blob/da752c51f31a2272f1f3e80486e8056fec3d0b87/lib/model/EventTypeEnum.ts#L14)
+Defined in: [model/EventTypeEnum.ts:14](https://github.com/Eliastik/simple-sound-studio-lib/blob/61c9eeaf822611325d0c50ace4e91cc6de3ae8d9/lib/model/EventTypeEnum.ts#L14)
 
 ***
 
@@ -198,7 +198,7 @@ Defined in: [model/EventTypeEnum.ts:14](https://github.com/Eliastik/simple-sound
 
 > **PLAYING\_UPDATE**: `"playingUpdate"`
 
-Defined in: [model/EventTypeEnum.ts:17](https://github.com/Eliastik/simple-sound-studio-lib/blob/da752c51f31a2272f1f3e80486e8056fec3d0b87/lib/model/EventTypeEnum.ts#L17)
+Defined in: [model/EventTypeEnum.ts:17](https://github.com/Eliastik/simple-sound-studio-lib/blob/61c9eeaf822611325d0c50ace4e91cc6de3ae8d9/lib/model/EventTypeEnum.ts#L17)
 
 ***
 
@@ -206,7 +206,7 @@ Defined in: [model/EventTypeEnum.ts:17](https://github.com/Eliastik/simple-sound
 
 > **RECORDER\_COUNT\_UPDATE**: `"recorderCountUpdate"`
 
-Defined in: [model/EventTypeEnum.ts:26](https://github.com/Eliastik/simple-sound-studio-lib/blob/da752c51f31a2272f1f3e80486e8056fec3d0b87/lib/model/EventTypeEnum.ts#L26)
+Defined in: [model/EventTypeEnum.ts:26](https://github.com/Eliastik/simple-sound-studio-lib/blob/61c9eeaf822611325d0c50ace4e91cc6de3ae8d9/lib/model/EventTypeEnum.ts#L26)
 
 ***
 
@@ -214,7 +214,7 @@ Defined in: [model/EventTypeEnum.ts:26](https://github.com/Eliastik/simple-sound
 
 > **RECORDER\_ERROR**: `"recorderError"`
 
-Defined in: [model/EventTypeEnum.ts:20](https://github.com/Eliastik/simple-sound-studio-lib/blob/da752c51f31a2272f1f3e80486e8056fec3d0b87/lib/model/EventTypeEnum.ts#L20)
+Defined in: [model/EventTypeEnum.ts:20](https://github.com/Eliastik/simple-sound-studio-lib/blob/61c9eeaf822611325d0c50ace4e91cc6de3ae8d9/lib/model/EventTypeEnum.ts#L20)
 
 ***
 
@@ -222,7 +222,7 @@ Defined in: [model/EventTypeEnum.ts:20](https://github.com/Eliastik/simple-sound
 
 > **RECORDER\_INIT**: `"recorderInit"`
 
-Defined in: [model/EventTypeEnum.ts:18](https://github.com/Eliastik/simple-sound-studio-lib/blob/da752c51f31a2272f1f3e80486e8056fec3d0b87/lib/model/EventTypeEnum.ts#L18)
+Defined in: [model/EventTypeEnum.ts:18](https://github.com/Eliastik/simple-sound-studio-lib/blob/61c9eeaf822611325d0c50ace4e91cc6de3ae8d9/lib/model/EventTypeEnum.ts#L18)
 
 ***
 
@@ -230,7 +230,7 @@ Defined in: [model/EventTypeEnum.ts:18](https://github.com/Eliastik/simple-sound
 
 > **RECORDER\_NOT\_FOUND\_ERROR**: `"recorderNotFoundError"`
 
-Defined in: [model/EventTypeEnum.ts:31](https://github.com/Eliastik/simple-sound-studio-lib/blob/da752c51f31a2272f1f3e80486e8056fec3d0b87/lib/model/EventTypeEnum.ts#L31)
+Defined in: [model/EventTypeEnum.ts:31](https://github.com/Eliastik/simple-sound-studio-lib/blob/61c9eeaf822611325d0c50ace4e91cc6de3ae8d9/lib/model/EventTypeEnum.ts#L31)
 
 ***
 
@@ -238,7 +238,7 @@ Defined in: [model/EventTypeEnum.ts:31](https://github.com/Eliastik/simple-sound
 
 > **RECORDER\_PAUSED**: `"recorderPaused"`
 
-Defined in: [model/EventTypeEnum.ts:24](https://github.com/Eliastik/simple-sound-studio-lib/blob/da752c51f31a2272f1f3e80486e8056fec3d0b87/lib/model/EventTypeEnum.ts#L24)
+Defined in: [model/EventTypeEnum.ts:24](https://github.com/Eliastik/simple-sound-studio-lib/blob/61c9eeaf822611325d0c50ace4e91cc6de3ae8d9/lib/model/EventTypeEnum.ts#L24)
 
 ***
 
@@ -246,7 +246,7 @@ Defined in: [model/EventTypeEnum.ts:24](https://github.com/Eliastik/simple-sound
 
 > **RECORDER\_RECORDING**: `"recorderRecording"`
 
-Defined in: [model/EventTypeEnum.ts:22](https://github.com/Eliastik/simple-sound-studio-lib/blob/da752c51f31a2272f1f3e80486e8056fec3d0b87/lib/model/EventTypeEnum.ts#L22)
+Defined in: [model/EventTypeEnum.ts:22](https://github.com/Eliastik/simple-sound-studio-lib/blob/61c9eeaf822611325d0c50ace4e91cc6de3ae8d9/lib/model/EventTypeEnum.ts#L22)
 
 ***
 
@@ -254,7 +254,7 @@ Defined in: [model/EventTypeEnum.ts:22](https://github.com/Eliastik/simple-sound
 
 > **RECORDER\_RESETED**: `"recorderReseted"`
 
-Defined in: [model/EventTypeEnum.ts:25](https://github.com/Eliastik/simple-sound-studio-lib/blob/da752c51f31a2272f1f3e80486e8056fec3d0b87/lib/model/EventTypeEnum.ts#L25)
+Defined in: [model/EventTypeEnum.ts:25](https://github.com/Eliastik/simple-sound-studio-lib/blob/61c9eeaf822611325d0c50ace4e91cc6de3ae8d9/lib/model/EventTypeEnum.ts#L25)
 
 ***
 
@@ -262,7 +262,7 @@ Defined in: [model/EventTypeEnum.ts:25](https://github.com/Eliastik/simple-sound
 
 > **RECORDER\_STOPPED**: `"recorderStopped"`
 
-Defined in: [model/EventTypeEnum.ts:23](https://github.com/Eliastik/simple-sound-studio-lib/blob/da752c51f31a2272f1f3e80486e8056fec3d0b87/lib/model/EventTypeEnum.ts#L23)
+Defined in: [model/EventTypeEnum.ts:23](https://github.com/Eliastik/simple-sound-studio-lib/blob/61c9eeaf822611325d0c50ace4e91cc6de3ae8d9/lib/model/EventTypeEnum.ts#L23)
 
 ***
 
@@ -270,7 +270,7 @@ Defined in: [model/EventTypeEnum.ts:23](https://github.com/Eliastik/simple-sound
 
 > **RECORDER\_SUCCESS**: `"recorderSuccess"`
 
-Defined in: [model/EventTypeEnum.ts:19](https://github.com/Eliastik/simple-sound-studio-lib/blob/da752c51f31a2272f1f3e80486e8056fec3d0b87/lib/model/EventTypeEnum.ts#L19)
+Defined in: [model/EventTypeEnum.ts:19](https://github.com/Eliastik/simple-sound-studio-lib/blob/61c9eeaf822611325d0c50ace4e91cc6de3ae8d9/lib/model/EventTypeEnum.ts#L19)
 
 ***
 
@@ -278,7 +278,7 @@ Defined in: [model/EventTypeEnum.ts:19](https://github.com/Eliastik/simple-sound
 
 > **RECORDER\_UNKNOWN\_ERROR**: `"recorderUnknownError"`
 
-Defined in: [model/EventTypeEnum.ts:32](https://github.com/Eliastik/simple-sound-studio-lib/blob/da752c51f31a2272f1f3e80486e8056fec3d0b87/lib/model/EventTypeEnum.ts#L32)
+Defined in: [model/EventTypeEnum.ts:32](https://github.com/Eliastik/simple-sound-studio-lib/blob/61c9eeaf822611325d0c50ace4e91cc6de3ae8d9/lib/model/EventTypeEnum.ts#L32)
 
 ***
 
@@ -286,7 +286,7 @@ Defined in: [model/EventTypeEnum.ts:32](https://github.com/Eliastik/simple-sound
 
 > **RECORDER\_UPDATE\_CONSTRAINTS**: `"recorderUpdateConstraints"`
 
-Defined in: [model/EventTypeEnum.ts:21](https://github.com/Eliastik/simple-sound-studio-lib/blob/da752c51f31a2272f1f3e80486e8056fec3d0b87/lib/model/EventTypeEnum.ts#L21)
+Defined in: [model/EventTypeEnum.ts:21](https://github.com/Eliastik/simple-sound-studio-lib/blob/61c9eeaf822611325d0c50ace4e91cc6de3ae8d9/lib/model/EventTypeEnum.ts#L21)
 
 ***
 
@@ -294,7 +294,7 @@ Defined in: [model/EventTypeEnum.ts:21](https://github.com/Eliastik/simple-sound
 
 > **RENDERING\_AUDIO\_PROBLEM\_DETECTED**: `"renderingAudioProblemDetected"`
 
-Defined in: [model/EventTypeEnum.ts:10](https://github.com/Eliastik/simple-sound-studio-lib/blob/da752c51f31a2272f1f3e80486e8056fec3d0b87/lib/model/EventTypeEnum.ts#L10)
+Defined in: [model/EventTypeEnum.ts:10](https://github.com/Eliastik/simple-sound-studio-lib/blob/61c9eeaf822611325d0c50ace4e91cc6de3ae8d9/lib/model/EventTypeEnum.ts#L10)
 
 ***
 
@@ -302,7 +302,7 @@ Defined in: [model/EventTypeEnum.ts:10](https://github.com/Eliastik/simple-sound
 
 > **SAMPLE\_RATE\_CHANGED**: `"sampleRateChanged"`
 
-Defined in: [model/EventTypeEnum.ts:27](https://github.com/Eliastik/simple-sound-studio-lib/blob/da752c51f31a2272f1f3e80486e8056fec3d0b87/lib/model/EventTypeEnum.ts#L27)
+Defined in: [model/EventTypeEnum.ts:27](https://github.com/Eliastik/simple-sound-studio-lib/blob/61c9eeaf822611325d0c50ace4e91cc6de3ae8d9/lib/model/EventTypeEnum.ts#L27)
 
 ***
 
@@ -310,7 +310,7 @@ Defined in: [model/EventTypeEnum.ts:27](https://github.com/Eliastik/simple-sound
 
 > **STARTED\_RENDERING\_AUDIO**: `"renderingAudio"`
 
-Defined in: [model/EventTypeEnum.ts:9](https://github.com/Eliastik/simple-sound-studio-lib/blob/da752c51f31a2272f1f3e80486e8056fec3d0b87/lib/model/EventTypeEnum.ts#L9)
+Defined in: [model/EventTypeEnum.ts:9](https://github.com/Eliastik/simple-sound-studio-lib/blob/61c9eeaf822611325d0c50ace4e91cc6de3ae8d9/lib/model/EventTypeEnum.ts#L9)
 
 ***
 
@@ -318,7 +318,7 @@ Defined in: [model/EventTypeEnum.ts:9](https://github.com/Eliastik/simple-sound-
 
 > **UPDATE\_AUDIO\_TREATMENT\_PERCENT**: `"updateAudioTreatmentPercent"`
 
-Defined in: [model/EventTypeEnum.ts:33](https://github.com/Eliastik/simple-sound-studio-lib/blob/da752c51f31a2272f1f3e80486e8056fec3d0b87/lib/model/EventTypeEnum.ts#L33)
+Defined in: [model/EventTypeEnum.ts:33](https://github.com/Eliastik/simple-sound-studio-lib/blob/61c9eeaf822611325d0c50ace4e91cc6de3ae8d9/lib/model/EventTypeEnum.ts#L33)
 
 ***
 
@@ -326,7 +326,7 @@ Defined in: [model/EventTypeEnum.ts:33](https://github.com/Eliastik/simple-sound
 
 > **UPDATE\_REMAINING\_TIME\_ESTIMATED**: `"updateRemainingTimeEstimated"`
 
-Defined in: [model/EventTypeEnum.ts:34](https://github.com/Eliastik/simple-sound-studio-lib/blob/da752c51f31a2272f1f3e80486e8056fec3d0b87/lib/model/EventTypeEnum.ts#L34)
+Defined in: [model/EventTypeEnum.ts:34](https://github.com/Eliastik/simple-sound-studio-lib/blob/61c9eeaf822611325d0c50ace4e91cc6de3ae8d9/lib/model/EventTypeEnum.ts#L34)
 
 ***
 
@@ -334,4 +334,4 @@ Defined in: [model/EventTypeEnum.ts:34](https://github.com/Eliastik/simple-sound
 
 > **WORKLET\_SUCCESSFULLY\_LOADED**: `"workletSuccessfullyLoaded"`
 
-Defined in: [model/EventTypeEnum.ts:42](https://github.com/Eliastik/simple-sound-studio-lib/blob/da752c51f31a2272f1f3e80486e8056fec3d0b87/lib/model/EventTypeEnum.ts#L42)
+Defined in: [model/EventTypeEnum.ts:42](https://github.com/Eliastik/simple-sound-studio-lib/blob/61c9eeaf822611325d0c50ace4e91cc6de3ae8d9/lib/model/EventTypeEnum.ts#L42)

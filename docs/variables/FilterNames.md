@@ -8,7 +8,7 @@
 
 > `const` **FilterNames**: `object`
 
-Defined in: [model/FilterNames.ts:1](https://github.com/Eliastik/simple-sound-studio-lib/blob/da752c51f31a2272f1f3e80486e8056fec3d0b87/lib/model/FilterNames.ts#L1)
+Defined in: [model/FilterNames.ts:1](https://github.com/Eliastik/simple-sound-studio-lib/blob/61c9eeaf822611325d0c50ace4e91cc6de3ae8d9/lib/model/FilterNames.ts#L1)
 
 ## Type declaration
 

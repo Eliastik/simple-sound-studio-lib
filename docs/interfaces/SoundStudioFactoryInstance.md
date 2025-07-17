@@ -6,7 +6,7 @@
 
 # Interface: SoundStudioFactoryInstance
 
-Defined in: [model/SoundStudioFactoryInstance.ts:7](https://github.com/Eliastik/simple-sound-studio-lib/blob/da752c51f31a2272f1f3e80486e8056fec3d0b87/lib/model/SoundStudioFactoryInstance.ts#L7)
+Defined in: [model/SoundStudioFactoryInstance.ts:7](https://github.com/Eliastik/simple-sound-studio-lib/blob/61c9eeaf822611325d0c50ace4e91cc6de3ae8d9/lib/model/SoundStudioFactoryInstance.ts#L7)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: [model/SoundStudioFactoryInstance.ts:7](https://github.com/Eliastik/
 
 > **audioEditor**: `AudioEditorInterface`
 
-Defined in: [model/SoundStudioFactoryInstance.ts:8](https://github.com/Eliastik/simple-sound-studio-lib/blob/da752c51f31a2272f1f3e80486e8056fec3d0b87/lib/model/SoundStudioFactoryInstance.ts#L8)
+Defined in: [model/SoundStudioFactoryInstance.ts:8](https://github.com/Eliastik/simple-sound-studio-lib/blob/61c9eeaf822611325d0c50ace4e91cc6de3ae8d9/lib/model/SoundStudioFactoryInstance.ts#L8)
 
 ***
 
@@ -22,7 +22,7 @@ Defined in: [model/SoundStudioFactoryInstance.ts:8](https://github.com/Eliastik/
 
 > **audioPlayer**: `BufferPlayerInterface`
 
-Defined in: [model/SoundStudioFactoryInstance.ts:10](https://github.com/Eliastik/simple-sound-studio-lib/blob/da752c51f31a2272f1f3e80486e8056fec3d0b87/lib/model/SoundStudioFactoryInstance.ts#L10)
+Defined in: [model/SoundStudioFactoryInstance.ts:10](https://github.com/Eliastik/simple-sound-studio-lib/blob/61c9eeaf822611325d0c50ace4e91cc6de3ae8d9/lib/model/SoundStudioFactoryInstance.ts#L10)
 
 ***
 
@@ -30,7 +30,7 @@ Defined in: [model/SoundStudioFactoryInstance.ts:10](https://github.com/Eliastik
 
 > **configService**: [`ConfigService`](ConfigService.md)
 
-Defined in: [model/SoundStudioFactoryInstance.ts:12](https://github.com/Eliastik/simple-sound-studio-lib/blob/da752c51f31a2272f1f3e80486e8056fec3d0b87/lib/model/SoundStudioFactoryInstance.ts#L12)
+Defined in: [model/SoundStudioFactoryInstance.ts:12](https://github.com/Eliastik/simple-sound-studio-lib/blob/61c9eeaf822611325d0c50ace4e91cc6de3ae8d9/lib/model/SoundStudioFactoryInstance.ts#L12)
 
 ***
 
@@ -38,7 +38,7 @@ Defined in: [model/SoundStudioFactoryInstance.ts:12](https://github.com/Eliastik
 
 > **eventEmitter**: `EventEmitterInterface`
 
-Defined in: [model/SoundStudioFactoryInstance.ts:11](https://github.com/Eliastik/simple-sound-studio-lib/blob/da752c51f31a2272f1f3e80486e8056fec3d0b87/lib/model/SoundStudioFactoryInstance.ts#L11)
+Defined in: [model/SoundStudioFactoryInstance.ts:11](https://github.com/Eliastik/simple-sound-studio-lib/blob/61c9eeaf822611325d0c50ace4e91cc6de3ae8d9/lib/model/SoundStudioFactoryInstance.ts#L11)
 
 ***
 
@@ -46,4 +46,4 @@ Defined in: [model/SoundStudioFactoryInstance.ts:11](https://github.com/Eliastik
 
 > **voiceRecorder**: `VoiceRecorderInterface`
 
-Defined in: [model/SoundStudioFactoryInstance.ts:9](https://github.com/Eliastik/simple-sound-studio-lib/blob/da752c51f31a2272f1f3e80486e8056fec3d0b87/lib/model/SoundStudioFactoryInstance.ts#L9)
+Defined in: [model/SoundStudioFactoryInstance.ts:9](https://github.com/Eliastik/simple-sound-studio-lib/blob/61c9eeaf822611325d0c50ace4e91cc6de3ae8d9/lib/model/SoundStudioFactoryInstance.ts#L9)

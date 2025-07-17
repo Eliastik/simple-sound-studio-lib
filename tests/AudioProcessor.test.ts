@@ -42,7 +42,7 @@ describe("AudioProcessor", () => {
             mockBufferManager
         );
 
-        await expect(audioProcessor2.renderAudio(new MockAudioBuffer(2, 0, 44100))).rejects.toThrowError("AudioContext is not yet available");
+        await expect(audioProcessor2.renderAudio(new MockAudioBuffer(2, 0, 44100))).rejects.toThrow("AudioContext is not yet available");
     });
 
     test("renderAudio should throw error if no principal buffer available", async () => {

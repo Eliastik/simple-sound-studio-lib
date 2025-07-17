@@ -92,7 +92,7 @@ describe("SaveBufferManager tests", () => {
         const saveBufferManager = new SaveBufferManager(mockFilterManagerInstance, null);
         mockBufferPlayerInstance.compatibilityMode = true;
 
-        await expect(saveBufferManager.saveBuffer(null, saveBufferOptions)).rejects.toThrowError("No buffer player was found");
+        await expect(saveBufferManager.saveBuffer(null, saveBufferOptions)).rejects.toThrow("No buffer player was found");
     });
 
     test("Save buffer direct - compatibility mode - success (WAV)", async () => {
@@ -212,7 +212,7 @@ describe("SaveBufferManager tests", () => {
 
         saveBufferManager.saveBuffer(mockRenderedBuffer, saveBufferOptions, mockRecorder as any);
 
-        await expect(saveBufferManager.saveBuffer(mockRenderedBuffer, saveBufferOptions)).rejects.toThrowError("The buffer is currently saving");
+        await expect(saveBufferManager.saveBuffer(mockRenderedBuffer, saveBufferOptions)).rejects.toThrow("The buffer is currently saving");
     });
 
     test("Stopping player should disable event", async () => {
