@@ -59,13 +59,15 @@ export default abstract class AbstractAudioEncoder {
             interleaved = buffers[0];
         }
 
+        const data = new Float32Array(interleaved);
+
         const audioData = new AudioData({
             format: "f32",
             sampleRate: options.sampleRate,
             numberOfFrames,
             numberOfChannels: 2,
             timestamp: 0,
-            data: interleaved,
+            data,
         });
 
         audioEncoder.encode(audioData);
