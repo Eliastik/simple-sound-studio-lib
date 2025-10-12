@@ -47,7 +47,7 @@ const mergeBuffers = () => {
     return buffers;
 };
 
-const exportAudioToBlob = async (format: AudioEncoderFormat, type: string) => {
+const exportAudioToBlob = async (format: AudioEncoderFormat, responseCommand: string, type: string) => {
     const output = await audioEncoderManager.encodeAudio(mergeBuffers(), {
         audioLength: recLength,
         bitrate,
@@ -57,7 +57,7 @@ const exportAudioToBlob = async (format: AudioEncoderFormat, type: string) => {
     });
 
     const audioBlob = new Blob([output], { type });
-    self.postMessage({ command: "exportMP3", data: audioBlob });
+    self.postMessage({ command: responseCommand, data: audioBlob });
 };
 
 const getBuffer = () => {
@@ -80,10 +80,10 @@ self.onmessage = function (e) {
         record(e.data.buffer);
         break;
     case "exportWAV":
-        exportAudioToBlob("wav", Constants.AUDIO_WAV);
+        exportAudioToBlob("wav", "exportWAV", Constants.AUDIO_WAV);
         break;
     case "exportMP3":
-        exportAudioToBlob("mp3", Constants.AUDIO_MP3);
+        exportAudioToBlob("mp3", "exportMP3", Constants.AUDIO_MP3);
         break;
     case "getBuffer":
         getBuffer();
