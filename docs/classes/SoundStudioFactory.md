@@ -6,7 +6,7 @@
 
 # Class: SoundStudioFactory
 
-Defined in: [utils/SoundStudioFactory.ts:19](https://github.com/Eliastik/simple-sound-studio-lib/blob/07dad1885665d358e7dba30e2fa1e4072b5b2b15/lib/utils/SoundStudioFactory.ts#L19)
+Defined in: [utils/SoundStudioFactory.ts:19](https://github.com/Eliastik/simple-sound-studio-lib/blob/53fa45aac5142882bc90fc2bf7cad8c5abfb3158/lib/utils/SoundStudioFactory.ts#L19)
 
 Factory class to create instances of sound studio components.
 
@@ -30,7 +30,7 @@ future release.
 
 > `static` **createAudioEditor**(`configService?`, `buffersToFetch?`): `AudioEditorInterface`
 
-Defined in: [utils/SoundStudioFactory.ts:70](https://github.com/Eliastik/simple-sound-studio-lib/blob/07dad1885665d358e7dba30e2fa1e4072b5b2b15/lib/utils/SoundStudioFactory.ts#L70)
+Defined in: [utils/SoundStudioFactory.ts:70](https://github.com/Eliastik/simple-sound-studio-lib/blob/53fa45aac5142882bc90fc2bf7cad8c5abfb3158/lib/utils/SoundStudioFactory.ts#L70)
 
 Create a singleton AudioEditor instance.
 
@@ -64,7 +64,7 @@ This method is deprecated. Use createNewInstance instead.
 
 > `static` **createNewInstance**(`options?`): [`SoundStudioFactoryInstance`](../interfaces/SoundStudioFactoryInstance.md)
 
-Defined in: [utils/SoundStudioFactory.ts:36](https://github.com/Eliastik/simple-sound-studio-lib/blob/07dad1885665d358e7dba30e2fa1e4072b5b2b15/lib/utils/SoundStudioFactory.ts#L36)
+Defined in: [utils/SoundStudioFactory.ts:36](https://github.com/Eliastik/simple-sound-studio-lib/blob/53fa45aac5142882bc90fc2bf7cad8c5abfb3158/lib/utils/SoundStudioFactory.ts#L36)
 
 Create a new instance of sound studio components.
 
@@ -88,7 +88,7 @@ A new instance of the sound studio components. See SoundStudioFactoryInstance
 
 > `static` **createVoiceRecorder**(): `VoiceRecorderInterface`
 
-Defined in: [utils/SoundStudioFactory.ts:96](https://github.com/Eliastik/simple-sound-studio-lib/blob/07dad1885665d358e7dba30e2fa1e4072b5b2b15/lib/utils/SoundStudioFactory.ts#L96)
+Defined in: [utils/SoundStudioFactory.ts:96](https://github.com/Eliastik/simple-sound-studio-lib/blob/53fa45aac5142882bc90fc2bf7cad8c5abfb3158/lib/utils/SoundStudioFactory.ts#L96)
 
 Create a singleton VoiceRecorder instance.
 
@@ -106,15 +106,15 @@ This method is deprecated. Use createNewInstance instead.
 
 ### ~~getAudioEditorInstance()~~
 
-> `static` **getAudioEditorInstance**(): `null` \| `AudioEditorInterface`
+> `static` **getAudioEditorInstance**(): `AudioEditorInterface` \| `null`
 
-Defined in: [utils/SoundStudioFactory.ts:110](https://github.com/Eliastik/simple-sound-studio-lib/blob/07dad1885665d358e7dba30e2fa1e4072b5b2b15/lib/utils/SoundStudioFactory.ts#L110)
+Defined in: [utils/SoundStudioFactory.ts:110](https://github.com/Eliastik/simple-sound-studio-lib/blob/53fa45aac5142882bc90fc2bf7cad8c5abfb3158/lib/utils/SoundStudioFactory.ts#L110)
 
 Get the singleton AudioEditor instance.
 
 #### Returns
 
-`null` \| `AudioEditorInterface`
+`AudioEditorInterface` \| `null`
 
 The singleton AudioEditor instance, or null if not initialized.
 
@@ -126,15 +126,15 @@ This method is deprecated. Use createNewInstance instead.
 
 ### ~~getAudioPlayerInstance()~~
 
-> `static` **getAudioPlayerInstance**(): `null` \| `BufferPlayerInterface`
+> `static` **getAudioPlayerInstance**(): `BufferPlayerInterface` \| `null`
 
-Defined in: [utils/SoundStudioFactory.ts:124](https://github.com/Eliastik/simple-sound-studio-lib/blob/07dad1885665d358e7dba30e2fa1e4072b5b2b15/lib/utils/SoundStudioFactory.ts#L124)
+Defined in: [utils/SoundStudioFactory.ts:124](https://github.com/Eliastik/simple-sound-studio-lib/blob/53fa45aac5142882bc90fc2bf7cad8c5abfb3158/lib/utils/SoundStudioFactory.ts#L124)
 
 Get the singleton BufferPlayer instance.
 
 #### Returns
 
-`null` \| `BufferPlayerInterface`
+`BufferPlayerInterface` \| `null`
 
 The singleton BufferPlayer instance, or null if not initialized.
 
@@ -146,15 +146,15 @@ This method is deprecated. Use createNewInstance instead.
 
 ### ~~getAudioRecorderInstance()~~
 
-> `static` **getAudioRecorderInstance**(): `null` \| `VoiceRecorderInterface`
+> `static` **getAudioRecorderInstance**(): `VoiceRecorderInterface` \| `null`
 
-Defined in: [utils/SoundStudioFactory.ts:138](https://github.com/Eliastik/simple-sound-studio-lib/blob/07dad1885665d358e7dba30e2fa1e4072b5b2b15/lib/utils/SoundStudioFactory.ts#L138)
+Defined in: [utils/SoundStudioFactory.ts:138](https://github.com/Eliastik/simple-sound-studio-lib/blob/53fa45aac5142882bc90fc2bf7cad8c5abfb3158/lib/utils/SoundStudioFactory.ts#L138)
 
 Get the singleton VoiceRecorder instance.
 
 #### Returns
 
-`null` \| `VoiceRecorderInterface`
+`VoiceRecorderInterface` \| `null`
 
 The singleton VoiceRecorder instance, or null if not initialized.
 
@@ -166,15 +166,15 @@ This method is deprecated. Use createNewInstance instead.
 
 ### ~~getConfigServiceInstance()~~
 
-> `static` **getConfigServiceInstance**(): `undefined` \| [`ConfigService`](../interfaces/ConfigService.md)
+> `static` **getConfigServiceInstance**(): [`ConfigService`](../interfaces/ConfigService.md) \| `undefined`
 
-Defined in: [utils/SoundStudioFactory.ts:166](https://github.com/Eliastik/simple-sound-studio-lib/blob/07dad1885665d358e7dba30e2fa1e4072b5b2b15/lib/utils/SoundStudioFactory.ts#L166)
+Defined in: [utils/SoundStudioFactory.ts:166](https://github.com/Eliastik/simple-sound-studio-lib/blob/53fa45aac5142882bc90fc2bf7cad8c5abfb3158/lib/utils/SoundStudioFactory.ts#L166)
 
 Get the singleton ConfigService instance.
 
 #### Returns
 
-`undefined` \| [`ConfigService`](../interfaces/ConfigService.md)
+[`ConfigService`](../interfaces/ConfigService.md) \| `undefined`
 
 The singleton ConfigService instance, or undefined if not initialized.
 
@@ -186,15 +186,15 @@ This method is deprecated. Use createNewInstance instead.
 
 ### ~~getEventEmitterInstance()~~
 
-> `static` **getEventEmitterInstance**(): `null` \| `EventEmitterInterface`
+> `static` **getEventEmitterInstance**(): `EventEmitterInterface` \| `null`
 
-Defined in: [utils/SoundStudioFactory.ts:152](https://github.com/Eliastik/simple-sound-studio-lib/blob/07dad1885665d358e7dba30e2fa1e4072b5b2b15/lib/utils/SoundStudioFactory.ts#L152)
+Defined in: [utils/SoundStudioFactory.ts:152](https://github.com/Eliastik/simple-sound-studio-lib/blob/53fa45aac5142882bc90fc2bf7cad8c5abfb3158/lib/utils/SoundStudioFactory.ts#L152)
 
 Get the singleton EventEmitter instance.
 
 #### Returns
 
-`null` \| `EventEmitterInterface`
+`EventEmitterInterface` \| `null`
 
 The singleton EventEmitter instance, or null if not initialized.
 

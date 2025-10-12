@@ -8,7 +8,7 @@
 
 > `const` **UtilFunctions**: `object`
 
-Defined in: [utils/Functions.ts:5](https://github.com/Eliastik/simple-sound-studio-lib/blob/07dad1885665d358e7dba30e2fa1e4072b5b2b15/lib/utils/Functions.ts#L5)
+Defined in: [utils/Functions.ts:5](https://github.com/Eliastik/simple-sound-studio-lib/blob/53fa45aac5142882bc90fc2bf7cad8c5abfb3158/lib/utils/Functions.ts#L5)
 
 ## Type Declaration
 
@@ -162,7 +162,7 @@ The audio duration
 
 ##### buffer
 
-`null` | `AudioBuffer`
+`AudioBuffer` | `null`
 
 #### Returns
 

@@ -6,11 +6,11 @@
 
 # Interface: SelectFormValue
 
-Defined in: [model/filtersSettings/GenericSettingValue.ts:3](https://github.com/Eliastik/simple-sound-studio-lib/blob/07dad1885665d358e7dba30e2fa1e4072b5b2b15/lib/model/filtersSettings/GenericSettingValue.ts#L3)
+Defined in: [model/filtersSettings/GenericSettingValue.ts:3](https://github.com/Eliastik/simple-sound-studio-lib/blob/53fa45aac5142882bc90fc2bf7cad8c5abfb3158/lib/model/filtersSettings/GenericSettingValue.ts#L3)
 
 ## Indexable
 
-\[`key`: `string`\]: `undefined` \| `string` \| [`GenericSettingValueAdditionalData`](GenericSettingValueAdditionalData.md)
+\[`key`: `string`\]: `string` \| [`GenericSettingValueAdditionalData`](GenericSettingValueAdditionalData.md) \| `undefined`
 
 ## Properties
 
@@ -18,7 +18,7 @@ Defined in: [model/filtersSettings/GenericSettingValue.ts:3](https://github.com/
 
 > `optional` **additionalData**: [`GenericSettingValueAdditionalData`](GenericSettingValueAdditionalData.md)
 
-Defined in: [model/filtersSettings/GenericSettingValue.ts:7](https://github.com/Eliastik/simple-sound-studio-lib/blob/07dad1885665d358e7dba30e2fa1e4072b5b2b15/lib/model/filtersSettings/GenericSettingValue.ts#L7)
+Defined in: [model/filtersSettings/GenericSettingValue.ts:7](https://github.com/Eliastik/simple-sound-studio-lib/blob/53fa45aac5142882bc90fc2bf7cad8c5abfb3158/lib/model/filtersSettings/GenericSettingValue.ts#L7)
 
 ***
 
@@ -26,7 +26,7 @@ Defined in: [model/filtersSettings/GenericSettingValue.ts:7](https://github.com/
 
 > **name**: `string`
 
-Defined in: [model/filtersSettings/GenericSettingValue.ts:5](https://github.com/Eliastik/simple-sound-studio-lib/blob/07dad1885665d358e7dba30e2fa1e4072b5b2b15/lib/model/filtersSettings/GenericSettingValue.ts#L5)
+Defined in: [model/filtersSettings/GenericSettingValue.ts:5](https://github.com/Eliastik/simple-sound-studio-lib/blob/53fa45aac5142882bc90fc2bf7cad8c5abfb3158/lib/model/filtersSettings/GenericSettingValue.ts#L5)
 
 ***
 
@@ -34,4 +34,4 @@ Defined in: [model/filtersSettings/GenericSettingValue.ts:5](https://github.com/
 
 > **value**: `string`
 
-Defined in: [model/filtersSettings/GenericSettingValue.ts:6](https://github.com/Eliastik/simple-sound-studio-lib/blob/07dad1885665d358e7dba30e2fa1e4072b5b2b15/lib/model/filtersSettings/GenericSettingValue.ts#L6)
+Defined in: [model/filtersSettings/GenericSettingValue.ts:6](https://github.com/Eliastik/simple-sound-studio-lib/blob/53fa45aac5142882bc90fc2bf7cad8c5abfb3158/lib/model/filtersSettings/GenericSettingValue.ts#L6)
