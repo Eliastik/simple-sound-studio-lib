@@ -54,6 +54,6 @@
     "typescript": "^5.9.3"
   },
   "peerDependencies": {
-    "@types/audioworklet": "^0.0.75"
+    "@types/audioworklet": "^0.0.87"
   }
 }
