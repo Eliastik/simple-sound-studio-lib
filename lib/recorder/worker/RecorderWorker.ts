@@ -41,7 +41,11 @@ const mergeBuffers = () => {
     const buffers = [];
 
     for (let channel = 0; channel < numChannels; channel++) {
-        buffers.push(UtilFunctions.mergeBuffers(recBuffers[channel]));
+        try {
+            buffers.push(UtilFunctions.mergeBuffers(recBuffers[channel]));
+        } catch(e) {
+            console.error("Error merging buffers for channel", channel, e);
+        }
     }
 
     return buffers;
