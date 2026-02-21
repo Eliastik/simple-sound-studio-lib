@@ -61,7 +61,7 @@ export default class SaveBufferManager extends AbstractAudioElement implements S
 
         this._savingBuffer = true;
 
-        let savingResult = false;
+        let savingResult: boolean;
 
         if (!this.bufferPlayer.compatibilityMode) {
             savingResult = await this.saveBufferDirect(renderedBuffer, options);

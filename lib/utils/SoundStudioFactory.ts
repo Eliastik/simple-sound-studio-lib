@@ -55,7 +55,7 @@ export default class SoundStudioFactory {
             };
         } catch (e) {
             console.error("Error when creating new Sound Studio instance\n", e);
-            throw new Error("Error when creating new Sound Studio instance");
+            throw new Error("Error when creating new Sound Studio instance", { cause: e });
         }
     }
 
