@@ -6,8 +6,8 @@
 
 # Interface: FilterState
 
-Defined in: [model/FilterState.ts:1](https://github.com/Eliastik/simple-sound-studio-lib/blob/d93f3d8f2592cee22c37ae1cbd145c3a5e90a2f0/lib/model/FilterState.ts#L1)
+Defined in: [model/FilterState.ts:1](https://github.com/Eliastik/simple-sound-studio-lib/blob/c5c8dc64b82b0b0119c12d685bd00f0ea76915fd/lib/model/FilterState.ts#L1)
 
 ## Indexable
 
-\[`filterId`: `string`\]: `boolean`
+> \[`filterId`: `string`\]: `boolean`

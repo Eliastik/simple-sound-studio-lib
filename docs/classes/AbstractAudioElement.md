@@ -6,7 +6,7 @@
 
 # Abstract Class: AbstractAudioElement
 
-Defined in: [interfaces/AbstractAudioElement.ts:10](https://github.com/Eliastik/simple-sound-studio-lib/blob/d93f3d8f2592cee22c37ae1cbd145c3a5e90a2f0/lib/interfaces/AbstractAudioElement.ts#L10)
+Defined in: [interfaces/AbstractAudioElement.ts:10](https://github.com/Eliastik/simple-sound-studio-lib/blob/c5c8dc64b82b0b0119c12d685bd00f0ea76915fd/lib/interfaces/AbstractAudioElement.ts#L10)
 
 ## Extended by
 
@@ -31,29 +31,29 @@ Defined in: [interfaces/AbstractAudioElement.ts:10](https://github.com/Eliastik/
 
 > **injectDependencies**(`bufferFetcherService`, `bufferDecoderService`, `configService`, `eventEmitter`, `contextManager`): `void`
 
-Defined in: [interfaces/AbstractAudioElement.ts:27](https://github.com/Eliastik/simple-sound-studio-lib/blob/d93f3d8f2592cee22c37ae1cbd145c3a5e90a2f0/lib/interfaces/AbstractAudioElement.ts#L27)
+Defined in: [interfaces/AbstractAudioElement.ts:27](https://github.com/Eliastik/simple-sound-studio-lib/blob/c5c8dc64b82b0b0119c12d685bd00f0ea76915fd/lib/interfaces/AbstractAudioElement.ts#L27)
 
 #### Parameters
 
 ##### bufferFetcherService
 
-`BufferFetcherServiceInterface` | `null`
+`BufferFetcherServiceInterface` \| `null`
 
 ##### bufferDecoderService
 
-`BufferDecoderServiceInterface` | `null`
+`BufferDecoderServiceInterface` \| `null`
 
 ##### configService
 
-[`ConfigService`](../interfaces/ConfigService.md) | `null`
+[`ConfigService`](../interfaces/ConfigService.md) \| `null`
 
 ##### eventEmitter
 
-`EventEmitterInterface` | `null`
+`EventEmitterInterface` \| `null`
 
 ##### contextManager
 
-`AudioContextManagerInterface` | `null`
+`AudioContextManagerInterface` \| `null`
 
 #### Returns
 

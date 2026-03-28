@@ -8,11 +8,11 @@
 
 > `const` **UtilFunctions**: `object`
 
-Defined in: [utils/Functions.ts:5](https://github.com/Eliastik/simple-sound-studio-lib/blob/d93f3d8f2592cee22c37ae1cbd145c3a5e90a2f0/lib/utils/Functions.ts#L5)
+Defined in: [utils/Functions.ts:5](https://github.com/Eliastik/simple-sound-studio-lib/blob/c5c8dc64b82b0b0119c12d685bd00f0ea76915fd/lib/utils/Functions.ts#L5)
 
 ## Type Declaration
 
-### calcAudioDuration()
+### calcAudioDuration
 
 > **calcAudioDuration**: (`audio`, `speed?`) => `number`
 
@@ -30,7 +30,7 @@ Defined in: [utils/Functions.ts:5](https://github.com/Eliastik/simple-sound-stud
 
 `number`
 
-### convertAudioBufferToFloat32Array()
+### convertAudioBufferToFloat32Array
 
 > **convertAudioBufferToFloat32Array**: (`buffer`) => `Float32Array`\<`ArrayBufferLike`\>[]
 
@@ -44,7 +44,7 @@ Defined in: [utils/Functions.ts:5](https://github.com/Eliastik/simple-sound-stud
 
 `Float32Array`\<`ArrayBufferLike`\>[]
 
-### convertAudioParamToFloat32Array()
+### convertAudioParamToFloat32Array
 
 > **convertAudioParamToFloat32Array**: (`param`, `length`) => `Float32Array`\<`ArrayBuffer`\>
 
@@ -62,7 +62,7 @@ Defined in: [utils/Functions.ts:5](https://github.com/Eliastik/simple-sound-stud
 
 `Float32Array`\<`ArrayBuffer`\>
 
-### decodeBuffer()
+### decodeBuffer
 
 > **decodeBuffer**: (`context`, `buffer`) => `AudioBuffer`
 
@@ -80,7 +80,7 @@ Defined in: [utils/Functions.ts:5](https://github.com/Eliastik/simple-sound-stud
 
 `AudioBuffer`
 
-### loadAudioBuffer()
+### loadAudioBuffer
 
 > **loadAudioBuffer**: (`context`, `file`) => `Promise`\<`AudioBuffer`\>
 
@@ -98,7 +98,7 @@ Defined in: [utils/Functions.ts:5](https://github.com/Eliastik/simple-sound-stud
 
 `Promise`\<`AudioBuffer`\>
 
-### readAsArrayBufferPromisified()
+### readAsArrayBufferPromisified
 
 > **readAsArrayBufferPromisified**: (`file`) => `Promise`\<`ArrayBuffer`\>
 
@@ -162,7 +162,7 @@ The audio duration
 
 ##### buffer
 
-`AudioBuffer` | `null`
+`AudioBuffer` \| `null`
 
 #### Returns
 
