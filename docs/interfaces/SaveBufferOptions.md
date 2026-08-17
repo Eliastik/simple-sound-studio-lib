@@ -6,7 +6,7 @@
 
 # Interface: SaveBufferOptions
 
-Defined in: [model/SaveBufferOptions.ts:3](https://github.com/Eliastik/simple-sound-studio-lib/blob/c5c8dc64b82b0b0119c12d685bd00f0ea76915fd/lib/model/SaveBufferOptions.ts#L3)
+Defined in: [model/SaveBufferOptions.ts:3](https://github.com/Eliastik/simple-sound-studio-lib/blob/66b841b3c5ec1810cbdac22a6f697020f179a53b/lib/model/SaveBufferOptions.ts#L3)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: [model/SaveBufferOptions.ts:3](https://github.com/Eliastik/simple-so
 
 > `optional` **bitrate?**: `number`
 
-Defined in: [model/SaveBufferOptions.ts:5](https://github.com/Eliastik/simple-sound-studio-lib/blob/c5c8dc64b82b0b0119c12d685bd00f0ea76915fd/lib/model/SaveBufferOptions.ts#L5)
+Defined in: [model/SaveBufferOptions.ts:5](https://github.com/Eliastik/simple-sound-studio-lib/blob/66b841b3c5ec1810cbdac22a6f697020f179a53b/lib/model/SaveBufferOptions.ts#L5)
 
 ***
 
@@ -22,4 +22,4 @@ Defined in: [model/SaveBufferOptions.ts:5](https://github.com/Eliastik/simple-so
 
 > `optional` **format?**: `AudioEncoderFormat`
 
-Defined in: [model/SaveBufferOptions.ts:4](https://github.com/Eliastik/simple-sound-studio-lib/blob/c5c8dc64b82b0b0119c12d685bd00f0ea76915fd/lib/model/SaveBufferOptions.ts#L4)
+Defined in: [model/SaveBufferOptions.ts:4](https://github.com/Eliastik/simple-sound-studio-lib/blob/66b841b3c5ec1810cbdac22a6f697020f179a53b/lib/model/SaveBufferOptions.ts#L4)
