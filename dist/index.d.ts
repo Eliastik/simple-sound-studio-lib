@@ -1058,6 +1058,11 @@ declare abstract class AbstractAudioFilterWorklet<T> extends AbstractAudioFilter
      */
     abstract receiveEvent(message: MessageEvent<T>): void;
     /**
+     * Compute the path to the worklet file
+     * @returns The path to the worklet file
+     */
+    protected computeWorkletPath(): string;
+    /**
      * Initialize the audio worklet by loading the module
      * @param audioContext The audio context
      */

@@ -1,6 +1,7 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 //@ts-ignore
 import { PitchShifter } from "soundtouchjs";
+import { SoundTouchNode } from "@soundtouchjs/audio-worklet";
 import Constants from "../model/Constants";
 import AbstractAudioFilterWorklet from "./interfaces/AbstractAudioFilterWorklet";
 import AudioFilterEntrypointInterface from "./interfaces/AudioFilterEntrypointInterface";
@@ -16,6 +17,7 @@ export default class SoundtouchWrapperFilter extends AbstractAudioFilterWorklet<
     private pitchSemitones = Constants.SOUNDTOUCH_DEFAULT_PITCH_SEMITONES;
     private currentSpeedAudio = Constants.SOUNDTOUCH_DEFAULT_SPEED;
     private currentPitchShifter: PitchShifter;
+    private currenSoundtouchWorkletNode: SoundTouchNode | null = null;
     private currentBufferSource: AudioBufferSourceNode | null = null;
     private isOfflineMode = false;
 
@@ -76,6 +78,14 @@ export default class SoundtouchWrapperFilter extends AbstractAudioFilterWorklet<
 
     private getSoundtouchScriptProcessorNode(buffer: AudioBuffer, context: BaseAudioContext): AudioNode {
         return new PitchShifter(context, buffer, Constants.SOUNDTOUCH_PITCH_SHIFTER_BUFFER_SIZE);
+    }
+
+    private async getSoundtouchWorkletNode(context: BaseAudioContext): Promise<SoundTouchNode> {
+        await SoundTouchNode.register(context, this.computeWorkletPath());
+
+        this.currenSoundtouchWorkletNode = new SoundTouchNode({ context });
+
+        return this.currenSoundtouchWorkletNode;
     }
 
     /**
@@ -149,21 +159,21 @@ export default class SoundtouchWrapperFilter extends AbstractAudioFilterWorklet<
      * @param context Audio context
      * @returns A promise resolving to audio nodes with the rendered audio as a buffer source
      */
-    private renderWithWorklet(buffer: AudioBuffer, context: BaseAudioContext): Promise<AudioFilterNodes> {
+    private async renderWithWorklet(buffer: AudioBuffer, context: BaseAudioContext): Promise<AudioFilterNodes> {
         try {
             const bufferSource = this.constructBufferSourceNode(context, buffer);
 
-            const workletNode = this.getNode(context);
+            const workletNode = await this.getSoundtouchWorkletNode(context);
 
             // Connect the node for correct rendering
-            bufferSource.connect(workletNode.input);
+            bufferSource.connect(workletNode);
 
             // Setup pitch/speed of Soundtouch
             this.updateState();
 
             return Promise.resolve({
-                input: workletNode.input,
-                output: workletNode.output
+                input: workletNode,
+                output: workletNode
             });
         } catch (e) {
             // Fallback to script processor node
@@ -235,9 +245,9 @@ export default class SoundtouchWrapperFilter extends AbstractAudioFilterWorklet<
             this.currentSpeedAudio = this.speedAudio;
         }
 
-        if (isWorklet) {
-            this.setWorkletSetting("pitch", pitch);
-            this.setWorkletSetting("pitchSemitones", key);
+        if (isWorklet && this.currenSoundtouchWorkletNode) {
+            this.currenSoundtouchWorkletNode.pitch.value = pitch;
+            this.currenSoundtouchWorkletNode.pitchSemitones.value = key;
 
             if (this.currentBufferSource) {
                 this.currentBufferSource.playbackRate.value = tempo;

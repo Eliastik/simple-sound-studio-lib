@@ -33,6 +33,14 @@ export default abstract class AbstractAudioFilterWorklet<T> extends AbstractAudi
     abstract receiveEvent(message: MessageEvent<T>): void;
 
     /**
+     * Compute the path to the worklet file
+     * @returns The path to the worklet file
+     */
+    protected computeWorkletPath() {
+        return (this.configService ? this.configService.getWorkletBasePath() : "") + this.workletPath;
+    }
+
+    /**
      * Initialize the audio worklet by loading the module
      * @param audioContext The audio context
      */
@@ -45,7 +53,7 @@ export default abstract class AbstractAudioFilterWorklet<T> extends AbstractAudi
             return;
         }
 
-        const workletPath = (this.configService ? this.configService.getWorkletBasePath() : "") + this.workletPath;
+        const workletPath = this.computeWorkletPath();
 
         const alreadyLoadedModules = this.loadedModulesMap.get(audioContext);
 

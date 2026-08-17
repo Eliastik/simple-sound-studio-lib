@@ -17,6 +17,7 @@
   "module": "dist/esm/SimpleSoundStudioLibrary.js",
   "types": "dist/index.d.ts",
   "dependencies": {
+    "@soundtouchjs/audio-worklet": "^2.1.1",
     "inversify": "^8.2.3",
     "lamejs": "^1.2.1",
     "lodash": "^4.18.1",
